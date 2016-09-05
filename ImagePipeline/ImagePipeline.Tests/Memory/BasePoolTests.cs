@@ -3,7 +3,6 @@ using FBCore.Common.Memory;
 using ImagePipeline.Memory;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System.Collections.Generic;
-using System;
 using System.Linq;
 
 namespace ImagePipeline.Tests.Memory
@@ -524,13 +523,25 @@ namespace ImagePipeline.Tests.Memory
             Assert.IsFalse(pool.CanAllocate(4));
         }
 
-    /**
-     * A simple test pool that allocates byte arrays, and always allocates buffers of double
-     * the size requested
-     */
-    private class TestPool : BasePool<byte[]>
+        private static Dictionary<int, int> MakeBucketSizeArray(params int[] args)
         {
-            public bool Reusable { get; set;  }
+            Preconditions.CheckArgument(args.Length % 2 == 0);
+            Dictionary<int, int> bucketSizes = new Dictionary<int, int>();
+            for (int i = 0; i < args.Length; i += 2) 
+            {
+                bucketSizes.Add(args[i], args[i + 1]);
+            }
+
+            return bucketSizes;
+        }
+
+        /**
+         * A simple test pool that allocates byte arrays, and always allocates buffers of double
+         * the size requested
+         */
+        private class TestPool : BasePool<byte[]>
+        {
+            public bool Reusable { get; set; }
 
             public TestPool(int maxPoolSizeSoftCap, int maxPoolSizeHardCap) : this(maxPoolSizeSoftCap, maxPoolSizeHardCap, null)
             {
@@ -540,9 +551,9 @@ namespace ImagePipeline.Tests.Memory
                 int maxPoolSizeSoftCap,
                 int maxPoolSizeHardCap,
                 Dictionary<int, int> bucketSizes) : base(
-                    new TestMemoryTrimmableRegistry(), 
-                    new PoolParams(maxPoolSizeSoftCap, maxPoolSizeHardCap, bucketSizes), 
-                    new TestPoolStatsTracker())
+                    new MockMemoryTrimmableRegistry(),
+                    new PoolParams(maxPoolSizeSoftCap, maxPoolSizeHardCap, bucketSizes),
+                    new MockPoolStatsTracker())
             {
                 Reusable = true;
                 Initialize();
@@ -586,60 +597,6 @@ namespace ImagePipeline.Tests.Memory
             {
                 return bucketedSize;
             }
-        }
-
-        private class TestMemoryTrimmableRegistry : IMemoryTrimmableRegistry
-        {
-            public void RegisterMemoryTrimmable(IMemoryTrimmable trimmable)
-            {
-            }
-
-            public void UnregisterMemoryTrimmable(IMemoryTrimmable trimmable)
-            {
-            }
-        }
-
-        private class TestPoolStatsTracker : PoolStatsTracker
-        {
-            public override void OnAlloc(int size)
-            {
-            }
-
-            public override void OnFree(int sizeInBytes)
-            {
-            }
-
-            public override void OnHardCapReached()
-            {
-            }
-
-            public override void OnSoftCapReached()
-            {
-            }
-
-            public override void OnValueRelease(int sizeInBytes)
-            {
-            }
-
-            public override void OnValueReuse(int bucketedSize)
-            {
-            }
-
-            public override void SetBasePool<T>(BasePool<T> basePool)
-            {
-            }
-        }
-
-        private static Dictionary<int, int> MakeBucketSizeArray(params int[] args)
-        {
-            Preconditions.CheckArgument(args.Length % 2 == 0);
-            Dictionary<int, int> bucketSizes = new Dictionary<int, int>();
-            for (int i = 0; i < args.Length; i += 2) 
-            {
-                bucketSizes.Add(args[i], args[i + 1]);
-            }
-
-            return bucketSizes;
         }
     }
 }

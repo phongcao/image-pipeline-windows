@@ -107,7 +107,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Memory\IPool.cs" />
+    <Compile Include="ImagePipeline\Memory\IByteArrayPool.cs" />
+    <Compile Include="ImagePipeline\Memory\IPool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\ImagePipelineBase.rd.xml" />
   </ItemGroup>

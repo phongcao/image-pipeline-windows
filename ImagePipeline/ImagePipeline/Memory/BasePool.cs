@@ -12,19 +12,21 @@ namespace ImagePipeline.Memory
         private readonly object _poolGate = new object();
 
         /**
-         * Determines if new buckets can be created
-         */
-        private bool _allowNewBuckets;
-
-        /**ab
          * The memory manager to register with
          */
-        private IMemoryTrimmableRegistry MemoryTrimmableRegistry { get; }
+        private readonly IMemoryTrimmableRegistry _memoryTrimmableRegistry;
 
         /**
         * Provider for pool parameters
         */
-        private PoolParams PoolParams { get; }
+        private readonly PoolParams _poolParams;
+
+        private readonly PoolStatsTracker _poolStatsTracker;
+
+        /**
+         * Determines if new buckets can be created
+         */
+        private bool _allowNewBuckets;
 
         /**
         * The buckets - representing different 'sizes'
@@ -35,8 +37,6 @@ namespace ImagePipeline.Memory
          * An Identity hash-set to keep track of values by reference equality
          */
         public HashSet<T> InUseValues { get; }
-
-        private PoolStatsTracker PoolStatsTracker { get; }
 
         /**
          * Tracks 'used space' - space allocated via the pool
@@ -58,9 +58,9 @@ namespace ImagePipeline.Memory
             PoolParams poolParams,
             PoolStatsTracker poolStatsTracker)
         {
-            MemoryTrimmableRegistry = Preconditions.CheckNotNull(memoryTrimmableRegistry);
-            PoolParams = Preconditions.CheckNotNull(poolParams);
-            PoolStatsTracker = Preconditions.CheckNotNull(poolStatsTracker);
+            _memoryTrimmableRegistry = Preconditions.CheckNotNull(memoryTrimmableRegistry);
+            _poolParams = Preconditions.CheckNotNull(poolParams);
+            _poolStatsTracker = Preconditions.CheckNotNull(poolStatsTracker);
 
             // Initialize the buckets
             Buckets = new Dictionary<int, Bucket<T>>();
@@ -77,8 +77,8 @@ namespace ImagePipeline.Memory
          */
         protected void Initialize()
         {
-            MemoryTrimmableRegistry.RegisterMemoryTrimmable(this);
-            PoolStatsTracker.SetBasePool(this);
+            _memoryTrimmableRegistry.RegisterMemoryTrimmable(this);
+            _poolStatsTracker.SetBasePool(this);
         }
 
         /**
@@ -118,7 +118,7 @@ namespace ImagePipeline.Memory
                         sizeInBytes = GetSizeInBytes(bucketedSize);
                         UsedCounter.Increment(sizeInBytes);
                         FreeCounter.Decrement(sizeInBytes);
-                        PoolStatsTracker.OnValueReuse(sizeInBytes);
+                        _poolStatsTracker.OnValueReuse(sizeInBytes);
                         LogStats();
                         Debug.WriteLine($"get (reuse) (object, size) = ({ val.GetHashCode() }, { bucketedSize })");
                         return val;
@@ -131,7 +131,7 @@ namespace ImagePipeline.Memory
                 if (!CanAllocate(sizeInBytes))
                 {
                     throw new PoolSizeViolationException(
-                        PoolParams.MaxSizeHardCap,
+                        _poolParams.MaxSizeHardCap,
                         UsedCounter.NumBytes,
                         FreeCounter.NumBytes,
                         sizeInBytes);
@@ -182,7 +182,7 @@ namespace ImagePipeline.Memory
                 // If we're over the pool's max size, try to trim the pool appropriately
                 TrimToSoftCap();
 
-                PoolStatsTracker.OnAlloc(sizeInBytes);
+                _poolStatsTracker.OnAlloc(sizeInBytes);
                 LogStats();
                 Debug.WriteLine($"get (alloc) (object, size) = ({ value.GetHashCode() }, { bucketedSize })");
             }
@@ -215,7 +215,7 @@ namespace ImagePipeline.Memory
                     // Something is going wrong, so let's free the value and report soft error.
                     Debug.WriteLine($"release (free, value unrecognized) (object, size) = ({ value.GetHashCode() }, { bucketedSize })");
                     Free(value);
-                    PoolStatsTracker.OnFree(sizeInBytes);
+                    _poolStatsTracker.OnFree(sizeInBytes);
                 }
                 else
                 {
@@ -241,14 +241,14 @@ namespace ImagePipeline.Memory
                         Debug.WriteLine($"release (free) (object, size) = ({ value.GetHashCode() }, { bucketedSize })");
                         Free(value);
                         UsedCounter.Decrement(sizeInBytes);
-                        PoolStatsTracker.OnFree(sizeInBytes);
+                        _poolStatsTracker.OnFree(sizeInBytes);
                     }
                     else
                     {
                         bucket.Release(value);
                         FreeCounter.Increment(sizeInBytes);
                         UsedCounter.Decrement(sizeInBytes);
-                        PoolStatsTracker.OnValueRelease(sizeInBytes);
+                        _poolStatsTracker.OnValueRelease(sizeInBytes);
                         Debug.WriteLine($"release (reuse) (object, size) = ({ value.GetHashCode() }, { bucketedSize })");
                     }
                 }
@@ -355,7 +355,7 @@ namespace ImagePipeline.Memory
                 Buckets.Clear();
 
                 // Create the new buckets
-                Dictionary<int, int> bucketSizes = PoolParams.BucketSizes;
+                Dictionary<int, int> bucketSizes = _poolParams.BucketSizes;
                 if (bucketSizes != null)
                 {
                     foreach (KeyValuePair<int, int> entry in bucketSizes)
@@ -447,7 +447,7 @@ namespace ImagePipeline.Memory
             {
                 if (IsMaxSizeSoftCapExceeded())
                 {
-                    TrimToSize(PoolParams.MaxSizeSoftCap);
+                    TrimToSize(_poolParams.MaxSizeSoftCap);
                 }
             }
         }
@@ -549,10 +549,10 @@ namespace ImagePipeline.Memory
         {
             lock (_poolGate)
             {
-                bool isMaxSizeSoftCapExceeded = (UsedCounter.NumBytes + FreeCounter.NumBytes) > PoolParams.MaxSizeSoftCap;
+                bool isMaxSizeSoftCapExceeded = (UsedCounter.NumBytes + FreeCounter.NumBytes) > _poolParams.MaxSizeSoftCap;
                 if (isMaxSizeSoftCapExceeded)
                 {
-                    PoolStatsTracker.OnSoftCapReached();
+                    _poolStatsTracker.OnSoftCapReached();
                 }
 
                 return isMaxSizeSoftCapExceeded;
@@ -572,18 +572,18 @@ namespace ImagePipeline.Memory
         {
             lock (_poolGate)
             {
-                int hardCap = PoolParams.MaxSizeHardCap;
+                int hardCap = _poolParams.MaxSizeHardCap;
 
                 // even with our best effort we cannot ensure hard cap limit.
                 // Return immediately - no point in trimming any space
                 if (sizeInBytes > hardCap - UsedCounter.NumBytes)
                 {
-                    PoolStatsTracker.OnHardCapReached();
+                    _poolStatsTracker.OnHardCapReached();
                     return false;
                 }
 
                 // trim if we need to
-                int softCap = PoolParams.MaxSizeSoftCap;
+                int softCap = _poolParams.MaxSizeSoftCap;
                 if (sizeInBytes > softCap - (UsedCounter.NumBytes + FreeCounter.NumBytes))
                 {
                     TrimToSize(softCap - sizeInBytes);
@@ -592,7 +592,7 @@ namespace ImagePipeline.Memory
                 // check again to see if we're below the hard cap
                 if (sizeInBytes > hardCap - (UsedCounter.NumBytes + FreeCounter.NumBytes))
                 {
-                    PoolStatsTracker.OnHardCapReached();
+                    _poolStatsTracker.OnHardCapReached();
                     return false;
                 }
 

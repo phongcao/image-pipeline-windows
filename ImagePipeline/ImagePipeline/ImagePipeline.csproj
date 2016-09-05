@@ -110,6 +110,8 @@
     <Compile Include="Memory\BasePool.cs" />
     <Compile Include="Memory\Bucket.cs" />
     <Compile Include="Memory\Counter.cs" />
+    <Compile Include="Memory\GenericByteArrayPool.cs" />
+    <Compile Include="Memory\IByteArrayPool.cs" />
     <Compile Include="Memory\InvalidSizeException.cs" />
     <Compile Include="Memory\InvalidValueException.cs" />
     <Compile Include="Memory\PoolSizeViolationException.cs" />

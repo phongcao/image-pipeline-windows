@@ -28,10 +28,10 @@ namespace ImagePipeline.Memory
     public class Bucket<T>
     {
         // 'max' length for this bucket
-        private int MaxLength { get; }
+        private readonly int _maxLength;
 
         // The free list for this bucket, subclasses can vary type
-        private Queue FreeList { get; }
+        private readonly Queue _freeList;
 
         // Current number of entries 'in use' (i.e.) not in the free list
         private int _inUseLength;
@@ -52,8 +52,8 @@ namespace ImagePipeline.Memory
             Preconditions.CheckState(inUseLength >= 0);
 
             ItemSize = itemSize;
-            MaxLength = maxLength;
-            FreeList = new Queue();
+            _maxLength = maxLength;
+            _freeList = new Queue();
             _inUseLength = inUseLength;
         }
 
@@ -63,12 +63,12 @@ namespace ImagePipeline.Memory
         */
         public bool IsMaxLengthExceeded()
         {
-            return (_inUseLength + GetFreeListSize() > MaxLength);
+            return (_inUseLength + GetFreeListSize() > _maxLength);
         }
 
         public int GetFreeListSize()
         {
-            return FreeList.Count;
+            return _freeList.Count;
         }
 
         /**
@@ -94,7 +94,7 @@ namespace ImagePipeline.Memory
          */
         public T Pop()
         {
-            return (FreeList.Count != 0) ? (T)FreeList.Dequeue() : default(T);
+            return (_freeList.Count != 0) ? (T)_freeList.Dequeue() : default(T);
         }
 
         /**
@@ -121,7 +121,7 @@ namespace ImagePipeline.Memory
 
         private void AddToFreeList(T value)
         {
-            FreeList.Enqueue(value);
+            _freeList.Enqueue(value);
         }
 
         /**
