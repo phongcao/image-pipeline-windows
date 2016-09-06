@@ -114,6 +114,7 @@
     <Compile Include="Common\Memory\MemoryTrimType.cs" />
     <Compile Include="Common\References\CloseableReference.cs" />
     <Compile Include="Common\References\DefaultResourceReleaser.cs" />
+    <Compile Include="Common\References\OOMSoftReference.cs" />
     <Compile Include="Common\References\SharedReference.cs" />
     <Compile Include="Common\Util\ByteConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

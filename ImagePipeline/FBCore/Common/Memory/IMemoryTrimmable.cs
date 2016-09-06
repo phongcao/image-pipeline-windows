@@ -10,6 +10,6 @@
         /**
          * Trim memory.
          */
-        void Trim(MemoryTrimType trimType);
+        void Trim(double trimType);
     }
 }

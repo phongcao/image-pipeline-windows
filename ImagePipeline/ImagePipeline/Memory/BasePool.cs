@@ -12,21 +12,21 @@ namespace ImagePipeline.Memory
         private readonly object _poolGate = new object();
 
         /**
+         * Determines if new buckets can be created
+         */
+        private bool _allowNewBuckets;
+
+        /**
          * The memory manager to register with
          */
-        private readonly IMemoryTrimmableRegistry _memoryTrimmableRegistry;
+        protected internal readonly IMemoryTrimmableRegistry _memoryTrimmableRegistry;
 
         /**
         * Provider for pool parameters
         */
-        private readonly PoolParams _poolParams;
+        protected internal readonly PoolParams _poolParams;
 
-        private readonly PoolStatsTracker _poolStatsTracker;
-
-        /**
-         * Determines if new buckets can be created
-         */
-        private bool _allowNewBuckets;
+        protected internal readonly PoolStatsTracker _poolStatsTracker;
 
         /**
         * The buckets - representing different 'sizes'
@@ -264,7 +264,7 @@ namespace ImagePipeline.Memory
          * In other words, we ignore the memoryTrimType parameter
          * @param memoryTrimType the kind of trimming we want to perform
          */
-        public void Trim(MemoryTrimType memoryTrimType)
+        public void Trim(double memoryTrimType)
         {
             TrimToNothing();
         }
@@ -513,7 +513,7 @@ namespace ImagePipeline.Memory
          * @param bucketedSize the bucket size
          * @return the freelist for the bucket
          */
-        Bucket<T> GetBucket(int bucketedSize)
+        internal Bucket<T> GetBucket(int bucketedSize)
         {
             lock (_poolGate)
             {
@@ -533,7 +533,7 @@ namespace ImagePipeline.Memory
             }
         }
 
-        Bucket<T> NewBucket(int bucketedSize)
+        protected virtual Bucket<T> NewBucket(int bucketedSize)
         {
             return new Bucket<T>(
                 /*itemSize*/GetSizeInBytes(bucketedSize),
@@ -597,6 +597,33 @@ namespace ImagePipeline.Memory
                 }
 
                 return true;
+            }
+        }
+
+        /**
+         * Export memory stats regarding buckets used, memory caps, reused values.
+         */
+        public Dictionary<string, int> GetStats()
+        {
+            lock (_poolGate)
+            {
+                Dictionary<string, int> stats = new Dictionary<string, int>();
+                foreach (var bucket in Buckets)
+                {
+                    int bucketedSize = bucket.Key;
+                    Bucket<T> bucketValue = bucket.Value;
+                    string BUCKET_USED_KEY = PoolStatsTracker.BUCKETS_USED_PREFIX + GetSizeInBytes(bucketedSize);
+                    stats.Add(BUCKET_USED_KEY, bucketValue.GetInUseCount());
+                }
+
+                stats.Add(PoolStatsTracker.SOFT_CAP, _poolParams.MaxSizeSoftCap);
+                stats.Add(PoolStatsTracker.HARD_CAP, _poolParams.MaxSizeHardCap);
+                stats.Add(PoolStatsTracker.USED_COUNT, UsedCounter.Count);
+                stats.Add(PoolStatsTracker.USED_BYTES, UsedCounter.NumBytes);
+                stats.Add(PoolStatsTracker.FREE_COUNT, FreeCounter.Count);
+                stats.Add(PoolStatsTracker.FREE_BYTES, FreeCounter.NumBytes);
+
+                return stats;
             }
         }
 

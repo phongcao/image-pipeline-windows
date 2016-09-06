@@ -1,4 +1,7 @@
-﻿using System;
+﻿using FBCore.Common.Internal;
+using FBCore.Common.Memory;
+using FBCore.Common.References;
+using System.Collections.Generic;
 
 namespace ImagePipeline.Memory
 {
@@ -10,65 +13,36 @@ namespace ImagePipeline.Memory
      */
     public class FlexByteArrayPool
     {
-        //        private final ResourceReleaser<byte[]> mResourceReleaser;
-        //        @VisibleForTesting final SoftRefByteArrayPool mDelegatePool;
+        private readonly IResourceReleaser<byte[]> _resourceReleaser;
+        internal SoftRefByteArrayPool _delegatePool;
 
-        //        public FlexByteArrayPool(
-        //            MemoryTrimmableRegistry memoryTrimmableRegistry,
-        //            PoolParams params)
-        //        {
-        //            Preconditions.checkArgument(params.maxNumThreads > 0);
-        //            mDelegatePool = new SoftRefByteArrayPool(
-        //                memoryTrimmableRegistry,
-        //                params,
-        //                NoOpPoolStatsTracker.getInstance());
-        //            mResourceReleaser = new ResourceReleaser<byte[]>() {
-        //      @Override
-        //      public void release(byte[] unused)
-        //        {
-        //            FlexByteArrayPool.this.release(unused);
-        //        }
-        //    };
-        //    }
+        public FlexByteArrayPool(
+            IMemoryTrimmableRegistry memoryTrimmableRegistry,
+            PoolParams args)
+        {
+            Preconditions.CheckArgument(args.MaxNumThreads > 0);
+            _delegatePool = new SoftRefByteArrayPool(memoryTrimmableRegistry, args, NoOpPoolStatsTracker.GetInstance());
+            _resourceReleaser = new FlexByteArrayResourceReleaser(this);
+        }
 
-        //public CloseableReference<byte[]> get(int size)
-        //{
-        //    return CloseableReference.of(mDelegatePool.get(size), mResourceReleaser);
-        //}
+        public CloseableReference<byte[]> Get(int size)
+        {
+            return CloseableReference<byte[]>.of(_delegatePool.Get(size), _resourceReleaser);
+        }
 
-        //public void release(byte[] value)
-        //{
-        //    mDelegatePool.release(value);
-        //}
+        public void Release(byte[] value)
+        {
+            _delegatePool.Release(value);
+        }
 
-        //public Map<String, Integer> getStats()
-        //{
-        //    return mDelegatePool.getStats();
-        //}
+        public Dictionary<string, int> GetStats()
+        {
+            return _delegatePool.GetStats();
+        }
 
-        //public int getMinBufferSize()
-        //{
-        //    return mDelegatePool.getMinBufferSize();
-        //}
-
-        //@VisibleForTesting static class SoftRefByteArrayPool extends GenericByteArrayPool
-        //{
-        //    public SoftRefByteArrayPool(
-        //        MemoryTrimmableRegistry memoryTrimmableRegistry,
-        //        PoolParams poolParams,
-        //        PoolStatsTracker poolStatsTracker)
-        //{
-        //    super(memoryTrimmableRegistry, poolParams, poolStatsTracker);
-        //}
-
-        //@Override
-        //Bucket<byte[]> newBucket(int bucketedSize)
-        //{
-        //    return new OOMSoftReferenceBucket<>(
-        //        getSizeInBytes(bucketedSize),
-        //        mPoolParams.maxNumThreads,
-        //        0);
-        //}
-        //  }
+        public int GetMinBufferSize()
+        {
+            return _delegatePool.GetMinBufferSize();
+        }
     }
 }

@@ -31,7 +31,7 @@ namespace ImagePipeline.Memory
         private readonly int _maxLength;
 
         // The free list for this bucket, subclasses can vary type
-        private readonly Queue _freeList;
+        protected readonly Queue _freeList;
 
         // Current number of entries 'in use' (i.e.) not in the free list
         private int _inUseLength;
@@ -92,7 +92,7 @@ namespace ImagePipeline.Memory
          * Does not update the bucket inUse count
          * @return the first value (if any) from the free list
          */
-        public T Pop()
+        public virtual T Pop()
         {
             return (_freeList.Count != 0) ? (T)_freeList.Dequeue() : default(T);
         }
@@ -119,7 +119,7 @@ namespace ImagePipeline.Memory
             AddToFreeList(value);
         }
 
-        private void AddToFreeList(T value)
+        protected virtual void AddToFreeList(T value)
         {
             _freeList.Enqueue(value);
         }
