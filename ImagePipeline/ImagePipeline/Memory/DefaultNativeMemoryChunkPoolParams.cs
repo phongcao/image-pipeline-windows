@@ -1,0 +1,84 @@
+﻿using FBCore.Common.Util;
+using System;
+using System.Collections.Generic;
+using Windows.System;
+
+namespace ImagePipeline.Memory
+{
+    /**
+     * Provides pool parameters ({@link PoolParams}) for {@link NativeMemoryChunkPool}
+     *
+     */
+    public static class DefaultNativeMemoryChunkPoolParams
+    {
+        /**
+         * Length of 'small' sized buckets. Bucket lengths for these buckets are larger because
+         * they're smaller in size
+         */
+        private const int SMALL_BUCKET_LENGTH = 5;
+
+        /**
+         * Bucket lengths for 'large' (> 256KB) buckets
+         */
+        private const int LARGE_BUCKET_LENGTH = 2;
+
+        public static PoolParams Get()
+        {
+            Dictionary<int, int> DEFAULT_BUCKETS = new Dictionary<int, int>();
+            DEFAULT_BUCKETS.Add(1 * ByteConstants.KB, SMALL_BUCKET_LENGTH);
+            DEFAULT_BUCKETS.Add(2 * ByteConstants.KB, SMALL_BUCKET_LENGTH);
+            DEFAULT_BUCKETS.Add(4 * ByteConstants.KB, SMALL_BUCKET_LENGTH);
+            DEFAULT_BUCKETS.Add(8 * ByteConstants.KB, SMALL_BUCKET_LENGTH);
+            DEFAULT_BUCKETS.Add(16 * ByteConstants.KB, SMALL_BUCKET_LENGTH);
+            DEFAULT_BUCKETS.Add(32 * ByteConstants.KB, SMALL_BUCKET_LENGTH);
+            DEFAULT_BUCKETS.Add(64 * ByteConstants.KB, SMALL_BUCKET_LENGTH);
+            DEFAULT_BUCKETS.Add(128 * ByteConstants.KB, SMALL_BUCKET_LENGTH);
+            DEFAULT_BUCKETS.Add(256 * ByteConstants.KB, LARGE_BUCKET_LENGTH);
+            DEFAULT_BUCKETS.Add(512 * ByteConstants.KB, LARGE_BUCKET_LENGTH);
+            DEFAULT_BUCKETS.Add(1024 * ByteConstants.KB, LARGE_BUCKET_LENGTH);
+            return new PoolParams(
+                GetMaxSizeSoftCap(),
+                GetMaxSizeHardCap(),
+                DEFAULT_BUCKETS);
+        }
+
+        /**
+         * {@link NativeMemoryChunkPool} manages memory on the native heap, so we don't need as strict
+         * caps as we would if we were on the Dalvik heap. However, since native memory OOMs are
+         * significantly more problematic than Dalvik OOMs, we would like to stay conservative.
+         */
+        private static int GetMaxSizeSoftCap()
+        {
+            ulong maxMemory = Math.Min(MemoryManager.AppMemoryUsageLimit, int.MaxValue);
+            if (maxMemory < 16 * ByteConstants.MB)
+            {
+                return 3 * ByteConstants.MB;
+            }
+            else if (maxMemory < 32 * ByteConstants.MB)
+            {
+                return 6 * ByteConstants.MB;
+            }
+            else
+            {
+                return 12 * ByteConstants.MB;
+            }
+        }
+
+        /**
+         * We need a smaller cap for devices with less then 16 MB so that we don't run the risk of
+         * evicting other processes from the native heap.
+         */
+        private static int GetMaxSizeHardCap()
+        {
+            ulong maxMemory = Math.Min(MemoryManager.AppMemoryUsageLimit, int.MaxValue);
+            if (maxMemory < 16 * ByteConstants.MB)
+            {
+                return (int)(maxMemory / 2);
+            }
+            else
+            {
+                return (int)(maxMemory / 4 * 3);
+            }
+        }
+    }
+}

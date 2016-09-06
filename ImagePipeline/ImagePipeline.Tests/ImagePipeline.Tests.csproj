@@ -95,7 +95,7 @@
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Memory\GenericByteArrayPoolTest.cs" />
+    <Compile Include="Memory\GenericByteArrayPoolTests.cs" />
     <Compile Include="Memory\MockMemoryTrimmableRegistry.cs" />
     <Compile Include="Memory\MockPoolStatsTracker.cs" />
     <Compile Include="Memory\PoolStats.cs" />

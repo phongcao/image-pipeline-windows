@@ -1,5 +1,4 @@
 ﻿using FBCore.Common.Internal;
-using FBCore.Common.Memory;
 using ImagePipeline.Memory;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System.Collections.Generic;

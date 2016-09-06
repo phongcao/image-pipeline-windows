@@ -8,7 +8,7 @@ namespace ImagePipeline.Tests.Memory
      * Basic tests for GenericByteArrayPool
      */
     [TestClass]
-    public class GenericByteArrayPoolTest
+    public class GenericByteArrayPoolTests
     {
         private GenericByteArrayPool _pool;
 
