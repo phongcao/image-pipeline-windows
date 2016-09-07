@@ -90,6 +90,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -109,6 +110,7 @@
   <ItemGroup>
     <Compile Include="ImagePipeline\Memory\IByteArrayPool.cs" />
     <Compile Include="ImagePipeline\Memory\IPool.cs" />
+    <Compile Include="ImageUtils\BitmapUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\ImagePipelineBase.rd.xml" />
   </ItemGroup>

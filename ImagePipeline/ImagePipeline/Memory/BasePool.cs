@@ -322,7 +322,7 @@ namespace ImagePipeline.Memory
          * @param value the value to test for reusability
          * @return true if the value is reusable
          */
-        protected virtual bool IsReusable(T value)
+        protected internal virtual bool IsReusable(T value)
         {
             Preconditions.CheckNotNull(value);
             return true;

@@ -567,7 +567,7 @@ namespace ImagePipeline.Tests.Memory
             {
             }
 
-            protected override bool IsReusable(byte[] value)
+            protected internal override bool IsReusable(byte[] value)
             {
                 return Reusable;
             }
