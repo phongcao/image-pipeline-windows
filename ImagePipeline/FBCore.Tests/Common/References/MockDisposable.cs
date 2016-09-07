@@ -1,14 +1,23 @@
 ﻿using System;
+using System.Threading;
 
 namespace FBCore.Tests.Common.References
 {
     class MockDisposable : IDisposable
     {
-        public int DisposeCallCount { get; private set; }
+        private int _disposeCallCount = 0;
+
+        public bool IsDisposed
+        {
+            get
+            {
+                return Volatile.Read(ref _disposeCallCount) > 0;
+            }
+        }
 
         public void Dispose()
         {
-            ++DisposeCallCount;
+            Interlocked.Increment(ref _disposeCallCount);
         }
     }
 }

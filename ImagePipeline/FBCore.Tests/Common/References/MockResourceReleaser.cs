@@ -1,14 +1,23 @@
 ﻿using FBCore.Common.References;
+using System.Threading;
 
 namespace FBCore.Tests.Common.References
 {
     class MockResourceReleaser<T> : IResourceReleaser<T>
     {
-        public int ReleaseCallCount { get; private set; }
+        private int _releaseCallCount = 0;
+
+        public bool IsReleased
+        {
+            get
+            {
+                return Volatile.Read(ref _releaseCallCount) > 0;
+            }
+        }
 
         public void Release(T value)
         {
-            ++ReleaseCallCount;
+            Interlocked.Increment(ref _releaseCallCount);
         }
     }
 }
