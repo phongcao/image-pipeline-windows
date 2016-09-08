@@ -3,43 +3,70 @@ using System.Collections.Generic;
 
 namespace ImagePipeline.Tests.Memory
 {
-    /**
-     * Helper class to get pool stats
-    */
+    /// <summary>
+    /// Helper class to get pool stats
+    /// </summary>
     public class PoolStats<T>
     {
+        /// <summary>
+        /// The base pool
+        /// </summary>
         public BasePool<T> Pool { get; set; }
 
+        /// <summary>
+        /// Keep track of used bytes
+        /// </summary>
         public int UsedBytes { get; set; }
 
+        /// <summary>
+        /// Keep track of used count
+        /// </summary>
         public int UsedCount { get; set; }
 
+        /// <summary>
+        /// Keep track of free bytes
+        /// </summary>
         public int FreeBytes { get; set; }
 
+        /// <summary>
+        /// Keep track of free count
+        /// </summary>
         public int FreeCount { get; set; }
 
+        /// <summary>
+        /// Keep track of bucket stats
+        /// </summary>
         public Dictionary<int, KeyValuePair<int, int>> BucketStats { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public PoolStats(BasePool<T> pool)
         {
             Pool = pool;
             BucketStats = new Dictionary<int, KeyValuePair<int, int>>();
         }
 
+        /// <summary>
+        /// Set pool
+        /// </summary>
         public void SetPool(BasePool<T> pool)
         {
             Pool = pool;
         }
 
-        /**
-         * Refresh all pool stats
-         */
+        /// <summary>
+        /// Refresh all stats
+        /// </summary>
         public void Refresh()
         {
             RefreshBasic();
             RefreshBucketStats();
         }
 
+        /// <summary>
+        /// Refresh bytes and count stats
+        /// </summary>
         public void RefreshBasic()
         {
             UsedBytes = Pool.UsedCounter.NumBytes;
@@ -48,6 +75,9 @@ namespace ImagePipeline.Tests.Memory
             FreeCount = Pool.FreeCounter.Count;
         }
 
+        /// <summary>
+        /// Refresh bucket stats
+        /// </summary>
         public void RefreshBucketStats()
         {
             BucketStats.Clear();

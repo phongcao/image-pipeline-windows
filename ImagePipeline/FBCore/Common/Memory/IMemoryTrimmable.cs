@@ -1,15 +1,15 @@
 ﻿namespace FBCore.Common.Memory
 {
-    /**
-     * A class can implement this interface to react to a {@link MemoryTrimmableRegistry}'s request to
-     * trim memory.
-     */
+    /// <summary>
+    /// A class can implement this interface to react to a <see cref="IMemoryTrimmableRegistry"/>'s request to
+    /// trim memory.
+    /// </summary>
 
     public interface IMemoryTrimmable
     {
-        /**
-         * Trim memory.
-         */
+        /// <summary>
+        /// Trim memory.
+        /// </summary>
         void Trim(double trimType);
     }
 }

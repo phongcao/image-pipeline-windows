@@ -2,16 +2,23 @@
 using ImagePipeline.Memory;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ImagePipeline.Tests.Memory
 {
+    /// <summary>
+    /// BasePoolTests
+    /// </summary>
     [TestClass]
     public class BasePoolTests
     {
         private TestPool _pool;
         private PoolStats<byte[]> _stats;
 
+        /// <summary>
+        /// Initialize
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -19,7 +26,9 @@ namespace ImagePipeline.Tests.Memory
             _stats = new PoolStats<byte[]>(_pool);
         }
 
-        // Test out the alloc method
+        /// <summary>
+        /// Test out the Alloc method
+        /// </summary>
         [TestMethod]
         public void TestAlloc()
         {
@@ -28,12 +37,17 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(2, _pool.Alloc(2).Length);
         }
 
+        /// <summary>
+        /// Test out the Free method
+        /// </summary>
         [TestMethod]
         public void TestFree()
         {
         }
 
-        // Tests out the GetBucketedSize method
+        /// <summary>
+        /// Tests out the GetBucketedSize method
+        /// </summary>
         [TestMethod]
         public void TestGetBucketedSize()
         {
@@ -44,7 +58,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(8, _pool.GetBucketedSize(7));
         }
 
-        // Tests out the GetBucketedSize method for invalid inputs
+        /// <summary>
+        /// Tests out the GetBucketedSize method for invalid inputs
+        /// </summary>
         [TestMethod]
         public void TestGetBucketedSize_Invalid()
         {
@@ -58,12 +74,14 @@ namespace ImagePipeline.Tests.Memory
                 }
                 catch (InvalidSizeException e)
                 {
-                    // do nothing
+                    Debug.WriteLine($"{ e.Message } is expected");
                 }
             }
         }
 
-        // Tests out the GetBucketedSizeForValue method
+        /// <summary>
+        /// Tests out the GetBucketedSizeForValue method
+        /// </summary>
         [TestMethod]
         public void TestGetBucketedSizeForValue()
         {
@@ -72,7 +90,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(6, _pool.GetBucketedSizeForValue(new byte[6]));
         }
 
-        // Tests out the TestGetSizeInBytes method
+        /// <summary>
+        /// Tests out the GetSizeInBytes method
+        /// </summary>
         [TestMethod]
         public void TestGetSizeInBytes()
         {
@@ -83,7 +103,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(4, _pool.GetSizeInBytes(4));
         }
 
-        // Get via alloc
+        /// <summary>
+        /// Get via Alloc
+        /// </summary>
         [TestMethod]
         public void TestGet_Alloc()
         {
@@ -125,9 +147,11 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(4, _stats.UsedBytes);
             Assert.AreEqual(1, _stats.FreeCount);
             Assert.AreEqual(1, _stats.UsedCount);
-       }
+        }
 
-        // Get via alloc+trim
+        /// <summary>
+        /// Get via Alloc+Trim
+        /// </summary>
         [TestMethod]
         public void TestGet_AllocAndTrim()
         {
@@ -170,11 +194,13 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(1, _stats.UsedCount);
         }
 
-        // Tests that we can reuse a free buffer in the pool
+        /// <summary>
+        /// Tests that we can reuse a free buffer in the pool
+        /// </summary>
         [TestMethod]
         public void TestGet_Reuse()
         {
-            // get a buffer, and immediately release it
+            // Get a buffer, and immediately release it
             byte[] b1 = _pool.Get(1);
             _pool.Release(b1);
             Assert.IsNotNull(b1);
@@ -191,7 +217,7 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(1, _stats.FreeCount);
             Assert.AreEqual(0, _stats.UsedCount);
 
-            // get another buffer of the same size as above. We should be able to reuse it
+            // Get another buffer of the same size as above. We should be able to reuse it
             byte[] b2 = _pool.Get(1);
             Assert.IsNotNull(b2);
             Assert.AreEqual(2, b2.Length);
@@ -209,7 +235,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(1, _stats.UsedCount);
         }
 
-        // Get via alloc - exception on max size hard cap
+        /// <summary>
+        /// Get via Alloc - exception on max size hard cap
+        /// </summary>
         [TestMethod]
         public void TestGet_AllocFailure()
         {
@@ -222,11 +250,13 @@ namespace ImagePipeline.Tests.Memory
             }
             catch (PoolSizeViolationException e)
             {
-              // expected exception
+                Debug.WriteLine($"{ e.Message } is expected");
             }
         }
 
-        // Test a simple release
+        /// <summary>
+        /// Test a simple release
+        /// </summary>
         [TestMethod]
         public void TestRelease()
         {
@@ -250,7 +280,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(0, _stats.UsedCount);
         }
 
-        // Test out release(), when it should free the value, instead of adding to the pool
+        /// <summary>
+        /// Test out Release(), when it should free the value, instead of adding to the pool
+        /// </summary>
         [TestMethod]
         public void TestRelease_Free()
         {
@@ -273,7 +305,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(1, _stats.UsedCount);
         }
 
-        // Test release on  zero-sized pool
+        /// <summary>
+        /// Test release on zero-sized pool
+        /// </summary>
         [TestMethod]
         public void TestRelease_Free2()
         {
@@ -297,7 +331,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(0, _stats.UsedCount);
         }
 
-        // Test release with bucket length constraints
+        /// <summary>
+        /// Test release with bucket length constraints
+        /// </summary>
         [TestMethod]
         public void TestRelease_BucketLengths()
         {
@@ -319,7 +355,7 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(0, _stats.FreeBytes);
             Assert.AreEqual(0, _stats.FreeCount);
 
-            // now release one of the buffers
+            // Now release one of the buffers
             _pool.Release(b0);
             _stats.Refresh();
             testStat = new Dictionary<int, KeyValuePair<int, int>>()
@@ -334,7 +370,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(0, _stats.FreeCount);
         }
 
-        // Test releasing an 'unknown' value
+        /// <summary>
+        /// Test releasing an 'unknown' value
+        /// </summary>
         [TestMethod]
         public void TestRelease_UnknownValue()
         {
@@ -361,7 +399,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(1, _stats.UsedCount);
         }
 
-        // Test out release with non reusable values
+        /// <summary>
+        /// Test out release with non reusable values
+        /// </summary>
         [TestMethod]
         public void TestRelease_NonReusable()
         {
@@ -387,7 +427,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(0, _stats.UsedCount);
         }
 
-        // Test buffers outside the 'normal' bucket sizes
+        /// <summary>
+        /// Test buffers outside the 'normal' bucket sizes
+        /// </summary>
         [TestMethod]
         public void TestGetRelease_NonBucketSizes()
         {
@@ -415,7 +457,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(0, _stats.FreeCount);
         }
 
-        // Test illegal arguments to get
+        /// <summary>
+        /// Test illegal arguments to get
+        /// </summary>
         [TestMethod]
         public void TestGetWithErrors()
         {
@@ -429,12 +473,14 @@ namespace ImagePipeline.Tests.Memory
                 }
                 catch (InvalidSizeException e)
                 {
-                    // do nothing
+                    Debug.WriteLine($"{ e.Message } is expected");
                 }
             }
         }
 
-        // Test out trimToNothing functionality
+        /// <summary>
+        /// Test out TrimToNothing functionality
+        /// </summary>
         [TestMethod]
         public void TestTrimToNothing()
         {
@@ -453,7 +499,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(4, _stats.UsedBytes);
         }
 
-        // Test out trimToSize functionality
+        /// <summary>
+        /// Test out TrimToSize functionality
+        /// </summary>
         [TestMethod]
         public void TestTrimToSize()
         {
@@ -509,6 +557,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
         }
 
+        /// <summary>
+        /// Test out CanAllocate functionality
+        /// </summary>
         [TestMethod]
         public void Test_CanAllocate()
         {
@@ -534,10 +585,10 @@ namespace ImagePipeline.Tests.Memory
             return bucketSizes;
         }
 
-        /**
-         * A simple test pool that allocates byte arrays, and always allocates buffers of double
-         * the size requested
-         */
+        /// <summary>
+        /// A simple test pool that allocates byte arrays, and always allocates buffers of double
+        /// the size requested
+        /// </summary>
         private class TestPool : BasePool<byte[]>
         {
             public bool Reusable { get; set; }
@@ -572,11 +623,11 @@ namespace ImagePipeline.Tests.Memory
                 return Reusable;
             }
 
-            /**
-             * Allocate the smallest even number than is greater than or equal to the requested size
-             * @param requestSize the logical request size
-             * @return the slightly higher size
-             */
+            /// <summary>
+            /// Allocate the smallest even number than is greater than or equal to the requested size
+            /// <param name="requestSize">The logical request size</param>
+            /// @return the slightly higher size
+            /// </summary>
             protected internal override int GetBucketedSize(int requestSize)
             {
                 if (requestSize <= 0)

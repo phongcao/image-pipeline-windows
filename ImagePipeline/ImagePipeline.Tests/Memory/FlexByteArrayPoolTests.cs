@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 namespace ImagePipeline.Tests.Memory
 {
-    /**
-     * Tests for {@link FlexByteArrayPool}
-     */
+    /// <summary>
+    /// Tests for <see cref="FlexByteArrayPool"/>
+    /// </summary>
     [TestClass]
     public class FlexByteArrayPoolTests
     {
@@ -17,6 +17,9 @@ namespace ImagePipeline.Tests.Memory
         private FlexByteArrayPool _pool;
         private SoftRefByteArrayPool _delegatePool;
 
+        /// <summary>
+        /// Initialize
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -39,6 +42,9 @@ namespace ImagePipeline.Tests.Memory
             _delegatePool = _pool._delegatePool;
         }
 
+        /// <summary>
+        /// Tests out the pool stats
+        /// </summary>
         [TestMethod]
         public void TestBasic()
         {
@@ -47,6 +53,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(0, _delegatePool.FreeCounter.NumBytes);
         }
 
+        /// <summary>
+        /// Tests out the Get method
+        /// </summary>
         [TestMethod]
         public void TestGet()
         {
@@ -55,12 +64,18 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(MIN_BUFFER_SIZE, arrayRef.Get().Length);
         }
 
+        /// <summary>
+        /// Tests out the Get method with big array
+        /// </summary>
         [TestMethod]
         public void TestGetTooBigArray()
         {
             Assert.AreEqual(2 * MAX_BUFFER_SIZE, _pool.Get(2 * MAX_BUFFER_SIZE).Get().Length);
         }
 
+        /// <summary>
+        /// Tests out the Release method
+        /// </summary>
         [TestMethod]
         public void TestRelease()
         {
@@ -68,6 +83,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(MIN_BUFFER_SIZE, _delegatePool.FreeCounter.NumBytes);
         }
 
+        /// <summary>
+        /// Tests out the array reallocation
+        /// </summary>
         [TestMethod]
         public void TestGet_Realloc()
         {
@@ -80,6 +98,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreNotSame(smallArray, arrayRef.Get());
         }
 
+        /// <summary>
+        /// Tests out the Trim method
+        /// </summary>
         [TestMethod]
         public void TestTrim()
         {
@@ -91,6 +112,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(0, _delegatePool.GetBucket(8).GetFreeListSize());
         }
 
+        /// <summary>
+        /// Tests out the Trim method in case of failure
+        /// </summary>
         [TestMethod]
         public void TestTrimUnsuccessful()
         {
@@ -99,6 +123,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.IsNotNull(arrayRef.Get());
         }
 
+        /// <summary>
+        /// Tests out the GetBucketedSize method
+        /// </summary>
         [TestMethod]
         public void TestGetBucketedSize()
         {

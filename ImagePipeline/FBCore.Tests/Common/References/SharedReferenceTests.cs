@@ -2,16 +2,20 @@
 using FBCore.Common.References;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace FBCore.Tests.Common.References
 {
+    /// <summary>
+    /// SharedReferenceTests
+    /// </summary>
     [TestClass]
     public class SharedReferenceTests
     {
-        /**
-         * Tests out the basic operations (isn't everything a basic operation?)
-         */
+        /// <summary>
+        /// Tests out the basic operations (isn't everything a basic operation?)
+        /// </summary>
         [TestMethod]
         public void TestBasic()
         {
@@ -49,7 +53,7 @@ namespace FBCore.Tests.Common.References
             }
             catch (NullReferenceException e)
             {
-                // do nothing
+                Debug.WriteLine($"{ e.Message } is expected.");
             }
 
             // So should deleting a reference
@@ -60,7 +64,7 @@ namespace FBCore.Tests.Common.References
             }
             catch (NullReferenceException e)
             {
-                // do nothing
+                Debug.WriteLine($"{ e.Message } is expected.");
             }
 
             // Null shared references are not 'valid'
@@ -73,6 +77,9 @@ namespace FBCore.Tests.Common.References
             t2Ref.DeleteReference();
         }
 
+        /// <summary>
+        /// Tests out the SharedReference constructor
+        /// </summary>
         [TestMethod]
         public void TestNewSharedReference()
         {
@@ -80,6 +87,9 @@ namespace FBCore.Tests.Common.References
             Assert.AreSame(thing, new SharedReference<Thing>(thing, THING_RELEASER).Get());
         }
 
+        /// <summary>
+        /// Tests out the custom released
+        /// </summary>
         [TestMethod]
         public void TestCustomReleaser()
         {
@@ -110,9 +120,9 @@ namespace FBCore.Tests.Common.References
             }
         }
 
-        /**
-         * A subclass of Thing that throws an exception on close
-         */
+        /// <summary>
+        /// A subclass of Thing that throws an exception on close
+        /// </summary>
         private class Thing2 : Thing
         {
             public Thing2(string value) : base(value)
@@ -136,6 +146,7 @@ namespace FBCore.Tests.Common.References
                 catch (IOException ioe)
                 {
                     // This should not happen
+                    Debug.WriteLine($"{ ioe.Message } is NOT expected.");
                     Assert.Fail();
                 }
             }

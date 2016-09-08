@@ -6,53 +6,138 @@ using System.Diagnostics;
 
 namespace ImagePipeline.Memory
 {
+    /// <summary>
+    /// A base pool class that manages a pool of values (of type V). <para />
+    /// The pool is organized as a map. Each entry in the map is a free-list (modeled by a queue) of
+    /// entries for a given size.
+    /// Some pools have a fixed set of buckets (aka bucketized sizes), while others don't.
+    /// <para />
+    /// The pool supports two main operations:
+    /// <ul>
+    ///   <li> <see cref="Get(int)"/> - returns a value of size that's the same or larger than specified, hopefully
+    ///   from the pool; otherwise, this value is allocated (via the alloc function)</li>
+    ///   <li> <see cref="Release(T)"/> - releases a value to the pool</li>
+    /// </ul>
+    /// In addition, the pool subscribes to the <see cref="IMemoryTrimmableRegistry"/>, and responds to
+    /// low-memory events (calls to trim). Some percent (perhaps all) of the values in the pool are then
+    /// released (via the underlying free function), and no longer belong to the pool.
+    /// <para />
+    /// Sizes
+    /// There are 3 different notions of sizes we consider here (not all of them may be relevant for
+    /// each use case).
+    /// <ul>
+    ///   <li>Logical size is simply the size of the value in terms appropriate for the value. For
+    ///   example, for byte arrays, the size is simply the length. For a bitmap, the size is just the
+    ///   number of pixels.</li>
+    ///   <li>Bucketed size typically represents one of discrete set of logical sizes - such that each
+    ///   bucketed size can accommodate a range of logical sizes. For example, for byte arrays, using
+    ///   sizes that are powers of 2 for bucketed sizes allows these byte arrays to support a number
+    ///   of logical sizes.</li>
+    ///   <li>Finally, Size-in-bytes is exactly that - the size of the value in bytes.</li>
+    /// </ul>
+    /// Logical Size and BucketedSize are both represented by the type parameter S, while size-in-bytes
+    /// is represented by an int.
+    /// <para />
+    /// Each concrete subclass of the pool must implement the following methods
+    /// <ul>
+    ///   <li><see cref="GetBucketedSize(int)"/> - returns the bucketized size for the given request size</li>
+    ///   <li><see cref="GetBucketedSizeForValue(T)"/> - returns the bucketized size for a given
+    ///   value</li>
+    ///   <li><see cref="GetSizeInBytes(int)"/> - gets the size in bytes for a given bucketized size</li>
+    ///   <li><see cref="Alloc(int)"/> - allocates a value of given size</li>
+    ///   <li><see cref="Free(T)"/> - frees the value V</li>
+    /// Subclasses may optionally implement
+    ///   <li><see cref="OnParamsChanged()"/> - called whenever this class determines to re-read the pool
+    ///   params</li>
+    ///   <li><see cref="IsReusable(T)"/> - used to determine if a value can be reused or must be
+    ///   freed</li>
+    /// </ul>
+    /// <para />
+    /// InUse values
+    /// The pool keeps track of values currently in use (in addition to the free values in the buckets).
+    /// This is maintained in an IdentityHashSet (using reference equality for the values). The in-use
+    /// set helps with accounting/book-keeping; we also use this during <see cref="Release(T)"/> to avoid
+    /// messing with (freeing/reusing) values that are 'unknown' to the pool.
+    /// <para />
+    /// PoolParams
+    /// Pools are "configured" with a set of parameters (the PoolParams) supplied via a provider.
+    /// This set of parameters includes
+    /// <ul>
+    ///   <li> <see cref="PoolParams.MaxSizeSoftCap"/>
+    ///   The size of a pool includes its used and free space. The maxSize setting
+    ///   for a pool is a soft cap on the overall size of the pool. A key point is that <see cref="Get(int)"/>
+    ///   requests will not fail because the max size has been exceeded (unless the underlying
+    ///   <see cref="Alloc(int)"/> function fails). However, the pool's free portion will be trimmed
+    ///   as much as possible so that the pool's size may fall below the max size. Note that when the
+    ///   free portion has fallen to zero, the pool may still be larger than its maxSizeSoftCap.
+    ///   On a <see cref="Release(T)"/> request, the value will be 'freed' instead of being added to
+    ///   the free portion of the pool, if the pool exceeds its maxSizeSoftCap.
+    ///   The invariant we want to maintain - see <see cref="EnsurePoolSizeInvariant()"/> - is that the pool
+    ///   must be below the max size soft cap OR the free lists must be empty. </li>
+    ///   <li> <see cref="PoolParams.MaxSizeHardCap"/>
+    ///   The hard cap is a stronger limit on the pool size. When this limit is reached, we first
+    ///   attempt to trim the pool. If the pool size is still over the hard, the
+    ///   <see cref="Get(int)"/> call will fail with a <see cref="PoolSizeViolationException"/> </li>
+    ///   <li> <see cref="PoolParams.BucketSizes"/>
+    ///   The pool can be configured with a set of 'sizes' - a bucket is created for each such size.
+    ///   Additionally, each bucket can have a a max-length specified, which is the sum of the used and
+    ///   free items in that bucket. As with the MaxSize parameter above, the maxLength here is a soft
+    ///   cap, in that it will not cause an exception on get; it simply controls the release path.
+    ///   If the BucketSizes parameter is null, then the pool will dynamically create buckets on demand.
+    ///   </li>
+    /// </ul>
+    /// </summary>
     public abstract class BasePool<T> : IPool<T>
     {
         // Init lock
         private readonly object _poolGate = new object();
 
-        /**
-         * Determines if new buckets can be created
-         */
+        /// <summary>
+        /// Determines if new buckets can be created
+        /// </summary>
         private bool _allowNewBuckets;
 
-        /**
-         * The memory manager to register with
-         */
+        /// <summary>
+        /// The memory manager to register with
+        /// </summary>
         protected internal readonly IMemoryTrimmableRegistry _memoryTrimmableRegistry;
 
-        /**
-        * Provider for pool parameters
-        */
+        /// <summary>
+       /// Provider for pool parameters
+       /// </summary>
         protected internal readonly PoolParams _poolParams;
 
+        /// <summary>
+        /// Keeps track of pool stats
+        /// </summary>
         protected internal readonly PoolStatsTracker _poolStatsTracker;
 
-        /**
-        * The buckets - representing different 'sizes'
-        */
+        /// <summary>
+       /// The buckets - representing different 'sizes'
+       /// </summary>
         public Dictionary<int, Bucket<T>> Buckets { get; }
 
-        /**
-         * An Identity hash-set to keep track of values by reference equality
-         */
+        /// <summary>
+        /// An Identity hash-set to keep track of values by reference equality
+        /// </summary>
         public HashSet<T> InUseValues { get; }
 
-        /**
-         * Tracks 'used space' - space allocated via the pool
-         */
+        /// <summary>
+        /// Tracks 'used space' - space allocated via the pool
+        /// </summary>
         internal Counter UsedCounter { get; }
 
-        /**
-        * Tracks 'free space' in the pool
-        */
+        /// <summary>
+       /// Tracks 'free space' in the pool
+       /// </summary>
         internal Counter FreeCounter { get; }
 
-        /**
-         * Creates a new instance of the pool.
-         * @param poolParams pool parameters
-         * @param poolStatsTracker
-         */
+        /// <summary>
+        /// Creates a new instance of the pool.
+        /// <param name="memoryTrimmableRegistry">A class to be notified of system memory events.</param>
+        /// <param name="poolParams">Pool parameters</param>
+        /// <param name="poolStatsTracker">Listener that logs pool statistics</param>
+        /// </summary>
         public BasePool(
             IMemoryTrimmableRegistry memoryTrimmableRegistry,
             PoolParams poolParams,
@@ -72,27 +157,27 @@ namespace ImagePipeline.Memory
             UsedCounter = new Counter();
         }
 
-        /**
-         * Finish pool initialization.
-         */
+        /// <summary>
+        /// Finish pool initialization.
+        /// </summary>
         protected void Initialize()
         {
             _memoryTrimmableRegistry.RegisterMemoryTrimmable(this);
             _poolStatsTracker.SetBasePool(this);
         }
 
-        /**
-         * Gets a new 'value' from the pool, if available. Allocates a new value if necessary.
-         * If we need to perform an allocation,
-         *   - If the pool size exceeds the max-size soft cap, then we attempt to trim the free portion
-         *     of the pool.
-         *   - If the pool size exceeds the max-size hard-cap (after trimming), then we throw an
-         *     {@link PoolSizeViolationException}
-         * Bucket length constraints are not considered in this function
-         * @param size the logical size to allocate
-         * @return a new value
-         * @throws InvalidSizeException
-         */
+        /// <summary>
+        /// Gets a new 'value' from the pool, if available. Allocates a new value if necessary.
+        /// If we need to perform an allocation,
+        ///   - If the pool size exceeds the max-size soft cap, then we attempt to trim the free portion
+        ///     of the pool.
+        ///   - If the pool size exceeds the max-size hard-cap (after trimming), then we throw an
+        ///     <see cref="PoolSizeViolationException"/>
+        /// Bucket length constraints are not considered in this function
+        /// <param name="size">The logical size to allocate</param>
+        /// @return a new value
+        /// @throws InvalidSizeException
+        /// </summary>
         public T Get(int size)
         {
             EnsurePoolSizeInvariant();
@@ -190,16 +275,16 @@ namespace ImagePipeline.Memory
             return value;
         }
 
-        /**
-         * Releases the given value to the pool.
-         * In a few cases, the value is 'freed' instead of being released to the pool. If
-         *   - the pool currently exceeds its max size OR
-         *   - if the value does not map to a bucket that's currently maintained by the pool, OR
-         *   - if the bucket for the value exceeds its maxLength, OR
-         *   - if the value is not recognized by the pool
-         *  then, the value is 'freed'.
-         * @param value the value to release to the pool
-         */
+        /// <summary>
+        /// Releases the given value to the pool.
+        /// In a few cases, the value is 'freed' instead of being released to the pool. If
+        ///   - the pool currently exceeds its max size OR
+        ///   - if the value does not map to a bucket that's currently maintained by the pool, OR
+        ///   - if the bucket for the value exceeds its maxLength, OR
+        ///   - if the value is not recognized by the pool
+        ///  then, the value is 'freed'.
+        /// <param name="value">The value to release to the pool</param>
+        /// </summary>
         public void Release(T value)
         {
             Preconditions.CheckNotNull(value);
@@ -257,81 +342,81 @@ namespace ImagePipeline.Memory
             }
         }
 
-        /**
-         * Trims the pool in response to low-memory states (invoked from MemoryManager)
-         * For now, we'll do the simplest thing, and simply clear out the entire pool. We may consider
-         * more sophisticated approaches later.
-         * In other words, we ignore the memoryTrimType parameter
-         * @param memoryTrimType the kind of trimming we want to perform
-         */
+        /// <summary>
+        /// Trims the pool in response to low-memory states (invoked from MemoryManager)
+        /// For now, we'll do the simplest thing, and simply clear out the entire pool. We may consider
+        /// more sophisticated approaches later.
+        /// In other words, we ignore the memoryTrimType parameter
+        /// <param name="memoryTrimType">The kind of trimming we want to perform</param>
+        /// </summary>
         public void Trim(double memoryTrimType)
         {
             TrimToNothing();
         }
 
-        /**
-         * Allocates a new 'value' with the given size
-         * @param bucketedSize the logical size to allocate
-         * @return a new value
-         */
+        /// <summary>
+        /// Allocates a new 'value' with the given size
+        /// <param name="bucketedSize">The logical size to allocate</param>
+        /// @return a new value
+        /// </summary>
         protected internal abstract T Alloc(int bucketedSize);
 
-        /**
-         * Frees the 'value'
-         * @param value the value to free
-         */
+        /// <summary>
+        /// Frees the 'value'
+        /// <param name="value">The value to free</param>
+        /// </summary>
         protected internal abstract void Free(T value);
 
-        /**
-         * Gets the bucketed size (typically something the same or larger than the requested size)
-         * @param requestSize the logical request size
-         * @return the 'bucketed' size
-         * @throws InvalidSizeException, if the size of the value doesn't match the pool's constraints
-         */
+        /// <summary>
+        /// Gets the bucketed size (typically something the same or larger than the requested size)
+        /// <param name="requestSize">The logical request size</param>
+        /// @return the 'bucketed' size
+        /// @throws InvalidSizeException, if the size of the value doesn't match the pool's constraints
+        /// </summary>
         protected internal abstract int GetBucketedSize(int requestSize);
 
-        /**
-         * Gets the bucketed size of the value
-         * @param value the value
-         * @return bucketed size of the value
-         * @throws InvalidSizeException, if the size of the value doesn't match the pool's constraints
-         * @throws InvalidValueException, if the value is invalid
-         */
+        /// <summary>
+        /// Gets the bucketed size of the value
+        /// <param name="value">The value</param>
+        /// @return bucketed size of the value
+        /// @throws InvalidSizeException, if the size of the value doesn't match the pool's constraints
+        /// @throws InvalidValueException, if the value is invalid
+        /// </summary>
         protected internal abstract int GetBucketedSizeForValue(T value);
 
-        /**
-         * Gets the size in bytes for the given bucketed size
-         * @param bucketedSize the bucketed size
-         * @return size in bytes
-         */
+        /// <summary>
+        /// Gets the size in bytes for the given bucketed size
+        /// <param name="bucketedSize">The bucketed size</param>
+        /// @return size in bytes
+        /// </summary>
         protected internal abstract int GetSizeInBytes(int bucketedSize);
 
-        /**
-         * The pool parameters may have changed. Subclasses can override this to update any state they
-         * were maintaining
-         */
+        /// <summary>
+        /// The pool parameters may have changed. Subclasses can override this to update any state they
+        /// were maintaining
+        /// </summary>
         protected void OnParamsChanged()
         {
         }
 
-        /**
-         * Determines if the supplied value is 'reusable'.
-         * This is called during {@link #release(Object)}, and determines if the value can be added
-         * to the freelists of the pool (for future reuse), or must be released right away.
-         * Subclasses can override this to provide custom implementations
-         * @param value the value to test for reusability
-         * @return true if the value is reusable
-         */
+        /// <summary>
+        /// Determines if the supplied value is 'reusable'.
+        /// This is called during <see cref="Release(T)"/>, and determines if the value can be added
+        /// to the freelists of the pool (for future reuse), or must be released right away.
+        /// Subclasses can override this to provide custom implementations
+        /// <param name="value">The value to test for reusability</param>
+        /// @return true if the value is reusable
+        /// </summary>
         protected internal virtual bool IsReusable(T value)
         {
             Preconditions.CheckNotNull(value);
             return true;
         }
 
-        /**
-         * Ensure pool size invariants.
-         * The pool must either be below the soft-cap OR it must have no free values left
-         */
+        /// <summary>
+        /// Ensure pool size invariants.
+        /// The pool must either be below the soft-cap OR it must have no free values left
+        /// </summary>
         private void EnsurePoolSizeInvariant()
         {
             lock (_poolGate)
@@ -340,11 +425,11 @@ namespace ImagePipeline.Memory
             }
         }
 
-        /**
-         * Initialize the list of buckets. Get the bucket sizes (and bucket lengths) from the bucket
-         * sizes provider
-         * @param inUseCounts map of current buckets and their in use counts
-         */
+        /// <summary>
+        /// Initialize the list of buckets. Get the bucket sizes (and bucket lengths) from the bucket
+        /// sizes provider
+        /// <param name="inUseCounts">Map of current buckets and their in use counts</param>
+        /// </summary>
         private void InitBuckets(Dictionary<int, int> inUseCounts)
         {
             lock (_poolGate)
@@ -380,12 +465,12 @@ namespace ImagePipeline.Memory
             }
         }
 
-        /**
-         * Gets rid of all free values in the pool
-         * At the end of this method, mFreeSpace will be zero (reflecting that there are no more free
-         * values in the pool). mUsedSpace will however not be reset, since that's a reflection of the
-         * values that were allocated via the pool, but are in use elsewhere
-         */
+        /// <summary>
+        /// Gets rid of all free values in the pool
+        /// At the end of this method, mFreeSpace will be zero (reflecting that there are no more free
+        /// values in the pool). mUsedSpace will however not be reset, since that's a reflection of the
+        /// values that were allocated via the pool, but are in use elsewhere
+        /// </summary>
         internal void TrimToNothing()
         {
             List<Bucket<T>> bucketsToTrim = new List<Bucket<T>>(Buckets.Count);
@@ -435,12 +520,12 @@ namespace ImagePipeline.Memory
             }
         }
 
-        /**
-         * Trim the (free portion of the) pool so that the pool size is at or below the soft cap.
-         * This will try to free up values in the free portion of the pool, until
-         *   (a) the pool size is now below the soft cap configured OR
-         *   (b) the free portion of the pool is empty
-         */
+        /// <summary>
+        /// Trim the (free portion of the) pool so that the pool size is at or below the soft cap.
+        /// This will try to free up values in the free portion of the pool, until
+        ///   (a) the pool size is now below the soft cap configured OR
+        ///   (b) the free portion of the pool is empty
+        /// </summary>
         private void TrimToSoftCap()
         {
             lock (_poolGate)
@@ -452,19 +537,19 @@ namespace ImagePipeline.Memory
             }
         }
 
-        /**
-         * (Try to) trim the pool until its total space falls below the max size (soft cap). This will
-         * get rid of values on the free list, until the free lists are empty, or we fall below the
-         * max size; whichever comes first.
-         * NOTE: It is NOT an error if we have eliminated all the free values, but the pool is still
-         * above its max size (soft cap)
-         * <p>
-         * The approach we take is to go from the smallest sized bucket down to the largest sized
-         * bucket. This may seem a bit counter-intuitive, but the rationale is that allocating
-         * larger-sized values is more expensive than the smaller-sized ones, so we want to keep them
-         * around for a while.
-         * @param targetSize target size to trim to
-         */
+        /// <summary>
+        /// (Try to) trim the pool until its total space falls below the max size (soft cap). This will
+        /// get rid of values on the free list, until the free lists are empty, or we fall below the
+        /// max size; whichever comes first.
+        /// NOTE: It is NOT an error if we have eliminated all the free values, but the pool is still
+        /// above its max size (soft cap)
+        /// <para />
+        /// The approach we take is to go from the smallest sized bucket down to the largest sized
+        /// bucket. This may seem a bit counter-intuitive, but the rationale is that allocating
+        /// larger-sized values is more expensive than the smaller-sized ones, so we want to keep them
+        /// around for a while.
+        /// <param name="targetSize">Target size to trim to</param>
+        /// </summary>
         internal void TrimToSize(int targetSize)
         {
             lock (_poolGate)
@@ -508,11 +593,11 @@ namespace ImagePipeline.Memory
             }
         }
 
-        /**
-         * Gets the freelist for the specified bucket. Create the freelist if there isn't one
-         * @param bucketedSize the bucket size
-         * @return the freelist for the bucket
-         */
+        /// <summary>
+        /// Gets the freelist for the specified bucket. Create the freelist if there isn't one
+        /// <param name="bucketedSize">The bucket size</param>
+        /// @return the freelist for the bucket
+        /// </summary>
         internal Bucket<T> GetBucket(int bucketedSize)
         {
             lock (_poolGate)
@@ -533,6 +618,11 @@ namespace ImagePipeline.Memory
             }
         }
 
+        /// <summary>
+        /// Instantiates the <see cref="Bucket&lt;T&gt;"/>.
+        /// </summary>
+        /// <param name="bucketedSize">Bucket size</param>
+        /// <returns>Bucket</returns>
         protected virtual Bucket<T> NewBucket(int bucketedSize)
         {
             return new Bucket<T>(
@@ -541,10 +631,10 @@ namespace ImagePipeline.Memory
                 /*inUseLength*/0);
         }
 
-        /**
-         * Returns true if the pool size (sum of the used and the free portions) exceeds its 'max size'
-         * soft cap as specified by the pool parameters.
-         */
+        /// <summary>
+        /// Returns true if the pool size (sum of the used and the free portions) exceeds its 'max size'
+        /// soft cap as specified by the pool parameters.
+        /// </summary>
         internal bool IsMaxSizeSoftCapExceeded()
         {
             lock (_poolGate)
@@ -559,15 +649,15 @@ namespace ImagePipeline.Memory
             }
         }
 
-        /**
-         * Can we allocate a value of size 'sizeInBytes' without exceeding the hard cap on the pool size?
-         * If allocating this value will take the pool over the hard cap, we will first trim the pool down
-         * to its soft cap, and then check again.
-         * If the current used bytes + this new value will take us above the hard cap, then we return
-         * false immediately - there is no point freeing up anything.
-         * @param sizeInBytes the size (in bytes) of the value to allocate
-         * @return true, if we can allocate this; false otherwise
-         */
+        /// <summary>
+        /// Can we allocate a value of size 'sizeInBytes' without exceeding the hard cap on the pool size?
+        /// If allocating this value will take the pool over the hard cap, we will first trim the pool down
+        /// to its soft cap, and then check again.
+        /// If the current used bytes + this new value will take us above the hard cap, then we return
+        /// false immediately - there is no point freeing up anything.
+        /// <param name="sizeInBytes">The size (in bytes) of the value to allocate</param>
+        /// @return true, if we can allocate this; false otherwise
+        /// </summary>
         internal bool CanAllocate(int sizeInBytes)
         {
             lock (_poolGate)
@@ -600,9 +690,9 @@ namespace ImagePipeline.Memory
             }
         }
 
-        /**
-         * Export memory stats regarding buckets used, memory caps, reused values.
-         */
+        /// <summary>
+        /// Export memory stats regarding buckets used, memory caps, reused values.
+        /// </summary>
         public Dictionary<string, int> GetStats()
         {
             lock (_poolGate)
@@ -627,10 +717,10 @@ namespace ImagePipeline.Memory
             }
         }
 
-        /**
-        * Simple 'debug' logging of stats.
-        * WARNING: The caller is responsible for synchronization
-        */
+        /// <summary>
+       /// Simple 'debug' logging of stats.
+       /// WARNING: The caller is responsible for synchronization
+       /// </summary>
         private void LogStats()
         {
             Debug.WriteLine($"Used = ({ UsedCounter.Count }, { UsedCounter.NumBytes }); Free = ({ FreeCounter.Count }, { FreeCounter.NumBytes })");

@@ -1,11 +1,18 @@
 ﻿using FBCore.Common.Internal;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace FBCore.Common.References
 {
+    /// <summary>
+    /// DefaultResourceReleaser for CloseableReference
+    /// </summary>
     public class DefaultResourceReleaser : IResourceReleaser<IDisposable>
     {
+        /// <summary>
+        /// Default release method
+        /// </summary>
         public void Release(IDisposable value)
         {
             try
@@ -14,7 +21,7 @@ namespace FBCore.Common.References
             }
             catch (IOException ioe)
             {
-                // This will not happen, Closeable.close swallows and logs IOExceptions
+                Debug.WriteLine($"{ ioe.Message }. This will not happen, Closeable.close swallows and logs IOExceptions.");
             }
         }
     }

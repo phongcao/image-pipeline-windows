@@ -5,23 +5,27 @@ using Windows.System;
 
 namespace ImagePipeline.Memory
 {
-    /**
-     * Provides pool parameters ({@link PoolParams}) for {@link NativeMemoryChunkPool}
-     *
-     */
+    /// <summary>
+    /// Provides pool parameters (<see cref="PoolParams"/>) for <see cref="NativeMemoryChunkPool"/>
+    ///
+    /// </summary>
     public static class DefaultNativeMemoryChunkPoolParams
     {
-        /**
-         * Length of 'small' sized buckets. Bucket lengths for these buckets are larger because
-         * they're smaller in size
-         */
+        /// <summary>
+        /// Length of 'small' sized buckets. Bucket lengths for these buckets are larger because
+        /// they're smaller in size
+        /// </summary>
         private const int SMALL_BUCKET_LENGTH = 5;
 
-        /**
-         * Bucket lengths for 'large' (> 256KB) buckets
-         */
+        /// <summary>
+        /// Bucket lengths for 'large' (> 256KB) buckets
+        /// </summary>
         private const int LARGE_BUCKET_LENGTH = 2;
 
+        /// <summary>
+        /// Gets the default pool params
+        /// </summary>
+        /// <returns>The default pool params</returns>
         public static PoolParams Get()
         {
             Dictionary<int, int> DEFAULT_BUCKETS = new Dictionary<int, int>();
@@ -42,11 +46,11 @@ namespace ImagePipeline.Memory
                 DEFAULT_BUCKETS);
         }
 
-        /**
-         * {@link NativeMemoryChunkPool} manages memory on the native heap, so we don't need as strict
-         * caps as we would if we were on the Dalvik heap. However, since native memory OOMs are
-         * significantly more problematic than Dalvik OOMs, we would like to stay conservative.
-         */
+        /// <summary>
+        /// <see cref="NativeMemoryChunkPool"/> manages memory on the native heap, so we don't need as strict
+        /// caps as we would if we were on the Dalvik heap. However, since native memory OOMs are
+        /// significantly more problematic than Dalvik OOMs, we would like to stay conservative.
+        /// </summary>
         private static int GetMaxSizeSoftCap()
         {
             ulong maxMemory = Math.Min(MemoryManager.AppMemoryUsageLimit, int.MaxValue);
@@ -64,10 +68,10 @@ namespace ImagePipeline.Memory
             }
         }
 
-        /**
-         * We need a smaller cap for devices with less then 16 MB so that we don't run the risk of
-         * evicting other processes from the native heap.
-         */
+        /// <summary>
+        /// We need a smaller cap for devices with less then 16 MB so that we don't run the risk of
+        /// evicting other processes from the native heap.
+        /// </summary>
         private static int GetMaxSizeHardCap()
         {
             ulong maxMemory = Math.Min(MemoryManager.AppMemoryUsageLimit, int.MaxValue);

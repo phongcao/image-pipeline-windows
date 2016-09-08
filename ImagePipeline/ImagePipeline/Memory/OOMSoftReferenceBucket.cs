@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace ImagePipeline.Memory
 {
-    /**
-     * A Bucket that uses OOMSoftReferences to store its free list.
-     */
+    /// <summary>
+    /// A Bucket that uses OOMSoftReferences to store its free list.
+    /// </summary>
     class OOMSoftReferenceBucket<T> : Bucket<T> where T : class
     {
         private Queue<OOMSoftReference<T>>_spareReferences;

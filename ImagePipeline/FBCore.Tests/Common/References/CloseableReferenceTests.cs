@@ -4,15 +4,18 @@ using System;
 
 namespace FBCore.Tests.Common.References
 {
-    /**
-     * Basic tests for closeable references
-     */
+    /// <summary>
+    /// Basic tests for closeable references
+    /// </summary>
     [TestClass]
     public class CloseableReferenceTest
     {
         private MockDisposable _mockCloseable;
         private CloseableReference<IDisposable> _closeableReference;
 
+        /// <summary>
+        /// Initialize
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -20,12 +23,18 @@ namespace FBCore.Tests.Common.References
             _closeableReference = CloseableReference<IDisposable>.of(_mockCloseable);
         }
 
+        /// <summary>
+        /// Tests the creation of the closable reference
+        /// </summary>
         [TestMethod]
         public void TestCreation()
         {
             Assert.AreEqual(1, _closeableReference.GetUnderlyingReferenceTestOnly().GetRefCountTestOnly());
         }
 
+        /// <summary>
+        /// Tests out the Clone method
+        /// </summary>
         [TestMethod]
         public void TestClone()
         {
@@ -34,6 +43,9 @@ namespace FBCore.Tests.Common.References
             Assert.AreSame(_closeableReference.GetUnderlyingReferenceTestOnly(), copy.GetUnderlyingReferenceTestOnly());
         }
 
+        /// <summary>
+        /// Tests out the Dispose method
+        /// </summary>
         [TestMethod]
         public void TestCloseReference()
         {
@@ -43,6 +55,9 @@ namespace FBCore.Tests.Common.References
             Assert.AreEqual(1, _closeableReference.GetUnderlyingReferenceTestOnly().GetRefCountTestOnly());
         }
 
+        /// <summary>
+        /// Tests out the Dispose method of the mock disposable object
+        /// </summary>
         [TestMethod]
         public void TestCloseWhenRefcount0()
         {

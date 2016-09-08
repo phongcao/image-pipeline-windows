@@ -1,17 +1,21 @@
 ﻿using ImagePipeline.Memory;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ImagePipeline.Tests.Memory
 {
-    /**
-     * Basic tests for GenericByteArrayPool
-     */
+    /// <summary>
+    /// Basic tests for GenericByteArrayPool
+    /// </summary>
     [TestClass]
     public class GenericByteArrayPoolTests
     {
         private GenericByteArrayPool _pool;
 
+        /// <summary>
+        /// Initialize
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -25,7 +29,9 @@ namespace ImagePipeline.Tests.Memory
                 new MockPoolStatsTracker());
         }
 
-        // Test out the Alloc method
+        /// <summary>
+        /// Test out the Alloc method
+        /// </summary>
         [TestMethod]
         public void TestAlloc()
         {
@@ -34,12 +40,17 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(32, _pool.Alloc(32).Length);
         }
 
+        /// <summary>
+        /// Test out the Free method
+        /// </summary>
         [TestMethod]
         public void TestFree()
         {
         }
 
-        // Tests out the GetBucketedSize method
+        /// <summary>
+        /// Test out the GetBucketedSize method
+        /// </summary>
         [TestMethod]
         public void TestGetBucketedSize()
         {
@@ -62,12 +73,14 @@ namespace ImagePipeline.Tests.Memory
                 }
                 catch (InvalidSizeException e)
                 {
-                    // do nothing
+                    Debug.WriteLine($"{ e.Message } is expected.");
                 }
             }
         }
 
-        // Tests out the GetBucketedSizeForValue method
+        /// <summary>
+        /// Test out the GetBucketedSizeForValue method
+        /// </summary>
         [TestMethod]
         public void TestGetBucketedSizeForValue()
         {
@@ -81,6 +94,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(31, _pool.GetBucketedSizeForValue(new byte[31]));
         }
 
+        /// <summary>
+        /// Test out the GetSizeInBytes method
+        /// </summary>
         [TestMethod]
         public void TestGetSizeInBytes()
         {

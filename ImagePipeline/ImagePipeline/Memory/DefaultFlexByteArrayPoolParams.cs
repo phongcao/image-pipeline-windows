@@ -4,20 +4,33 @@ using System.Collections.Generic;
 
 namespace ImagePipeline.Memory
 {
-    /**
-     * Provides pool parameters ({@link PoolParams}) for {@link SharedByteArray}
-     */
+    /// <summary>
+    /// Provides pool parameters (<see cref="PoolParams"/>) for <see cref="SharedByteArray"/>
+    /// </summary>
     public static class DefaultFlexByteArrayPoolParams
     {
-        // The default max buffer size we'll use
+        /// <summary>
+        /// The default max buffer size we'll use
+        /// </summary>
         public const int DEFAULT_MAX_BYTE_ARRAY_SIZE = 4 * ByteConstants.MB;
 
-        // The min buffer size we'll use
+        /// <summary>
+        /// The min buffer size we'll use
+        /// </summary>
         private const int DEFAULT_MIN_BYTE_ARRAY_SIZE = 128 * ByteConstants.KB;
 
-        // The maximum number of threads permitted to touch this pool
+        /// <summary>
+        /// The maximum number of threads permitted to touch this pool
+        /// </summary>
         public static readonly int DEFAULT_MAX_NUM_THREADS = Environment.ProcessorCount;
 
+        /// <summary>
+        /// Generates bucket with parameters
+        /// </summary>
+        /// <param name="min">The min buffer size</param>
+        /// <param name="max">The max buffer size</param>
+        /// <param name="numThreads">The number of threads permitted to touch this pool</param>
+        /// <returns></returns>
         public static Dictionary<int, int> GenerateBuckets(int min, int max, int numThreads)
         {
             Dictionary<int, int> buckets = new Dictionary<int, int>();
@@ -29,6 +42,10 @@ namespace ImagePipeline.Memory
             return buckets;
         }
 
+        /// <summary>
+        /// Instantiates the <see cref="PoolParams"/>.
+        /// </summary>
+        /// <returns></returns>
         public static PoolParams Get()
         {
             return new PoolParams(

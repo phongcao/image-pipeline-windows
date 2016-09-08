@@ -3,13 +3,14 @@ using ImagePipeline.Testing;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Tests.Memory
 {
-    /**
-     * Basic tests for BitmapPool 
-     */
+    /// <summary>
+    /// Basic tests for BitmapPool 
+    /// </summary>
     [TestClass]
     public class BitmapPoolTests
     {
@@ -17,6 +18,9 @@ namespace ImagePipeline.Tests.Memory
 
         private BitmapPool _pool;
 
+        /// <summary>
+        /// Initialize
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -26,6 +30,9 @@ namespace ImagePipeline.Tests.Memory
                 new MockPoolStatsTracker());
         }
 
+        /// <summary>
+        /// Tests out the Free method
+        /// </summary>
         [TestMethod]
         public void TestFree()
         {
@@ -41,6 +48,7 @@ namespace ImagePipeline.Tests.Memory
                 }
                 catch (ObjectDisposedException e)
                 {
+                    Debug.WriteLine($"{e.Message} is expected");
                     disposed = true;
                 }
 
@@ -48,7 +56,9 @@ namespace ImagePipeline.Tests.Memory
             }
         }
 
-        // Tests out the GetBucketedSize method
+        /// <summary>
+        /// Tests out the GetBucketedSize method
+        /// </summary>
         [TestMethod]
         public void TestGetBucketedSize()
         {
@@ -56,7 +66,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(56, _pool.GetBucketedSize(56));
         }
 
-        // Tests out the GetBucketedSizeForValue method
+        /// <summary>
+        /// Tests out the GetBucketedSizeForValue method
+        /// </summary>
         [TestMethod]
         public void TestGetBucketedSizeForValue()
         {
@@ -72,6 +84,9 @@ namespace ImagePipeline.Tests.Memory
             }
         }
 
+        /// <summary>
+        /// Tests out the GetSizeInBytes method
+        /// </summary>
         [TestMethod]
         public void TestGetSizeInBytes()
         {
@@ -79,7 +94,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(224, _pool.GetSizeInBytes(224));
         }
 
-        // Test out bitmap reusability
+        /// <summary>
+        /// Test out bitmap reusability
+        /// </summary>
         [TestMethod]
         public void TestIsReusable()
         {
