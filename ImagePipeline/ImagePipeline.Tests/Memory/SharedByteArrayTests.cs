@@ -7,9 +7,9 @@ using System.Diagnostics;
 
 namespace ImagePipeline.Tests.Memory
 {
-    /**
-     * Tests for {@link SharedByteArray}
-     */
+    /// <summary>
+    /// Tests for <see cref="SharedByteArray"/>
+    /// </summary>
     [TestClass]
     public class SharedByteArrayTests
     {
