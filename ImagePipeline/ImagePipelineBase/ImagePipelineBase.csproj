@@ -116,6 +116,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImagePipeline\Common\TooManyBitmapsException.cs" />
     <Compile Include="ImagePipeline\Memory\IByteArrayPool.cs" />
     <Compile Include="ImagePipeline\Memory\IPool.cs" />
     <Compile Include="ImageUtils\BitmapUtil.cs" />

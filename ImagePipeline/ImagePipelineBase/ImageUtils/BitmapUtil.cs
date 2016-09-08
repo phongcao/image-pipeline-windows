@@ -46,6 +46,16 @@ namespace ImageUtils
         /// <summary>
         /// Get the size in bytes of the underlying bitmap
         /// </summary>
+        /// <param name="bitmap">Bitmap</param>
+        /// <returns>The size in bytes of the underlying bitmap</returns>
+        public static uint GetSizeInBytes(SoftwareBitmap bitmap)
+        {
+            return GetAllocationByteCount(bitmap);
+        }
+
+        /// <summary>
+        /// Get the size in bytes of the underlying bitmap
+        /// </summary>
         /// <param name="bitmap"></param>
         /// <returns>Size in bytes of the underlying bitmap</returns>
         public static unsafe uint GetAllocationByteCount(SoftwareBitmap bitmap)

@@ -101,6 +101,7 @@
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Memory\BitmapCounterTests.cs" />
     <Compile Include="Memory\BitmapPoolTests.cs" />
     <Compile Include="Memory\FlexByteArrayPoolTests.cs" />
     <Compile Include="Memory\GenericByteArrayPoolTests.cs" />

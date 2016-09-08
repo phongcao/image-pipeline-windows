@@ -117,6 +117,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Memory\BasePool.cs" />
+    <Compile Include="Memory\BitmapCounter.cs" />
+    <Compile Include="Memory\BitmapCounterProvider.cs" />
     <Compile Include="Memory\BitmapPool.cs" />
     <Compile Include="Memory\Bucket.cs" />
     <Compile Include="Memory\Counter.cs" />
@@ -125,7 +127,6 @@
     <Compile Include="Memory\DefaultFlexByteArrayPoolParams.cs" />
     <Compile Include="Memory\DefaultNativeMemoryChunkPoolParams.cs" />
     <Compile Include="Memory\FlexByteArrayPool.cs" />
-    <Compile Include="Memory\FlexByteArrayResourceReleaser.cs" />
     <Compile Include="Memory\GenericByteArrayPool.cs" />
     <Compile Include="Memory\IByteArrayPool.cs" />
     <Compile Include="Memory\InvalidSizeException.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Memory\PoolSizeViolationException.cs" />
     <Compile Include="Memory\PoolStatsTracker.cs" />
     <Compile Include="Memory\PoolParams.cs" />
+    <Compile Include="Memory\ResourceReleaser.cs" />
     <Compile Include="Memory\SizeTooLargeException.cs" />
     <Compile Include="Memory\SoftRefByteArrayPool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
