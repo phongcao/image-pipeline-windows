@@ -125,12 +125,12 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Tracks 'used space' - space allocated via the pool
         /// </summary>
-        internal Counter UsedCounter { get; }
+        internal Counter _usedCounter;
 
         /// <summary>
-       /// Tracks 'free space' in the pool
-       /// </summary>
-        internal Counter FreeCounter { get; }
+        /// Tracks 'free space' in the pool
+        /// </summary>
+        internal Counter _freeCounter;
 
         /// <summary>
         /// Creates a new instance of the pool.
@@ -153,8 +153,8 @@ namespace ImagePipeline.Memory
 
             InUseValues = new HashSet<T>();
 
-            FreeCounter = new Counter();
-            UsedCounter = new Counter();
+            _freeCounter = new Counter();
+            _usedCounter = new Counter();
         }
 
         /// <summary>
@@ -201,8 +201,8 @@ namespace ImagePipeline.Memory
                         // lets recompute size in bytes here
                         bucketedSize = GetBucketedSizeForValue(val);
                         sizeInBytes = GetSizeInBytes(bucketedSize);
-                        UsedCounter.Increment(sizeInBytes);
-                        FreeCounter.Decrement(sizeInBytes);
+                        _usedCounter.Increment(sizeInBytes);
+                        _freeCounter.Decrement(sizeInBytes);
                         _poolStatsTracker.OnValueReuse(sizeInBytes);
                         LogStats();
                         Debug.WriteLine($"get (reuse) (object, size) = ({ val.GetHashCode() }, { bucketedSize })");
@@ -217,13 +217,13 @@ namespace ImagePipeline.Memory
                 {
                     throw new PoolSizeViolationException(
                         _poolParams.MaxSizeHardCap,
-                        UsedCounter.NumBytes,
-                        FreeCounter.NumBytes,
+                        _usedCounter.NumBytes,
+                        _freeCounter.NumBytes,
                         sizeInBytes);
                 }
 
                 // Optimistically assume that allocation succeeds - if it fails, we need to undo those changes
-                UsedCounter.Increment(sizeInBytes);
+                _usedCounter.Increment(sizeInBytes);
                 if (bucket != null)
                 {
                     bucket.IncrementInUseCount();
@@ -244,7 +244,7 @@ namespace ImagePipeline.Memory
                 // counters.
                 lock(_poolGate)
                 {
-                    UsedCounter.Decrement(sizeInBytes);
+                    _usedCounter.Decrement(sizeInBytes);
                     Bucket<T> bucket = GetBucket(bucketedSize);
                     if (bucket != null)
                     {
@@ -325,14 +325,14 @@ namespace ImagePipeline.Memory
 
                         Debug.WriteLine($"release (free) (object, size) = ({ value.GetHashCode() }, { bucketedSize })");
                         Free(value);
-                        UsedCounter.Decrement(sizeInBytes);
+                        _usedCounter.Decrement(sizeInBytes);
                         _poolStatsTracker.OnFree(sizeInBytes);
                     }
                     else
                     {
                         bucket.Release(value);
-                        FreeCounter.Increment(sizeInBytes);
-                        UsedCounter.Decrement(sizeInBytes);
+                        _freeCounter.Increment(sizeInBytes);
+                        _usedCounter.Decrement(sizeInBytes);
                         _poolStatsTracker.OnValueRelease(sizeInBytes);
                         Debug.WriteLine($"release (reuse) (object, size) = ({ value.GetHashCode() }, { bucketedSize })");
                     }
@@ -421,7 +421,7 @@ namespace ImagePipeline.Memory
         {
             lock (_poolGate)
             {
-                Preconditions.CheckState(!IsMaxSizeSoftCapExceeded() || FreeCounter.NumBytes == 0);
+                Preconditions.CheckState(!IsMaxSizeSoftCapExceeded() || _freeCounter.NumBytes == 0);
             }
         }
 
@@ -492,7 +492,7 @@ namespace ImagePipeline.Memory
                 InitBuckets(inUseCounts);
 
                 // Free up the stats
-                FreeCounter.Reset();
+                _freeCounter.Reset();
                 LogStats();
             }
 
@@ -555,13 +555,13 @@ namespace ImagePipeline.Memory
             lock (_poolGate)
             {
                 // find how much we need to free
-                int bytesToFree = Math.Min(UsedCounter.NumBytes + FreeCounter.NumBytes - targetSize, FreeCounter.NumBytes);
+                int bytesToFree = Math.Min(_usedCounter.NumBytes + _freeCounter.NumBytes - targetSize, _freeCounter.NumBytes);
                 if (bytesToFree <= 0)
                 {
                     return;
                 }
 
-                Debug.WriteLine($"trimToSize: TargetSize = { targetSize }; Initial Size = { UsedCounter.NumBytes + FreeCounter.NumBytes }; Bytes to free = { bytesToFree }");
+                Debug.WriteLine($"trimToSize: TargetSize = { targetSize }; Initial Size = { _usedCounter.NumBytes + _freeCounter.NumBytes }; Bytes to free = { bytesToFree }");
                 LogStats();
 
                 // now walk through the buckets from the smallest to the largest. Keep freeing things
@@ -583,13 +583,13 @@ namespace ImagePipeline.Memory
 
                         Free(value);
                         bytesToFree -= bucket.Value.ItemSize;
-                        FreeCounter.Decrement(bucket.Value.ItemSize);
+                        _freeCounter.Decrement(bucket.Value.ItemSize);
                     }
                 }
 
                 // Dump stats at the end
                 LogStats();
-                Debug.WriteLine($"trimToSize: TargetSize = { targetSize }; Final Size = { UsedCounter.NumBytes + FreeCounter.NumBytes }");
+                Debug.WriteLine($"trimToSize: TargetSize = { targetSize }; Final Size = { _usedCounter.NumBytes + _freeCounter.NumBytes }");
             }
         }
 
@@ -639,7 +639,7 @@ namespace ImagePipeline.Memory
         {
             lock (_poolGate)
             {
-                bool isMaxSizeSoftCapExceeded = (UsedCounter.NumBytes + FreeCounter.NumBytes) > _poolParams.MaxSizeSoftCap;
+                bool isMaxSizeSoftCapExceeded = (_usedCounter.NumBytes + _freeCounter.NumBytes) > _poolParams.MaxSizeSoftCap;
                 if (isMaxSizeSoftCapExceeded)
                 {
                     _poolStatsTracker.OnSoftCapReached();
@@ -666,7 +666,7 @@ namespace ImagePipeline.Memory
 
                 // even with our best effort we cannot ensure hard cap limit.
                 // Return immediately - no point in trimming any space
-                if (sizeInBytes > hardCap - UsedCounter.NumBytes)
+                if (sizeInBytes > hardCap - _usedCounter.NumBytes)
                 {
                     _poolStatsTracker.OnHardCapReached();
                     return false;
@@ -674,13 +674,13 @@ namespace ImagePipeline.Memory
 
                 // trim if we need to
                 int softCap = _poolParams.MaxSizeSoftCap;
-                if (sizeInBytes > softCap - (UsedCounter.NumBytes + FreeCounter.NumBytes))
+                if (sizeInBytes > softCap - (_usedCounter.NumBytes + _freeCounter.NumBytes))
                 {
                     TrimToSize(softCap - sizeInBytes);
                 }
 
                 // check again to see if we're below the hard cap
-                if (sizeInBytes > hardCap - (UsedCounter.NumBytes + FreeCounter.NumBytes))
+                if (sizeInBytes > hardCap - (_usedCounter.NumBytes + _freeCounter.NumBytes))
                 {
                     _poolStatsTracker.OnHardCapReached();
                     return false;
@@ -708,10 +708,10 @@ namespace ImagePipeline.Memory
 
                 stats.Add(PoolStatsTracker.SOFT_CAP, _poolParams.MaxSizeSoftCap);
                 stats.Add(PoolStatsTracker.HARD_CAP, _poolParams.MaxSizeHardCap);
-                stats.Add(PoolStatsTracker.USED_COUNT, UsedCounter.Count);
-                stats.Add(PoolStatsTracker.USED_BYTES, UsedCounter.NumBytes);
-                stats.Add(PoolStatsTracker.FREE_COUNT, FreeCounter.Count);
-                stats.Add(PoolStatsTracker.FREE_BYTES, FreeCounter.NumBytes);
+                stats.Add(PoolStatsTracker.USED_COUNT, _usedCounter.Count);
+                stats.Add(PoolStatsTracker.USED_BYTES, _usedCounter.NumBytes);
+                stats.Add(PoolStatsTracker.FREE_COUNT, _freeCounter.Count);
+                stats.Add(PoolStatsTracker.FREE_BYTES, _freeCounter.NumBytes);
 
                 return stats;
             }
@@ -723,7 +723,7 @@ namespace ImagePipeline.Memory
        /// </summary>
         private void LogStats()
         {
-            Debug.WriteLine($"Used = ({ UsedCounter.Count }, { UsedCounter.NumBytes }); Free = ({ FreeCounter.Count }, { FreeCounter.NumBytes })");
+            Debug.WriteLine($"Used = ({ _usedCounter.Count }, { _usedCounter.NumBytes }); Free = ({ _freeCounter.Count }, { _freeCounter.NumBytes })");
         }
     }
 }

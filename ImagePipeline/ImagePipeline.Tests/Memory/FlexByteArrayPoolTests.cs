@@ -50,7 +50,7 @@ namespace ImagePipeline.Tests.Memory
         {
             Assert.AreEqual(MIN_BUFFER_SIZE, _pool.GetMinBufferSize());
             Assert.AreEqual(MAX_BUFFER_SIZE, _delegatePool._poolParams.MaxBucketSize);
-            Assert.AreEqual(0, _delegatePool.FreeCounter.NumBytes);
+            Assert.AreEqual(0, _delegatePool._freeCounter.NumBytes);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace ImagePipeline.Tests.Memory
         public void TestGet()
         {
             CloseableReference<byte[]> arrayRef = _pool.Get(1);
-            Assert.AreEqual(0, _delegatePool.FreeCounter.NumBytes);
+            Assert.AreEqual(0, _delegatePool._freeCounter.NumBytes);
             Assert.AreEqual(MIN_BUFFER_SIZE, arrayRef.Get().Length);
         }
 
@@ -80,7 +80,7 @@ namespace ImagePipeline.Tests.Memory
         public void TestRelease()
         {
             _pool.Get(MIN_BUFFER_SIZE).Dispose();
-            Assert.AreEqual(MIN_BUFFER_SIZE, _delegatePool.FreeCounter.NumBytes);
+            Assert.AreEqual(MIN_BUFFER_SIZE, _delegatePool._freeCounter.NumBytes);
         }
 
         /// <summary>

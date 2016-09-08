@@ -69,10 +69,10 @@ namespace ImagePipeline.Tests.Memory
         /// </summary>
         public void RefreshBasic()
         {
-            UsedBytes = Pool.UsedCounter.NumBytes;
-            UsedCount = Pool.UsedCounter.Count;
-            FreeBytes = Pool.FreeCounter.NumBytes;
-            FreeCount = Pool.FreeCounter.Count;
+            UsedBytes = Pool._usedCounter.NumBytes;
+            UsedCount = Pool._usedCounter.Count;
+            FreeBytes = Pool._freeCounter.NumBytes;
+            FreeCount = Pool._freeCounter.Count;
         }
 
         /// <summary>

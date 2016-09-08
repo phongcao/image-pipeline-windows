@@ -58,7 +58,11 @@ namespace FBCore.Common.References
         public T Get()
         {
             T reference = default(T);
-            softRef1.TryGetTarget(out reference);
+            if (softRef1 != null)
+            {
+                softRef1.TryGetTarget(out reference);
+            }
+
             return reference;
         }
 
