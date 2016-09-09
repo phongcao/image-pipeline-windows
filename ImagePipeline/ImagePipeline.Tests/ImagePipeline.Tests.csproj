@@ -109,6 +109,9 @@
     <Compile Include="Memory\MockPoolStatsTracker.cs" />
     <Compile Include="Memory\NativeMemoryChunkPoolTests.cs" />
     <Compile Include="Memory\NativeMemoryChunkTests.cs" />
+    <Compile Include="Memory\PooledByteArrayBufferedInputStreamTests.cs" />
+    <Compile Include="Memory\PooledByteBufferInputStreamTests.cs" />
+    <Compile Include="Memory\PooledByteStreamsTests.cs" />
     <Compile Include="Memory\PoolStats.cs" />
     <Compile Include="Memory\SharedByteArrayTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

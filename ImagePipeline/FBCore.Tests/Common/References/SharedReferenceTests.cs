@@ -116,6 +116,11 @@ namespace FBCore.Tests.Common.References
 
             public void Dispose()
             {
+                Dispose(true);
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
                 _value = null;
             }
         }
@@ -129,7 +134,7 @@ namespace FBCore.Tests.Common.References
             {
             }
 
-            public new void Dispose()
+            protected override void Dispose(bool disposing)
             {
                 throw new IOException("");
             }

@@ -107,6 +107,33 @@ namespace FBCore.Common.References
         }
 
         /// <summary>
+        /// Perform cleanup operations on unmanaged resources held by the current object before 
+        /// the object is destroyed
+        /// </summary>
+        ~CloseableReference()
+        {
+            try
+            {
+                // We put synchronized here so that lint doesn't warn about accessing _isClosed, which is
+                // guarded by this. Lint isn't aware of finalize semantics.
+                lock (_referenceGate)
+                {
+                    if (_isClosed)
+                    {
+                        return;
+                    }
+                }
+
+                Debug.WriteLine($"Finalized without closing: { GetHashCode() } { _sharedReference.GetHashCode() } (type = { _sharedReference.GetType() })");
+                Dispose(false);
+            }
+            finally
+            {
+                // Do nothing
+            }
+        }
+
+        /// <summary>
         /// Closes this CloseableReference.
         ///
         /// <para />Decrements the reference count of the underlying object. If it is zero, the object
@@ -115,6 +142,12 @@ namespace FBCore.Common.References
         /// <para />This method is idempotent. Calling it multiple times on the same instance has no effect.
         /// </summary>
         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
         {
             lock (_referenceGate)
             {
@@ -176,33 +209,6 @@ namespace FBCore.Common.References
             lock (_referenceGate)
             {
                 return !_isClosed;
-            }
-        }
-
-        /// <summary>
-        /// Perform cleanup operations on unmanaged resources held by the current object before 
-        /// the object is destroyed
-        /// </summary>
-        ~CloseableReference()
-        {
-            try
-            {
-                // We put synchronized here so that lint doesn't warn about accessing mIsClosed, which is
-                // guarded by this. Lint isn't aware of finalize semantics.
-                lock (_referenceGate)
-                {
-                    if (_isClosed)
-                    {
-                        return;
-                    }
-                }
-
-                Debug.WriteLine($"Finalized without closing: { GetHashCode() } { _sharedReference.GetHashCode() } (type = { _sharedReference.GetType() })");
-                Dispose();
-            }
-            finally
-            {
-                // Do nothing
             }
         }
 

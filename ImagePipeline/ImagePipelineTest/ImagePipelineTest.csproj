@@ -118,8 +118,12 @@
     <Compile Include="ImagePipeline\Testing\FakeNativeMemoryChunk.cs" />
     <Compile Include="ImagePipeline\Testing\FakeNativeMemoryChunkPool.cs" />
     <Compile Include="ImagePipeline\Testing\MockBitmapFactory.cs" />
+    <Compile Include="ImagePipeline\Testing\MockByteArrayPool.cs" />
+    <Compile Include="ImagePipeline\Testing\MockDisposable.cs" />
+    <Compile Include="ImagePipeline\Testing\MockMemoryStream.cs" />
     <Compile Include="ImagePipeline\Testing\MockMemoryTrimmableRegistry.cs" />
     <Compile Include="ImagePipeline\Testing\MockPoolStatsTracker.cs" />
+    <Compile Include="ImagePipeline\Testing\MockResourceReleaser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\ImagePipelineTest.rd.xml" />
   </ItemGroup>

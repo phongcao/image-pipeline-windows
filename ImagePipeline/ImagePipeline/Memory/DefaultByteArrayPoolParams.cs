@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// Provides pool parameters (<see cref="PoolParams"/>) for common <see cref="ByteArrayPool"/>
+    /// Provides pool parameters (<see cref="PoolParams"/>) for common <see cref="IByteArrayPool"/>
     /// </summary>
     public static class DefaultByteArrayPoolParams
     {

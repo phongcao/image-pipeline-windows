@@ -128,6 +128,7 @@
     <Compile Include="Memory\BitmapCounterProvider.cs" />
     <Compile Include="Memory\BitmapPool.cs" />
     <Compile Include="Memory\Bucket.cs" />
+    <Compile Include="Memory\ClosedException.cs" />
     <Compile Include="Memory\Counter.cs" />
     <Compile Include="Memory\DefaultBitmapPoolParams.cs" />
     <Compile Include="Memory\DefaultByteArrayPoolParams.cs" />
@@ -135,7 +136,6 @@
     <Compile Include="Memory\DefaultNativeMemoryChunkPoolParams.cs" />
     <Compile Include="Memory\FlexByteArrayPool.cs" />
     <Compile Include="Memory\GenericByteArrayPool.cs" />
-    <Compile Include="Memory\IByteArrayPool.cs" />
     <Compile Include="Memory\InvalidSizeException.cs" />
     <Compile Include="Memory\InvalidValueException.cs" />
     <Compile Include="Memory\NativeMemoryChunk.cs" />

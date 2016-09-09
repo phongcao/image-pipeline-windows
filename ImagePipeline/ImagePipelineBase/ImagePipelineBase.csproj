@@ -126,6 +126,13 @@
     <Compile Include="ImagePipeline\Common\TooManyBitmapsException.cs" />
     <Compile Include="ImagePipeline\Memory\IByteArrayPool.cs" />
     <Compile Include="ImagePipeline\Memory\IPool.cs" />
+    <Compile Include="ImagePipeline\Memory\IPooledByteBuffer.cs" />
+    <Compile Include="ImagePipeline\Memory\IPooledByteBufferFactory.cs" />
+    <Compile Include="ImagePipeline\Memory\PooledByteArrayBufferedInputStream.cs" />
+    <Compile Include="ImagePipeline\Memory\PooledByteBufferInputStream.cs" />
+    <Compile Include="ImagePipeline\Memory\PooledByteBufferOutputStream.cs" />
+    <Compile Include="ImagePipeline\Memory\PooledByteStreams.cs" />
+    <Compile Include="ImagePipeline\Memory\TrivialPooledByteBuffer.cs" />
     <Compile Include="ImageUtils\BitmapUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\ImagePipelineBase.rd.xml" />

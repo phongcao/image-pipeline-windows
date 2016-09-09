@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace ImagePipeline.Testing
 {
-    /**
-     * A 'fake' {@link NativeMemoryChunkPool} instance as a test helper
-     */
+    /// <summary>
+    /// A 'fake' <see cref="NativeMemoryChunkPool"/> instance as a test helper
+    /// </summary>
     public class FakeNativeMemoryChunkPool : NativeMemoryChunkPool
     {
         /// <summary>

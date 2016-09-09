@@ -24,7 +24,7 @@ namespace ImagePipeline.Testing
         /// <summary>
         /// Fake Dispose method
         /// </summary>
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             _buf = null;
         }

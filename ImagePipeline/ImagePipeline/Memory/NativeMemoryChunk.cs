@@ -54,9 +54,35 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
+        /// A finalizer, just in case. Just delegates to <see cref="Dispose()"/>
+        /// @throws Throwable
+        /// </summary>
+        ~NativeMemoryChunk()
+        {
+            if (IsClosed())
+            {
+                return;
+            }
+
+            Debug.WriteLine($"finalize: Chunk { GetHashCode().ToString("X4") } still active. Underlying address = { _nativePtr.ToString("X4") }");
+
+            // Do the actual clearing
+            Dispose(false);
+        }
+
+        /// <summary>
         /// This has to be called before we get rid of this object in order to release underlying memory
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// This has to be called before we get rid of this object in order to release underlying memory
+        /// </summary>
+        protected virtual void Dispose(bool disposing)
         {
             lock (_memoryChunkGate)
             {
@@ -223,23 +249,6 @@ namespace ImagePipeline.Memory
             CheckBounds(offset, other.Size, otherOffset, count);
             ImagePipelineNative.NativeMemoryChunk.NativeMemcpy(
                 other._nativePtr + otherOffset, _nativePtr + offset, count);
-        }
-
-        /// <summary>
-        /// A finalizer, just in case. Just delegates to <see cref="Dispose()"/>
-        /// @throws Throwable
-        /// </summary>
-        ~NativeMemoryChunk()
-        {
-            if (IsClosed())
-            {
-                return;
-            }
-
-            Debug.WriteLine($"finalize: Chunk { GetHashCode().ToString("X4") } still active. Underlying address = { _nativePtr.ToString("X4") }");
-
-            // do the actual clearing
-            Dispose();
         }
 
         /// <summary>
