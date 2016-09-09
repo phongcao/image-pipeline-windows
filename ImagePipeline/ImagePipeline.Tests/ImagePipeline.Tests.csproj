@@ -107,6 +107,7 @@
     <Compile Include="Memory\GenericByteArrayPoolTests.cs" />
     <Compile Include="Memory\MockMemoryTrimmableRegistry.cs" />
     <Compile Include="Memory\MockPoolStatsTracker.cs" />
+    <Compile Include="Memory\NativeMemoryChunkPoolTests.cs" />
     <Compile Include="Memory\NativeMemoryChunkTests.cs" />
     <Compile Include="Memory\PoolStats.cs" />
     <Compile Include="Memory\SharedByteArrayTests.cs" />

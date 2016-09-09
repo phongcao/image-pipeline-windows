@@ -139,6 +139,7 @@
     <Compile Include="Memory\InvalidSizeException.cs" />
     <Compile Include="Memory\InvalidValueException.cs" />
     <Compile Include="Memory\NativeMemoryChunk.cs" />
+    <Compile Include="Memory\NativeMemoryChunkPool.cs" />
     <Compile Include="Memory\NoOpPoolStatsTracker.cs" />
     <Compile Include="Memory\OOMSoftReferenceBucket.cs" />
     <Compile Include="Memory\PoolSizeViolationException.cs" />

@@ -24,7 +24,7 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Size of the memory region
         /// </summary>
-        public int Size { get; }
+        public virtual int Size { get; }
 
         /// <summary>
         /// Flag indicating if this object was closed
@@ -56,7 +56,7 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// This has to be called before we get rid of this object in order to release underlying memory
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             lock (_memoryChunkGate)
             {
@@ -72,7 +72,7 @@ namespace ImagePipeline.Memory
         /// Is this chunk already closed (aka freed) ?
         /// @return true, if this chunk has already been closed
         /// </summary>
-        public bool IsClosed()
+        public virtual bool IsClosed()
         {
             lock (_memoryChunkGate)
             {
@@ -88,7 +88,7 @@ namespace ImagePipeline.Memory
         /// <param name="count">number of bytes to copy</param>
         /// @return number of bytes written
         /// </summary>
-        public int Write(
+        public virtual int Write(
             int nativeMemoryOffset,
             byte[] byteArray,
             int byteArrayOffset,
@@ -117,7 +117,7 @@ namespace ImagePipeline.Memory
         /// <param name="count">number of bytes to copy</param>
         /// @return number of bytes read
         /// </summary>
-        public int Read(
+        public virtual int Read(
             int nativeMemoryOffset,
             byte[] byteArray,
             int byteArrayOffset,
@@ -140,7 +140,7 @@ namespace ImagePipeline.Memory
         /// <param name="offset"></param>
         /// @return byte at given offset
         /// </summary>
-        public byte Read(int offset)
+        public virtual byte Read(int offset)
         {
             lock (_memoryChunkGate)
             {
@@ -159,7 +159,7 @@ namespace ImagePipeline.Memory
         /// <param name="otherOffset">number of first byte to write to</param>
         /// <param name="count">number of bytes to copy</param>
         /// </summary>
-        public void Copy(
+        public virtual void Copy(
             int offset,
             NativeMemoryChunk other,
             int otherOffset,

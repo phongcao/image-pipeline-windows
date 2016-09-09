@@ -115,7 +115,11 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImagePipeline\Testing\FakeNativeMemoryChunk.cs" />
+    <Compile Include="ImagePipeline\Testing\FakeNativeMemoryChunkPool.cs" />
     <Compile Include="ImagePipeline\Testing\MockBitmapFactory.cs" />
+    <Compile Include="ImagePipeline\Testing\MockMemoryTrimmableRegistry.cs" />
+    <Compile Include="ImagePipeline\Testing\MockPoolStatsTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\ImagePipelineTest.rd.xml" />
   </ItemGroup>
@@ -127,6 +131,10 @@
     <ProjectReference Include="..\ImagePipelineBase\ImagePipelineBase.csproj">
       <Project>{563BC30E-4300-4E2B-9D6D-720F3AF8834F}</Project>
       <Name>ImagePipelineBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ImagePipeline\ImagePipeline.csproj">
+      <Project>{a6d3ecaa-105a-48fc-be2a-d78220e32145}</Project>
+      <Name>ImagePipeline</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

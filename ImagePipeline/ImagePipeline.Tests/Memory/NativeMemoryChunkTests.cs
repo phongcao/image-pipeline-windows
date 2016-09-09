@@ -106,7 +106,7 @@ namespace ImagePipeline.Tests.Memory
             {
                 byte[] src = Enumerable.Repeat(value, size).ToArray();
                 nativeMemoryChunk.Write(0, src, 0, size);
-                Assert.AreEqual(34, nativeMemoryChunk.Read(0));
+                Assert.AreEqual(value, nativeMemoryChunk.Read(0));
             }
         }
 
