@@ -105,10 +105,11 @@
     <Compile Include="Memory\BitmapPoolTests.cs" />
     <Compile Include="Memory\FlexByteArrayPoolTests.cs" />
     <Compile Include="Memory\GenericByteArrayPoolTests.cs" />
-    <Compile Include="Memory\MockMemoryTrimmableRegistry.cs" />
-    <Compile Include="Memory\MockPoolStatsTracker.cs" />
     <Compile Include="Memory\NativeMemoryChunkPoolTests.cs" />
     <Compile Include="Memory\NativeMemoryChunkTests.cs" />
+    <Compile Include="Memory\NativePooledByteBufferFactoryTests.cs" />
+    <Compile Include="Memory\NativePooledByteBufferOutputStreamTests.cs" />
+    <Compile Include="Memory\NativePooledByteBufferTests.cs" />
     <Compile Include="Memory\PooledByteArrayBufferedInputStreamTests.cs" />
     <Compile Include="Memory\PooledByteBufferInputStreamTests.cs" />
     <Compile Include="Memory\PooledByteStreamsTests.cs" />

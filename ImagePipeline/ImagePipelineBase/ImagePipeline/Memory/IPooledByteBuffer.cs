@@ -12,7 +12,7 @@ namespace ImagePipelineBase.ImagePipeline.Memory
         /// Get the size of the byte buffer
         /// @return the size of the byte buffer
         /// </summary>
-        int Size();
+        int Size { get;  }
 
         /// <summary>
         /// Read byte at given offset

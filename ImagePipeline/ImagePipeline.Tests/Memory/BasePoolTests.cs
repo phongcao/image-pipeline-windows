@@ -1,8 +1,8 @@
 ﻿using FBCore.Common.Internal;
 using ImagePipeline.Memory;
+using ImagePipeline.Testing;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace ImagePipeline.Tests.Memory
@@ -72,9 +72,9 @@ namespace ImagePipeline.Tests.Memory
                     _pool.GetBucketedSize(s);
                     Assert.Fail("Failed size: " + s);
                 }
-                catch (InvalidSizeException e)
+                catch (InvalidSizeException)
                 {
-                    Debug.WriteLine($"{ e.Message } is expected");
+                    // This is expected
                 }
             }
         }
@@ -248,9 +248,9 @@ namespace ImagePipeline.Tests.Memory
               pool.Get(4);
               Assert.Fail();
             }
-            catch (PoolSizeViolationException e)
+            catch (PoolSizeViolationException)
             {
-                Debug.WriteLine($"{ e.Message } is expected");
+                // This is expected
             }
         }
 
@@ -471,9 +471,9 @@ namespace ImagePipeline.Tests.Memory
                     _pool.Get(s);
                     Assert.Fail("Failed size: " + s);
                 }
-                catch (InvalidSizeException e)
+                catch (InvalidSizeException)
                 {
-                    Debug.WriteLine($"{ e.Message } is expected");
+                    // This is expected
                 }
             }
         }

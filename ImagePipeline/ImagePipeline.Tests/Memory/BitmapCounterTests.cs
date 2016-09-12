@@ -2,7 +2,6 @@
 using ImagePipeline.Testing;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
-using System.Diagnostics;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Tests.Memory
@@ -62,9 +61,9 @@ namespace ImagePipeline.Tests.Memory
                     _bitmapCounter.Decrease(bitmap2);
                     Assert.Fail();
                 }
-                catch (ArgumentException e)
+                catch (ArgumentException)
                 {
-                    Debug.WriteLine($"{e.Message} is expected");
+                    // This is expected
                 }
             }
         }
@@ -86,9 +85,9 @@ namespace ImagePipeline.Tests.Memory
                     _bitmapCounter.Decrease(bitmap3);
                     Assert.Fail();
                 }
-                catch (ArgumentException e)
+                catch (ArgumentException)
                 {
-                    Debug.WriteLine($"{e.Message} is expected");
+                    // This is expected
                 }
             }
         }

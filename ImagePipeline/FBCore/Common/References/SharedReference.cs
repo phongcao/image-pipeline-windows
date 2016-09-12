@@ -83,7 +83,6 @@ namespace FBCore.Common.References
     /// </summary>
     public class SharedReference<T>
     {
-        // Init lock
         private static readonly object _referenceGate = new object();
 
         // Keeps references to all live objects so finalization of those Objects always happens after

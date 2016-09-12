@@ -1,7 +1,7 @@
 ﻿using ImagePipeline.Memory;
+using ImagePipeline.Testing;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace ImagePipeline.Tests.Memory
 {
@@ -71,9 +71,9 @@ namespace ImagePipeline.Tests.Memory
                     _pool.GetBucketedSize(size);
                     Assert.Fail();
                 }
-                catch (InvalidSizeException e)
+                catch (InvalidSizeException)
                 {
-                    Debug.WriteLine($"{ e.Message } is expected.");
+                    // This is expected
                 }
             }
         }

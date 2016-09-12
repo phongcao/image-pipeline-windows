@@ -137,9 +137,13 @@
     <Compile Include="Memory\FlexByteArrayPool.cs" />
     <Compile Include="Memory\GenericByteArrayPool.cs" />
     <Compile Include="Memory\InvalidSizeException.cs" />
+    <Compile Include="Memory\InvalidStreamException.cs" />
     <Compile Include="Memory\InvalidValueException.cs" />
     <Compile Include="Memory\NativeMemoryChunk.cs" />
     <Compile Include="Memory\NativeMemoryChunkPool.cs" />
+    <Compile Include="Memory\NativePooledByteBuffer.cs" />
+    <Compile Include="Memory\NativePooledByteBufferFactory.cs" />
+    <Compile Include="Memory\NativePooledByteBufferOutputStream.cs" />
     <Compile Include="Memory\NoOpPoolStatsTracker.cs" />
     <Compile Include="Memory\OOMSoftReferenceBucket.cs" />
     <Compile Include="Memory\PoolSizeViolationException.cs" />

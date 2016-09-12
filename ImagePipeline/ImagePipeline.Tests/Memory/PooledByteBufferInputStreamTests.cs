@@ -1,7 +1,6 @@
 ﻿using ImagePipelineBase.ImagePipeline.Memory;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
-using System.Diagnostics;
 using System.IO;
 
 namespace ImagePipeline.Tests.Memory
@@ -85,9 +84,9 @@ namespace ImagePipeline.Tests.Memory
                 _stream.Read(new byte[64], 10, 55);
                 Assert.Fail();
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (ArgumentOutOfRangeException)
             {
-                Debug.WriteLine($"{e.Message} is expected");
+                // This is expected
             }
         }
 
@@ -180,9 +179,9 @@ namespace ImagePipeline.Tests.Memory
                 new PooledByteBufferInputStream(buffer);
                 Assert.Fail();
             }
-            catch (ArgumentException e)
+            catch (ArgumentException)
             {
-                Debug.WriteLine($"{e.Message} is expected");
+                // This is expected
             }
         }
     }

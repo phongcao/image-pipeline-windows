@@ -48,7 +48,6 @@ namespace FBCore.Common.References
     /// </summary>
     public sealed class CloseableReference<T> : IDisposable
     {
-        // Init lock
         private readonly object _referenceGate = new object();
 
         private static readonly DefaultResourceReleaser DEFAULT_CLOSEABLE_RELEASER = new DefaultResourceReleaser();

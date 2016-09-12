@@ -7,7 +7,6 @@ namespace ImagePipeline.Memory
     /// </summary>
     public class NoOpPoolStatsTracker : PoolStatsTracker
     {
-        // Init lock
         private static readonly object _instanceGate = new object();
 
         private static NoOpPoolStatsTracker _instance = null;

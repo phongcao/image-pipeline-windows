@@ -89,7 +89,6 @@ namespace ImagePipeline.Memory
     /// </summary>
     public abstract class BasePool<T> : IPool<T>
     {
-        // Init lock
         private readonly object _poolGate = new object();
 
         /// <summary>

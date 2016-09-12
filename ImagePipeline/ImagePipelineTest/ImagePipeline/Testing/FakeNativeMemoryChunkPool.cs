@@ -1,5 +1,6 @@
 ﻿using ImagePipeline.Memory;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ImagePipeline.Testing
 {

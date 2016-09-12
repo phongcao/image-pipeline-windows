@@ -71,6 +71,6 @@ namespace ImagePipelineBase.ImagePipeline.Memory
         /// Returns the total number of bytes written to this stream so far.
         /// @return the number of bytes written to this stream.
         /// </summary>
-        public abstract int Size();
+        public abstract int Size { get;  }
     }
 }

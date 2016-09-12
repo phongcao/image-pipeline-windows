@@ -1,9 +1,9 @@
 ﻿using FBCore.Common.Memory;
 using FBCore.Common.References;
 using ImagePipeline.Memory;
+using ImagePipeline.Testing;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
-using System.Diagnostics;
 
 namespace ImagePipeline.Tests.Memory
 {
@@ -67,9 +67,9 @@ namespace ImagePipeline.Tests.Memory
                 _array.Get(32);
                 Assert.Fail();
             }
-            catch (ArgumentException e)
+            catch (ArgumentException)
             {
-                Debug.WriteLine($"{e.Message} is expected");
+                // This is expected
             }
         }
 

@@ -33,9 +33,12 @@ namespace ImagePipelineBase.ImagePipeline.Memory
         /// Get the size of the byte buffer
         /// @return the size of the byte buffer
         /// </summary>
-        public int Size()
+        public int Size
         {
-            return IsClosed() ? -1 : _buf.Length;
+            get
+            {
+                return IsClosed() ? -1 : _buf.Length;
+            }
         }
 
         /// <summary>

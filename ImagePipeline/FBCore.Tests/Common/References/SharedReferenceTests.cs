@@ -51,9 +51,9 @@ namespace FBCore.Tests.Common.References
                 tRef.AddReference();
                 Assert.Fail();
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
-                Debug.WriteLine($"{ e.Message } is expected.");
+                // This is expected
             }
 
             // So should deleting a reference
@@ -62,9 +62,9 @@ namespace FBCore.Tests.Common.References
                 tRef.DeleteReference();
                 Assert.Fail();
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
-                Debug.WriteLine($"{ e.Message } is expected.");
+                // This is expected
             }
 
             // Null shared references are not 'valid'

@@ -20,7 +20,7 @@ namespace ImagePipelineBase.ImagePipeline.Memory
         /// Creates a new inputstream instance over the specific buffer.
         /// <param name="pooledByteBuffer">the buffer to read from</param>
         /// </summary>
-        public PooledByteBufferInputStream(IPooledByteBuffer pooledByteBuffer) : base()
+        public PooledByteBufferInputStream(IPooledByteBuffer pooledByteBuffer)
         {
             Preconditions.CheckArgument(!pooledByteBuffer.IsClosed());
             _pooledByteBuffer = Preconditions.CheckNotNull(pooledByteBuffer);
@@ -89,7 +89,7 @@ namespace ImagePipelineBase.ImagePipeline.Memory
         {
             get
             {
-                return _pooledByteBuffer.Size();
+                return _pooledByteBuffer.Size;
             }
         }
 
@@ -177,7 +177,7 @@ namespace ImagePipelineBase.ImagePipeline.Memory
                 throw new ArgumentOutOfRangeException($"length={ buffer.Length }; regionStart={ offset }; regionLength={ count }");
             }
 
-            int available = _pooledByteBuffer.Size() - _currentOffset;
+            int available = _pooledByteBuffer.Size - _currentOffset;
             if (available <= 0 || count <= 0)
             {
                 return 0;
@@ -214,7 +214,7 @@ namespace ImagePipelineBase.ImagePipeline.Memory
                 throw new ArgumentOutOfRangeException();
             }
 
-            int size = _pooledByteBuffer.Size();
+            int size = _pooledByteBuffer.Size;
             int originOffset = _currentOffset;
             if (origin == SeekOrigin.Begin)
             {
@@ -222,11 +222,11 @@ namespace ImagePipelineBase.ImagePipeline.Memory
             }
             else if (origin == SeekOrigin.End)
             {
-                originOffset = _pooledByteBuffer.Size();
+                originOffset = _pooledByteBuffer.Size;
             }
 
             long newOffset = originOffset + offset;
-            newOffset = Math.Min(newOffset, _pooledByteBuffer.Size());
+            newOffset = Math.Min(newOffset, _pooledByteBuffer.Size);
             newOffset = Math.Max(newOffset, 0);
             Position = newOffset;
 

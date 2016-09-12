@@ -1,7 +1,6 @@
 ﻿using ImagePipeline.Memory;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
-using System.Diagnostics;
 using System.Linq;
 
 namespace ImagePipeline.Tests.Memory
@@ -87,9 +86,9 @@ namespace ImagePipeline.Tests.Memory
                     nativeMemoryChunk.Write(0, src, offset, size);
                     Assert.Fail();
                 }
-                catch (ArgumentException e)
+                catch (ArgumentException)
                 {
-                    Debug.WriteLine($"{e.Message} is expected");
+                    // This is expected
                 }
             }
         }

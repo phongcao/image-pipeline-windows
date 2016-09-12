@@ -16,7 +16,7 @@ namespace ImagePipeline.Testing
         /// Instantiates the <see cref="FakeNativeMemoryChunk"/>.
         /// </summary>
         /// <param name="bufSize">Size</param>
-        public FakeNativeMemoryChunk(int bufSize) : base()
+        public FakeNativeMemoryChunk(int bufSize)
         {
             _buf = new byte[bufSize];
         }
