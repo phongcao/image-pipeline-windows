@@ -120,6 +120,7 @@
     <Compile Include="Common\Memory\IMemoryTrimmable.cs" />
     <Compile Include="Common\Memory\IMemoryTrimmableRegistry.cs" />
     <Compile Include="Common\Memory\MemoryTrimType.cs" />
+    <Compile Include="Common\Memory\NoOpMemoryTrimmableRegistry.cs" />
     <Compile Include="Common\References\CloseableReference.cs" />
     <Compile Include="Common\References\DefaultResourceReleaser.cs" />
     <Compile Include="Common\References\OOMSoftReference.cs" />

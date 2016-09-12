@@ -146,6 +146,8 @@
     <Compile Include="Memory\NativePooledByteBufferOutputStream.cs" />
     <Compile Include="Memory\NoOpPoolStatsTracker.cs" />
     <Compile Include="Memory\OOMSoftReferenceBucket.cs" />
+    <Compile Include="Memory\PoolConfig.cs" />
+    <Compile Include="Memory\PoolFactory.cs" />
     <Compile Include="Memory\PoolSizeViolationException.cs" />
     <Compile Include="Memory\PoolStatsTracker.cs" />
     <Compile Include="Memory\PoolParams.cs" />
