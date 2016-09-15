@@ -1,6 +1,7 @@
 ﻿using FBCore.Common.Internal;
 using FBCore.Common.Memory;
 using FBCore.Common.References;
+using ImagePipelineBase.ImagePipeline.Memory;
 using System;
 using System.Threading;
 

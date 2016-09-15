@@ -123,6 +123,21 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\OrderedDictionary.cs" />
+    <Compile Include="ImagePipeline\Bitmaps\BitmapCreationObserver.cs" />
+    <Compile Include="ImagePipeline\Bitmaps\IBitmapCreationObserver.cs" />
+    <Compile Include="ImagePipeline\Bitmaps\PlatformBitmapFactory.cs" />
+    <Compile Include="ImagePipeline\Cache\BitmapMemoryCacheTrimStrategy.cs" />
+    <Compile Include="ImagePipeline\Cache\CacheTrimStrategy.cs" />
+    <Compile Include="ImagePipeline\Cache\CountingLruMap.cs" />
+    <Compile Include="ImagePipeline\Cache\CountingMemoryCache.cs" />
+    <Compile Include="ImagePipeline\Cache\EntryStateObserver.cs" />
+    <Compile Include="ImagePipeline\Cache\ICacheTrimStrategy.cs" />
+    <Compile Include="ImagePipeline\Cache\IEntryStateObserver.cs" />
+    <Compile Include="ImagePipeline\Cache\IMemoryCache.cs" />
+    <Compile Include="ImagePipeline\Cache\IValueDescriptor.cs" />
+    <Compile Include="ImagePipeline\Cache\MemoryCacheParams.cs" />
+    <Compile Include="ImagePipeline\Cache\ValueDescriptor.cs" />
     <Compile Include="ImagePipeline\Common\TooManyBitmapsException.cs" />
     <Compile Include="ImagePipeline\Memory\IByteArrayPool.cs" />
     <Compile Include="ImagePipeline\Memory\IPool.cs" />
@@ -132,6 +147,7 @@
     <Compile Include="ImagePipeline\Memory\PooledByteBufferInputStream.cs" />
     <Compile Include="ImagePipeline\Memory\PooledByteBufferOutputStream.cs" />
     <Compile Include="ImagePipeline\Memory\PooledByteStreams.cs" />
+    <Compile Include="ImagePipeline\Memory\ResourceReleaser.cs" />
     <Compile Include="ImagePipeline\Memory\TrivialPooledByteBuffer.cs" />
     <Compile Include="ImageUtils\BitmapUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

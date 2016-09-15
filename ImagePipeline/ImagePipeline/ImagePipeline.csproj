@@ -151,7 +151,6 @@
     <Compile Include="Memory\PoolSizeViolationException.cs" />
     <Compile Include="Memory\PoolStatsTracker.cs" />
     <Compile Include="Memory\PoolParams.cs" />
-    <Compile Include="Memory\ResourceReleaser.cs" />
     <Compile Include="Memory\SharedByteArray.cs" />
     <Compile Include="Memory\SizeTooLargeException.cs" />
     <Compile Include="Memory\SoftRefByteArrayPool.cs" />
