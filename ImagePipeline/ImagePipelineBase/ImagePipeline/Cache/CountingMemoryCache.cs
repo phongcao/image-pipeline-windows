@@ -134,7 +134,10 @@ namespace ImagePipelineBase.ImagePipeline.Cache
         private IValueDescriptor<Entry> WrapValueDescriptor(IValueDescriptor<V> evictableValueDescriptor)
         {
             return new ValueDescriptor<Entry>(
-                entry => evictableValueDescriptor.GetSizeInBytes(entry.ValueRef.Get()));
+                entry =>
+                {
+                    return entry.ValueRef.IsValid() ? evictableValueDescriptor.GetSizeInBytes(entry.ValueRef.Get()) : 0;
+                });
         }
 
         /// <summary>
@@ -278,7 +281,7 @@ namespace ImagePipelineBase.ImagePipeline.Cache
         {
             lock (_cacheGate)
             {
-                if (!entry.IsOrphan && entry.ClientCount == 0)
+                if (!entry.IsOrphan && entry.ClientCount == 0 && entry.ValueRef.IsValid())
                 {
                     _exclusiveEntries.Put(entry.Key, entry);
                     return true;
