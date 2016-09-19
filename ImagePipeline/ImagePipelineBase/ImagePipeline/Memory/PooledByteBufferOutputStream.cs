@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace ImagePipelineBase.ImagePipeline.Memory
+namespace ImagePipeline.Memory
 {
     /// <summary>
     /// An OutputStream that produces a PooledByteBuffer.

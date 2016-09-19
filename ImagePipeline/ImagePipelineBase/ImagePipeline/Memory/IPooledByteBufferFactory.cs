@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace ImagePipelineBase.ImagePipeline.Memory
+namespace ImagePipeline.Memory
 {
     /// <summary>
    /// A factory to create instances of IPooledByteBuffer and PooledByteBufferOutputStream

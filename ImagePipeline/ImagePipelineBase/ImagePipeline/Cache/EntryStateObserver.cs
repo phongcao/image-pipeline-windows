@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ImagePipelineBase.ImagePipeline.Cache
+namespace ImagePipeline.Cache
 {
     /// <summary>
     /// EntryStateObserver helper class

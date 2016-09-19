@@ -8,7 +8,7 @@ using System.Linq;
 namespace ImagePipeline.Tests.Memory
 {
     /// <summary>
-    /// BasePoolTests
+    /// Tests for <see cref="BasePool&lt;T&gt;"/> 
     /// </summary>
     [TestClass]
     public class BasePoolTests

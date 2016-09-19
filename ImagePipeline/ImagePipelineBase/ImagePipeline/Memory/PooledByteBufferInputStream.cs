@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace ImagePipelineBase.ImagePipeline.Memory
+namespace ImagePipeline.Memory
 {
     /// <summary>
     /// An InputStream implementation over a <see cref="IPooledByteBuffer"/> instance

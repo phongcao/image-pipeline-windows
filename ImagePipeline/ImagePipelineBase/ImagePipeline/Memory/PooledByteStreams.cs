@@ -3,7 +3,7 @@ using ImagePipeline.Memory;
 using System;
 using System.IO;
 
-namespace ImagePipelineBase.ImagePipeline.Memory
+namespace ImagePipeline.Memory
 {
     /// <summary>
     /// Helper class for interacting with java streams, similar to guava's ByteSteams.

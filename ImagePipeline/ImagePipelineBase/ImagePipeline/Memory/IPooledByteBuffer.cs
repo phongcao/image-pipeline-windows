@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ImagePipelineBase.ImagePipeline.Memory
+namespace ImagePipeline.Memory
 {
     /// <summary>
     /// A 'pooled' byte-buffer abstraction. Represents an immutable sequence of bytes stored off the

@@ -1,14 +1,14 @@
 ﻿using FBCore.Common.Internal;
 using FBCore.Common.Memory;
 using FBCore.Common.References;
-using ImagePipelineBase.ImagePipeline.Bitmaps;
-using ImagePipelineBase.ImagePipeline.Memory;
+using ImagePipeline.Bitmaps;
+using ImagePipeline.Memory;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Windows.Graphics.Imaging;
 
-namespace ImagePipelineBase.ImagePipeline.Cache
+namespace ImagePipeline.Cache
 {
     /// <summary>
     /// Layer of memory cache stack responsible for managing eviction of the the cached items.

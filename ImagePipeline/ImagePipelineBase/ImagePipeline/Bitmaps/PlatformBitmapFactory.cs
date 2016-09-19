@@ -1,7 +1,7 @@
 ﻿using FBCore.Common.References;
 using Windows.Graphics.Imaging;
 
-namespace ImagePipelineBase.ImagePipeline.Bitmaps
+namespace ImagePipeline.Bitmaps
 {
     /// <summary>
     /// Bitmap factory optimized for the platform.

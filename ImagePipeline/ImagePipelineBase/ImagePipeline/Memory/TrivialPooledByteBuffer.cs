@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ImagePipelineBase.ImagePipeline.Memory
+namespace ImagePipeline.Memory
 {
     /// <summary>
     /// A trivial implementation of <see cref="IPooledByteBuffer"/>

@@ -1,4 +1,4 @@
-﻿using ImagePipelineBase.ImagePipeline.Memory;
+﻿using ImagePipeline.Memory;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 using System.IO;

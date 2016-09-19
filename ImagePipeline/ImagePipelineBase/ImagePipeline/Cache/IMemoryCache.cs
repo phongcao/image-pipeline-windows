@@ -1,7 +1,7 @@
 ﻿using FBCore.Common.References;
 using System;
 
-namespace ImagePipelineBase.ImagePipeline.Cache
+namespace ImagePipeline.Cache
 {
     /// <summary>
     /// Interface for the image pipeline memory cache.

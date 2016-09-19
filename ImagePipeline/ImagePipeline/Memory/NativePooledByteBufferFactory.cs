@@ -1,14 +1,13 @@
 ﻿using FBCore.Common.Internal;
 using FBCore.Common.References;
-using ImagePipelineBase.ImagePipeline.Memory;
 using System.IO;
 
 namespace ImagePipeline.Memory
 {
     /// <summary>
-   /// A factory to provide instances of <see cref="NativePooledByteBuffer"/> and
-   /// <see cref="NativePooledByteBufferOutputStream"/>
-   /// </summary>
+    /// A factory to provide instances of <see cref="NativePooledByteBuffer"/> and
+    /// <see cref="NativePooledByteBufferOutputStream"/>
+    /// </summary>
     public class NativePooledByteBufferFactory : IPooledByteBufferFactory
     {
         private readonly PooledByteStreams _pooledByteStreams;

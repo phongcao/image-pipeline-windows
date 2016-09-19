@@ -1,4 +1,4 @@
-﻿namespace ImagePipelineBase.ImagePipeline.Cache
+﻿namespace ImagePipeline.Cache
 {
     /// <summary>
     /// Interface used to specify the trimming strategy for the cache.

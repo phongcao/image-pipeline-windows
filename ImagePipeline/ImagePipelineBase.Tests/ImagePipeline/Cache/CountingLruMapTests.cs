@@ -1,4 +1,4 @@
-﻿using ImagePipelineBase.ImagePipeline.Cache;
+﻿using ImagePipeline.Cache;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 using System.Collections.Generic;

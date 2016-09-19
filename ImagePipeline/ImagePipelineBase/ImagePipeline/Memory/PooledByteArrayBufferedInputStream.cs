@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
-namespace ImagePipelineBase.ImagePipeline.Memory
+namespace ImagePipeline.Memory
 {
     /// <summary>
     /// InputStream that wraps another input stream and buffers all reads.

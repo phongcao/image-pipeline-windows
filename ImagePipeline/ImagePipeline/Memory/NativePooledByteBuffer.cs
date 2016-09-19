@@ -1,6 +1,5 @@
 ﻿using FBCore.Common.Internal;
 using FBCore.Common.References;
-using ImagePipelineBase.ImagePipeline.Memory;
 
 namespace ImagePipeline.Memory
 {

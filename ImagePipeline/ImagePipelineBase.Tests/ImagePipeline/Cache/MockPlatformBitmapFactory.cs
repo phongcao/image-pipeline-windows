@@ -1,6 +1,6 @@
 ﻿using FBCore.Common.References;
-using ImagePipelineBase.ImagePipeline.Bitmaps;
-using ImagePipelineBase.ImagePipeline.Memory;
+using ImagePipeline.Bitmaps;
+using ImagePipeline.Memory;
 using System.Threading;
 using Windows.Graphics.Imaging;
 

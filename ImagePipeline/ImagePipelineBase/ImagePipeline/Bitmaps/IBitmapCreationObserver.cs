@@ -1,6 +1,6 @@
 ﻿using Windows.Graphics.Imaging;
 
-namespace ImagePipelineBase.ImagePipeline.Bitmaps
+namespace ImagePipeline.Bitmaps
 {
     /// <summary>
     /// Observer that notifies external creation of bitmap using

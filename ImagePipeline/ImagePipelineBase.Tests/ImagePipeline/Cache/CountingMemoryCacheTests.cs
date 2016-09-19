@@ -1,9 +1,7 @@
-﻿using FBCore.Common.Internal;
-using FBCore.Common.Memory;
+﻿using FBCore.Common.Memory;
 using FBCore.Common.References;
-using ImagePipelineBase.ImagePipeline.Bitmaps;
-using ImagePipelineBase.ImagePipeline.Cache;
-using ImagePipelineBase.ImagePipeline.Memory;
+using ImagePipeline.Cache;
+using ImagePipeline.Memory;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 using System.Collections.Generic;

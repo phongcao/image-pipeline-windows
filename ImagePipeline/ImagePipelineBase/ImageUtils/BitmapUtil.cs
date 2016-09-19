@@ -1,5 +1,9 @@
-﻿using System;
+﻿using FBCore.Common.Internal;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 
 namespace ImageUtils
@@ -7,12 +11,8 @@ namespace ImageUtils
     /// <summary>
     /// Helper class for bitmap
     /// </summary>
-    public static class BitmapUtil
+    public sealed class BitmapUtil
     {
-        private const int DECODE_BUFFER_SIZE = 16 * 1024;
-        private const int POOL_SIZE = 12;
-        //private static final Pools.SynchronizedPool<ByteBuffer> DECODE_BUFFERS = new Pools.SynchronizedPool<>(POOL_SIZE);
-
         /// <summary>
         /// Bytes per pixel (BitmapPixelFormat.Rgba16)
         /// </summary>
@@ -62,16 +62,51 @@ namespace ImageUtils
         {
             uint capacity = default(int);
 
-            using (BitmapBuffer buffer = bitmap.LockBuffer(BitmapBufferAccessMode.Read))
+            if (bitmap != null)
             {
-                using (var reference = buffer.CreateReference())
+                using (BitmapBuffer buffer = bitmap.LockBuffer(BitmapBufferAccessMode.Read))
                 {
-                    byte* dataInBytes;
-                    ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacity);
+                    using (var reference = buffer.CreateReference())
+                    {
+                        byte* dataInBytes;
+                        ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacity);
+                    }
                 }
             }
 
             return capacity;
+        }
+
+        /// <summary>
+        /// Decodes only the bounds of an image and returns its width and height or null if the size can't
+        /// be determined
+        /// <param name="bytes">the input byte array of the image</param>
+        /// @return dimensions of the image
+        /// </summary>
+        public static async Task<KeyValuePair<int, int>> DecodeDimensions(byte[] bytes)
+        {
+            // Wrapping with ByteArrayInputStream is cheap and we don't have duplicate implementation
+            return await DecodeDimensions(new MemoryStream(bytes));
+        }
+
+        /// <summary>
+        /// Decodes only the bounds of an image and returns its width and height or null if the size can't
+        /// be determined
+        /// <param name="inputStream">the InputStream containing the image data</param>
+        /// @return dimensions of the image
+        /// </summary>
+        public static async Task<KeyValuePair<int, int>> DecodeDimensions(Stream inputStream)
+        {
+            Preconditions.CheckNotNull(inputStream);
+            try
+            {
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(inputStream.AsRandomAccessStream());
+                return new KeyValuePair<int, int>((int)decoder.OrientedPixelWidth, (int)decoder.OrientedPixelHeight);
+            }
+            catch (Exception)
+            {
+                return default(KeyValuePair<int, int>);
+            }   
         }
 
         /// <summary>

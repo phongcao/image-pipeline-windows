@@ -1,4 +1,4 @@
-﻿namespace ImagePipelineBase.ImagePipeline.Cache
+﻿namespace ImagePipeline.Cache
 {
     /// <summary>
     /// Configuration for a memory cache.

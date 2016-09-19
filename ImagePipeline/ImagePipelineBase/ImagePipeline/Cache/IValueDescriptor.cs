@@ -1,4 +1,4 @@
-﻿namespace ImagePipelineBase.ImagePipeline.Cache
+﻿namespace ImagePipeline.Cache
 {
     /// <summary>
     /// Interface used to get the information about the values.

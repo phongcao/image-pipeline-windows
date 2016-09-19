@@ -96,6 +96,20 @@
   </PropertyGroup>
   <ItemGroup>
     <!--A reference to the entire .Net Framework and Windows SDK are automatically included-->
+    <Content Include="Assets\ImageFormatUtils\webps\1_webp_anim.webp" />
+    <Content Include="Assets\ImageFormatUtils\webps\1_webp_e.webp" />
+    <Content Include="Assets\ImageFormatUtils\webps\1_webp_ea.webp" />
+    <Content Include="Assets\ImageFormatUtils\webps\1_webp_ll.webp" />
+    <Content Include="Assets\ImageFormatUtils\webps\1_webp_plain.webp" />
+    <Content Include="Assets\ImageFormatUtils\webps\2_webp_ea.webp" />
+    <Content Include="Assets\ImageFormatUtils\webps\2_webp_ll.webp" />
+    <Content Include="Assets\ImageFormatUtils\webps\2_webp_plain.webp" />
+    <Content Include="Assets\ImageFormatUtils\webps\3_webp_ea.webp" />
+    <Content Include="Assets\ImageFormatUtils\webps\3_webp_ll.webp" />
+    <Content Include="Assets\ImageFormatUtils\webps\4_webp_ea.webp" />
+    <Content Include="Assets\ImageFormatUtils\webps\4_webp_ll.webp" />
+    <Content Include="Assets\ImageFormatUtils\webps\5_webp_ea.webp" />
+    <Content Include="Assets\ImageFormatUtils\webps\5_webp_ll.webp" />
     <None Include="project.json" />
     <SDKReference Include="MSTestFramework.Universal, Version=$(UnitTestPlatformVersion)" />
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
@@ -104,6 +118,15 @@
     <Compile Include="ImagePipeline\Cache\CountingMemoryCacheTests.cs" />
     <Compile Include="ImagePipeline\Cache\MockPlatformBitmapFactory.cs" />
     <Compile Include="ImagePipeline\Cache\MockSupplier.cs" />
+    <Compile Include="ImageFormatUtils\GifFormatCheckerTests.cs" />
+    <Compile Include="ImageFormatUtils\ImageFormatCheckerTests.cs" />
+    <Compile Include="ImagePipeline\Image\CloseableBitmapTests.cs" />
+    <Compile Include="ImagePipeline\Image\CloseableStaticBitmapTests.cs" />
+    <Compile Include="ImagePipeline\Image\EncodedImageTests.cs" />
+    <Compile Include="ImageUtils\BitmapUtilTests.cs" />
+    <Compile Include="ImageUtils\JfifTestUtils.cs" />
+    <Compile Include="ImageUtils\JfifTestUtilsTests.cs" />
+    <Compile Include="ImageUtils\JfifUtilTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTestApp.xaml.cs">
       <DependentUpon>UnitTestApp.xaml</DependentUpon>
@@ -123,6 +146,47 @@
     <None Include="ImagePipelineBase.Tests_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\ImageFormatUtils\animatedgifs\1.gif" />
+    <Content Include="Assets\ImageFormatUtils\animatedgifs\2.gif" />
+    <Content Include="Assets\ImageFormatUtils\bmps\1.bmp" />
+    <Content Include="Assets\ImageFormatUtils\bmps\2.bmp" />
+    <Content Include="Assets\ImageFormatUtils\bmps\3.bmp" />
+    <Content Include="Assets\ImageFormatUtils\bmps\4.bmp" />
+    <Content Include="Assets\ImageFormatUtils\bmps\5.bmp" />
+    <Content Include="Assets\ImageFormatUtils\gifs\1.gif" />
+    <Content Include="Assets\ImageFormatUtils\gifs\2.gif" />
+    <Content Include="Assets\ImageFormatUtils\gifs\3.gif" />
+    <Content Include="Assets\ImageFormatUtils\gifs\4.gif" />
+    <Content Include="Assets\ImageFormatUtils\gifs\5.gif" />
+    <Content Include="Assets\ImageFormatUtils\jpegs\1.jpeg" />
+    <Content Include="Assets\ImageFormatUtils\jpegs\2.jpeg" />
+    <Content Include="Assets\ImageFormatUtils\jpegs\3.jpeg" />
+    <Content Include="Assets\ImageFormatUtils\jpegs\4.jpeg" />
+    <Content Include="Assets\ImageFormatUtils\jpegs\5.jpeg" />
+    <Content Include="Assets\ImageFormatUtils\pngs\1.png" />
+    <Content Include="Assets\ImageFormatUtils\pngs\2.png" />
+    <Content Include="Assets\ImageFormatUtils\pngs\3.png" />
+    <Content Include="Assets\ImageFormatUtils\pngs\4.png" />
+    <Content Include="Assets\ImageFormatUtils\pngs\5.png" />
+    <Content Include="Assets\ImagePipeline\Images\image.jpg" />
+    <Content Include="Assets\ImagePipeline\Images\image.png" />
+    <Content Include="Assets\ImageUtils\animatedgifs\1.gif" />
+    <Content Include="Assets\ImageUtils\animatedgifs\2.gif" />
+    <Content Include="Assets\ImageUtils\bmps\1.bmp" />
+    <Content Include="Assets\ImageUtils\bmps\2.bmp" />
+    <Content Include="Assets\ImageUtils\bmps\3.bmp" />
+    <Content Include="Assets\ImageUtils\gifs\1.gif" />
+    <Content Include="Assets\ImageUtils\gifs\2.gif" />
+    <Content Include="Assets\ImageUtils\gifs\3.gif" />
+    <Content Include="Assets\ImageUtils\jpegs\1.jpeg" />
+    <Content Include="Assets\ImageUtils\jpegs\1cut.jpeg" />
+    <Content Include="Assets\ImageUtils\jpegs\1prog.jpeg" />
+    <Content Include="Assets\ImageUtils\jpegs\2.jpeg" />
+    <Content Include="Assets\ImageUtils\jpegs\2prog.jpeg" />
+    <Content Include="Assets\ImageUtils\jpegs\3.jpeg" />
+    <Content Include="Assets\ImageUtils\pngs\1.png" />
+    <Content Include="Assets\ImageUtils\pngs\2.png" />
+    <Content Include="Assets\ImageUtils\pngs\3.png" />
     <Content Include="Properties\UnitTestApp.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -145,6 +209,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

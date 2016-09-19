@@ -1,7 +1,7 @@
 ﻿using FBCore.Common.References;
 using System;
 
-namespace ImagePipelineBase.ImagePipeline.Memory
+namespace ImagePipeline.Memory
 {
     /// <summary>
     /// ResourceReleaser helper class

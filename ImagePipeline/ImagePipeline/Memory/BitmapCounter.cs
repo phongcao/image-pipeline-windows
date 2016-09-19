@@ -1,7 +1,6 @@
 ﻿using FBCore.Common.Internal;
 using FBCore.Common.References;
-using ImagePipelineBase.ImagePipeline.Common;
-using ImagePipelineBase.ImagePipeline.Memory;
+using ImagePipeline.Common;
 using ImageUtils;
 using System;
 using System.Collections.Generic;
@@ -22,7 +21,7 @@ namespace ImagePipeline.Memory
 
         private readonly int _maxCount;
         private readonly int _maxSize;
-        private readonly ResourceReleaser<SoftwareBitmap> _unpooledBitmapsReleaser;
+        private readonly IResourceReleaser<SoftwareBitmap> _unpooledBitmapsReleaser;
 
         /// <summary>
         /// Instantiates the <see cref="BitmapCounter"/>.
@@ -118,7 +117,7 @@ namespace ImagePipeline.Memory
         /// Gets the bitmap pool releaser
         /// </summary>
         /// <returns>The bitmap pool releaser</returns>
-        public ResourceReleaser<SoftwareBitmap> GetReleaser()
+        public IResourceReleaser<SoftwareBitmap> GetReleaser()
         {
             return _unpooledBitmapsReleaser;
         }

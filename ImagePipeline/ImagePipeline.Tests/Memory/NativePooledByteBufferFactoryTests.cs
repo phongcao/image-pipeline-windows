@@ -1,6 +1,5 @@
 ﻿using ImagePipeline.Memory;
 using ImagePipeline.Testing;
-using ImagePipelineBase.ImagePipeline.Memory;
 using ImagePipelineTest.ImagePipeline.Testing;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System.Collections.Generic;

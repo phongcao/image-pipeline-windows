@@ -1,7 +1,7 @@
 ﻿using System;
 using Windows.Graphics.Imaging;
 
-namespace ImagePipelineBase.ImagePipeline.Bitmaps
+namespace ImagePipeline.Bitmaps
 {
     /// <summary>
     /// BitmapCreationObserver helper class

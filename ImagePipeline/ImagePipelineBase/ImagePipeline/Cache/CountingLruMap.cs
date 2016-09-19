@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Truncon.Collections;
 
-namespace ImagePipelineBase.ImagePipeline.Cache
+namespace ImagePipeline.Cache
 {
     /// <summary>
     /// Map that keeps track of the elements order (according to the LRU policy) and their size.

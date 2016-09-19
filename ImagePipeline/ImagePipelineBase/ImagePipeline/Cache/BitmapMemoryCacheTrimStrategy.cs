@@ -1,7 +1,7 @@
 ﻿using FBCore.Common.Memory;
 using System.Diagnostics;
 
-namespace ImagePipelineBase.ImagePipeline.Cache
+namespace ImagePipeline.Cache
 {
     /// <summary>
     /// CountingMemoryCache eviction strategy appropriate for bitmap caches.

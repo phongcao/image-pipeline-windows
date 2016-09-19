@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ImagePipelineBase.ImagePipeline.Common
+namespace ImagePipeline.Common
 {
     /// <summary>
     /// Being throwed when there are too many bitmaps in the pool
