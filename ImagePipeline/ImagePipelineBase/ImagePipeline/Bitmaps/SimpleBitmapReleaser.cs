@@ -1,7 +1,7 @@
 ﻿using FBCore.Common.References;
 using Windows.Graphics.Imaging;
 
-namespace ImagePipelineBase.ImagePipeline.Bitmaps
+namespace ImagePipeline.Bitmaps
 {
     /// <summary>
     /// A releaser that just recycles (frees) bitmap memory immediately.

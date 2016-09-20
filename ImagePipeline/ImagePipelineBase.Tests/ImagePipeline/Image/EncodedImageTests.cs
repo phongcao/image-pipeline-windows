@@ -189,7 +189,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
                     ByteStreams.ToByteArray(stream.AsStream()));
                 EncodedImage encodedImage = new EncodedImage(
                     CloseableReference<IPooledByteBuffer>.of(buf, _releaser));
-                await encodedImage.ParseMetaData();
+                await encodedImage.ParseMetaDataAsync();
                 Assert.AreEqual(ImageFormat.JPEG, encodedImage.Format);
                 Assert.AreEqual(550, encodedImage.Width);
                 Assert.AreEqual(468, encodedImage.Height);
@@ -210,7 +210,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
                     ByteStreams.ToByteArray(stream.AsStream()));
                 EncodedImage encodedImage = new EncodedImage(
                     CloseableReference<IPooledByteBuffer>.of(buf, _releaser));
-                await encodedImage.ParseMetaData();
+                await encodedImage.ParseMetaDataAsync();
                 Assert.AreEqual(ImageFormat.PNG, encodedImage.Format);
                 Assert.AreEqual(800, encodedImage.Width);
                 Assert.AreEqual(600, encodedImage.Height);

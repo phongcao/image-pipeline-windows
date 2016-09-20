@@ -267,7 +267,7 @@ namespace ImagePipeline.Image
         /// <summary>
         /// Sets the encoded image meta data.
         /// </summary>
-        public async Task ParseMetaData()
+        public async Task ParseMetaDataAsync()
         {
             ImageFormat format = ImageFormatChecker.GetImageFormat_WrapIOException(
                 GetInputStream());
@@ -278,7 +278,7 @@ namespace ImagePipeline.Image
             // dimensions
             if (!ImageFormatHelper.IsWebpFormat(Format))
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensions(GetInputStream());
+                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(GetInputStream());
                 if (!dimensions.Equals(default(KeyValuePair<int, int>)))
                 {
                     Width = dimensions.Key;

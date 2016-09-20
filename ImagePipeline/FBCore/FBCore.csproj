@@ -129,10 +129,14 @@
     <Compile Include="Common\References\SharedReference.cs" />
     <Compile Include="Common\Util\ByteConstants.cs" />
     <Compile Include="Common\Util\Hex.cs" />
+    <Compile Include="Common\Util\SecureHashUtil.cs" />
     <Compile Include="Common\Webp\WebpSupportStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\References\IResourceReleaser.cs" />
     <EmbeddedResource Include="Properties\FBCore.rd.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

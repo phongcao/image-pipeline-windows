@@ -83,10 +83,10 @@ namespace ImageUtils
         /// <param name="bytes">the input byte array of the image</param>
         /// @return dimensions of the image
         /// </summary>
-        public static async Task<KeyValuePair<int, int>> DecodeDimensions(byte[] bytes)
+        public static async Task<KeyValuePair<int, int>> DecodeDimensionsAsync(byte[] bytes)
         {
             // Wrapping with ByteArrayInputStream is cheap and we don't have duplicate implementation
-            return await DecodeDimensions(new MemoryStream(bytes));
+            return await DecodeDimensionsAsync(new MemoryStream(bytes));
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace ImageUtils
         /// <param name="inputStream">the InputStream containing the image data</param>
         /// @return dimensions of the image
         /// </summary>
-        public static async Task<KeyValuePair<int, int>> DecodeDimensions(Stream inputStream)
+        public static async Task<KeyValuePair<int, int>> DecodeDimensionsAsync(Stream inputStream)
         {
             Preconditions.CheckNotNull(inputStream);
             try

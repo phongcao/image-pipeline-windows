@@ -1,8 +1,7 @@
 ﻿using FBCore.Common.Internal;
-using System;
 using System.IO;
 
-namespace ImagePipelineBase.ImageFormatUtils
+namespace ImageFormatUtils
 {
     /// <summary>
     /// Detects the format of an encoded gif.

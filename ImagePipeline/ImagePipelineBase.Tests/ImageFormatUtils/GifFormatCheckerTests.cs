@@ -1,4 +1,4 @@
-﻿using ImagePipelineBase.ImageFormatUtils;
+﻿using ImageFormatUtils;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 using System.Collections.Generic;

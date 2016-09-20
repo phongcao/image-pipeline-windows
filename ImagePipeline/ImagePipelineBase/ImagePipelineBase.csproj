@@ -123,6 +123,18 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\Common\CacheKeyUtil.cs" />
+    <Compile Include="Cache\Common\DebuggingCacheKey.cs" />
+    <Compile Include="Cache\Common\ICacheErrorLogger.cs" />
+    <Compile Include="Cache\Common\ICacheEvent.cs" />
+    <Compile Include="Cache\Common\ICacheEventListener.cs" />
+    <Compile Include="Cache\Common\ICacheKey.cs" />
+    <Compile Include="Cache\Common\IWriterCallback.cs" />
+    <Compile Include="Cache\Common\MultiCacheKey.cs" />
+    <Compile Include="Cache\Common\NoOpCacheErrorLogger.cs" />
+    <Compile Include="Cache\Common\SimpleCacheKey.cs" />
+    <Compile Include="Cache\Common\WriterCallbacks.cs" />
+    <Compile Include="Cache\Common\NoOpCacheEventListener.cs" />
     <Compile Include="Collections\OrderedDictionary.cs" />
     <Compile Include="ImageFormatUtils\GifFormatChecker.cs" />
     <Compile Include="ImageFormatUtils\ImageFormat.cs" />
@@ -173,6 +185,9 @@
       <Project>{179effb6-c262-428c-a7c1-6fb386628344}</Project>
       <Name>FBCore</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Cache\Disk\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

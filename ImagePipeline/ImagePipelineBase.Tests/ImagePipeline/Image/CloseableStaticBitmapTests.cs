@@ -1,6 +1,6 @@
 ﻿using FBCore.Common.References;
+using ImagePipeline.Bitmaps;
 using ImagePipeline.Image;
-using ImagePipelineBase.ImagePipeline.Bitmaps;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 using Windows.Graphics.Imaging;
