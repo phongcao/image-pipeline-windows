@@ -34,7 +34,7 @@ namespace ImagePipeline.Tests.Memory
             using (NativeMemoryChunk nativeMemoryChunk = new NativeMemoryChunk(size))
             {
                 nativeMemoryChunk.Dispose();
-                Assert.IsTrue(nativeMemoryChunk.IsClosed());
+                Assert.IsTrue(nativeMemoryChunk.IsClosed);
             }
         }
 

@@ -115,8 +115,18 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\File\CreateDirectoryException.cs" />
+    <Compile Include="Common\File\DirectoryDeleteException.cs" />
+    <Compile Include="Common\File\FileDeleteException.cs" />
+    <Compile Include="Common\File\FileSystemInfoExtensions.cs" />
+    <Compile Include="Common\File\FileTree.cs" />
+    <Compile Include="Common\File\FileUtils.cs" />
+    <Compile Include="Common\File\IFileTreeVisitor.cs" />
+    <Compile Include="Common\File\ParentDirNotFoundException.cs" />
+    <Compile Include="Common\File\RenameException.cs" />
     <Compile Include="Common\Internal\ByteStreams.cs" />
     <Compile Include="Common\Internal\Closeables.cs" />
+    <Compile Include="Common\Internal\Files.cs" />
     <Compile Include="Common\Internal\ISupplier.cs" />
     <Compile Include="Common\Internal\Preconditions.cs" />
     <Compile Include="Common\Memory\IMemoryTrimmable.cs" />
@@ -136,7 +146,7 @@
     <EmbeddedResource Include="Properties\FBCore.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
+    <Folder Include="Common\Disk\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

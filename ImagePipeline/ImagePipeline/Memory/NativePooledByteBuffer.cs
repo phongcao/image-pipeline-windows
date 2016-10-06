@@ -96,11 +96,14 @@ namespace ImagePipeline.Memory
         /// Check if this bytebuffer is already closed
         /// @return true if this bytebuffer is closed.
         /// </summary>
-        public bool IsClosed()
+        public bool IsClosed
         {
-            lock (_poolGate)
+            get
             {
-                return !CloseableReference<NativeMemoryChunk>.IsValid(_bufRef);
+                lock (_poolGate)
+                {
+                    return !CloseableReference<NativeMemoryChunk>.IsValid(_bufRef);
+                }
             }
         }
 
@@ -129,7 +132,7 @@ namespace ImagePipeline.Memory
         {
             lock (_poolGate)
             {
-                if (IsClosed())
+                if (IsClosed)
                 {
                     throw new ClosedException();
                 }

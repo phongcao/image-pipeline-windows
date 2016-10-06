@@ -42,7 +42,7 @@ namespace ImagePipeline.Tests.Memory
         [TestMethod]
         public void TestBasic()
         {
-            Assert.IsFalse(_pooledByteBuffer.IsClosed());
+            Assert.IsFalse(_pooledByteBuffer.IsClosed);
             Assert.AreSame(_chunk, _pooledByteBuffer._bufRef.Get());
             Assert.AreEqual(BUFFER_LENGTH, _pooledByteBuffer.Size);
         }
@@ -139,7 +139,7 @@ namespace ImagePipeline.Tests.Memory
             MockPoolStatsTracker statsTracker = (MockPoolStatsTracker)_pool._poolStatsTracker;
             Assert.AreEqual(0, statsTracker.FreeCallCount);
             _pooledByteBuffer.Dispose();
-            Assert.IsTrue(_pooledByteBuffer.IsClosed());
+            Assert.IsTrue(_pooledByteBuffer.IsClosed);
             Assert.IsNull(_pooledByteBuffer._bufRef);
             Assert.AreEqual(1, statsTracker.FreeCallCount);
         }

@@ -33,9 +33,12 @@ namespace ImagePipeline.Testing
         /// Fake IsClosed method
         /// </summary>
         /// <returns></returns>
-        public override bool IsClosed()
+        public override bool IsClosed
         {
-            return _buf == null;
+            get
+            {
+                return _buf == null;
+            }
         }
 
         /// <summary>

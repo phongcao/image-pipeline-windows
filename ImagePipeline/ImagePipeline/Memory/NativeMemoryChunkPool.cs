@@ -123,7 +123,7 @@ namespace ImagePipeline.Memory
         protected internal override bool IsReusable(NativeMemoryChunk value)
         {
             Preconditions.CheckNotNull(value);
-            return !value.IsClosed();
+            return !value.IsClosed;
         }
     }
 }

@@ -101,6 +101,7 @@
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\File\FileUtilsTests.cs" />
     <Compile Include="Common\References\CloseableReferenceTests.cs" />
     <Compile Include="Common\References\MockDisposable.cs" />
     <Compile Include="Common\References\MockResourceReleaser.cs" />

@@ -22,7 +22,7 @@ namespace ImagePipeline.Memory
         /// </summary>
         public PooledByteBufferInputStream(IPooledByteBuffer pooledByteBuffer)
         {
-            Preconditions.CheckArgument(!pooledByteBuffer.IsClosed());
+            Preconditions.CheckArgument(!pooledByteBuffer.IsClosed);
             _pooledByteBuffer = Preconditions.CheckNotNull(pooledByteBuffer);
             _currentOffset = 0;
         }

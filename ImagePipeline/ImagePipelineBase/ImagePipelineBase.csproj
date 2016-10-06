@@ -123,6 +123,9 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryResource\ByteArrayBinaryResource.cs" />
+    <Compile Include="BinaryResource\FileBinaryResource.cs" />
+    <Compile Include="BinaryResource\IBinaryResource.cs" />
     <Compile Include="Cache\Common\CacheKeyUtil.cs" />
     <Compile Include="Cache\Common\DebuggingCacheKey.cs" />
     <Compile Include="Cache\Common\ICacheErrorLogger.cs" />
@@ -135,6 +138,12 @@
     <Compile Include="Cache\Common\SimpleCacheKey.cs" />
     <Compile Include="Cache\Common\WriterCallbacks.cs" />
     <Compile Include="Cache\Common\NoOpCacheEventListener.cs" />
+    <Compile Include="Cache\Disk\DefaultDiskStorage.cs" />
+    <Compile Include="Cache\Disk\DiskDumpInfo.cs" />
+    <Compile Include="Cache\Disk\DiskDumpInfoEntry.cs" />
+    <Compile Include="Cache\Disk\IDiskStorage.cs" />
+    <Compile Include="Cache\Disk\IEntry.cs" />
+    <Compile Include="Cache\Disk\IInserter.cs" />
     <Compile Include="Collections\OrderedDictionary.cs" />
     <Compile Include="ImageFormatUtils\GifFormatChecker.cs" />
     <Compile Include="ImageFormatUtils\ImageFormat.cs" />
@@ -186,9 +195,7 @@
       <Name>FBCore</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Cache\Disk\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
