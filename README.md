@@ -1,2 +1,2 @@
 # image-pipeline-windows
-A Univeral Windows Platform port of [Fresco](https://github.com/facebook/fresco) library.
+A Universal Windows Platform port of [Fresco](https://github.com/facebook/fresco) library.
