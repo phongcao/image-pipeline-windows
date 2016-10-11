@@ -54,7 +54,7 @@ namespace FBCore.Common.File
         /// delete it. If the delete or the rename operation fails, then we raise an exception
         /// <param name="source">The source file</param>
         /// <param name="target">The new 'name' for the source file</param>
-        /// @throws IOException
+        /// @throws RenameException
         /// </summary>
         public static void Rename(FileSystemInfo source, FileSystemInfo target)
         {

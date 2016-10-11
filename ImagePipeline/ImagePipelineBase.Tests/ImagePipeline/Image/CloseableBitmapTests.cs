@@ -25,7 +25,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
         {
             _bitmap = new SoftwareBitmap(BitmapPixelFormat.Rgba8, 50, 50);
             _releaseCallCount = 0;
-            _resourceReleaser = new ResourceReleaser<SoftwareBitmap>(
+            _resourceReleaser = new ResourceReleaserHelper<SoftwareBitmap>(
                 b =>
                 {
                     b.Dispose();

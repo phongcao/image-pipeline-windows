@@ -22,7 +22,7 @@ namespace BinaryResource
         /// <summary>
         /// Returns the size of the byte array
         /// </summary>
-        public long Size()
+        public long GetSize()
         {
             return _bytes.Length;
         }

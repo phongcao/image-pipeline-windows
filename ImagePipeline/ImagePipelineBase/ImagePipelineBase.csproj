@@ -136,6 +136,7 @@
     <Compile Include="Cache\Common\MultiCacheKey.cs" />
     <Compile Include="Cache\Common\NoOpCacheErrorLogger.cs" />
     <Compile Include="Cache\Common\SimpleCacheKey.cs" />
+    <Compile Include="Cache\Common\WriterCallbackHelper.cs" />
     <Compile Include="Cache\Common\WriterCallbacks.cs" />
     <Compile Include="Cache\Common\NoOpCacheEventListener.cs" />
     <Compile Include="Cache\Disk\DefaultDiskStorage.cs" />

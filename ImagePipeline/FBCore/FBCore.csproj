@@ -115,6 +115,9 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Disk\IDiskTrimmable.cs" />
+    <Compile Include="Common\Disk\IDiskTrimmableRegistry.cs" />
+    <Compile Include="Common\Disk\NoOpDiskTrimmableRegistry.cs" />
     <Compile Include="Common\File\CreateDirectoryException.cs" />
     <Compile Include="Common\File\DirectoryDeleteException.cs" />
     <Compile Include="Common\File\FileDeleteException.cs" />
@@ -129,6 +132,7 @@
     <Compile Include="Common\Internal\Files.cs" />
     <Compile Include="Common\Internal\ISupplier.cs" />
     <Compile Include="Common\Internal\Preconditions.cs" />
+    <Compile Include="Common\Internal\Supplier.cs" />
     <Compile Include="Common\Memory\IMemoryTrimmable.cs" />
     <Compile Include="Common\Memory\IMemoryTrimmableRegistry.cs" />
     <Compile Include="Common\Memory\MemoryTrimType.cs" />
@@ -137,6 +141,9 @@
     <Compile Include="Common\References\DefaultResourceReleaser.cs" />
     <Compile Include="Common\References\OOMSoftReference.cs" />
     <Compile Include="Common\References\SharedReference.cs" />
+    <Compile Include="Common\Time\Clock.cs" />
+    <Compile Include="Common\Time\MockSystemClock.cs" />
+    <Compile Include="Common\Time\SystemClock.cs" />
     <Compile Include="Common\Util\ByteConstants.cs" />
     <Compile Include="Common\Util\Hex.cs" />
     <Compile Include="Common\Util\SecureHashUtil.cs" />
@@ -145,9 +152,7 @@
     <Compile Include="Common\References\IResourceReleaser.cs" />
     <EmbeddedResource Include="Properties\FBCore.rd.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Common\Disk\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

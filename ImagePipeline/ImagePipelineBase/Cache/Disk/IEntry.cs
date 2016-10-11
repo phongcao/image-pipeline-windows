@@ -22,7 +22,7 @@ namespace Cache.Disk
         /// Calculated on first time and never changes so it can be used as immutable
         /// </summary>
         /// <returns></returns>
-        long Size { get; }
+        long GetSize();
 
         /// <summary>
         /// Gets the resoure

@@ -115,6 +115,7 @@
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\Disk\DefaultDiskStorageTests.cs" />
     <Compile Include="ImagePipeline\Cache\CountingMemoryCacheTests.cs" />
     <Compile Include="ImagePipeline\Cache\MockPlatformBitmapFactory.cs" />
     <Compile Include="ImagePipeline\Cache\MockSupplier.cs" />
@@ -209,9 +210,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Cache\Disk\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

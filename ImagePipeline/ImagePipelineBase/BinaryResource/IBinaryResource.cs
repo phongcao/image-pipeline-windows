@@ -45,6 +45,6 @@ namespace BinaryResource
         ///
         /// @throws IOException if an I/O error occurs in the process of reading the size of this source
         /// </summary>
-        long Size();
+        long GetSize();
     }
 }

@@ -34,7 +34,7 @@ namespace ImagePipeline.Memory
             Preconditions.CheckArgument(maxSize > 0);
             _maxCount = maxCount;
             _maxSize = maxSize;
-            _unpooledBitmapsReleaser = new ResourceReleaser<SoftwareBitmap>(value =>
+            _unpooledBitmapsReleaser = new ResourceReleaserHelper<SoftwareBitmap>(value =>
             {
                 try
                 {

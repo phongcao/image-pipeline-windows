@@ -6,15 +6,15 @@ namespace ImagePipeline.Memory
     /// <summary>
     /// ResourceReleaser helper class
     /// </summary>
-    public class ResourceReleaser<T> : IResourceReleaser<T>
+    public class ResourceReleaserHelper<T> : IResourceReleaser<T>
     {
         private readonly Action<T> _func;
 
         /// <summary>
-        /// Instantiates the <see cref="ResourceReleaser&lt;T&gt;"/>.
+        /// Instantiates the <see cref="ResourceReleaserHelper&lt;T&gt;"/>.
         /// </summary>
         /// <param name="func">Delegate function</param>
-        public ResourceReleaser(Action<T> func)
+        public ResourceReleaserHelper(Action<T> func)
         {
             _func = func;
         }

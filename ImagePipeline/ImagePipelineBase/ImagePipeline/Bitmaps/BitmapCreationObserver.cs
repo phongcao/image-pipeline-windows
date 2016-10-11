@@ -6,15 +6,15 @@ namespace ImagePipeline.Bitmaps
     /// <summary>
     /// BitmapCreationObserver helper class
     /// </summary>
-    public class BitmapCreationObserver : IBitmapCreationObserver
+    public class BitmapCreationObserverHelper : IBitmapCreationObserver
     {
         private readonly Action<SoftwareBitmap, object> _func;
 
         /// <summary>
-        /// Instantiates the <see cref="BitmapCreationObserver"/>.
+        /// Instantiates the <see cref="BitmapCreationObserverHelper"/>.
         /// </summary>
         /// <param name="func">Delegate function</param>
-        public BitmapCreationObserver(Action<SoftwareBitmap, object> func)
+        public BitmapCreationObserverHelper(Action<SoftwareBitmap, object> func)
         {
             _func = func;
         }

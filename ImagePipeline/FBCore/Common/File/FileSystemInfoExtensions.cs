@@ -74,5 +74,34 @@ namespace FBCore.Common.File.Extensions
                 return false;
             }
         }
+
+        /// <summary>
+        /// Returns a new file made from the pathname of the parent of this file.
+        /// This is the path up to but not including the last name. <code> null</code> is
+        /// returned when there is no parent.
+        /// </summary>
+        public static DirectoryInfo GetParentDirectory(this FileSystemInfo file)
+        {
+            DirectoryInfo parent = null;
+
+            try
+            {
+                if (file.IsDirectory())
+                {
+                    DirectoryInfo currentDir = (DirectoryInfo)file;
+                    parent = currentDir.Parent;
+                }
+                else
+                {
+                    FileInfo currentFile = (FileInfo)file;
+                    parent = currentFile.Directory;
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            return parent;
+        }
     }
 }

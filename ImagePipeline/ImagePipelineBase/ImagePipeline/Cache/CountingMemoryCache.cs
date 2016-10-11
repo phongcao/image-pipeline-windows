@@ -127,13 +127,13 @@ namespace ImagePipeline.Cache
             if (isExternalCreatedBitmapLogEnabled)
             {
                 platformBitmapFactory.SetCreationListener(
-                    new BitmapCreationObserver((b, o) => _otherEntries.Add(b, o)));
+                    new BitmapCreationObserverHelper((b, o) => _otherEntries.Add(b, o)));
             }
         }
 
         private IValueDescriptor<Entry> WrapValueDescriptor(IValueDescriptor<V> evictableValueDescriptor)
         {
-            return new ValueDescriptor<Entry>(
+            return new ValueDescriptorHelper<Entry>(
                 entry =>
                 {
                     return entry.ValueRef.IsValid() ? evictableValueDescriptor.GetSizeInBytes(entry.ValueRef.Get()) : 0;
@@ -250,7 +250,7 @@ namespace ImagePipeline.Cache
             IncreaseClientCount(entry);
             return CloseableReference<V>.of(
                 entry.ValueRef.Get(),
-                new ResourceReleaser<V>(v => ReleaseClientReference(entry)));
+                new ResourceReleaserHelper<V>(v => ReleaseClientReference(entry)));
         }
 
         /// <summary>

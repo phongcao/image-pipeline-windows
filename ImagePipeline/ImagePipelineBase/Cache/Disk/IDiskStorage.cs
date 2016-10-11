@@ -10,13 +10,13 @@ namespace Cache.Disk
     public interface IDiskStorage
     {
         /// <summary>
-        /// is this storage enabled?
+        /// Is this storage enabled?
         /// @return true, if enabled
         /// </summary>
         bool IsEnabled { get; }
 
         /// <summary>
-        /// is this storage external?
+        /// Is this storage external?
         /// @return true, if external
         /// </summary>
         bool IsExternal { get; }
@@ -72,7 +72,7 @@ namespace Cache.Disk
         /// @return a collection of entries in storage
         /// @throws IOException
         /// </summary>
-        ICollection<IEntry> Entries { get; }
+        ICollection<IEntry> GetEntries();
 
         /// <summary>
         /// Remove the resource represented by the entry
@@ -100,7 +100,7 @@ namespace Cache.Disk
         /// <summary>
         /// Gets the disk dump info
         /// </summary>
-        DiskDumpInfo DumpInfo { get; }
+        DiskDumpInfo GetDumpInfo();
 
         /// <summary>
         /// Get the storage's name, which should be unique

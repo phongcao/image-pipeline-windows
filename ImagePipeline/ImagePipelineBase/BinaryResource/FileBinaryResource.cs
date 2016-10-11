@@ -39,7 +39,7 @@ namespace BinaryResource
         /// Returns file size
         /// </summary>
         /// <returns></returns>
-        public long Size()
+        public long GetSize()
         {
             return _file.Length; // 0L if file doesn't exist
         }

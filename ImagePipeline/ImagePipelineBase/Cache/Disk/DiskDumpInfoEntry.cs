@@ -28,7 +28,7 @@
         /// <summary>
         /// Instantiates the <see cref="DiskDumpInfoEntry"/>
         /// </summary>
-        protected DiskDumpInfoEntry(string path, string type, float size, string firstBits)
+        public DiskDumpInfoEntry(string path, string type, float size, string firstBits)
         {
             Path = path;
             Type = type;
