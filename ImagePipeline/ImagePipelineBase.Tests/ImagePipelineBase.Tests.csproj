@@ -116,6 +116,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\Disk\DefaultDiskStorageTests.cs" />
+    <Compile Include="Cache\Disk\DefaultEntryEvictionComparatorSupplierTests.cs" />
+    <Compile Include="Cache\Disk\ScoreBasedEvictionComparatorSupplierTests.cs" />
+    <Compile Include="Cache\Disk\SettableCacheEventTests.cs" />
     <Compile Include="ImagePipeline\Cache\CountingMemoryCacheTests.cs" />
     <Compile Include="ImagePipeline\Cache\MockPlatformBitmapFactory.cs" />
     <Compile Include="ImagePipeline\Cache\MockSupplier.cs" />

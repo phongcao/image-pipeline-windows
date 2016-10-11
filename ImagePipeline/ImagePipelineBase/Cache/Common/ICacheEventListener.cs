@@ -6,6 +6,11 @@
     public enum EvictionReason
     {
         /// <summary>
+        /// Default, null value
+        /// </summary>
+        NONE,
+
+        /// <summary>
         /// Cache full
         /// </summary>
         CACHE_FULL,
