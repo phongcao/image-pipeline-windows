@@ -31,7 +31,7 @@ namespace ImagePipeline.Image
         /// <summary>
         /// Returns whether this instance is closed.
         /// </summary>
-        public abstract bool IsClosed { get; }
+        public abstract bool Closed { get; }
 
         /// <summary>
         /// Returns quality information for the image.
@@ -50,7 +50,7 @@ namespace ImagePipeline.Image
         /// the image for an animated GIF might contain the current frame being viewed). This means
         /// that the image should not be stored in the bitmap cache.
         /// </summary>
-        public bool IsStateful
+        public bool Stateful
         {
             get
             {
@@ -63,7 +63,7 @@ namespace ImagePipeline.Image
         /// </summary>
         ~CloseableImage()
         {
-            if (IsClosed)
+            if (Closed)
             {
                 return;
             }

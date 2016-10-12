@@ -97,7 +97,7 @@ namespace FBCore.Tests.Common.References
             MockResourceReleaser<Thing> releaser = new MockResourceReleaser<Thing>();
             SharedReference<Thing> tRef = new SharedReference<Thing>(thing, releaser);
             tRef.DeleteReference();
-            Assert.IsTrue(releaser.IsReleased);
+            Assert.IsTrue(releaser.Released);
         }
 
         private class Thing : IDisposable

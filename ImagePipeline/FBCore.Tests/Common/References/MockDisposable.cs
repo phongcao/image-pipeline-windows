@@ -7,7 +7,7 @@ namespace FBCore.Tests.Common.References
     {
         private int _disposeCallCount = 0;
 
-        public bool IsDisposed
+        public bool Disposed
         {
             get
             {

@@ -94,11 +94,11 @@ namespace Cache.Disk
 
         private static bool CheckExternal(FileSystemInfo directory, ICacheErrorLogger cacheErrorLogger)
         {
-            // Get the logical root folder for all external storage devices.
-            StorageFolder externalDevices = KnownFolders.RemovableDevices;
-
             try
             {
+                // Get the logical root folder for all external storage devices.
+                StorageFolder externalDevices = KnownFolders.RemovableDevices;
+
                 if (directory.FullName.Contains(externalDevices.Path))
                 {
                     return true;
@@ -128,7 +128,7 @@ namespace Cache.Disk
         /// Is this storage enabled?
         /// @return true, if enabled
         /// </summary>
-        public bool IsEnabled
+        public bool Enabled
         {
             get
             {
@@ -140,7 +140,7 @@ namespace Cache.Disk
         /// Is this storage external?
         /// @return true, if external
         /// </summary>
-        public bool IsExternal
+        public bool External
         {
             get
             {

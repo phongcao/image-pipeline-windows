@@ -55,7 +55,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
                 return new DefaultDiskStorage(
                     _directory,
                     version,
-                    NoOpCacheErrorLogger.GetInstance(),
+                    NoOpCacheErrorLogger.Instance,
                     _clock);
             });
         }
@@ -93,13 +93,13 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         }
 
         /// <summary>
-        /// Tests out the IsEnabled method
+        /// Tests out the Enabled attribute
         /// </summary>
         [TestMethod]
-        public void TestIsEnabled()
+        public void TestEnabled()
         {
             DefaultDiskStorage storage = GetStorageSupplier(1).Get();
-            Assert.IsTrue(storage.IsEnabled);
+            Assert.IsTrue(storage.Enabled);
         }
 
         /// <summary>

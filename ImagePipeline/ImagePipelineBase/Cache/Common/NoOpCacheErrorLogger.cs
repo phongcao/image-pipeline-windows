@@ -18,16 +18,19 @@ namespace Cache.Common
         /// Gets singleton
         /// </summary>
         /// <returns></returns>
-        public static NoOpCacheErrorLogger GetInstance()
+        public static NoOpCacheErrorLogger Instance
         {
-            lock (_instanceGate)
+            get
             {
-                if (_instance == null)
+                lock (_instanceGate)
                 {
-                    _instance = new NoOpCacheErrorLogger();
-                }
+                    if (_instance == null)
+                    {
+                        _instance = new NoOpCacheErrorLogger();
+                    }
 
-                return _instance;
+                    return _instance;
+                }
             }
         }
 

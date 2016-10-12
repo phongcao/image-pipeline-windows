@@ -96,7 +96,7 @@ namespace ImagePipeline.Memory
         /// Check if this bytebuffer is already closed
         /// @return true if this bytebuffer is closed.
         /// </summary>
-        public bool IsClosed
+        public bool Closed
         {
             get
             {
@@ -132,7 +132,7 @@ namespace ImagePipeline.Memory
         {
             lock (_poolGate)
             {
-                if (IsClosed)
+                if (Closed)
                 {
                     throw new ClosedException();
                 }

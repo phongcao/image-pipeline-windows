@@ -19,16 +19,19 @@ namespace ImagePipeline.Memory
         /// Singleton
         /// </summary>
         /// <returns></returns>
-        public static NoOpPoolStatsTracker GetInstance()
+        public static NoOpPoolStatsTracker Instance
         {
-            lock (_instanceGate)
+            get
             {
-                if (_instance == null)
+                lock (_instanceGate)
                 {
-                    _instance = new NoOpPoolStatsTracker();
-                }
+                    if (_instance == null)
+                    {
+                        _instance = new NoOpPoolStatsTracker();
+                    }
 
-                return _instance;
+                    return _instance;
+                }
             }
         }
 

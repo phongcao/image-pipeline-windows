@@ -26,7 +26,7 @@ namespace ImagePipeline.Memory
             PoolParams args)
         {
             Preconditions.CheckArgument(args.MaxNumThreads > 0);
-            _delegatePool = new SoftRefByteArrayPool(memoryTrimmableRegistry, args, NoOpPoolStatsTracker.GetInstance());
+            _delegatePool = new SoftRefByteArrayPool(memoryTrimmableRegistry, args, NoOpPoolStatsTracker.Instance);
             _resourceReleaser = new ResourceReleaserHelper<byte[]>(value => Release(value));
         }
 

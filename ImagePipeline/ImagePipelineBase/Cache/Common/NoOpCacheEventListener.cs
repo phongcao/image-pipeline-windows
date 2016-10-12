@@ -16,16 +16,19 @@
         /// Gets singleton
         /// </summary>
         /// <returns></returns>
-        public static NoOpCacheEventListener GetInstance()
+        public static NoOpCacheEventListener Instance
         {
-            lock (_instanceGate)
+            get
             {
-                if (_instance == null)
+                lock (_instanceGate)
                 {
-                    _instance = new NoOpCacheEventListener();
-                }
+                    if (_instance == null)
+                    {
+                        _instance = new NoOpCacheEventListener();
+                    }
 
-                return _instance;
+                    return _instance;
+                }
             }
         }
 

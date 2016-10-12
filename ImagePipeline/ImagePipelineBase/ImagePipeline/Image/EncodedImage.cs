@@ -140,12 +140,15 @@ namespace ImagePipeline.Image
         /// Returns true if the internal buffer reference is valid or the InputStream Supplier is not null,
         /// false otherwise.
         /// </summary>
-        public bool IsValid()
+        public bool Valid
         {
-            lock (_imageGate)
+            get
             {
-                return CloseableReference<IPooledByteBuffer>.IsValid(
-                    _pooledByteBufferRef) || _inputStreamSupplier != null;
+                lock (_imageGate)
+                {
+                    return CloseableReference<IPooledByteBuffer>.IsValid(
+                        _pooledByteBufferRef) || _inputStreamSupplier != null;
+                }
             }
         }
 
@@ -344,7 +347,7 @@ namespace ImagePipeline.Image
         /// </summary>
         public static bool IsValid(EncodedImage encodedImage)
         {
-            return encodedImage != null && encodedImage.IsValid();
+            return encodedImage != null && encodedImage.Valid;
         }
 
         /// <summary>

@@ -119,7 +119,6 @@
     <Compile Include="ImagePipeline\Testing\FakeNativeMemoryChunkPool.cs" />
     <Compile Include="ImagePipeline\Testing\MockBitmapFactory.cs" />
     <Compile Include="ImagePipeline\Testing\MockByteArrayPool.cs" />
-    <Compile Include="ImagePipeline\Testing\MockDisposable.cs" />
     <Compile Include="ImagePipeline\Testing\MockMemoryStream.cs" />
     <Compile Include="ImagePipeline\Testing\MockMemoryTrimmableRegistry.cs" />
     <Compile Include="ImagePipeline\Testing\MockPoolStatsTracker.cs" />

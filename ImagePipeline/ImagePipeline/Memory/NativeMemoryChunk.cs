@@ -59,7 +59,7 @@ namespace ImagePipeline.Memory
         /// </summary>
         ~NativeMemoryChunk()
         {
-            if (IsClosed)
+            if (Closed)
             {
                 return;
             }
@@ -98,7 +98,7 @@ namespace ImagePipeline.Memory
         /// Is this chunk already closed (aka freed) ?
         /// @return true, if this chunk has already been closed
         /// </summary>
-        public virtual bool IsClosed
+        public virtual bool Closed
         {
             get
             {
@@ -126,7 +126,7 @@ namespace ImagePipeline.Memory
             lock (_memoryChunkGate)
             {
                 Preconditions.CheckNotNull(byteArray);
-                Preconditions.CheckState(!IsClosed);
+                Preconditions.CheckState(!Closed);
                 int actualCount = AdjustByteCount(nativeMemoryOffset, count);
                 CheckBounds(nativeMemoryOffset, byteArray.Length, byteArrayOffset, actualCount);
                 ImagePipelineNative.NativeMemoryChunk.NativeCopyFromByteArray(
@@ -155,7 +155,7 @@ namespace ImagePipeline.Memory
             lock (_memoryChunkGate)
             {
                 Preconditions.CheckNotNull(byteArray);
-                Preconditions.CheckState(!IsClosed);
+                Preconditions.CheckState(!Closed);
                 int actualCount = AdjustByteCount(nativeMemoryOffset, count);
                 CheckBounds(nativeMemoryOffset, byteArray.Length, byteArrayOffset, actualCount);
                 ImagePipelineNative.NativeMemoryChunk.NativeCopyToByteArray(
@@ -173,7 +173,7 @@ namespace ImagePipeline.Memory
         {
             lock (_memoryChunkGate)
             {
-                Preconditions.CheckState(!IsClosed);
+                Preconditions.CheckState(!Closed);
                 Preconditions.CheckArgument(offset >= 0);
                 Preconditions.CheckArgument(offset < Size);
                 return ImagePipelineNative.NativeMemoryChunk.NativeReadByte(_nativePtr + offset);
@@ -247,8 +247,8 @@ namespace ImagePipeline.Memory
             int otherOffset,
             int count)
         {
-            Preconditions.CheckState(!IsClosed);
-            Preconditions.CheckState(!other.IsClosed);
+            Preconditions.CheckState(!Closed);
+            Preconditions.CheckState(!other.Closed);
             CheckBounds(offset, other.Size, otherOffset, count);
             ImagePipelineNative.NativeMemoryChunk.NativeMemcpy(
                 other._nativePtr + otherOffset, _nativePtr + offset, count);

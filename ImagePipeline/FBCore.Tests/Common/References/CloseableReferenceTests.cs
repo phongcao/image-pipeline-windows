@@ -63,7 +63,7 @@ namespace FBCore.Tests.Common.References
         {
             _closeableReference.Dispose();
             Assert.AreEqual(0, _closeableReference.GetUnderlyingReferenceTestOnly().GetRefCountTestOnly());
-            Assert.IsTrue(_mockCloseable.IsDisposed);
+            Assert.IsTrue(_mockCloseable.Disposed);
         }
     }
 }

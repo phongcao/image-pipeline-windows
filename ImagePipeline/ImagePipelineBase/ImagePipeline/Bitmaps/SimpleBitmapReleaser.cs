@@ -14,14 +14,17 @@ namespace ImagePipeline.Bitmaps
         /// Gets singleton
         /// </summary>
         /// <returns></returns>
-        public static SimpleBitmapReleaser GetInstance()
+        public static SimpleBitmapReleaser Instance
         {
-            if (_instance == null)
+            get
             {
-                _instance = new SimpleBitmapReleaser();
-            }
+                if (_instance == null)
+                {
+                    _instance = new SimpleBitmapReleaser();
+                }
 
-            return _instance;
+                return _instance;
+            }
         }
 
         private SimpleBitmapReleaser() { }

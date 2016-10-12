@@ -43,7 +43,7 @@
         /// <para /> When fetching image progressively, the few first results can be of really poor quality,
         /// but eventually, they get really close to original image, and we mark those as good-enough.
         /// </summary>
-        public bool IsOfGoodEnoughQuality
+        public bool GoodEnoughQuality
         {
             get
             {
@@ -55,7 +55,7 @@
         /// Whether the image is of full quality.
         /// <para /> For progressive JPEGs, this is the final scan. For other image types, this is always true.
         /// </summary>
-        public bool IsOfFullQuality
+        public bool FullQuality
         {
             get
             {

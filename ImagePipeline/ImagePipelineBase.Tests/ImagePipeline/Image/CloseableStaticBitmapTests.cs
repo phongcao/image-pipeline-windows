@@ -23,7 +23,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
         public void Initialize()
         {
             _bitmap = new SoftwareBitmap(BitmapPixelFormat.Rgba8, 1, 1);
-            IResourceReleaser<SoftwareBitmap> resourceReleaser = SimpleBitmapReleaser.GetInstance();
+            IResourceReleaser<SoftwareBitmap> resourceReleaser = SimpleBitmapReleaser.Instance;
             _closeableStaticBitmap = new CloseableStaticBitmap(
                 _bitmap, resourceReleaser, ImmutableQualityInfo.FULL_QUALITY, 0);
         }
@@ -35,7 +35,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
         public void TestClose()
         {
             _closeableStaticBitmap.Dispose();
-            Assert.IsTrue(_closeableStaticBitmap.IsClosed);
+            Assert.IsTrue(_closeableStaticBitmap.Closed);
             bool disposed = false;
 
             // Check if object has been disposed
@@ -60,7 +60,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
             CloseableReference<SoftwareBitmap> reference = 
                 _closeableStaticBitmap.ConvertToBitmapReference();
             Assert.AreSame(reference.Get(), _bitmap);
-            Assert.IsTrue(_closeableStaticBitmap.IsClosed);
+            Assert.IsTrue(_closeableStaticBitmap.Closed);
         }
 
         /// <summary>

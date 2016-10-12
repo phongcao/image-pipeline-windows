@@ -41,18 +41,18 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
         [TestMethod]
         public void TestBasic()
         {
-            Assert.IsFalse(_closeableStaticBitmap.IsClosed);
+            Assert.IsFalse(_closeableStaticBitmap.Closed);
             Assert.AreSame(_bitmap, _closeableStaticBitmap.UnderlyingBitmap);
 
             // Close it now
             _closeableStaticBitmap.Dispose();
-            Assert.IsTrue(_closeableStaticBitmap.IsClosed);
+            Assert.IsTrue(_closeableStaticBitmap.Closed);
             Assert.IsNull(_closeableStaticBitmap.UnderlyingBitmap);
             Assert.AreEqual(1, _releaseCallCount);
 
             // Close it again
             _closeableStaticBitmap.Dispose();
-            Assert.IsTrue(_closeableStaticBitmap.IsClosed);
+            Assert.IsTrue(_closeableStaticBitmap.Closed);
             Assert.IsNull(_closeableStaticBitmap.UnderlyingBitmap);
         }
 
@@ -63,7 +63,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
         public void TestFinalize()
         {
             _closeableStaticBitmap.Dispose();
-            Assert.IsTrue(_closeableStaticBitmap.IsClosed);
+            Assert.IsTrue(_closeableStaticBitmap.Closed);
             Assert.IsNull(_closeableStaticBitmap.UnderlyingBitmap);
             Assert.AreEqual(1, _releaseCallCount);
         }

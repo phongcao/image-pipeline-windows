@@ -719,7 +719,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
             Assert.AreEqual(key, entry.Key, "key mismatch");
             Assert.AreEqual(value, entry.ValueRef.Get(), "value mismatch");
             Assert.AreEqual(count, entry.ClientCount, "client count mismatch");
-            Assert.IsFalse(entry.IsOrphan, "entry is an orphan");
+            Assert.IsFalse(entry.Orphan, "entry is an orphan");
         }
 
         private void AssertExclusivelyOwned(string key, int value)
@@ -731,7 +731,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
             Assert.AreEqual(key, entry.Key, "key mismatch");
             Assert.AreEqual(value, entry.ValueRef.Get(), "value mismatch");
             Assert.AreEqual(0, entry.ClientCount, "client count greater than zero");
-            Assert.IsFalse(entry.IsOrphan, "entry is an orphan");
+            Assert.IsFalse(entry.Orphan, "entry is an orphan");
         }
 
         private void AssertNotCached(string key, int value)
@@ -744,7 +744,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
         {
             Assert.AreNotSame(entry, _cache._cachedEntries.Get(entry.Key), "entry found in the exclusives");
             Assert.AreNotSame(entry, _cache._exclusiveEntries.Get(entry.Key), "entry found in the cache");
-            Assert.IsTrue(entry.IsOrphan, "entry is not an orphan");
+            Assert.IsTrue(entry.Orphan, "entry is not an orphan");
             Assert.AreEqual(count, entry.ClientCount, "client count mismatch");
         }
 

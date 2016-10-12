@@ -143,6 +143,7 @@
     <Compile Include="Cache\Disk\DefaultEntryEvictionComparatorSupplier.cs" />
     <Compile Include="Cache\Disk\DiskDumpInfo.cs" />
     <Compile Include="Cache\Disk\DiskDumpInfoEntry.cs" />
+    <Compile Include="Cache\Disk\DiskStorageCache.cs" />
     <Compile Include="Cache\Disk\EntryEvictionComparatorHelper.cs" />
     <Compile Include="Cache\Disk\IDiskStorage.cs" />
     <Compile Include="Cache\Disk\IEntry.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Cache\Disk\IFileCache.cs" />
     <Compile Include="Cache\Disk\IInserter.cs" />
     <Compile Include="Cache\Disk\MockEntry.cs" />
+    <Compile Include="Cache\Disk\Params.cs" />
     <Compile Include="Cache\Disk\ScoreBasedEvictionComparatorSupplier.cs" />
     <Compile Include="Cache\Disk\SettableCacheEvent.cs" />
     <Compile Include="Collections\OrderedDictionary.cs" />

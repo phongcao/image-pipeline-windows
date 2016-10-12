@@ -123,17 +123,17 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
         }
 
         /// <summary>
-        /// Tests out the IsValid method
+        /// Tests out the IsValid attribute
         /// </summary>
         [TestMethod]
-        public void TestIsValid()
+        public void TestValid()
         {
             EncodedImage encodedImage = new EncodedImage(_byteBufferRef);
-            Assert.IsTrue(encodedImage.IsValid());
+            Assert.IsTrue(encodedImage.Valid);
             encodedImage.Dispose();
-            Assert.IsFalse(encodedImage.IsValid());
+            Assert.IsFalse(encodedImage.Valid);
             encodedImage = new EncodedImage(_inputStreamSupplier);
-            Assert.IsTrue(encodedImage.IsValid());
+            Assert.IsTrue(encodedImage.Valid);
 
             // Test the static method
             Assert.IsFalse(EncodedImage.IsValid(null));

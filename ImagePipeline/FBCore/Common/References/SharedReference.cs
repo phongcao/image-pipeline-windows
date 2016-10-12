@@ -176,11 +176,14 @@ namespace FBCore.Common.References
         /// Checks if this shared-reference is valid i.e. its reference count is greater than zero.
         /// @return true if shared reference is valid
         /// </summary>
-        public bool IsValid()
+        public bool Valid
         {
-            lock (_referenceGate)
+            get
             {
-                return _refCount > 0;
+                lock (_referenceGate)
+                {
+                    return _refCount > 0;
+                }
             }
         }
 
@@ -190,7 +193,7 @@ namespace FBCore.Common.References
         /// </summary>
         public static bool IsValid(SharedReference<T> reference)
         {
-            return reference != null && reference.IsValid();
+            return reference != null && reference.Valid;
         }
 
         /// <summary>

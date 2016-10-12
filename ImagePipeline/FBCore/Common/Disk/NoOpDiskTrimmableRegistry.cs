@@ -16,16 +16,19 @@
         /// Singleton
         /// </summary>
         /// <returns></returns>
-        public static NoOpDiskTrimmableRegistry GetInstance()
+        public static NoOpDiskTrimmableRegistry Instance
         {
-            lock (_instanceGate)
+            get
             {
-                if (_instance == null)
+                lock (_instanceGate)
                 {
-                    _instance = new NoOpDiskTrimmableRegistry();
-                }
+                    if (_instance == null)
+                    {
+                        _instance = new NoOpDiskTrimmableRegistry();
+                    }
 
-                return _instance;
+                    return _instance;
+                }
             }
         }
 

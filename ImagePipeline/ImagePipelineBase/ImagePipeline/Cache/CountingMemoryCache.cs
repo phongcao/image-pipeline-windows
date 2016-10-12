@@ -40,7 +40,7 @@ namespace ImagePipeline.Cache
             /// as soon as the last client of an orphaned entry closes their reference, the entry's copy is
             /// closed too.
             /// </summary>
-            public bool IsOrphan { get; set; }
+            public bool Orphan { get; set; }
 
             public IEntryStateObserver<K> Observer { get; }
 
@@ -49,7 +49,7 @@ namespace ImagePipeline.Cache
                 Key = Preconditions.CheckNotNull(key);
                 ValueRef = Preconditions.CheckNotNull(CloseableReference<V>.CloneOrNull(valueRef));
                 ClientCount = 0;
-                IsOrphan = false;
+                Orphan = false;
                 Observer = observer;
             }
 
@@ -136,7 +136,7 @@ namespace ImagePipeline.Cache
             return new ValueDescriptorHelper<Entry>(
                 entry =>
                 {
-                    return entry.ValueRef.IsValid() ? evictableValueDescriptor.GetSizeInBytes(entry.ValueRef.Get()) : 0;
+                    return entry.ValueRef.Valid ? evictableValueDescriptor.GetSizeInBytes(entry.ValueRef.Get()) : 0;
                 });
         }
 
@@ -281,7 +281,7 @@ namespace ImagePipeline.Cache
         {
             lock (_cacheGate)
             {
-                if (!entry.IsOrphan && entry.ClientCount == 0 && entry.ValueRef.IsValid())
+                if (!entry.Orphan && entry.ClientCount == 0 && entry.ValueRef.Valid)
                 {
                     _exclusiveEntries.Put(entry.Key, entry);
                     return true;
@@ -561,8 +561,8 @@ namespace ImagePipeline.Cache
             lock (_cacheGate)
             {
                 Preconditions.CheckNotNull(entry);
-                Preconditions.CheckState(!entry.IsOrphan);
-                entry.IsOrphan = true;
+                Preconditions.CheckState(!entry.Orphan);
+                entry.Orphan = true;
             }
         }
 
@@ -574,7 +574,7 @@ namespace ImagePipeline.Cache
             lock (_cacheGate)
             {
                 Preconditions.CheckNotNull(entry);
-                Preconditions.CheckState(!entry.IsOrphan);
+                Preconditions.CheckState(!entry.Orphan);
                 entry.ClientCount++;
             }
         }
@@ -600,7 +600,7 @@ namespace ImagePipeline.Cache
             lock (_cacheGate)
             {
                 Preconditions.CheckNotNull(entry);
-                return (entry.IsOrphan && entry.ClientCount == 0) ? entry.ValueRef : null;
+                return (entry.Orphan && entry.ClientCount == 0) ? entry.ValueRef : null;
             }
         }
 

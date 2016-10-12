@@ -30,10 +30,10 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Fake IsClosed method
+        /// Fake Closed attribute
         /// </summary>
         /// <returns></returns>
-        public override bool IsClosed
+        public override bool Closed
         {
             get
             {

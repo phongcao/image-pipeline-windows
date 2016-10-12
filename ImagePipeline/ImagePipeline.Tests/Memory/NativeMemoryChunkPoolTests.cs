@@ -47,11 +47,11 @@ namespace ImagePipeline.Tests.Memory
         public void TestFree()
         {
             NativeMemoryChunk c = _pool.Alloc(1);
-            Assert.IsFalse(c.IsClosed);
+            Assert.IsFalse(c.Closed);
             _pool.Free(c);
-            Assert.IsTrue(c.IsClosed);
+            Assert.IsTrue(c.Closed);
             _pool.Free(c);
-            Assert.IsTrue(c.IsClosed);
+            Assert.IsTrue(c.Closed);
         }
 
         /// <summary>

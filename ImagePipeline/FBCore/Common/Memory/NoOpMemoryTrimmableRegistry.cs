@@ -19,16 +19,19 @@
         /// Singleton
         /// </summary>
         /// <returns></returns>
-        public static NoOpMemoryTrimmableRegistry GetInstance()
+        public static NoOpMemoryTrimmableRegistry Instance
         {
-            lock (_instanceGate)
+            get
             {
-                if (_instance == null)
+                lock (_instanceGate)
                 {
-                    _instance = new NoOpMemoryTrimmableRegistry();
-                }
+                    if (_instance == null)
+                    {
+                        _instance = new NoOpMemoryTrimmableRegistry();
+                    }
 
-                return _instance;
+                    return _instance;
+                }
             }
         }
 

@@ -182,7 +182,7 @@ namespace FBCore.Common.References
         {
             lock (_referenceGate)
             {
-                Preconditions.CheckState(IsValid());
+                Preconditions.CheckState(Valid);
                 return new CloseableReference<T>(_sharedReference);
             }
         }
@@ -195,7 +195,7 @@ namespace FBCore.Common.References
         {
             lock (_referenceGate)
             {
-                return IsValid() ? new CloseableReference<T>(_sharedReference) : null;
+                return Valid ? new CloseableReference<T>(_sharedReference) : null;
             }
         }
 
@@ -203,11 +203,14 @@ namespace FBCore.Common.References
         /// Checks if this closable-reference is valid i.e. is not closed.
         /// @return true if the closeable reference is valid
         /// </summary>
-        public bool IsValid()
+        public bool Valid
         {
-            lock (_referenceGate)
+            get
             {
-                return !_isClosed;
+                lock (_referenceGate)
+                {
+                    return !_isClosed;
+                }
             }
         }
 
@@ -232,7 +235,7 @@ namespace FBCore.Common.References
         {
             lock (_referenceGate)
             {
-                return IsValid() ? _sharedReference.GetHashCode() : 0;
+                return Valid ? _sharedReference.GetHashCode() : 0;
             }
         }
 
@@ -242,7 +245,7 @@ namespace FBCore.Common.References
         /// </summary>
         public static bool IsValid(CloseableReference<T> reference)
         {
-            return reference != null && reference.IsValid();
+            return reference != null && reference.Valid;
         }
 
         /// <summary>

@@ -67,13 +67,13 @@ namespace ImagePipeline.Memory
         private PoolConfig(Builder builder)
         {
             BitmapPoolParams = _bitmapPoolParamsBuilder(builder) ?? DefaultBitmapPoolParams.Get();
-            BitmapPoolStatsTracker = _bitmapPoolStatsTrackerBuilder(builder) ?? NoOpPoolStatsTracker.GetInstance();
+            BitmapPoolStatsTracker = _bitmapPoolStatsTrackerBuilder(builder) ?? NoOpPoolStatsTracker.Instance;
             FlexByteArrayPoolParams = _flexByteArrayPoolParamsBuilder(builder) ?? DefaultFlexByteArrayPoolParams.Get();
-            MemoryTrimmableRegistry = _memoryTrimmableRegistryBuilder(builder) ?? NoOpMemoryTrimmableRegistry.GetInstance();
+            MemoryTrimmableRegistry = _memoryTrimmableRegistryBuilder(builder) ?? NoOpMemoryTrimmableRegistry.Instance;
             NativeMemoryChunkPoolParams = _nativeMemoryChunkPoolParamsBuilder(builder) ?? DefaultNativeMemoryChunkPoolParams.Get();
-            NativeMemoryChunkPoolStatsTracker = _nativeMemoryChunkPoolStatsTrackerBuilder(builder) ?? NoOpPoolStatsTracker.GetInstance();
+            NativeMemoryChunkPoolStatsTracker = _nativeMemoryChunkPoolStatsTrackerBuilder(builder) ?? NoOpPoolStatsTracker.Instance;
             SmallByteArrayPoolParams = _smallByteArrayPoolParamsBuilder(builder) ?? DefaultByteArrayPoolParams.Get();
-            SmallByteArrayPoolStatsTracker = _smallByteArrayPoolStatsTrackerBuilder(builder) ?? NoOpPoolStatsTracker.GetInstance();
+            SmallByteArrayPoolStatsTracker = _smallByteArrayPoolStatsTrackerBuilder(builder) ?? NoOpPoolStatsTracker.Instance;
         }
 
         /// <summary>

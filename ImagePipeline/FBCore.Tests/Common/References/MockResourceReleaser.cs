@@ -7,7 +7,7 @@ namespace FBCore.Tests.Common.References
     {
         private int _releaseCallCount = 0;
 
-        public bool IsReleased
+        public bool Released
         {
             get
             {

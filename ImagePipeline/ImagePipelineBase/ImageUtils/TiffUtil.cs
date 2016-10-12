@@ -61,10 +61,10 @@ namespace ImageUtils
             length -= toSkip;
 
             // Move to the entry with orientation tag
-            length = MoveToTiffEntryWithTag(inputStream, length, tiffHeader.IsLittleEndian, TIFF_TAG_ORIENTATION);
+            length = MoveToTiffEntryWithTag(inputStream, length, tiffHeader.LittleEndian, TIFF_TAG_ORIENTATION);
 
             // Read orientation
-            return GetOrientationFromTiffEntry(inputStream, length, tiffHeader.IsLittleEndian);
+            return GetOrientationFromTiffEntry(inputStream, length, tiffHeader.LittleEndian);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace ImageUtils
         /// </summary>
         private class TiffHeader
         {
-            internal bool IsLittleEndian { get; set; }
+            internal bool LittleEndian { get; set; }
 
             internal int ByteOrder { get; set; }
 
@@ -104,10 +104,10 @@ namespace ImageUtils
                 return 0;
             }
 
-            tiffHeader.IsLittleEndian = (tiffHeader.ByteOrder == TIFF_BYTE_ORDER_LITTLE_END);
+            tiffHeader.LittleEndian = (tiffHeader.ByteOrder == TIFF_BYTE_ORDER_LITTLE_END);
 
             // Read the offset of the first IFD and check if it is reasonable
-            tiffHeader.FirstIfdOffset = StreamProcessor.ReadPackedInt(inputStream, 4, tiffHeader.IsLittleEndian);
+            tiffHeader.FirstIfdOffset = StreamProcessor.ReadPackedInt(inputStream, 4, tiffHeader.LittleEndian);
             length -= 4;
             if (tiffHeader.FirstIfdOffset < 8 || tiffHeader.FirstIfdOffset - 8 > length)
             {
