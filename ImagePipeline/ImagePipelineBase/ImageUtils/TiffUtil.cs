@@ -70,7 +70,7 @@ namespace ImageUtils
         /// <summary>
         /// Structure that holds TIFF header.
         /// </summary>
-        private class TiffHeader
+        class TiffHeader
         {
             internal bool LittleEndian { get; set; }
 

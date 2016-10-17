@@ -37,6 +37,8 @@ namespace Cache.Disk
         /// </summary>
         internal static readonly long TEMP_FILE_LIFETIME_MS = (long)TimeSpan.FromMinutes(30).TotalMilliseconds;
 
+        private static readonly Random _random = new Random();
+
         /// <summary>
         /// The base directory used for the cache
         /// </summary>
@@ -57,6 +59,8 @@ namespace Cache.Disk
         private readonly FileSystemInfo _versionDirectory;
 
         private readonly ICacheErrorLogger _cacheErrorLogger;
+        
+        // For unit tests
         private readonly Clock _clock;
 
         /// <summary>
@@ -200,7 +204,7 @@ namespace Cache.Disk
             }
         }
 
-        private class IncompleteFileException : IOException
+        class IncompleteFileException : IOException
         {
             public long Expected { get; }
 
@@ -247,7 +251,7 @@ namespace Cache.Disk
         /// Implementation of <see cref="IFileTreeVisitor"/> to iterate over all the sharded files and
         /// collect those valid content files. It's used in entriesIterator method.
         /// </summary>
-        private class EntriesCollector : IFileTreeVisitor
+        class EntriesCollector : IFileTreeVisitor
         {
             private readonly List<IEntry> result = new List<IEntry>();
             private readonly DefaultDiskStorage _parent;
@@ -290,7 +294,7 @@ namespace Cache.Disk
         /// if it's in the correct shard according to its name (checkShard method). If it's unexpected
         /// file is deleted.
         /// </summary>
-        private class PurgingVisitor : IFileTreeVisitor
+        class PurgingVisitor : IFileTreeVisitor
         {
             private bool insideBaseDirectory;
             private readonly DefaultDiskStorage _parent;
@@ -357,8 +361,8 @@ namespace Cache.Disk
             /// </summary>
             private bool IsRecentFile(FileSystemInfo file)
             {
-                long lastModifiedTime = file.LastWriteTime.Ticks / TimeSpan.TicksPerMillisecond;
-                return lastModifiedTime > (_parent._clock.Now - TEMP_FILE_LIFETIME_MS);
+                return file.LastWriteTime > (
+                    _parent._clock.Now.Subtract(TimeSpan.FromMilliseconds(TEMP_FILE_LIFETIME_MS)));
             }
         };
 
@@ -441,7 +445,7 @@ namespace Cache.Disk
             FileSystemInfo file = GetContentFileFor(resourceId);
             if (file.Exists)
             {
-                file.LastWriteTime = new DateTime(_clock.Now * TimeSpan.TicksPerMillisecond);
+                file.LastWriteTime = _clock.Now;
                 return FileBinaryResource.CreateOrNull((FileInfo)file);
             }
 
@@ -486,7 +490,7 @@ namespace Cache.Disk
             bool exists = contentFile.Exists;
             if (touch && exists)
             {
-                contentFile.LastWriteTime = new DateTime(_clock.Now * TimeSpan.TicksPerMillisecond);
+                contentFile.LastWriteTime = _clock.Now;
             }
 
             return exists;
@@ -621,6 +625,7 @@ namespace Cache.Disk
         public ICollection<IEntry> GetEntries()
         {
             EntriesCollector collector = new EntriesCollector(this);
+            _versionDirectory.Refresh();
             FileTree.WalkFileTree(_versionDirectory, collector);
             return collector.GetEntries();
         }
@@ -633,7 +638,7 @@ namespace Cache.Disk
             private readonly string _id;
             private readonly FileBinaryResource _resource;
             private long _size;
-            private long _timestamp;
+            private DateTime _timestamp;
 
             public EntryImpl(string id, FileInfo cachedFile)
             {
@@ -641,7 +646,7 @@ namespace Cache.Disk
                 _id = Preconditions.CheckNotNull(id);
                 _resource = FileBinaryResource.CreateOrNull(cachedFile);
                 _size = -1;
-                _timestamp = -1;
+                _timestamp = default(DateTime);
             }
 
             public string Id
@@ -652,21 +657,21 @@ namespace Cache.Disk
                 }
             }
 
-            public long Timestamp
+            public DateTime Timestamp
             {
                 get
                 {
-                    if (_timestamp < 0)
+                    if (_timestamp == default(DateTime))
                     {
                         FileInfo cachedFile = _resource.File;
 
                         try
                         {
-                            _timestamp = cachedFile.LastWriteTime.Ticks / TimeSpan.TicksPerMillisecond;
+                            _timestamp = cachedFile.LastWriteTime;
                         }
                         catch (IOException)
                         {
-                            _timestamp = 0;
+                            _timestamp = default(DateTime);
                         }
                     }
 
@@ -717,7 +722,7 @@ namespace Cache.Disk
         /// CONTENT: the file that has the content
         /// TEMP: temporal files, used to write the content until they are switched to CONTENT files
         /// </summary>
-        private class FileType
+        class FileType
         {
             public const int CONTENT = 0;
             public const int TEMP = 1;
@@ -751,7 +756,7 @@ namespace Cache.Disk
         /// All file name parsing should be done through here.
         /// Temp files creation is also handled here, to encapsulate naming.
         /// </summary>
-        private class StorageFileInfo
+        class StorageFileInfo
         {
             public FileType Type { get; }
 
@@ -775,7 +780,8 @@ namespace Cache.Disk
 
             public FileInfo CreateTempFile(FileSystemInfo parent)
             {
-                string path = Path.Combine(parent.FullName, ResourceId + "." + TEMP_FILE_EXTENSION);
+                string path = Path.Combine(parent.FullName, 
+                    ResourceId + "." + _random.Next() + TEMP_FILE_EXTENSION);
                 FileStream f = File.Create(path);
                 f.Dispose();
                 return new FileInfo(path);
@@ -906,7 +912,7 @@ namespace Cache.Disk
 
                 if (targetFile.Exists)
                 {
-                    targetFile.LastWriteTime = new DateTime(_parent._clock.Now * TimeSpan.TicksPerMillisecond);
+                    targetFile.LastWriteTime = _parent._clock.Now;
                 }
 
                 return FileBinaryResource.CreateOrNull(targetFile);

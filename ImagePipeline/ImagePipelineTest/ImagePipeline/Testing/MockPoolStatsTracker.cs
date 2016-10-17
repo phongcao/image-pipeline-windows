@@ -6,7 +6,7 @@ namespace ImagePipeline.Testing
     /// <summary>
     /// Mock pool stats tracker for unit tests
     /// </summary>
-    public class MockPoolStatsTracker : PoolStatsTracker
+    class MockPoolStatsTracker : PoolStatsTracker
     {
         private int _allocCallCount = 0;
         private int _freeCallCount = 0;

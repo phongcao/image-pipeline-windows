@@ -5,7 +5,7 @@ namespace FBCore.Common.Statfs
     /// <summary>
     /// Mock the <see cref="StatFsHelper"/> class for unit test
     /// </summary>
-    internal class MockStatFsHelper : StatFsHelper
+    class MockStatFsHelper : StatFsHelper
     {
         private static MockStatFsHelper _mockStatsFsHelper;
 

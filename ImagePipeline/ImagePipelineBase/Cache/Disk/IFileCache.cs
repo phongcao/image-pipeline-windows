@@ -33,7 +33,7 @@ namespace Cache.Disk
         bool HasKeySync(ICacheKey key);
 
         /// <summary>
-        /// Async version of HasKeySync
+        /// Returns true if the key is in the in-memory key index.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -62,12 +62,12 @@ namespace Cache.Disk
         /// <summary>
         /// @return the in-use size of the cache
         /// </summary>
-        long GetSize();
+        long Size { get; }
 
         /// <summary>
         /// @return the count of pictures in the cache
         /// </summary>
-        long GetCount();
+        long Count { get; }
 
         /// <summary>
         /// Deletes old cache files.

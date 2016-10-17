@@ -6,9 +6,9 @@ namespace Cache.Disk
     /// <summary>
     /// Mock implementation of <see cref="IEntry"/> 
     /// </summary>
-    public class MockEntry : IEntry
+    class MockEntry : IEntry
     {
-        private long _timestamp;
+        private DateTime _timestamp;
         private long _size;
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Cache.Disk
         /// <summary>
         /// Calculated on first time and never changes so it can be used as immutable
         /// </summary>
-        public long Timestamp
+        public DateTime Timestamp
         {
             get
             {
@@ -48,7 +48,7 @@ namespace Cache.Disk
         /// Mocks the timestamp
         /// </summary>
         /// <param name="timestamp"></param>
-        public void SetTimeStamp(long timestamp)
+        public void SetTimeStamp(DateTime timestamp)
         {
             _timestamp = timestamp;
         }

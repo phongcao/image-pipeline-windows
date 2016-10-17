@@ -6,7 +6,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
     /// Mock Supplier class
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class MockSupplier<T> : ISupplier<T>
+    class MockSupplier<T> : ISupplier<T>
     {
         private T _value;
 

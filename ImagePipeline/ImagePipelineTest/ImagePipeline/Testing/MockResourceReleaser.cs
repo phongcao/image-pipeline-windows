@@ -7,7 +7,7 @@ namespace ImagePipeline.Testing
     /// Mock ResourceReleaser method
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class MockResourceReleaser<T> : IResourceReleaser<T>
+    class MockResourceReleaser<T> : IResourceReleaser<T>
     {
         private int _releaseCallCount = 0;
 

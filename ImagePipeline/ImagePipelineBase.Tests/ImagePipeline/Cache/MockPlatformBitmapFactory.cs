@@ -9,7 +9,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
     /// <summary>
     /// Mock PlatformBitmapFactory
     /// </summary>
-    public class MockPlatformBitmapFactory : PlatformBitmapFactory
+    class MockPlatformBitmapFactory : PlatformBitmapFactory
     {
         private static readonly IResourceReleaser<SoftwareBitmap> BITMAP_RESOURCE_RELEASER = 
             new ResourceReleaserHelper<SoftwareBitmap>(b => b.Dispose());

@@ -8,6 +8,16 @@
         private static readonly object _instanceGate = new object();
         private static NoOpDiskTrimmableRegistry _instance = null;
 
+        /// <summary>
+        /// Returns how many times the RegisterDiskTrimmable method has been invoked
+        /// </summary>
+        public int RegisterDiskTrimmableCount { get; set; }
+
+        /// <summary>
+        /// Returns how many times the UnregisterDiskTrimmable method has been invoked
+        /// </summary>
+        public int UnregisterDiskTrimmableCount { get; set; }
+
         private NoOpDiskTrimmableRegistry()
         {
         }
@@ -32,14 +42,31 @@
             }
         }
 
-        ///  Register an object
-        public void RegisterDiskTrimmable(IDiskTrimmable trimmable)
+        /// <summary>
+        /// Reset counters
+        /// </summary>
+        public void ResetCounter()
         {
+            RegisterDiskTrimmableCount = 0;
+            UnregisterDiskTrimmableCount = 0;
         }
 
-        ///  Unregister an object
+        /// <summary>
+        /// Register an object
+        /// </summary>
+        /// <param name="trimmable"></param>
+        public void RegisterDiskTrimmable(IDiskTrimmable trimmable)
+        {
+            ++RegisterDiskTrimmableCount;
+        }
+
+        /// <summary>
+        /// Unregister an object
+        /// </summary>
+        /// <param name="trimmable"></param>
         public void UnregisterDiskTrimmable(IDiskTrimmable trimmable)
         {
+            ++UnregisterDiskTrimmableCount;
         }
     }
 }

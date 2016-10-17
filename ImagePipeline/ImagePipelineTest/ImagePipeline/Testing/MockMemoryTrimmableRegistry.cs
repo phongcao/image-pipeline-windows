@@ -5,7 +5,7 @@ namespace ImagePipeline.Testing
     /// <summary>
     /// MockMemoryTrimmableRegistry class for unit tests
     /// </summary>
-    public class MockMemoryTrimmableRegistry : IMemoryTrimmableRegistry
+    class MockMemoryTrimmableRegistry : IMemoryTrimmableRegistry
     {
         /// <summary>
         /// Mock RegisterMemoryTrimmable

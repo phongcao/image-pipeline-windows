@@ -36,6 +36,7 @@ namespace Cache.Common
             }
             catch (EncoderFallbackException e)
             {
+                // This should never happen. All VMs support UTF-8
                 throw e;
             }
         }

@@ -33,7 +33,7 @@ namespace Cache.Common
             return new WriterCallbackByteArray(data);
         }
 
-        private class WriterCallbackStream : IWriterCallback
+        class WriterCallbackStream : IWriterCallback
         {
             private Stream _inputStream;
 
@@ -48,7 +48,7 @@ namespace Cache.Common
             }
         }
 
-        private class WriterCallbackByteArray : IWriterCallback
+        class WriterCallbackByteArray : IWriterCallback
         {
             private byte[] _data;
 

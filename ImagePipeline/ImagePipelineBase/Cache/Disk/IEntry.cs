@@ -1,4 +1,5 @@
 ﻿using BinaryResource;
+using System;
 
 namespace Cache.Disk
 {
@@ -16,7 +17,7 @@ namespace Cache.Disk
         /// Calculated on first time and never changes so it can be used as immutable
         /// </summary>
         /// <returns></returns>
-        long Timestamp { get; }
+        DateTime Timestamp { get; }
 
         /// <summary>
         /// Calculated on first time and never changes so it can be used as immutable

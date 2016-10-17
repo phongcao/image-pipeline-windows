@@ -7,7 +7,7 @@ namespace ImagePipeline.Testing
     /// <summary>
     /// Helper class for creating bitmap mocks in tests.
     /// </summary>
-    public class MockBitmapFactory
+    class MockBitmapFactory
     {
         /// <summary>
         /// Mock bitmap width

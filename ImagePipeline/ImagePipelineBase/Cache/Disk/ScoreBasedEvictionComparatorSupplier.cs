@@ -30,7 +30,7 @@ namespace Cache.Disk
         {
             return new EntryEvictionComparatorHelper((lhs, rhs) =>
             {
-                long now = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                DateTime now = DateTime.Now;
                 float score1 = CalculateScore(lhs, now);
                 float score2 = CalculateScore(rhs, now);
                 return score1 < score2 ? 1 : ((score2 == score1) ? 0 : -1);
@@ -42,9 +42,9 @@ namespace Cache.Disk
         ///
         /// Entries with a higher eviction score should be evicted first.
         /// </summary>
-        internal float CalculateScore(IEntry entry, long now)
+        internal float CalculateScore(IEntry entry, DateTime now)
         {
-            long ageMs = now - entry.Timestamp;
+            long ageMs = Math.Abs((long)(now - entry.Timestamp).TotalMilliseconds);
             long bytes = entry.GetSize();
             return _ageWeight * ageMs + _sizeWeight * bytes;
         }

@@ -8,6 +8,7 @@ namespace FBCore.Common.Time
     public class SystemClock : Clock
     {
         private static readonly SystemClock INSTANCE = new SystemClock();
+        private static DateTime JAN_1ST_1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         private SystemClock()
         {
@@ -27,11 +28,24 @@ namespace FBCore.Common.Time
         ///
         /// @return the current time in milliseconds.
         /// </summary>
-        public override long Now
+        public override long CurrentTimeMillis
         {
             get
             {
-                return DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                return (long)((DateTime.UtcNow - JAN_1ST_1970).TotalMilliseconds);
+            }
+        }
+
+        /// <summary>
+        /// Gets the current time.
+        ///
+        /// @return the current time.
+        /// </summary>
+        public override DateTime Now
+        {
+            get
+            {
+                return DateTime.Now;
             }
         }
     }

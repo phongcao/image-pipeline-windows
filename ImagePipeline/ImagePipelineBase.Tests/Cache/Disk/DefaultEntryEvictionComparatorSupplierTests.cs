@@ -23,20 +23,18 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             List<IEntry> entries = new List<IEntry>();
             for (int i = 0; i < 100; i++)
             {
-                byte[] buffer = new byte[8];
-                random.NextBytes(buffer);
-                entries.Add(CreateEntry(BitConverter.ToInt64(buffer, 0)));
+                entries.Add(CreateEntry(DateTime.Now.Add(TimeSpan.FromMilliseconds(random.Next()))));
             }
 
             entries.Sort(new DefaultEntryEvictionComparatorSupplier().Get());
 
             for (int i = 0; i < entries.Count - 1; i++)
             {
-                Assert.IsTrue(entries[i].Timestamp < entries[i + 1].Timestamp);
+                Assert.IsTrue(entries[i].Timestamp <= entries[i + 1].Timestamp);
             }
         }
 
-        private static IEntry CreateEntry(long time)
+        private static IEntry CreateEntry(DateTime time)
         {
             MockEntry entry = new MockEntry();
             entry.SetTimeStamp(time);

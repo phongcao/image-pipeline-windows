@@ -20,6 +20,8 @@ namespace FBCore.Common.Util
             (byte) 'c', (byte) 'd', (byte) 'e', (byte) 'f'
         };
 
+        private static readonly char[] PADDING = { '=' };
+
         /// <summary>
         /// Make SHA1 hash
         /// </summary>
@@ -65,7 +67,13 @@ namespace FBCore.Common.Util
             {
                 HashAlgorithmProvider provider = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha1);
                 IBuffer sha1HashBuffer = provider.HashData(bytes.AsBuffer());
-                return CryptographicBuffer.EncodeToBase64String(sha1HashBuffer);
+
+                // http://stackoverflow.com/questions/26353710/how-to-achieve-base64-url-safe-encoding-in-c
+                return CryptographicBuffer
+                    .EncodeToBase64String(sha1HashBuffer)
+                    .TrimEnd(PADDING)
+                    .Replace('+', '-')
+                    .Replace('/', '_'); ;
             }
             catch (ArgumentNullException e)
             {

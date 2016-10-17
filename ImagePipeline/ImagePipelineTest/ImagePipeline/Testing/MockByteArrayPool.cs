@@ -6,7 +6,7 @@ namespace ImagePipelineTest.ImagePipeline.Testing
     /// <summary>
     /// Mock ByteArrayPool
     /// </summary>
-    public class MockByteArrayPool : IByteArrayPool
+    class MockByteArrayPool : IByteArrayPool
     {
         private int _getCallCount;
         private int _releaseCallCount;

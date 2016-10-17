@@ -132,7 +132,8 @@
     <Compile Include="Common\Internal\Files.cs" />
     <Compile Include="Common\Internal\ISupplier.cs" />
     <Compile Include="Common\Internal\Preconditions.cs" />
-    <Compile Include="Common\Internal\Supplier.cs" />
+    <Compile Include="Common\Internal\SupplierHelper.cs" />
+    <Compile Include="Common\Internal\Suppliers.cs" />
     <Compile Include="Common\Memory\IMemoryTrimmable.cs" />
     <Compile Include="Common\Memory\IMemoryTrimmableRegistry.cs" />
     <Compile Include="Common\Memory\MemoryTrimType.cs" />

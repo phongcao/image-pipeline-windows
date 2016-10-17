@@ -19,15 +19,18 @@ namespace FBCore.Common.File.Extensions
             List<FileSystemInfo> files = new List<FileSystemInfo>();
 
             //  Loop through all the immediate subdirectories
-            foreach (var entry in Directory.GetDirectories(directory.FullName))
+            if (directory.Exists)
             {
-                files.Add(new DirectoryInfo(entry));
-            }
+                foreach (var entry in Directory.GetDirectories(directory.FullName))
+                {
+                    files.Add(new DirectoryInfo(entry));
+                }
 
-            //  Loop through all the files
-            foreach (var entry in Directory.GetFiles(directory.FullName))
-            {
-                files.Add(new FileInfo(entry));
+                //  Loop through all the files
+                foreach (var entry in Directory.GetFiles(directory.FullName))
+                {
+                    files.Add(new FileInfo(entry));
+                }
             }
 
             return files.ToArray();
@@ -56,15 +59,17 @@ namespace FBCore.Common.File.Extensions
             {
                 if (currentFileInfo.IsDirectory())
                 {
-                    DirectoryInfo currentDir = (DirectoryInfo)currentFileInfo;
+                    DirectoryInfo currentDir = new DirectoryInfo(currentFileInfo.FullName);
                     DirectoryInfo newDir = (DirectoryInfo)newFileInfo;
                     currentDir.MoveTo(newDir.FullName);
+                    currentDir = (DirectoryInfo)currentFileInfo;
                 }
                 else
                 {
-                    FileInfo currentFile = (FileInfo)currentFileInfo;
+                    FileInfo currentFile = new FileInfo(currentFileInfo.FullName);
                     FileInfo newFile = (FileInfo)newFileInfo;
                     currentFile.MoveTo(Path.Combine(currentFile.DirectoryName, newFile.Name));
+                    currentFile = (FileInfo)currentFileInfo;
                 }
 
                 return true;

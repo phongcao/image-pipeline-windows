@@ -1,4 +1,6 @@
-﻿namespace FBCore.Common.Time
+﻿using System;
+
+namespace FBCore.Common.Time
 {
     /// <summary>
     /// Abstract class for getting the current time.
@@ -15,6 +17,13 @@
         ///
         /// @return the current time in milliseconds.
         /// </summary>
-        public abstract long Now { get; }
+        public abstract long CurrentTimeMillis { get; }
+
+        /// <summary>
+        /// Gets the current time.
+        ///
+        /// @return the current time in milliseconds.
+        /// </summary>
+        public abstract DateTime Now { get; }
     }
 }

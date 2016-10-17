@@ -589,7 +589,7 @@ namespace ImagePipeline.Tests.Memory
         /// A simple test pool that allocates byte arrays, and always allocates buffers of double
         /// the size requested
         /// </summary>
-        private class TestPool : BasePool<byte[]>
+        class TestPool : BasePool<byte[]>
         {
             public bool Reusable { get; set; }
 

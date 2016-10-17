@@ -26,8 +26,8 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             for (int i = 0; i< 100; i++) 
             {
                 MockEntry entry = new MockEntry();
-                entry.SetTimeStamp(NextLong());
-                entry.SetSize(NextLong());
+                entry.SetTimeStamp(DateTime.Now.Subtract(TimeSpan.FromMilliseconds(_random.Next())));
+                entry.SetSize(_random.Next());
                 _entries.Add(entry);
             }
         }
@@ -41,7 +41,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             DoTest(1f, 0f);
             for (int i = 0; i < _entries.Count - 1; i++)
             {
-                Assert.IsTrue(_entries[i].Timestamp < _entries[i + 1].Timestamp);
+                Assert.IsTrue(_entries[i].Timestamp <= _entries[i + 1].Timestamp);
             }
         }
 
@@ -54,7 +54,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             DoTest(0f, 1f);
             for (int i = 0; i < _entries.Count - 1; i++)
             {
-                Assert.IsTrue(_entries[i].GetSize() > _entries[i + 1].GetSize());
+                Assert.IsTrue(_entries[i].GetSize() >= _entries[i + 1].GetSize());
             }
         }
         /// <summary>
@@ -83,16 +83,9 @@ namespace ImagePipelineBase.Tests.Cache.Disk
 
             for (int i = 0; i < _entries.Count - 1; i++)
             {
-                Assert.IsTrue(supplier.CalculateScore(_entries[i], 0) >
-                    supplier.CalculateScore(_entries[i + 1], 0));
+                Assert.IsTrue(supplier.CalculateScore(_entries[i], DateTime.Now) >=
+                    supplier.CalculateScore(_entries[i + 1], DateTime.Now));
             }
-        }
-
-        private long NextLong()
-        {
-            byte[] buffer = new byte[8];
-            _random.NextBytes(buffer);
-            return BitConverter.ToInt64(buffer, 0);
         }
     }
 }

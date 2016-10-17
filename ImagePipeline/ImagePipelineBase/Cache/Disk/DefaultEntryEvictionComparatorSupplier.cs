@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Cache.Disk
 {
@@ -15,8 +16,8 @@ namespace Cache.Disk
         {
             return new EntryEvictionComparatorHelper((e1, e2) =>
             {
-                long time1 = e1.Timestamp;
-                long time2 = e2.Timestamp;
+                DateTime time1 = e1.Timestamp;
+                DateTime time2 = e2.Timestamp;
                 return time1 < time2 ? -1 : ((time2 == time1) ? 0 : 1);
             });
         }

@@ -45,7 +45,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             }
 
             FileTree.DeleteContents(_directory);
-            _clock.SetDateTime(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond);
+            _clock.SetDateTime(DateTime.Now);
         }
 
         private ISupplier<DefaultDiskStorage> GetStorageSupplier(int version)
@@ -190,14 +190,14 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             byte[] value3 = new byte[106];
             value3[80] = 103;
 
-            long time1 = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            DateTime time1 = DateTime.Now;
             WriteFileToStorage(storage, resourceId1, value1);
 
-            long time2 = time1 + 1000;
+            DateTime time2 = time1.AddMilliseconds(1000);
             _clock.SetDateTime(time2);
             WriteFileToStorage(storage, resourceId2, value2);
 
-            _clock.SetDateTime(time2 + 1000);
+            _clock.SetDateTime(time2.AddMilliseconds(1000));
             WriteFileToStorage(storage, resourceId3, value3);
 
             IList<FileSystemInfo> files = FindNewFiles(_directory, new HashSet<FileSystemInfo>(), /*recurse*/true);
@@ -209,7 +209,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             ICollection<IEntry> entries = storage.GetEntries();
             foreach (var item in entries)
             {
-                if (Math.Abs(item.Timestamp - time2) < 500)
+                if (Math.Abs((item.Timestamp - time2).TotalMilliseconds) < 500)
                 {
                     storage.Remove(item);
                 }
@@ -228,11 +228,11 @@ namespace ImagePipelineBase.Tests.Cache.Disk
 
             // First
             IEntry entry = entries1[0];
-            Assert.IsFalse(Math.Abs(entry.Timestamp - time2) < 500);
+            Assert.IsFalse(Math.Abs((entry.Timestamp - time2).TotalMilliseconds) < 500);
 
             // Second
             entry = entries1[1];
-            Assert.IsFalse(Math.Abs(entry.Timestamp - time2) < 500);
+            Assert.IsFalse(Math.Abs((entry.Timestamp - time2).TotalMilliseconds) < 500);
         }
 
         /// <summary>
@@ -242,27 +242,27 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         public void TestTouch()
         {
             DefaultDiskStorage storage = GetStorageSupplier(1).Get();
-            long startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            DateTime startTime = DateTime.Now;
 
             string resourceId1 = "resource1";
             byte[] value1 = new byte[100];
             FileInfo file1 = WriteFileToStorage(storage, resourceId1, value1);
-            Assert.IsTrue(Math.Abs(file1.LastWriteTime.Ticks / TimeSpan.TicksPerMillisecond - startTime) <= 500);
+            Assert.IsTrue(Math.Abs((file1.LastWriteTime- startTime).TotalMilliseconds) <= 500);
 
-            long time2 = startTime + 10000;
+            DateTime time2 = startTime.AddMilliseconds(10000);
             _clock.SetDateTime(time2);
             string resourceId2 = "resource2";
             byte[] value2 = new byte[100];
             FileInfo file2 = WriteFileToStorage(storage, resourceId2, value2);
-            Assert.IsTrue(Math.Abs(file1.LastWriteTime.Ticks / TimeSpan.TicksPerMillisecond - startTime) <= 500);
-            Assert.IsTrue(Math.Abs(file2.LastWriteTime.Ticks / TimeSpan.TicksPerMillisecond - time2) <= 500);
+            Assert.IsTrue(Math.Abs((file1.LastWriteTime - startTime).TotalMilliseconds) <= 500);
+            Assert.IsTrue(Math.Abs((file2.LastWriteTime - time2).TotalMilliseconds) <= 500);
 
-            long time3 = time2 + 10000;
+            DateTime time3 = time2.AddMilliseconds(10000);
             _clock.SetDateTime(time3);
             storage.Touch(resourceId1, null);
             file1.Refresh();
-            Assert.IsTrue(Math.Abs(file1.LastWriteTime.Ticks / TimeSpan.TicksPerMillisecond - time3) <= 500);
-            Assert.IsTrue(Math.Abs(file2.LastWriteTime.Ticks / TimeSpan.TicksPerMillisecond - time2) <= 500);
+            Assert.IsTrue(Math.Abs((file1.LastWriteTime - time3).TotalMilliseconds) <= 500);
+            Assert.IsTrue(Math.Abs((file2.LastWriteTime - time2).TotalMilliseconds) <= 500);
         }
 
         /// <summary>
@@ -361,9 +361,8 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             Assert.AreEqual(100, file1.Length);
             ICollection<IEntry> entries = storage.GetEntries();
             IEntry entry = entries.FirstOrDefault();
-            long timestamp = entry.Timestamp;
-            _clock.SetDateTime((DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) + 
-                (long)TimeSpan.FromHours(1).TotalMilliseconds);
+            DateTime timestamp = entry.Timestamp;
+            _clock.SetDateTime(DateTime.Now.AddHours(1));
             storage.GetResource(resourceId1, null);
 
             // Now the new timestamp show be higher, but the entry should have the same value
@@ -392,9 +391,8 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             // Mark it old, then try eviction again. It should be gone.
             try
             {
-                tempFile.LastWriteTime = new DateTime(
-                    (_clock.Now - DefaultDiskStorage.TEMP_FILE_LIFETIME_MS - 1000) * 
-                    TimeSpan.TicksPerMillisecond);
+                tempFile.LastWriteTime = _clock.Now.Subtract(
+                    TimeSpan.FromMilliseconds(DefaultDiskStorage.TEMP_FILE_LIFETIME_MS + 1000));
             }
             catch (Exception)
             {
@@ -500,6 +498,11 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             }
 
             storage.PurgeUnexpectedResources();
+            unexpectedFile1.Refresh();
+            unexpectedFile2.Refresh();
+            unexpectedSubfile1.Refresh();
+            unexpectedDir1.Refresh();
+            unexpectedDir2.Refresh();
             Assert.IsFalse(unexpectedFile1.Exists);
             Assert.IsFalse(unexpectedFile2.Exists);
             Assert.IsFalse(unexpectedSubfile1.Exists);
@@ -635,18 +638,18 @@ namespace ImagePipelineBase.Tests.Cache.Disk
 
             IList<FileSystemInfo> files = new List<FileSystemInfo>(4);
 
-            long time1 = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            DateTime time1 = DateTime.Now;
             files.Add(Write(storage, resourceId0, CONTENT0));
 
-            long time2 = time1 + 1000;
+            DateTime time2 = time1.AddMilliseconds(1000);
             _clock.SetDateTime(time2);
             files.Add(Write(storage, resourceId1, CONTENT1));
 
-            long time3 = time2 + 1000;
+            DateTime time3 = time2.AddMilliseconds(1000);
             _clock.SetDateTime(time3);
             files.Add(Write(storage, resourceId2, CONTENT2));
 
-            long time4 = time3 + 1000;
+            DateTime time4 = time3.AddMilliseconds(1000);
             _clock.SetDateTime(time4);
             files.Add(Write(storage, resourceId3, CONTENT3));
 
@@ -771,8 +774,8 @@ namespace ImagePipelineBase.Tests.Cache.Disk
 
             entries.Sort((a, b) =>
             {
-                long al = a.Timestamp;
-                long bl = b.Timestamp;
+                DateTime al = a.Timestamp;
+                DateTime bl = b.Timestamp;
                 return (al < bl) ? -1 : ((al > bl) ? 1 : 0);
             });
 

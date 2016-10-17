@@ -6,7 +6,7 @@ namespace ImagePipelineTest.ImagePipeline.Testing
     /// <summary>
     /// Mock MemoryStream class
     /// </summary>
-    public class MockMemoryStream : MemoryStream
+    class MockMemoryStream : MemoryStream
     {
         private readonly Action<byte[], int, int> _writeFunc;
 

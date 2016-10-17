@@ -29,3 +29,5 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 [assembly: InternalsVisibleTo("FBCore.Tests")]
+[assembly: InternalsVisibleTo("ImagePipeline.Tests")]
+[assembly: InternalsVisibleTo("ImagePipelineBase.Tests")]

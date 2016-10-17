@@ -100,7 +100,7 @@ namespace FBCore.Tests.Common.References
             Assert.IsTrue(releaser.Released);
         }
 
-        private class Thing : IDisposable
+        class Thing : IDisposable
         {
             private string _value;
 
@@ -128,7 +128,7 @@ namespace FBCore.Tests.Common.References
         /// <summary>
         /// A subclass of Thing that throws an exception on close
         /// </summary>
-        private class Thing2 : Thing
+        class Thing2 : Thing
         {
             public Thing2(string value) : base(value)
             {
@@ -140,7 +140,7 @@ namespace FBCore.Tests.Common.References
             }
         }
 
-        private class ThingResourceReleaser : IResourceReleaser<Thing>
+        class ThingResourceReleaser : IResourceReleaser<Thing>
         {
             void IResourceReleaser<Thing>.Release(Thing value)
             {
