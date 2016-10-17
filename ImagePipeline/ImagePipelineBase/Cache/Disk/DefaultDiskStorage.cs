@@ -713,7 +713,7 @@ namespace Cache.Disk
             }
 
             DirectoryInfo expectedDirectory = GetSubdirectory(info.ResourceId);
-            bool isCorrect = expectedDirectory.FullName.Equals(file.GetParentDirectory().FullName);
+            bool isCorrect = expectedDirectory.FullName.Equals(file.GetParent().FullName);
             return isCorrect ? info : null;
         }
 
@@ -782,9 +782,9 @@ namespace Cache.Disk
             {
                 string path = Path.Combine(parent.FullName, 
                     ResourceId + "." + _random.Next() + TEMP_FILE_EXTENSION);
-                FileStream f = File.Create(path);
-                f.Dispose();
-                return new FileInfo(path);
+                FileInfo file = new FileInfo(path);
+                file.CreateEmpty();
+                return file;
             }
 
             public static StorageFileInfo FromFile(FileSystemInfo file)

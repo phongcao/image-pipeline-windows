@@ -265,6 +265,13 @@ namespace ImagePipelineBase.Cache.Disk
         private bool ShouldCreateNewStorage()
         {
             State currentState = _currentState;
+
+            // Refresh the root directory
+            if (currentState.RootDirectory != null)
+            {
+                currentState.RootDirectory.Refresh();
+            }
+
             return (currentState.DiskStorageDelegate == null ||
                 currentState.RootDirectory == null ||
                 !currentState.RootDirectory.Exists);

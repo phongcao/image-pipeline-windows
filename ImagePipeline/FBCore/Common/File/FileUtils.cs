@@ -17,25 +17,17 @@ namespace FBCore.Common.File
         /// </summary>
         public static void Mkdirs(FileSystemInfo directory)
         {
-            if (directory.Exists)
+            if (System.IO.File.Exists(directory.FullName))
             {
-                // File exists and *is* a directory
-                if (directory.IsDirectory())
-                {
-                    return;
-                }
-
                 // File exists, but is not a directory - delete it
                 try
                 {
-                    directory.Delete();
+                    System.IO.File.Delete(directory.FullName);
                 }
                 catch (Exception)
                 {
                     throw new FileDeleteException(directory.FullName);
                 }
-
-                return;
             }
 
             try

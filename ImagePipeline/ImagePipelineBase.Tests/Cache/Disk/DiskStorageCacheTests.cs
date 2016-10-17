@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace ImagePipelineBase.Tests.Cache.Disk
@@ -83,7 +85,8 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         {
             return new DiskStorageWithReadFailures(
                 version,
-                Suppliers.of<FileSystemInfo>(new DirectoryInfo(ApplicationData.Current.LocalCacheFolder.Path)),
+                Suppliers.of<FileSystemInfo>(
+                    new DirectoryInfo(ApplicationData.Current.LocalCacheFolder.Path)),
                 CACHE_TYPE,
                 NoOpCacheErrorLogger.Instance,
                 _clock);
@@ -498,59 +501,51 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             Assert.IsTrue(cache.Enabled);
         }
 
-        /**
-         * Verify that multiple threads can write to the cache at the same time.
-         */
-        //@Test
-        //public void testConcurrency() throws Exception
-        //{
-        //    final CyclicBarrier barrier = new CyclicBarrier(3);
-        //        WriterCallback writerCallback = new WriterCallback() {
-        //        @Override
-        //        public void write(OutputStream os) throws IOException
-        //        {
-        //        try {
-        //                // Both threads will need to hit this barrier. If writing is serialized,
-        //                // the second thread will never reach here as the first will hold
-        //                // the write lock forever.
-        //                barrier.await(10, TimeUnit.SECONDS);
-        //            } catch (Exception e) {
-        //                throw new RuntimeException(e);
-        //            }
-        //        }
-        //    };
-        //    CacheKey key1 = new SimpleCacheKey("concurrent1");
-        //    CacheKey key2 = new SimpleCacheKey("concurrent2");
-        //    Thread t1 = runInsertionInSeparateThread(key1, writerCallback);
-        //    Thread t2 = runInsertionInSeparateThread(key2, writerCallback);
-        //    barrier.await(10, TimeUnit.SECONDS);
-        //    t1.join(1000);
-        //    t2.join(1000);
-        //}
+        /// <summary>
+        /// Verify that multiple threads can write to the cache at the same time.
+        /// </summary>
+        [TestMethod]
+        public void TestConcurrency()
+        {
+            using (Barrier barrier = new Barrier(3))
+            {
+                WriterCallbackHelper writerCallback = new WriterCallbackHelper((os) =>
+                {
+                    try
+                    {
+                        // Both threads will need to hit this barrier. If writing is serialized,
+                        // the second thread will never reach here as the first will hold
+                        // the write lock forever.
+                        barrier.SignalAndWait();
+                    }
+                    catch (Exception e)
+                    {
+                        throw e;
+                    }
+                });
 
-        //private Thread runInsertionInSeparateThread(final CacheKey key,
-        //    final WriterCallback callback)
-        //{
-        //    Runnable runnable = new Runnable() {
+                ICacheKey key1 = new SimpleCacheKey("concurrent1");
+                ICacheKey key2 = new SimpleCacheKey("concurrent2");
+                Task t1 = RunInsertionInSeparateThread(key1, writerCallback);
+                Task t2 = RunInsertionInSeparateThread(key2, writerCallback);
+                barrier.SignalAndWait();             
+            }
+        }
 
-        //      @Override
-        //      public void run()
-        //        {
-        //            try
-        //            {
-        //                mCache.insert(key, callback);
-        //            }
-        //            catch (IOException e)
-        //            {
-        //                fail();
-        //            }
-        //        }
-        //    };
-        //    Thread thread = new Thread(runnable);
-        //    thread.setDaemon(true);
-        //    thread.start();
-        //    return thread;
-        //}
+        private Task RunInsertionInSeparateThread(ICacheKey key, IWriterCallback callback)
+        {
+            return Task.Run(() =>
+            {
+                try
+                {
+                    _cache.Insert(key, callback);
+                }
+                catch (IOException)
+                {
+                    Assert.Fail();
+                }
+            });
+        }
 
         /// <summary>
         /// Tests insertion

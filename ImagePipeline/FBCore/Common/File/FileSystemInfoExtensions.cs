@@ -18,9 +18,9 @@ namespace FBCore.Common.File.Extensions
         {
             List<FileSystemInfo> files = new List<FileSystemInfo>();
 
-            //  Loop through all the immediate subdirectories
             if (directory.Exists)
             {
+                //  Loop through all the immediate subdirectories
                 foreach (var entry in Directory.GetDirectories(directory.FullName))
                 {
                     files.Add(new DirectoryInfo(entry));
@@ -59,17 +59,11 @@ namespace FBCore.Common.File.Extensions
             {
                 if (currentFileInfo.IsDirectory())
                 {
-                    DirectoryInfo currentDir = new DirectoryInfo(currentFileInfo.FullName);
-                    DirectoryInfo newDir = (DirectoryInfo)newFileInfo;
-                    currentDir.MoveTo(newDir.FullName);
-                    currentDir = (DirectoryInfo)currentFileInfo;
+                    Directory.Move(currentFileInfo.FullName, newFileInfo.FullName);
                 }
                 else
                 {
-                    FileInfo currentFile = new FileInfo(currentFileInfo.FullName);
-                    FileInfo newFile = (FileInfo)newFileInfo;
-                    currentFile.MoveTo(Path.Combine(currentFile.DirectoryName, newFile.Name));
-                    currentFile = (FileInfo)currentFileInfo;
+                    System.IO.File.Move(currentFileInfo.FullName, newFileInfo.FullName);
                 }
 
                 return true;
@@ -85,28 +79,43 @@ namespace FBCore.Common.File.Extensions
         /// This is the path up to but not including the last name. <code> null</code> is
         /// returned when there is no parent.
         /// </summary>
-        public static DirectoryInfo GetParentDirectory(this FileSystemInfo file)
+        public static DirectoryInfo GetParent(this FileSystemInfo file)
         {
-            DirectoryInfo parent = null;
-
             try
             {
-                if (file.IsDirectory())
-                {
-                    DirectoryInfo currentDir = (DirectoryInfo)file;
-                    parent = currentDir.Parent;
-                }
-                else
-                {
-                    FileInfo currentFile = (FileInfo)file;
-                    parent = currentFile.Directory;
-                }
+                return Directory.GetParent(file.FullName);
             }
             catch (Exception)
             {
             }
 
-            return parent;
+            return null;
+        }
+
+        /// <summary>
+        /// Creates an empty directory or file and close it
+        /// </summary>
+        /// <param name="file">a file</param>
+        /// <returns>true if the creation is successful, false otherwise.</returns>
+        public static bool CreateEmpty(this FileSystemInfo file)
+        {
+            try
+            {
+                if (file.GetType() == typeof(DirectoryInfo))
+                {
+                    ((DirectoryInfo)file).Create();
+                }
+                else
+                {
+                    ((FileInfo)file).Create().Dispose();
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

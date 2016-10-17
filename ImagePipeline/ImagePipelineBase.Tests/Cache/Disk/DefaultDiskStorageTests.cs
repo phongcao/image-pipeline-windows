@@ -34,16 +34,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             _clock = MockSystemClock.Get();
             StorageFolder cacheDir = ApplicationData.Current.LocalCacheFolder;
             _directory = new DirectoryInfo(Path.Combine(cacheDir.Path, "sharded-disk-storage-test"));
-
-            try
-            {
-                _directory.Create();
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
-
+            Assert.IsTrue(_directory.CreateEmpty());
             FileTree.DeleteContents(_directory);
             _clock.SetDateTime(DateTime.Now);
         }
@@ -68,15 +59,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         {
             // Create a bogus file
             FileInfo bogusFile = new FileInfo(Path.Combine(_directory.FullName, "bogus"));
-            try
-            {
-                FileStream file = bogusFile.Create();
-                file.Dispose();
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
+            Assert.IsTrue(bogusFile.CreateEmpty());
 
             // Create the storage now. Bogus files should be gone now
             DefaultDiskStorage storage = GetStorageSupplier(1).Get();
@@ -426,76 +409,26 @@ namespace ImagePipelineBase.Tests.Cache.Disk
                 Path.Combine(_directory.FullName, "unexpected-file-1"));
             FileInfo unexpectedFile2 = new FileInfo(
                 Path.Combine(_directory.FullName, "unexpected-file-2"));
-            FileStream file1 = default(FileStream);
-            FileStream file2 = default(FileStream);
-
-            try
-            {
-                file1 = unexpectedFile1.Create();
-                file2 = unexpectedFile2.Create();
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
-            finally
-            {
-                file1.Dispose();
-                file2.Dispose();
-            }
+            Assert.IsTrue(unexpectedFile1.CreateEmpty());
+            Assert.IsTrue(unexpectedFile2.CreateEmpty());
 
             DirectoryInfo unexpectedDir1 = new DirectoryInfo(
                 Path.Combine(_directory.FullName, "unexpected-dir-1"));
             DirectoryInfo unexpectedDir2 = new DirectoryInfo(
                 Path.Combine(_directory.FullName, "unexpected-dir-2"));
-
-            try
-            {
-                unexpectedDir1.Create();
-                unexpectedDir2.Create();
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
+            Assert.IsTrue(unexpectedDir1.CreateEmpty());
+            Assert.IsTrue(unexpectedDir2.CreateEmpty());
 
             FileInfo unexpectedSubfile1 = new FileInfo(
                 Path.Combine(unexpectedDir2.FullName, "unexpected-sub-file-1"));
-            FileStream subfile1 = default(FileStream);
-
-            try
-            {
-                subfile1 = unexpectedSubfile1.Create();
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
-            finally
-            {
-                subfile1.Dispose();
-            }
-
+            Assert.IsTrue(unexpectedSubfile1.CreateEmpty());
             Assert.AreEqual(5, _directory.ListFiles().Length); // 4 unexpected (files+dirs) + ver. dir
             Assert.AreEqual(1, unexpectedDir2.ListFiles().Length);
             Assert.AreEqual(0, unexpectedDir1.ListFiles().Length);
 
             FileInfo unexpectedFileInShard = new FileInfo(
-                Path.Combine(file.GetParentDirectory().FullName, "unexpected-in-shard"));
-            FileStream fileInShard = default(FileStream);
-
-            try
-            {
-                fileInShard = unexpectedFileInShard.Create();
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
-            finally
-            {
-                fileInShard.Dispose();
-            }
+                Path.Combine(file.GetParent().FullName, "unexpected-in-shard"));
+            Assert.IsTrue(unexpectedFileInShard.CreateEmpty());
 
             storage.PurgeUnexpectedResources();
             unexpectedFile1.Refresh();
@@ -532,21 +465,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             // Create file before setting final test date
             FileInfo somethingArbitrary = new FileInfo(
                 Path.Combine(_directory.FullName, "something-arbitrary"));
-            FileStream file = default(FileStream);
-
-            try
-            {
-                file = somethingArbitrary.Create();
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
-            finally
-            {
-                file.Dispose();
-            }
-
+            Assert.IsTrue(somethingArbitrary.CreateEmpty());
             long lastModified = (_directory.LastWriteTime.Ticks / TimeSpan.TicksPerMillisecond) - 1000;
 
             try
