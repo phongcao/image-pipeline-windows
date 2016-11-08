@@ -73,8 +73,9 @@ namespace FBCore.Common.References
         }
 
         /// <summary>
-        /// Constructs a CloseableReference.
-        ///
+        /// Constructs a CloseableReference. The argument must derive from IDisposable so that
+        /// it can re-use the default closable releaser.
+        /// 
         /// <para />Returns null if the parameter is null.
         /// </summary>
         public static CloseableReference<T> of(T t)
@@ -85,13 +86,9 @@ namespace FBCore.Common.References
             }
             else
             {
-                try
+                if (!(t is IDisposable))
                 {
-                    IDisposable disposable = (IDisposable)t;
-                }
-                catch (InvalidCastException)
-                {
-                    throw new InvalidCastException("Argument isn't derived from IDisposable");
+                    throw new ArgumentException("Argument is not IDisposable");
                 }
 
                 return new CloseableReference<T>(t, DEFAULT_CLOSEABLE_RELEASER);
