@@ -123,6 +123,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\StagingArea.cs" />
     <Compile Include="Memory\BasePool.cs" />
     <Compile Include="Memory\BitmapCounter.cs" />
     <Compile Include="Memory\BitmapCounterProvider.cs" />

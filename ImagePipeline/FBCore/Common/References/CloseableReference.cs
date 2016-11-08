@@ -50,7 +50,7 @@ namespace FBCore.Common.References
     {
         private readonly object _referenceGate = new object();
 
-        private static readonly DefaultResourceReleaser DEFAULT_CLOSEABLE_RELEASER = new DefaultResourceReleaser();
+        private static readonly DefaultResourceReleaser<T> DEFAULT_CLOSEABLE_RELEASER = new DefaultResourceReleaser<T>();
 
         private bool _isClosed = false;
 
@@ -85,7 +85,16 @@ namespace FBCore.Common.References
             }
             else
             {
-                return new CloseableReference<T>(t, (IResourceReleaser<T>)DEFAULT_CLOSEABLE_RELEASER);
+                try
+                {
+                    IDisposable disposable = (IDisposable)t;
+                }
+                catch (InvalidCastException)
+                {
+                    throw new InvalidCastException("Argument isn't derived from IDisposable");
+                }
+
+                return new CloseableReference<T>(t, DEFAULT_CLOSEABLE_RELEASER);
             }
         }
 

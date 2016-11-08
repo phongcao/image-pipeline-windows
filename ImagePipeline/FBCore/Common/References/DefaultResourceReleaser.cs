@@ -8,16 +8,16 @@ namespace FBCore.Common.References
     /// <summary>
     /// DefaultResourceReleaser for CloseableReference
     /// </summary>
-    public class DefaultResourceReleaser : IResourceReleaser<IDisposable>
+    public class DefaultResourceReleaser<T> : IResourceReleaser<T>
     {
         /// <summary>
         /// Default release method
         /// </summary>
-        public void Release(IDisposable value)
+        public void Release(T value)
         {
             try
             {
-                Closeables.Close(value, true);
+                Closeables.Close((IDisposable)value, true);
             }
             catch (IOException ioe)
             {
