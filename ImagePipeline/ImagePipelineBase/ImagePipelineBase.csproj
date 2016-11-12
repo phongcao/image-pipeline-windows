@@ -141,6 +141,7 @@
     <Compile Include="Cache\Common\NoOpCacheEventListener.cs" />
     <Compile Include="Cache\Disk\DefaultDiskStorage.cs" />
     <Compile Include="Cache\Disk\DefaultEntryEvictionComparatorSupplier.cs" />
+    <Compile Include="Cache\Disk\DiskCacheConfig.cs" />
     <Compile Include="Cache\Disk\DiskDumpInfo.cs" />
     <Compile Include="Cache\Disk\DiskDumpInfoEntry.cs" />
     <Compile Include="Cache\Disk\DiskStorageCache.cs" />
@@ -176,6 +177,12 @@
     <Compile Include="ImagePipeline\Cache\MemoryCacheParams.cs" />
     <Compile Include="ImagePipeline\Cache\ValueDescriptorHelper.cs" />
     <Compile Include="ImagePipeline\Common\TooManyBitmapsException.cs" />
+    <Compile Include="ImagePipeline\Core\DefaultExecutorSupplier.cs" />
+    <Compile Include="ImagePipeline\Core\Executors.cs" />
+    <Compile Include="ImagePipeline\Core\IExecutorService.cs" />
+    <Compile Include="ImagePipeline\Core\IExecutorSupplier.cs" />
+    <Compile Include="ImagePipeline\Core\LimitedConcurrencyTaskScheduler.cs" />
+    <Compile Include="ImagePipeline\Core\SerialExecutorService.cs" />
     <Compile Include="ImagePipeline\Image\CloseableBitmap.cs" />
     <Compile Include="ImagePipeline\Image\CloseableImage.cs" />
     <Compile Include="ImagePipeline\Image\CloseableStaticBitmap.cs" />

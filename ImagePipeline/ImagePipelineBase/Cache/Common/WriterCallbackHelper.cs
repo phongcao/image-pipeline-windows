@@ -1,8 +1,7 @@
-﻿using Cache.Common;
-using System;
+﻿using System;
 using System.IO;
 
-namespace ImagePipelineBase.Cache.Common
+namespace Cache.Common
 {
     /// <summary>
     /// Helper class for <see cref="IWriterCallback"/>

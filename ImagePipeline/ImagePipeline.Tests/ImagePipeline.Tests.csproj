@@ -100,6 +100,7 @@
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\BufferedDiskCacheTests.cs" />
     <Compile Include="Cache\StagingAreaTests.cs" />
     <Compile Include="Memory\BitmapCounterTests.cs" />
     <Compile Include="Memory\BitmapPoolTests.cs" />

@@ -1,6 +1,4 @@
-﻿using ImagePipelineBase.Cache.Disk;
-
-namespace Cache.Disk
+﻿namespace Cache.Disk
 {
     /// <summary>
     /// This class holds the params for the <see cref="DiskStorageCache"/> object

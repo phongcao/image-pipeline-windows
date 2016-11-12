@@ -123,7 +123,13 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\BufferedDiskCache.cs" />
+    <Compile Include="Cache\IImageCacheStatsTracker.cs" />
     <Compile Include="Cache\StagingArea.cs" />
+    <Compile Include="Core\DiskStorageCacheFactory.cs" />
+    <Compile Include="Core\DynamicDefaultDiskStorageFactory.cs" />
+    <Compile Include="Core\IDiskStorageFactory.cs" />
+    <Compile Include="Core\IFileCacheFactory.cs" />
     <Compile Include="Memory\BasePool.cs" />
     <Compile Include="Memory\BitmapCounter.cs" />
     <Compile Include="Memory\BitmapCounterProvider.cs" />
@@ -172,6 +178,7 @@
       <Name>ImagePipelineNative</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

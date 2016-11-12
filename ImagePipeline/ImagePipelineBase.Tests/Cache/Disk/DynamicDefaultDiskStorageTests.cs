@@ -3,9 +3,7 @@ using Cache.Disk;
 using FBCore.Common.File;
 using FBCore.Common.File.Extensions;
 using FBCore.Common.Internal;
-using ImagePipelineBase.Cache.Disk;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using System;
 using System.IO;
 using Windows.Storage;
 

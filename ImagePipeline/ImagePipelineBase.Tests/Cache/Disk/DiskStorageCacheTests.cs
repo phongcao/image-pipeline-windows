@@ -4,8 +4,6 @@ using Cache.Disk;
 using FBCore.Common.Disk;
 using FBCore.Common.Internal;
 using FBCore.Common.Time;
-using ImagePipelineBase.Cache.Common;
-using ImagePipelineBase.Cache.Disk;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 using System.Collections.Generic;

@@ -5,7 +5,6 @@ using FBCore.Common.File;
 using FBCore.Common.File.Extensions;
 using FBCore.Common.Internal;
 using FBCore.Common.Time;
-using ImagePipelineBase.Cache.Common;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 using System.Collections.Generic;

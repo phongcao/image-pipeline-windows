@@ -1,6 +1,5 @@
 ﻿using BinaryResource;
 using Cache.Common;
-using Cache.Disk;
 using FBCore.Common.File;
 using FBCore.Common.Internal;
 using FBCore.Common.Time;
@@ -8,7 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace ImagePipelineBase.Cache.Disk
+namespace Cache.Disk
 {
     /// <summary>
     /// A supplier of a DiskStorage concrete implementation.

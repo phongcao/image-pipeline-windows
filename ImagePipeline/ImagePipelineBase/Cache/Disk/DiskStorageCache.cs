@@ -1,6 +1,5 @@
 ﻿using BinaryResource;
 using Cache.Common;
-using Cache.Disk;
 using FBCore.Common.Disk;
 using FBCore.Common.Statfs;
 using FBCore.Common.Time;
@@ -11,7 +10,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ImagePipelineBase.Cache.Disk
+namespace Cache.Disk
 {
     /// <summary>
     /// Cache that manages disk storage.
