@@ -125,6 +125,7 @@
   <ItemGroup>
     <Compile Include="Cache\BufferedDiskCache.cs" />
     <Compile Include="Cache\IImageCacheStatsTracker.cs" />
+    <Compile Include="Cache\NoOpImageCacheStatsTracker.cs" />
     <Compile Include="Cache\StagingArea.cs" />
     <Compile Include="Core\DiskStorageCacheFactory.cs" />
     <Compile Include="Core\DynamicDefaultDiskStorageFactory.cs" />

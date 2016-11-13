@@ -21,9 +21,21 @@ namespace ImagePipeline.Cache
         private readonly object _mapGate = new object();
         private IDictionary<ICacheKey, EncodedImage> _map;
 
+        /// <summary>
+        /// Test-only variables
+        ///
+        /// <para /><b>DO NOT USE in application code.</b>
+        /// </summary>
+        internal int _removeCallsTestOnly;
+        internal int _clearAllCallsTestOnly;
+
         private StagingArea()
         {
             _map = new Dictionary<ICacheKey, EncodedImage>();
+
+            // For unit test
+            _removeCallsTestOnly = 0;
+            _clearAllCallsTestOnly = 0;
         }
 
         /// <summary>
@@ -77,6 +89,9 @@ namespace ImagePipeline.Cache
         /// </summary>
         public void ClearAll()
         {
+            // For unit test
+            ++_clearAllCallsTestOnly;
+
             IList<EncodedImage> old;
             lock (_mapGate)
             {
@@ -100,6 +115,9 @@ namespace ImagePipeline.Cache
         /// </summary>
         public bool Remove(ICacheKey key)
         {
+            // For unit test
+            ++_removeCallsTestOnly;
+
             Preconditions.CheckNotNull(key);
             EncodedImage encodedImage = default(EncodedImage);
             lock (_mapGate)

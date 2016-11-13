@@ -215,7 +215,7 @@ namespace ImagePipeline.Cache
         /// Associates encodedImage with given key in disk cache. Disk write is performed on background
         /// thread, so the caller of this method is not blocked
         /// </summary>
-        public void Put(ICacheKey key, EncodedImage encodedImage)
+        public Task Put(ICacheKey key, EncodedImage encodedImage)
         {
             Preconditions.CheckNotNull(key);
             Preconditions.CheckArgument(EncodedImage.IsValid(encodedImage));
@@ -229,7 +229,7 @@ namespace ImagePipeline.Cache
             EncodedImage finalEncodedImage = EncodedImage.CloneOrNull(encodedImage);
             try
             {
-                _writeExecutor.Execute(() =>
+                return _writeExecutor.Execute(() =>
                 {
                     try
                     {
@@ -242,13 +242,14 @@ namespace ImagePipeline.Cache
                     }
                 });
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 // We failed to enqueue cache write. Log failure and decrement ref count
                 // TODO: 3697790
                 Debug.WriteLine($"Failed to schedule disk-cache write for { key.ToString() }");
                 _stagingArea.Remove(key, encodedImage);
                 EncodedImage.CloseSafely(finalEncodedImage);
+                throw e;
             }
         }
 
