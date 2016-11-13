@@ -162,6 +162,11 @@
     <Compile Include="Memory\SharedByteArray.cs" />
     <Compile Include="Memory\SizeTooLargeException.cs" />
     <Compile Include="Memory\SoftRefByteArrayPool.cs" />
+    <Compile Include="Producers\BaseConsumer.cs" />
+    <Compile Include="Producers\BaseConsumerHelper.cs" />
+    <Compile Include="Producers\DelegatingConsumer.cs" />
+    <Compile Include="Producers\IConsumer.cs" />
+    <Compile Include="Producers\MockBaseConsumer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\ImagePipeline.rd.xml" />
   </ItemGroup>

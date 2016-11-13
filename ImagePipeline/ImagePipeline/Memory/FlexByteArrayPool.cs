@@ -9,7 +9,7 @@ namespace ImagePipeline.Memory
     /// A special byte-array pool designed to minimize allocations.
     ///
     /// <para />The length of each bucket's free list is capped at the number of threads using the pool.
-    /// <para />The free list of each bucket uses <see cref="OOMSoftReference&lt;T&gt;"/>s.
+    /// <para />The free list of each bucket uses <see cref="OOMSoftReference{T}"/>s.
     /// </summary>
     public class FlexByteArrayPool
     {

@@ -10,7 +10,7 @@ namespace ImagePipeline.Cache
         private readonly Func<T, int> _func;
 
         /// <summary>
-        /// Instantiates the <see cref="ValueDescriptorHelper&lt;T&gt;"/>.
+        /// Instantiates the <see cref="ValueDescriptorHelper{T}"/>.
         /// </summary>
         /// <param name="func">Delegate function</param>
         public ValueDescriptorHelper(Func<T, int> func)

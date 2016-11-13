@@ -618,7 +618,7 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Instantiates the <see cref="Bucket&lt;T&gt;"/>.
+        /// Instantiates the <see cref="Bucket{T}"/>.
         /// </summary>
         /// <param name="bucketedSize">Bucket size</param>
         /// <returns>Bucket</returns>

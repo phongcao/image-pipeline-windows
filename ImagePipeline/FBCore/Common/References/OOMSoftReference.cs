@@ -31,7 +31,7 @@ namespace FBCore.Common.References
         WeakReference<T> softRef3;
 
         /// <summary>
-        /// Instantiates the <see cref="OOMSoftReference&lt;T&gt;"/>.
+        /// Instantiates the <see cref="OOMSoftReference{T}"/>.
         /// </summary>
         public OOMSoftReference()
         {

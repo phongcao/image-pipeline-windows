@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// Config parameters for pools (<see cref="BasePool&lt;T&gt;"/>. Supplied via a provider.
+    /// Config parameters for pools (<see cref="BasePool{T}"/>. Supplied via a provider.
     /// <para />
     /// <see cref="MaxSizeSoftCap"/>
     /// This represents a soft cap on the size of the pool. When the pool size hits this limit, the pool

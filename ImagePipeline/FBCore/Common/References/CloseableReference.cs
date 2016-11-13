@@ -11,7 +11,7 @@ namespace FBCore.Common.References
     /// <para />This class allows reference-counting semantics in a Java-friendlier way. A single object
     /// can have any number of CloseableReferences pointing to it. When all of these have been closed,
     /// the object either has its <see cref="IDisposable.Dispose"/> method called, if it implements
-    /// <see cref="IDisposable"/>, or its designated <see cref="IResourceReleaser&lt;T&gt;.Release"/>,
+    /// <see cref="IDisposable"/>, or its designated <see cref="IResourceReleaser{T}.Release"/>,
     /// if it does not.
     ///
     /// <para />Callers can construct a CloseableReference wrapping a <see cref="IDisposable"/> with:
@@ -20,7 +20,7 @@ namespace FBCore.Common.References
     /// CloseableReference c = CloseableReference.of(foo);
     /// 
     /// <para />Objects that do not implement Closeable can still use this class, but must supply a
-    /// <see cref="IResourceReleaser&lt;T&gt;"/>:
+    /// <see cref="IResourceReleaser{T}"/>:
     /// 
     /// <code>
     ///   <![CDATA[ 

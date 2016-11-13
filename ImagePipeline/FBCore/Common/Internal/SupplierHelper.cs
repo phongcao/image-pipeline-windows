@@ -3,7 +3,7 @@
 namespace FBCore.Common.Internal
 {
     /// <summary>
-    /// Helper class for the <see cref="SupplierHelper&lt;T&gt;"/> interface
+    /// Helper class for the <see cref="SupplierHelper{T}"/> interface
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class SupplierHelper<T> : ISupplier<T>
@@ -11,7 +11,7 @@ namespace FBCore.Common.Internal
         private readonly Func<T> _func;
 
         /// <summary>
-        /// Instantiates the <see cref="SupplierHelper&lt;T&gt;"/>
+        /// Instantiates the <see cref="SupplierHelper{T}"/>
         /// </summary>
         public SupplierHelper(Func<T> func)
         {

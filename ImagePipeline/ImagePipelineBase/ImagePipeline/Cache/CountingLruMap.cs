@@ -16,7 +16,7 @@ namespace ImagePipeline.Cache
         private int _sizeInBytes = 0;
 
         /// <summary>
-        /// Instantiates the <see cref="CountingLruMap&lt;K, V&gt;"/>.
+        /// Instantiates the <see cref="CountingLruMap{K, V}"/>.
         /// </summary>
         /// <param name="valueDescriptor"></param>
         public CountingLruMap(IValueDescriptor<V> valueDescriptor)

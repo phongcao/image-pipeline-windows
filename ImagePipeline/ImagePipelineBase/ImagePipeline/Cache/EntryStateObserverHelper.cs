@@ -10,7 +10,7 @@ namespace ImagePipeline.Cache
         private readonly Action<T, bool> _func;
 
         /// <summary>
-        /// Instantiates the <see cref="EntryStateObserverHelper&lt;T&gt;"/>.
+        /// Instantiates the <see cref="EntryStateObserverHelper{T}"/>.
         /// </summary>
         /// <param name="func">Delegate function</param>
         public EntryStateObserverHelper(Action<T, bool> func)

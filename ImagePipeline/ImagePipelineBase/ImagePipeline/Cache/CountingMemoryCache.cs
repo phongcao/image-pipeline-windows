@@ -102,7 +102,7 @@ namespace ImagePipeline.Cache
         private readonly object _cacheGate = new object();
 
         /// <summary>
-        /// Instantiates the <see cref="CountingMemoryCache&lt;K, V&gt;"/>.
+        /// Instantiates the <see cref="CountingMemoryCache{K, V}"/>.
         /// </summary>
         /// <param name="valueDescriptor"></param>
         /// <param name="cacheTrimStrategy"></param>
@@ -439,7 +439,7 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Removes the exclusively owned items until the cache constraints are met.
         ///
-        /// <para /> This method invokes the external <see cref="CloseableReference&lt;V&gt;.Dispose"/> method,
+        /// <para /> This method invokes the external <see cref="CloseableReference{V}.Dispose"/> method,
         /// so it must not be called while holding the <code>this</code> lock.
         /// </summary>
         private void MaybeEvictEntries()
@@ -495,7 +495,7 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Notifies the client that the cache no longer tracks the given items.
         ///
-        /// <para /> This method invokes the external <see cref="CloseableReference&lt;V&gt;.Dispose"/> method,
+        /// <para /> This method invokes the external <see cref="CloseableReference{V}.Dispose"/> method,
         /// so it must not be called while holding the <code>this</code> lock.
         /// </summary>
         private void MaybeClose(IList<Entry> oldEntries)

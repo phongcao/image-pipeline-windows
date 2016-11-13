@@ -80,7 +80,7 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Convert this object to a CloseableReference&lt;Bitmap&gt;.
+        /// Convert this object to a CloseableReference{Bitmap}.
         /// <para />You cannot call this method on an object that has already been closed.
         /// <para />The reference count of the bitmap is preserved. After calling this method, this object
         /// can no longer be used and no longer points to the bitmap.

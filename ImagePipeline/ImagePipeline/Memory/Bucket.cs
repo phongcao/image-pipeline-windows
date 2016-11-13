@@ -4,15 +4,15 @@ using FBCore.Common.Internal;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// The Bucket is a constituent class of <see cref="BasePool&lt;T&gt;"/>. The pool maintains its free values
+    /// The Bucket is a constituent class of <see cref="BasePool{T}"/>. The pool maintains its free values
     /// in a set of buckets, where each bucket represents a set of values of the same 'size'.
     /// <para />
     /// Each bucket maintains a freelist of values.
-    /// When the pool receives a <see cref="BasePool&lt;T&gt;.Get(int)"/> request for a particular size, it finds the
+    /// When the pool receives a <see cref="BasePool{T}.Get(int)"/> request for a particular size, it finds the
     /// appropriate bucket, and delegates the request to the bucket (<see cref="Get()"/>.
     /// If the bucket's freelist is  non-empty, then one of the entries on the freelist is returned (and
     /// removed from the freelist).
-    /// Similarly, when a value is released to the pool via a call to <see cref="BasePool&lt;T&gt;.Release(T)"/>,
+    /// Similarly, when a value is released to the pool via a call to <see cref="BasePool{T}.Release(T)"/>,
     /// the pool locates the appropriate bucket and returns the value to the bucket's freelist - see
     /// (<see cref="Release(T)"/>
     /// <para />
@@ -20,10 +20,10 @@ namespace ImagePipeline.Memory
     /// values that came from this bucket, but are now in use by the caller, and no longer on the
     /// freelist.
     /// The 'length' of the bucket is the number of values from this bucket that are currently in use
-    /// (mInUseCount), plus the size of the freeList. The maxLength of the bucket is that maximum length
+    /// (_inUseCount), plus the size of the freeList. The maxLength of the bucket is that maximum length
     /// that this bucket should grow to - and is used by the pool to determine whether values should
     /// be released to the bucket ot freed.
-    /// &lt;T&gt; Type of values to be 'stored' in the bucket
+    /// {T} Type of values to be 'stored' in the bucket
     /// </summary>
     public class Bucket<T>
     {

@@ -11,7 +11,7 @@ namespace ImagePipeline.Memory
         private readonly Action<T> _func;
 
         /// <summary>
-        /// Instantiates the <see cref="ResourceReleaserHelper&lt;T&gt;"/>.
+        /// Instantiates the <see cref="ResourceReleaserHelper{T}"/>.
         /// </summary>
         /// <param name="func">Delegate function</param>
         public ResourceReleaserHelper(Action<T> func)

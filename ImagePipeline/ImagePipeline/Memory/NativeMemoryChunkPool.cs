@@ -114,7 +114,7 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Checks if the value is reusable (for subsequent <see cref="BasePool&lt;T&gt;.Get(int)"/> operations.
+        /// Checks if the value is reusable (for subsequent <see cref="BasePool{T}.Get(int)"/> operations.
         /// The value is reusable, if
         ///  - it hasn't already been freed
         /// <param name="value">the value to test for reusability</param>

@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 namespace ImagePipelineBase.Tests.ImagePipeline.Cache
 {
     /// <summary>
-    /// Tests for <see cref="CountingLruMap&lt;K, V&gt;"/>
+    /// Tests for <see cref="CountingLruMap{K, V}"/>
     /// </summary>
     [TestClass]
     public class CountingLruMapTests

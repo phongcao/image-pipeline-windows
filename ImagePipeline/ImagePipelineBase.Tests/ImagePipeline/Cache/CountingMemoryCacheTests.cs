@@ -10,7 +10,7 @@ using Windows.Graphics.Imaging;
 namespace ImagePipelineBase.Tests.ImagePipeline.Cache
 {
     /// <summary>
-    /// Tests for <see cref="CountingMemoryCache&lt;K, V&gt;"/>
+    /// Tests for <see cref="CountingMemoryCache{K, V}"/>
     /// </summary>
     [TestClass]
     public class CountingMemoryCacheTests
