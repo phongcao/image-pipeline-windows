@@ -505,6 +505,8 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         [TestMethod]
         public void TestConcurrency()
         {
+            IList<Task> tasks = new List<Task>();
+
             using (Barrier barrier = new Barrier(3))
             {
                 WriterCallbackHelper writerCallback = new WriterCallbackHelper((os) =>
@@ -525,9 +527,13 @@ namespace ImagePipelineBase.Tests.Cache.Disk
                 ICacheKey key1 = new SimpleCacheKey("concurrent1");
                 ICacheKey key2 = new SimpleCacheKey("concurrent2");
                 Task t1 = RunInsertionInSeparateThread(key1, writerCallback);
+                tasks.Add(t1);
                 Task t2 = RunInsertionInSeparateThread(key2, writerCallback);
+                tasks.Add(t2);
                 barrier.SignalAndWait();             
             }
+
+            Task.WaitAll(tasks.ToArray());
         }
 
         private Task RunInsertionInSeparateThread(ICacheKey key, IWriterCallback callback)
