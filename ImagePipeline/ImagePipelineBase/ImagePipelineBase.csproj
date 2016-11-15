@@ -176,6 +176,10 @@
     <Compile Include="ImagePipeline\Cache\IValueDescriptor.cs" />
     <Compile Include="ImagePipeline\Cache\MemoryCacheParams.cs" />
     <Compile Include="ImagePipeline\Cache\ValueDescriptorHelper.cs" />
+    <Compile Include="ImagePipeline\Common\ImageDecodeOptions.cs" />
+    <Compile Include="ImagePipeline\Common\ImageDecodeOptionsBuilder.cs" />
+    <Compile Include="ImagePipeline\Common\Priority.cs" />
+    <Compile Include="ImagePipeline\Common\ResizeOptions.cs" />
     <Compile Include="ImagePipeline\Common\TooManyBitmapsException.cs" />
     <Compile Include="ImagePipeline\Core\DefaultExecutorSupplier.cs" />
     <Compile Include="ImagePipeline\Core\Executors.cs" />

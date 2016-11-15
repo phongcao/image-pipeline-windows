@@ -148,8 +148,10 @@
     <Compile Include="Common\Time\MockSystemClock.cs" />
     <Compile Include="Common\Time\SystemClock.cs" />
     <Compile Include="Common\Util\ByteConstants.cs" />
+    <Compile Include="Common\Util\HashCodeUtil.cs" />
     <Compile Include="Common\Util\Hex.cs" />
     <Compile Include="Common\Util\SecureHashUtil.cs" />
+    <Compile Include="Common\Util\UriUtil.cs" />
     <Compile Include="Common\Webp\WebpSupportStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\References\IResourceReleaser.cs" />
