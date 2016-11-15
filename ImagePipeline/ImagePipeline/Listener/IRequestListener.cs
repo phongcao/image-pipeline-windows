@@ -37,7 +37,7 @@ namespace ImagePipeline.Listener
         /// <param name="error">cause of failure</param>
         /// <param name="isPrefetch">whether the request is a prefetch or not</param>
         /// </summary>
-        void onRequestFailure(
+        void OnRequestFailure(
             ImageRequest request,
             string requestId,
             Exception error,

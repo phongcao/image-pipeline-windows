@@ -20,7 +20,7 @@ namespace ImagePipeline.Producers
 
         /// <summary>
         /// Called whenever an important producer-specific event occurs. This may only be called if
-        /// onProducerStart has been called, but corresponding onProducerFinishWith* method has not been
+        /// onProducerStart has been called, but corresponding OnProducerFinishWith method has not been
         /// called yet.
         /// </summary>
         void OnProducerEvent(string requestId, string producerName, string eventName);

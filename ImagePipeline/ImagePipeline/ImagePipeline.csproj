@@ -131,7 +131,12 @@
     <Compile Include="Core\DynamicDefaultDiskStorageFactory.cs" />
     <Compile Include="Core\IDiskStorageFactory.cs" />
     <Compile Include="Core\IFileCacheFactory.cs" />
+    <Compile Include="Listener\BaseRequestListener.cs" />
+    <Compile Include="Listener\ForwardingRequestListener.cs" />
     <Compile Include="Listener\IRequestListener.cs" />
+    <Compile Include="Listener\RequestListenerHelper.cs" />
+    <Compile Include="Producers\ProducerListenerHelper.cs" />
+    <Compile Include="Listener\RequestLoggingListener.cs" />
     <Compile Include="Memory\BasePool.cs" />
     <Compile Include="Memory\BitmapCounter.cs" />
     <Compile Include="Memory\BitmapCounterProvider.cs" />
