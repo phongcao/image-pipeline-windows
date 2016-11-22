@@ -6,21 +6,21 @@ using System.Collections.Generic;
 namespace ImagePipeline.Listener
 {
     /// <summary>
-    /// Helper class for <see cref="IRequestListener"/>
+    /// Provides custom implementation for <see cref="IRequestListener"/>
     /// </summary>
-    public class RequestListenerHelper : IRequestListener
+    public class RequestListenerImpl : IRequestListener
     {
-        private ProducerListenerHelper _producerListener;
+        private ProducerListenerImpl _producerListener;
         private Action<ImageRequest, object, string, bool> _onRequestStartFunc;
         private Action<ImageRequest, string, bool> _onRequestSuccessFunc;
         private Action<ImageRequest, string, Exception, bool> _onRequestFailureFunc;
         private Action<string> _onRequestCancellationFunc;
 
         /// <summary>
-        /// Instantiates the <see cref="RequestListenerHelper"/>
+        /// Instantiates the <see cref="RequestListenerImpl"/>
         /// </summary>
-        public RequestListenerHelper(
-            ProducerListenerHelper producerListener,
+        public RequestListenerImpl(
+            ProducerListenerImpl producerListener,
             Action<ImageRequest, object, string, bool> onRequestStartFunc,
             Action<ImageRequest, string, bool> onRequestSuccessFunc,
             Action<ImageRequest, string, Exception, bool> onRequestFailureFunc,

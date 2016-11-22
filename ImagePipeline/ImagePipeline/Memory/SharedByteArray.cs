@@ -38,7 +38,7 @@ namespace ImagePipeline.Memory
         /// </summary>
         internal readonly SemaphoreSlim _semaphore;
 
-        private readonly ResourceReleaserHelper<byte[]> _resourceReleaser;
+        private readonly ResourceReleaserImpl<byte[]> _resourceReleaser;
 
         /// <summary>
         /// Instantiates the <see cref="SharedByteArray"/>.
@@ -57,7 +57,7 @@ namespace ImagePipeline.Memory
             _minByteArraySize = args.MinBucketSize;
             _byteArraySoftRef = new OOMSoftReference<byte[]>();
             _semaphore = new SemaphoreSlim(1, 1);
-            _resourceReleaser = new ResourceReleaserHelper<byte[]>(value =>
+            _resourceReleaser = new ResourceReleaserImpl<byte[]>(value =>
             {
                 _semaphore.Release();
             });

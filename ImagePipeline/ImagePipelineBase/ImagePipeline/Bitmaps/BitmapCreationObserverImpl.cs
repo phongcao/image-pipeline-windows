@@ -4,17 +4,17 @@ using Windows.Graphics.Imaging;
 namespace ImagePipeline.Bitmaps
 {
     /// <summary>
-    /// BitmapCreationObserver helper class
+    /// Provides custom implementation for <see cref="IBitmapCreationObserver" />
     /// </summary>
-    public class BitmapCreationObserverHelper : IBitmapCreationObserver
+    public class BitmapCreationObserverImpl : IBitmapCreationObserver
     {
         private readonly Action<SoftwareBitmap, object> _func;
 
         /// <summary>
-        /// Instantiates the <see cref="BitmapCreationObserverHelper"/>.
+        /// Instantiates the <see cref="BitmapCreationObserverImpl"/>.
         /// </summary>
         /// <param name="func">Delegate function</param>
-        public BitmapCreationObserverHelper(Action<SoftwareBitmap, object> func)
+        public BitmapCreationObserverImpl(Action<SoftwareBitmap, object> func)
         {
             _func = func;
         }

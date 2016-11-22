@@ -4,17 +4,17 @@ using System;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// ResourceReleaser helper class
+    /// Provides custom implementation for <see cref="IResourceReleaser{T}"/>
     /// </summary>
-    public class ResourceReleaserHelper<T> : IResourceReleaser<T>
+    public class ResourceReleaserImpl<T> : IResourceReleaser<T>
     {
         private readonly Action<T> _func;
 
         /// <summary>
-        /// Instantiates the <see cref="ResourceReleaserHelper{T}"/>.
+        /// Instantiates the <see cref="ResourceReleaserImpl{T}"/>.
         /// </summary>
         /// <param name="func">Delegate function</param>
-        public ResourceReleaserHelper(Action<T> func)
+        public ResourceReleaserImpl(Action<T> func)
         {
             _func = func;
         }

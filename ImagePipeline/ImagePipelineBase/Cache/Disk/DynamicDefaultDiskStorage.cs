@@ -67,13 +67,13 @@ namespace Cache.Disk
         /// Is this storage enabled?
         /// @return true, if enabled
         /// </summary>
-        public bool Enabled
+        public bool IsEnabled
         {
             get
             {
                 try
                 {
-                    return Get().Enabled;
+                    return Get().IsEnabled;
                 }
                 catch (IOException)
                 {
@@ -86,13 +86,13 @@ namespace Cache.Disk
         /// Is this storage external?
         /// @return true, if external
         /// </summary>
-        public bool External
+        public bool IsExternal
         {
             get
             {
                 try
                 {
-                    return Get().External;
+                    return Get().IsExternal;
                 }
                 catch (IOException)
                 {

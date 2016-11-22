@@ -20,8 +20,8 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
         [TestInitialize]
         public void Initialize()
         {
-            ValueDescriptorHelper<object> valueDescriptor = 
-                new ValueDescriptorHelper<object>(v => (int)v);
+            ValueDescriptorImpl<object> valueDescriptor = 
+                new ValueDescriptorImpl<object>(v => (int)v);
 
             _countingLruMap = new CountingLruMap<string, object>(valueDescriptor);
         }

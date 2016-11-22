@@ -48,12 +48,12 @@ namespace ImagePipeline.Request
         /// <summary>
         /// If set - the client will receive intermediate results
         /// </summary>
-        public bool ProgressiveRenderingEnabled { get; }
+        public bool IsProgressiveRenderingEnabled { get; }
 
         /// <summary>
         /// If set the client will receive thumbnail previews for local images, before the whole image
         /// </summary>
-        public bool LocalThumbnailPreviewsEnabled { get; }
+        public bool IsLocalThumbnailPreviewsEnabled { get; }
 
         /// <summary>
         /// Image decode options
@@ -68,7 +68,7 @@ namespace ImagePipeline.Request
         /// <summary>
         /// Is auto-rotate enabled?
         /// </summary>
-        public bool AutoRotateEnabled { get; }
+        public bool IsAutoRotateEnabled { get; }
 
         /// <summary>
         /// Priority levels of this request.
@@ -83,7 +83,7 @@ namespace ImagePipeline.Request
         /// <summary>
         /// Whether the disk cache should be used for this request
         /// </summary>
-        public bool DiskCacheEnabled { get; }
+        public bool IsDiskCacheEnabled { get; }
 
         /// <summary>
         /// Postprocessor to run on the output bitmap.
@@ -155,17 +155,17 @@ namespace ImagePipeline.Request
             CacheChoice = builder.CacheChoice;
             SourceUri = builder.SourceUri;
 
-            ProgressiveRenderingEnabled = builder.ProgressiveRenderingEnabled;
-            LocalThumbnailPreviewsEnabled = builder.LocalThumbnailPreviewsEnabled;
+            IsProgressiveRenderingEnabled = builder.IsProgressiveRenderingEnabled;
+            IsLocalThumbnailPreviewsEnabled = builder.IsLocalThumbnailPreviewsEnabled;
 
             ImageDecodeOptions = builder.ImageDecodeOptions;
 
             ResizeOptions = builder.ResizeOptions;
-            AutoRotateEnabled = builder.AutoRotateEnabled;
+            IsAutoRotateEnabled = builder.IsAutoRotateEnabled;
 
             Priority = builder.Priority;
             LowestPermittedRequestLevel = builder.LowestPermittedRequestLevel;
-            DiskCacheEnabled = builder.DiskCacheEnabled;
+            IsDiskCacheEnabled = builder.IsDiskCacheEnabled;
 
             Postprocessor = builder.Postprocessor;
 

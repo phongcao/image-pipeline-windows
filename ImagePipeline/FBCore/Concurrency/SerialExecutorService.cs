@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.System.Threading;
 
-namespace ImagePipeline.Core
+namespace FBCore.Concurrency
 {
     /// <summary>
     /// Provides default implementations of IExecutorService execution methods

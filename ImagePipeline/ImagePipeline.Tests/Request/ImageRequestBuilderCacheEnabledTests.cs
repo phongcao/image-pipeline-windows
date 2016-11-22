@@ -18,7 +18,7 @@ namespace ImagePipeline.Tests.Request
         {
             ImageRequestBuilder builder = 
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("http://request"));
-            Assert.IsTrue(builder.DiskCacheEnabled);
+            Assert.IsTrue(builder.IsDiskCacheEnabled);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace ImagePipeline.Tests.Request
             ImageRequestBuilder builder =
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("http://request"));
             builder.DisableDiskCache();
-            Assert.IsFalse(builder.DiskCacheEnabled);
+            Assert.IsFalse(builder.IsDiskCacheEnabled);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace ImagePipeline.Tests.Request
         {
             ImageRequestBuilder builder =
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("https://request"));
-            Assert.IsTrue(builder.DiskCacheEnabled);
+            Assert.IsTrue(builder.IsDiskCacheEnabled);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace ImagePipeline.Tests.Request
             ImageRequestBuilder builder =
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("https://request"));
             builder.DisableDiskCache();
-            Assert.IsFalse(builder.DiskCacheEnabled);
+            Assert.IsFalse(builder.IsDiskCacheEnabled);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace ImagePipeline.Tests.Request
         {
             ImageRequestBuilder builder =
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("ms-appx:///request"));
-            Assert.IsFalse(builder.DiskCacheEnabled);
+            Assert.IsFalse(builder.IsDiskCacheEnabled);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace ImagePipeline.Tests.Request
             ImageRequestBuilder builder =
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("ms-appx:///request"));
             builder.DisableDiskCache();
-            Assert.IsFalse(builder.DiskCacheEnabled);
+            Assert.IsFalse(builder.IsDiskCacheEnabled);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace ImagePipeline.Tests.Request
         {
             ImageRequestBuilder builder =
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("ms-appx-web:///request"));
-            Assert.IsFalse(builder.DiskCacheEnabled);
+            Assert.IsFalse(builder.IsDiskCacheEnabled);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace ImagePipeline.Tests.Request
             ImageRequestBuilder builder =
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("ms-appx-web:///request"));
             builder.DisableDiskCache();
-            Assert.IsFalse(builder.DiskCacheEnabled);
+            Assert.IsFalse(builder.IsDiskCacheEnabled);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace ImagePipeline.Tests.Request
         {
             ImageRequestBuilder builder =
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("ms-appdata:///request"));
-            Assert.IsFalse(builder.DiskCacheEnabled);
+            Assert.IsFalse(builder.IsDiskCacheEnabled);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace ImagePipeline.Tests.Request
             ImageRequestBuilder builder =
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("ms-appdata:///request"));
             builder.DisableDiskCache();
-            Assert.IsFalse(builder.DiskCacheEnabled);
+            Assert.IsFalse(builder.IsDiskCacheEnabled);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace ImagePipeline.Tests.Request
         {
             ImageRequestBuilder builder =
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("ms-resource:///request"));
-            Assert.IsFalse(builder.DiskCacheEnabled);
+            Assert.IsFalse(builder.IsDiskCacheEnabled);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace ImagePipeline.Tests.Request
             ImageRequestBuilder builder =
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("ms-resource:///request"));
             builder.DisableDiskCache();
-            Assert.IsFalse(builder.DiskCacheEnabled);
+            Assert.IsFalse(builder.IsDiskCacheEnabled);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace ImagePipeline.Tests.Request
         {
             ImageRequestBuilder builder =
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("data:image/png;base64"));
-            Assert.IsFalse(builder.DiskCacheEnabled);
+            Assert.IsFalse(builder.IsDiskCacheEnabled);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace ImagePipeline.Tests.Request
             ImageRequestBuilder builder =
                 ImageRequestBuilder.NewBuilderWithSource(new Uri("data:image/png;base64"));
             builder.DisableDiskCache();
-            Assert.IsFalse(builder.DiskCacheEnabled);
+            Assert.IsFalse(builder.IsDiskCacheEnabled);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Windows.System.Threading;
 
-namespace ImagePipeline.Core
+namespace FBCore.Concurrency
 {
     /// <summary>
     /// Factory and utility methods for <see cref="IExecutorService"/>

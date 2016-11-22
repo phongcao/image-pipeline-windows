@@ -37,7 +37,7 @@ namespace ImagePipeline.Memory
         {
             get
             {
-                return Closed ? -1 : _buf.Length;
+                return IsClosed ? -1 : _buf.Length;
             }
         }
 
@@ -77,7 +77,7 @@ namespace ImagePipeline.Memory
         /// Check if this instance has already been closed
         /// @return true, if the instance has been closed
         /// </summary>
-        public bool Closed
+        public bool IsClosed
         {
             get
             {

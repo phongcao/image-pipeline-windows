@@ -35,7 +35,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
         public void TestClose()
         {
             _closeableStaticBitmap.Dispose();
-            Assert.IsTrue(_closeableStaticBitmap.Closed);
+            Assert.IsTrue(_closeableStaticBitmap.IsClosed);
             bool disposed = false;
 
             // Check if object has been disposed
@@ -60,7 +60,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
             CloseableReference<SoftwareBitmap> reference = 
                 _closeableStaticBitmap.ConvertToBitmapReference();
             Assert.AreSame(reference.Get(), _bitmap);
-            Assert.IsTrue(_closeableStaticBitmap.Closed);
+            Assert.IsTrue(_closeableStaticBitmap.IsClosed);
         }
 
         /// <summary>

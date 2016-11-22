@@ -3,10 +3,10 @@
 namespace ImagePipeline.Producers
 {
     /// <summary>
-    /// Helper class for <see cref="BaseConsumer{T}"/>
+    /// Provides custom implementation for <see cref="BaseConsumer{T}"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BaseConsumerHelper<T> : BaseConsumer<T>
+    public class BaseConsumerImpl<T> : BaseConsumer<T>
     {
         private Action<T, bool> _onNewResultImplFunc;
         private Action<Exception> _onFailureImplFunc;
@@ -14,13 +14,13 @@ namespace ImagePipeline.Producers
         private Action<float> _onProgressUpdateImplFunc;
 
         /// <summary>
-        /// Instantiates the <see cref="BaseConsumerHelper{T}"/>
+        /// Instantiates the <see cref="BaseConsumerImpl{T}"/>
         /// </summary>
         /// <param name="onNewResultImplFunc"></param>
         /// <param name="onFailureImplFunc"></param>
         /// <param name="onCancellationImplFunc"></param>
         /// <param name="onProgressUpdateImplFunc"></param>
-        public BaseConsumerHelper(
+        public BaseConsumerImpl(
             Action<T, bool> onNewResultImplFunc,
             Action<Exception> onFailureImplFunc,
             Action onCancellationImplFunc,

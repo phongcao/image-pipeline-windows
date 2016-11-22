@@ -40,7 +40,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
 
         private ISupplier<DefaultDiskStorage> GetStorageSupplier(int version)
         {
-            return new SupplierHelper<DefaultDiskStorage>(() =>
+            return new SupplierImpl<DefaultDiskStorage>(() =>
             {
                 return new DefaultDiskStorage(
                     _directory,
@@ -81,7 +81,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         public void TestEnabled()
         {
             DefaultDiskStorage storage = GetStorageSupplier(1).Get();
-            Assert.IsTrue(storage.Enabled);
+            Assert.IsTrue(storage.IsEnabled);
         }
 
         /// <summary>
@@ -638,7 +638,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             IInserter inserter,
             byte[] content)
         {
-            inserter.WriteData(new WriterCallbackHelper(os =>
+            inserter.WriteData(new WriterCallbackImpl(os =>
             {
                 os.Write(content, 0, content.Length);
             }),

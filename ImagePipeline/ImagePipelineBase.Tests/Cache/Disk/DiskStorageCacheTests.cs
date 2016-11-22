@@ -335,7 +335,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             IOException writeException = new IOException();
             try
             {
-                _cache.Insert(key1, new WriterCallbackHelper(os =>
+                _cache.Insert(key1, new WriterCallbackImpl(os =>
                 {
                     throw writeException;
                 }));
@@ -496,7 +496,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         {
             IDiskStorage storage = CreateDiskStorage(TESTCACHE_CURRENT_VERSION);
             DiskStorageCache cache = CreateDiskCache(storage, false);
-            Assert.IsTrue(cache.Enabled);
+            Assert.IsTrue(cache.IsEnabled);
         }
 
         /// <summary>
@@ -509,7 +509,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
 
             using (Barrier barrier = new Barrier(3))
             {
-                WriterCallbackHelper writerCallback = new WriterCallbackHelper((os) =>
+                WriterCallbackImpl writerCallback = new WriterCallbackImpl((os) =>
                 {
                     try
                     {

@@ -28,7 +28,7 @@ namespace Cache.Disk
         /// <returns></returns>
         public IEntryEvictionComparator Get()
         {
-            return new EntryEvictionComparatorHelper((lhs, rhs) =>
+            return new EntryEvictionComparatorImpl((lhs, rhs) =>
             {
                 DateTime now = DateTime.Now;
                 float score1 = CalculateScore(lhs, now);

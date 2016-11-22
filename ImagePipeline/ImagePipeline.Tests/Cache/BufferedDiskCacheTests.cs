@@ -2,6 +2,7 @@
 using Cache.Disk;
 using FBCore.Common.Internal;
 using FBCore.Common.References;
+using FBCore.Concurrency;
 using ImagePipeline.Cache;
 using ImagePipeline.Core;
 using ImagePipeline.Image;

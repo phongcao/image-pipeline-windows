@@ -15,7 +15,7 @@ namespace Cache.Disk
         /// cache should just ignore calls, not fail.
         /// @return true if this cache is usable, false otherwise.
         /// </summary>
-        bool Enabled { get; }
+        bool IsEnabled { get; }
 
         /// <summary>
         /// Returns the binary resource cached with key.

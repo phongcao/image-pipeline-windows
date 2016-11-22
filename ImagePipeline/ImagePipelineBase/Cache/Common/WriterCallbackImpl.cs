@@ -4,17 +4,17 @@ using System.IO;
 namespace Cache.Common
 {
     /// <summary>
-    /// Helper class for <see cref="IWriterCallback"/>
+    /// Provides custom implementation for <see cref="IWriterCallback"/>
     /// </summary>
-    public class WriterCallbackHelper : IWriterCallback
+    public class WriterCallbackImpl : IWriterCallback
     {
         private Action<Stream> _func;
 
         /// <summary>
-        /// Instantiates the <see cref="WriterCallbackHelper"/>
+        /// Instantiates the <see cref="WriterCallbackImpl"/>
         /// </summary>
         /// <param name="func"></param>
-        public WriterCallbackHelper(Action<Stream> func)
+        public WriterCallbackImpl(Action<Stream> func)
         {
             _func = func;
         }

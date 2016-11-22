@@ -13,13 +13,13 @@ namespace Cache.Disk
         /// Is this storage enabled?
         /// @return true, if enabled
         /// </summary>
-        bool Enabled { get; }
+        bool IsEnabled { get; }
 
         /// <summary>
         /// Is this storage external?
         /// @return true, if external
         /// </summary>
-        bool External { get; }
+        bool IsExternal { get; }
 
         /// <summary>
         /// Get the resource with the specified name

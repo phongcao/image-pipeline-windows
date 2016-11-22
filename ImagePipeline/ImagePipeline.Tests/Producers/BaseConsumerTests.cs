@@ -26,7 +26,7 @@ namespace ImagePipeline.Tests.Producers
             _result = new object();
             _result2 = new object();
             _error = new Exception();
-            _baseConsumer = new BaseConsumerHelper<object>(
+            _baseConsumer = new BaseConsumerImpl<object>(
                 (newResult, isLast) =>
                 {
                     _delegatedConsumer.OnNewResult(newResult, isLast);

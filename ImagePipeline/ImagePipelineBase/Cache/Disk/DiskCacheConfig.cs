@@ -325,7 +325,7 @@ namespace Cache.Disk
             {
                 if (_baseDirectoryPathSupplier == null)
                 {
-                    _baseDirectoryPathSupplier = new SupplierHelper<FileSystemInfo>(() =>
+                    _baseDirectoryPathSupplier = new SupplierImpl<FileSystemInfo>(() =>
                     {
                         return new DirectoryInfo(ApplicationData.Current.LocalCacheFolder.Path);
                     });

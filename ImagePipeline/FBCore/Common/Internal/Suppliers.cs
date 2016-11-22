@@ -12,7 +12,7 @@
         /// </summary>
         public static ISupplier<T> of<T>(T instance)
         {
-            return new SupplierHelper<T>(() =>
+            return new SupplierImpl<T>(() =>
             {
                 return instance;
             });

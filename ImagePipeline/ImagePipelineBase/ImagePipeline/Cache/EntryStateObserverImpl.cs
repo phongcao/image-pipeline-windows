@@ -3,17 +3,17 @@
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// EntryStateObserver helper class
+    /// Provides custom implementation for <see cref="IEntryStateObserver{T}"/>
     /// </summary>
-    public class EntryStateObserverHelper<T> : IEntryStateObserver<T>
+    public class EntryStateObserverImpl<T> : IEntryStateObserver<T>
     {
         private readonly Action<T, bool> _func;
 
         /// <summary>
-        /// Instantiates the <see cref="EntryStateObserverHelper{T}"/>.
+        /// Instantiates the <see cref="EntryStateObserverImpl{T}"/>.
         /// </summary>
         /// <param name="func">Delegate function</param>
-        public EntryStateObserverHelper(Action<T, bool> func)
+        public EntryStateObserverImpl(Action<T, bool> func)
         {
             _func = func;
         }

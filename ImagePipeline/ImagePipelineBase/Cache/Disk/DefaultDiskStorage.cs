@@ -132,7 +132,7 @@ namespace Cache.Disk
         /// Is this storage enabled?
         /// @return true, if enabled
         /// </summary>
-        public bool Enabled
+        public bool IsEnabled
         {
             get
             {
@@ -144,7 +144,7 @@ namespace Cache.Disk
         /// Is this storage external?
         /// @return true, if external
         /// </summary>
-        public bool External
+        public bool IsExternal
         {
             get
             {

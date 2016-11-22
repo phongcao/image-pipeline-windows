@@ -43,7 +43,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
             new string[] {"k0", "k1", "k2", "k3", "k4", "k5", "k6", "k7", "k8", "k9"};
 
         private static readonly IResourceReleaser<SoftwareBitmap> BITMAP_RESOURCE_RELEASER =
-            new ResourceReleaserHelper<SoftwareBitmap>(b => b.Dispose());
+            new ResourceReleaserImpl<SoftwareBitmap>(b => b.Dispose());
 
         /// <summary>
         /// Initialize
@@ -53,7 +53,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
         {
             _releaseCallCount = 0;
             _releaseValues = new List<int>();
-            _releaser = new ResourceReleaserHelper<int>(
+            _releaser = new ResourceReleaserImpl<int>(
                 v =>
                 {
                     ++_releaseCallCount;
@@ -62,15 +62,15 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
 
             _onExclusivityChangedCallCount = 0;
             _isExclusive = null;
-            _entryStateObserver = new EntryStateObserverHelper<string>(
+            _entryStateObserver = new EntryStateObserverImpl<string>(
                 (v, b) =>
                 {
                     ++_onExclusivityChangedCallCount;
                     _isExclusive = b;
                 });
 
-            _cacheTrimStrategy = new CacheTrimStrategyHelper(v => _trimRatio);
-            _valueDescriptor = new ValueDescriptorHelper<int>(v => v);
+            _cacheTrimStrategy = new CacheTrimStrategyImpl(v => _trimRatio);
+            _valueDescriptor = new ValueDescriptorImpl<int>(v => v);
             _params = new MemoryCacheParams(
                 CACHE_MAX_SIZE,
                 CACHE_MAX_COUNT,

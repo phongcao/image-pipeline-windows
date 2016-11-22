@@ -3,17 +3,16 @@
 namespace FBCore.Common.Internal
 {
     /// <summary>
-    /// Helper class for the <see cref="SupplierHelper{T}"/> interface
+    /// Provides custom implementation for <see cref="ISupplier{T}"/>
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class SupplierHelper<T> : ISupplier<T>
+    public class SupplierImpl<T> : ISupplier<T>
     {
         private readonly Func<T> _func;
 
         /// <summary>
-        /// Instantiates the <see cref="SupplierHelper{T}"/>
+        /// Instantiates the <see cref="SupplierImpl{T}"/>
         /// </summary>
-        public SupplierHelper(Func<T> func)
+        public SupplierImpl(Func<T> func)
         {
             _func = func;
         }

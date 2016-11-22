@@ -98,7 +98,7 @@ namespace ImagePipeline.Image
         /// <summary>
         /// Returns whether this instance is closed.
         /// </summary>
-        public override bool Closed
+        public override bool IsClosed
         {
             get
             {

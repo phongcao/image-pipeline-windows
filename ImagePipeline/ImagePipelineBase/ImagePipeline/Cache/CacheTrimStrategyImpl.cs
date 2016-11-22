@@ -3,17 +3,17 @@
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// CacheTrimStrategy helper class
+    /// Provides custom implementation for <see cref="ICacheTrimStrategy"/>
     /// </summary>
-    public class CacheTrimStrategyHelper : ICacheTrimStrategy
+    public class CacheTrimStrategyImpl : ICacheTrimStrategy
     {
         private readonly Func<double, double> _func;
 
         /// <summary>
-        /// Instantiates the <see cref="CacheTrimStrategyHelper"/>.
+        /// Instantiates the <see cref="CacheTrimStrategyImpl"/>.
         /// </summary>
         /// <param name="func">Delegate function</param>
-        public CacheTrimStrategyHelper(Func<double, double> func)
+        public CacheTrimStrategyImpl(Func<double, double> func)
         {
             _func = func;
         }

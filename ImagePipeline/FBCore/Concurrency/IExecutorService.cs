@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace ImagePipeline.Core
+namespace FBCore.Concurrency
 {
     /// <summary>
     /// This interface provides a way of decoupling task submission from the

@@ -3,17 +3,17 @@
 namespace Cache.Disk
 {
     /// <summary>
-    /// Helper class for <see cref="IEntryEvictionComparator"/>
+    /// Provides custom implementation for <see cref="IEntryEvictionComparator"/>
     /// </summary>
-    public class EntryEvictionComparatorHelper : IEntryEvictionComparator
+    public class EntryEvictionComparatorImpl : IEntryEvictionComparator
     {
         private Func<IEntry, IEntry, int> _func;
 
         /// <summary>
-        ///  Instantiates the <see cref="EntryEvictionComparatorHelper"/>
+        ///  Instantiates the <see cref="EntryEvictionComparatorImpl"/>
         /// </summary>
         /// <param name="func"></param>
-        public EntryEvictionComparatorHelper(Func<IEntry, IEntry, int> func)
+        public EntryEvictionComparatorImpl(Func<IEntry, IEntry, int> func)
         {
             _func = func;
         }

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace ImagePipeline.Producers
 {
     /// <summary>
-    /// Helper class for <see cref="IProducerListener"/>
+    /// Provides custom implementation for <see cref="IProducerListener"/>
     /// </summary>
-    public class ProducerListenerHelper : IProducerListener
+    public class ProducerListenerImpl : IProducerListener
     {
         internal Action<string, string> OnProducerStartFunc { get; }
 
@@ -21,9 +21,9 @@ namespace ImagePipeline.Producers
         internal Func<string, bool> RequiresExtraMapFunc { get; }
 
         /// <summary>
-        /// Instantiates the <see cref="ProducerListenerHelper"/>
+        /// Instantiates the <see cref="ProducerListenerImpl"/>
         /// </summary>
-        public ProducerListenerHelper(
+        public ProducerListenerImpl(
             Action<string, string> onProducerStartFunc,
             Action<string, string, string> onProducerEventFunc,
             Action<string, string, IDictionary<string, string>> onProducerFinishWithSuccessFunc,

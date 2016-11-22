@@ -3,17 +3,17 @@
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// ValueDescriptor helper class
+    /// Provides custom implementation for <see cref="IValueDescriptor{T}"/>
     /// </summary>
-    public class ValueDescriptorHelper<T> : IValueDescriptor<T>
+    public class ValueDescriptorImpl<T> : IValueDescriptor<T>
     {
         private readonly Func<T, int> _func;
 
         /// <summary>
-        /// Instantiates the <see cref="ValueDescriptorHelper{T}"/>.
+        /// Instantiates the <see cref="ValueDescriptorImpl{T}"/>.
         /// </summary>
         /// <param name="func">Delegate function</param>
-        public ValueDescriptorHelper(Func<T, int> func)
+        public ValueDescriptorImpl(Func<T, int> func)
         {
             _func = func;
         }

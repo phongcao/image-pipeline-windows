@@ -104,7 +104,7 @@ namespace ImagePipeline.Tests.Request
             _onProducerFinishWithCancellationFuncCalls3 = 0;
             _requiresExtraMapFuncCalls3 = 0;
 
-            ProducerListenerHelper producerListener1 = new ProducerListenerHelper(
+            ProducerListenerImpl producerListener1 = new ProducerListenerImpl(
                 (_, __) => { ++_onProducerStartFuncCalls1; },
                 (_, __, ___) => { ++_onProducerEventFuncCalls1; },
                 (_, __, ___) => { ++_onProducerFinishWithSuccessFuncCalls1; },
@@ -112,7 +112,7 @@ namespace ImagePipeline.Tests.Request
                 (_, __, ___) => { ++_onProducerFinishWithCancellationFuncCalls1; },
                 (_) => { ++_requiresExtraMapFuncCalls1; return false; });
 
-            ProducerListenerHelper producerListener2 = new ProducerListenerHelper(
+            ProducerListenerImpl producerListener2 = new ProducerListenerImpl(
                 (_, __) => { ++_onProducerStartFuncCalls2; },
                 (_, __, ___) => { ++_onProducerEventFuncCalls2; },
                 (_, __, ___) => { ++_onProducerFinishWithSuccessFuncCalls2; },
@@ -120,7 +120,7 @@ namespace ImagePipeline.Tests.Request
                 (_, __, ___) => { ++_onProducerFinishWithCancellationFuncCalls2; },
                 (_) => { ++_requiresExtraMapFuncCalls2; return false; });
 
-            ProducerListenerHelper producerListener3 = new ProducerListenerHelper(
+            ProducerListenerImpl producerListener3 = new ProducerListenerImpl(
                 (_, __) => { ++_onProducerStartFuncCalls3; },
                 (_, __, ___) => { ++_onProducerEventFuncCalls3; },
                 (_, __, ___) => { ++_onProducerFinishWithSuccessFuncCalls3; },
@@ -128,21 +128,21 @@ namespace ImagePipeline.Tests.Request
                 (_, __, ___) => { ++_onProducerFinishWithCancellationFuncCalls3; },
                 (_) => { ++_requiresExtraMapFuncCalls3; return false; });
 
-            _requestListener1 = new RequestListenerHelper(
+            _requestListener1 = new RequestListenerImpl(
                 producerListener1,
                 (_, __, ___, ____) => { ++_onRequestStartFuncCalls1; },
                 (_, __, ___) => { ++_onRequestSuccessFuncCall1; },
                 (_, __, ___, ____) => { ++_onRequestFailureFuncCalls1; },
                 (_) => { ++_onRequestCancellationFuncCalls1; });
 
-            _requestListener2 = new RequestListenerHelper(
+            _requestListener2 = new RequestListenerImpl(
                 producerListener2,
                 (_, __, ___, ____) => { ++_onRequestStartFuncCalls2; },
                 (_, __, ___) => { ++_onRequestSuccessFuncCall2; },
                 (_, __, ___, ____) => { ++_onRequestFailureFuncCalls2; },
                 (_) => { ++_onRequestCancellationFuncCalls2; });
 
-            _requestListener3 = new RequestListenerHelper(
+            _requestListener3 = new RequestListenerImpl(
                 producerListener3,
                 (_, __, ___, ____) => { ++_onRequestStartFuncCalls3; },
                 (_, __, ___) => { ++_onRequestSuccessFuncCall3; },

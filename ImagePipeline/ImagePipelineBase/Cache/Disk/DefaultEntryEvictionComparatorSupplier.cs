@@ -14,7 +14,7 @@ namespace Cache.Disk
         /// <returns></returns>
         public IEntryEvictionComparator Get()
         {
-            return new EntryEvictionComparatorHelper((e1, e2) =>
+            return new EntryEvictionComparatorImpl((e1, e2) =>
             {
                 DateTime time1 = e1.Timestamp;
                 DateTime time2 = e2.Timestamp;

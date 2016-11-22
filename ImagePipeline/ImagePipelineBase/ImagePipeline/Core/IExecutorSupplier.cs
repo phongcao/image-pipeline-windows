@@ -1,4 +1,6 @@
-﻿namespace ImagePipeline.Core
+﻿using FBCore.Concurrency;
+
+namespace ImagePipeline.Core
 {
     /// <summary>
     /// Implementations of this interface are responsible for supplying the different executors

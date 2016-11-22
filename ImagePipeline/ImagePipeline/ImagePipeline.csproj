@@ -134,8 +134,8 @@
     <Compile Include="Listener\BaseRequestListener.cs" />
     <Compile Include="Listener\ForwardingRequestListener.cs" />
     <Compile Include="Listener\IRequestListener.cs" />
-    <Compile Include="Listener\RequestListenerHelper.cs" />
-    <Compile Include="Producers\ProducerListenerHelper.cs" />
+    <Compile Include="Listener\RequestListenerImpl.cs" />
+    <Compile Include="Producers\ProducerListenerImpl.cs" />
     <Compile Include="Listener\RequestLoggingListener.cs" />
     <Compile Include="Memory\BasePool.cs" />
     <Compile Include="Memory\BitmapCounter.cs" />
@@ -169,7 +169,7 @@
     <Compile Include="Memory\SizeTooLargeException.cs" />
     <Compile Include="Memory\SoftRefByteArrayPool.cs" />
     <Compile Include="Producers\BaseConsumer.cs" />
-    <Compile Include="Producers\BaseConsumerHelper.cs" />
+    <Compile Include="Producers\BaseConsumerImpl.cs" />
     <Compile Include="Producers\DelegatingConsumer.cs" />
     <Compile Include="Producers\IConsumer.cs" />
     <Compile Include="Producers\IProducerListener.cs" />

@@ -41,6 +41,6 @@ namespace ImagePipeline.Memory
         /// Check if this instance has already been closed
         /// @return true, if the instance has been closed
         /// </summary>
-        bool Closed { get; }
+        bool IsClosed { get; }
     }
 }

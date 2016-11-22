@@ -31,7 +31,7 @@ namespace ImagePipeline.Image
         /// <summary>
         /// Returns whether this instance is closed.
         /// </summary>
-        public abstract bool Closed { get; }
+        public abstract bool IsClosed { get; }
 
         /// <summary>
         /// Returns quality information for the image.
@@ -63,7 +63,7 @@ namespace ImagePipeline.Image
         /// </summary>
         ~CloseableImage()
         {
-            if (Closed)
+            if (IsClosed)
             {
                 return;
             }

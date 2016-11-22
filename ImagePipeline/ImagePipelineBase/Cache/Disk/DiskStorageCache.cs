@@ -235,11 +235,11 @@ namespace Cache.Disk
         /// Is this storage enabled?
         /// @return true, if enabled
         /// </summary>
-        public bool Enabled
+        public bool IsEnabled
         {
             get
             {
-                return _storage.Enabled;
+                return _storage.IsEnabled;
             }
         }
 
@@ -665,7 +665,7 @@ namespace Cache.Disk
             // Test if _cacheSizeLimit can be set to the high limit
             bool isAvailableSpaceLowerThanHighLimit;
 
-            StatFsHelper.StorageType storageType = _storage.External ? 
+            StatFsHelper.StorageType storageType = _storage.IsExternal ? 
                 StatFsHelper.StorageType.EXTERNAL : 
                 StatFsHelper.StorageType.INTERNAL;
 

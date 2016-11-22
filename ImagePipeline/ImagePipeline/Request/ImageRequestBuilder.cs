@@ -18,7 +18,7 @@ namespace ImagePipeline.Request
         internal RequestLevel LowestPermittedRequestLevel { get; private set; } = 
             new RequestLevel(RequestLevel.FULL_FETCH);
 
-        internal bool AutoRotateEnabled { get; private set; } = false;
+        internal bool IsAutoRotateEnabled { get; private set; } = false;
 
         internal ResizeOptions ResizeOptions { get; private set; } = null;
 
@@ -27,15 +27,15 @@ namespace ImagePipeline.Request
 
         internal CacheChoice CacheChoice { get; private set; } = CacheChoice.DEFAULT;
 
-        internal bool ProgressiveRenderingEnabled { get; private set; } = false;
+        internal bool IsProgressiveRenderingEnabled { get; private set; } = false;
 
-        internal bool LocalThumbnailPreviewsEnabled { get; private set; } = false;
+        internal bool IsLocalThumbnailPreviewsEnabled { get; private set; } = false;
 
         internal int Priority { get; private set; } = Common.Priority.HIGH;
 
         internal IPostprocessor Postprocessor { get; private set; } = null;
 
-        internal bool DiskCacheEnabled
+        internal bool IsDiskCacheEnabled
         {
             get
             {
@@ -63,13 +63,13 @@ namespace ImagePipeline.Request
         public static ImageRequestBuilder FromRequest(ImageRequest imageRequest)
         {
             return NewBuilderWithSource(imageRequest.SourceUri)
-                .SetAutoRotateEnabled(imageRequest.AutoRotateEnabled)
+                .SetAutoRotateEnabled(imageRequest.IsAutoRotateEnabled)
                 .SetImageDecodeOptions(imageRequest.ImageDecodeOptions)
                 .SetCacheChoice(imageRequest.CacheChoice)
-                .SetLocalThumbnailPreviewsEnabled(imageRequest.LocalThumbnailPreviewsEnabled)
+                .SetLocalThumbnailPreviewsEnabled(imageRequest.IsLocalThumbnailPreviewsEnabled)
                 .SetLowestPermittedRequestLevel(imageRequest.LowestPermittedRequestLevel)
                 .SetPostprocessor(imageRequest.Postprocessor)
-                .SetProgressiveRenderingEnabled(imageRequest.ProgressiveRenderingEnabled)
+                .SetProgressiveRenderingEnabled(imageRequest.IsProgressiveRenderingEnabled)
                 .SetRequestPriority(imageRequest.Priority)
                 .SetResizeOptions(imageRequest.ResizeOptions)
                 .SetRequestListener(imageRequest.RequestListener);
@@ -111,7 +111,7 @@ namespace ImagePipeline.Request
         /// </summary>
         public ImageRequestBuilder SetAutoRotateEnabled(bool enabled)
         {
-            AutoRotateEnabled = enabled;
+            IsAutoRotateEnabled = enabled;
             return this;
         }
 
@@ -156,7 +156,7 @@ namespace ImagePipeline.Request
         /// </summary>
         public ImageRequestBuilder SetProgressiveRenderingEnabled(bool enabled)
         {
-            ProgressiveRenderingEnabled = enabled;
+            IsProgressiveRenderingEnabled = enabled;
             return this;
         }
 
@@ -167,7 +167,7 @@ namespace ImagePipeline.Request
         /// </summary>
         public ImageRequestBuilder SetLocalThumbnailPreviewsEnabled(bool enabled)
         {
-            LocalThumbnailPreviewsEnabled = enabled;
+            IsLocalThumbnailPreviewsEnabled = enabled;
             return this;
         }
 

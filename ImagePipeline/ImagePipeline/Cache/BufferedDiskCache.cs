@@ -3,6 +3,7 @@ using Cache.Common;
 using Cache.Disk;
 using FBCore.Common.Internal;
 using FBCore.Common.References;
+using FBCore.Concurrency;
 using ImagePipeline.Core;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
@@ -357,7 +358,7 @@ namespace ImagePipeline.Cache
 
             try
             {
-                _fileCache.Insert(key, new WriterCallbackHelper(os =>
+                _fileCache.Insert(key, new WriterCallbackImpl(os =>
                 {
                     _pooledByteStreams.Copy(encodedImage.GetInputStream(), os);
                 }));

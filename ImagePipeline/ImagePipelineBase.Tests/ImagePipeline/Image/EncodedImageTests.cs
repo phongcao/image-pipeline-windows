@@ -24,8 +24,8 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
         private CloseableReference<IPooledByteBuffer> _byteBufferRef;
         private FileStream _inputStream = default(FileStream);
         private ISupplier<FileStream> _inputStreamSupplier;
-        private static readonly ResourceReleaserHelper<IPooledByteBuffer> _releaser =
-            new ResourceReleaserHelper<IPooledByteBuffer>(
+        private static readonly ResourceReleaserImpl<IPooledByteBuffer> _releaser =
+            new ResourceReleaserImpl<IPooledByteBuffer>(
                 b =>
                 {
                     b.Dispose();
