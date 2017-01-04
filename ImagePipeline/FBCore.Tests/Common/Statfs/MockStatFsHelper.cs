@@ -1,6 +1,7 @@
-﻿using Windows.Storage;
+﻿using FBCore.Common.Statfs;
+using Windows.Storage;
 
-namespace FBCore.Common.Statfs
+namespace FBCore.Tests.Common.Statfs
 {
     /// <summary>
     /// Mock the <see cref="StatFsHelper"/> class for unit test

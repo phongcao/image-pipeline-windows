@@ -1,7 +1,8 @@
 ﻿using System;
 using BinaryResource;
+using Cache.Disk;
 
-namespace Cache.Disk
+namespace ImagePipelineBase.Tests.Cache.Disk
 {
     /// <summary>
     /// Mock implementation of <see cref="IEntry"/> 

@@ -119,6 +119,8 @@
     <Compile Include="Cache\Disk\DefaultEntryEvictionComparatorSupplierTests.cs" />
     <Compile Include="Cache\Disk\DiskStorageCacheTests.cs" />
     <Compile Include="Cache\Disk\DynamicDefaultDiskStorageTests.cs" />
+    <Compile Include="Cache\Disk\MockEntry.cs" />
+    <Compile Include="Cache\Disk\MockSystemClock.cs" />
     <Compile Include="Cache\Disk\ScoreBasedEvictionComparatorSupplierTests.cs" />
     <Compile Include="Cache\Disk\SettableCacheEventTests.cs" />
     <Compile Include="ImagePipeline\Cache\CountingMemoryCacheTests.cs" />

@@ -142,10 +142,8 @@
     <Compile Include="Common\References\DefaultResourceReleaser.cs" />
     <Compile Include="Common\References\OOMSoftReference.cs" />
     <Compile Include="Common\References\SharedReference.cs" />
-    <Compile Include="Common\Statfs\MockStatFsHelper.cs" />
     <Compile Include="Common\Statfs\StatFsHelper.cs" />
     <Compile Include="Common\Time\Clock.cs" />
-    <Compile Include="Common\Time\MockSystemClock.cs" />
     <Compile Include="Common\Time\SystemClock.cs" />
     <Compile Include="Common\Util\ByteConstants.cs" />
     <Compile Include="Common\Util\HashCodeUtil.cs" />

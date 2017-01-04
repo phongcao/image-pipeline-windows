@@ -1,7 +1,8 @@
-﻿using System;
+﻿using ImagePipeline.Producers;
+using System;
 using System.Threading;
 
-namespace ImagePipeline.Producers
+namespace ImagePipeline.Tests.Producers
 {
     /// <summary>
     ///  Mock BaseConsumer for unit tests

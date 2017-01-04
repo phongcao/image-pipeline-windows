@@ -31,6 +31,16 @@
     public abstract class BaseDataSubscriber<T> : IDataSubscriber<T>
     {
         /// <summary>
+        /// Test-only variables
+        ///
+        /// <para /><b>DO NOT USE in application code.</b>
+        /// </summary>
+        private int _onNewResultCallCount;
+        private int _onFailureCallCount;
+        private int _onCancellationCallCount;
+        private IDataSource<T> _dataSource;
+
+        /// <summary>
         /// Called whenever a new value is ready to be retrieved from the DataSource.
         ///
         /// <para />To retrieve the new value, call <code> dataSource.GetResult()</code>.
@@ -41,6 +51,10 @@
         /// </summary>
         public void OnNewResult(IDataSource<T> dataSource)
         {
+            // For unit test
+            ++_onNewResultCallCount;
+            _dataSource = dataSource;
+
             // IsFinished should be checked before calling OnNewResultImpl(), otherwise
             // there would be a race condition: the final data source result might be ready before
             // we call IsFinished here, which would lead to the loss of the final result
@@ -71,6 +85,10 @@
         /// </summary>
         public void OnFailure(IDataSource<T> dataSource)
         {
+            // For unit test
+            ++_onFailureCallCount;
+            _dataSource = dataSource;
+
             try
             {
                 OnFailureImpl(dataSource);
@@ -91,6 +109,9 @@
         /// </summary>
         public void OnCancellation(IDataSource<T> dataSource)
         {
+            // For unit test
+            ++_onCancellationCallCount;
+            _dataSource = dataSource;
         }
 
         /// <summary>
@@ -113,5 +134,49 @@
         /// </summary>
         /// <param name="dataSource"></param>
         public abstract void OnFailureImpl(IDataSource<T> dataSource);
+
+        /// <summary>
+        /// For unit test
+        /// </summary>
+        internal int OnNewResultCallCount
+        {
+            get
+            {
+                return _onNewResultCallCount;
+            }
+        }
+
+        /// <summary>
+        /// For unit test
+        /// </summary>
+        internal int OnFailureCallCount
+        {
+            get
+            {
+                return _onFailureCallCount;
+            }
+        }
+
+        /// <summary>
+        /// For unit test
+        /// </summary>
+        internal int OnCancellationCallCount
+        {
+            get
+            {
+                return _onCancellationCallCount;
+            }
+        }
+
+        /// <summary>
+        /// For unit test
+        /// </summary>
+        internal IDataSource<T> DataSource
+        {
+            get
+            {
+                return _dataSource;
+            }
+        }
     }
 }

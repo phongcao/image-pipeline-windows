@@ -153,7 +153,6 @@
     <Compile Include="Cache\Disk\IEntryEvictionComparatorSupplier.cs" />
     <Compile Include="Cache\Disk\IFileCache.cs" />
     <Compile Include="Cache\Disk\IInserter.cs" />
-    <Compile Include="Cache\Disk\MockEntry.cs" />
     <Compile Include="Cache\Disk\Params.cs" />
     <Compile Include="Cache\Disk\ScoreBasedEvictionComparatorSupplier.cs" />
     <Compile Include="Cache\Disk\SettableCacheEvent.cs" />

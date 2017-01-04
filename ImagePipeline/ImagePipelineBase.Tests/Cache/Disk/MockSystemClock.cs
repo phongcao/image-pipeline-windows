@@ -1,6 +1,7 @@
-﻿using System;
+﻿using FBCore.Common.Time;
+using System;
 
-namespace FBCore.Common.Time
+namespace ImagePipelineBase.Tests.Cache.Disk
 {
     /// <summary>
     /// Mock implementation of <see cref="Clock"/>.
