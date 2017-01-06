@@ -38,6 +38,7 @@
         private int _onNewResultCallCount;
         private int _onFailureCallCount;
         private int _onCancellationCallCount;
+        private int _onProgressUpdateCallCount;
         private IDataSource<T> _dataSource;
 
         /// <summary>
@@ -121,6 +122,9 @@
         /// </summary>
         public void OnProgressUpdate(IDataSource<T> dataSource)
         {
+            // For unit test
+            ++_onProgressUpdateCallCount;
+            _dataSource = dataSource;
         }
 
         /// <summary>
@@ -177,6 +181,32 @@
             {
                 return _dataSource;
             }
+        }
+
+        /// <summary>
+        /// For unit test
+        /// </summary>
+        internal bool HasZeroInteractions
+        {
+            get
+            {
+                return (_onNewResultCallCount == 0) &&
+                    (_onFailureCallCount == 0) &&
+                    (_onCancellationCallCount == 0) &&
+                    (_onProgressUpdateCallCount == 0);
+            }
+        }
+
+        /// <summary>
+        /// For unit test
+        /// </summary>
+        internal void Reset()
+        {
+            _onNewResultCallCount = 0;
+            _onFailureCallCount = 0;
+            _onCancellationCallCount = 0;
+            _onProgressUpdateCallCount = 0;
+            _dataSource = null;
         }
     }
 }

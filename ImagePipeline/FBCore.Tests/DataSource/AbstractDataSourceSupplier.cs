@@ -27,9 +27,9 @@ namespace FBCore.Tests.DataSource
         [TestInitialize]
         public void Initialize()
         {
-            _src1 = new MockDataSource<object>();
-            _src2 = new MockDataSource<object>();
-            _src3 = new MockDataSource<object>();
+            _src1 = new MockAbstractDataSource<object>();
+            _src2 = new MockAbstractDataSource<object>();
+            _src3 = new MockAbstractDataSource<object>();
             _dataSourceSupplier1 = new SupplierImpl<IDataSource<object>>(() =>
             {
                 return _src1;
@@ -53,15 +53,15 @@ namespace FBCore.Tests.DataSource
 
         protected void VerifyNoMoreInteractionsAll()
         {
-            VerifyOptionals((MockDataSource<object>)_src1);
-            VerifyOptionals((MockDataSource<object>)_src2);
-            VerifyOptionals((MockDataSource<object>)_src3);
-            ((MockDataSource<object>)_src1).VerifyNoMoreInteraction();
-            ((MockDataSource<object>)_src2).VerifyNoMoreInteraction();
-            ((MockDataSource<object>)_src3).VerifyNoMoreInteraction();
+            VerifyOptionals((MockAbstractDataSource<object>)_src1);
+            VerifyOptionals((MockAbstractDataSource<object>)_src2);
+            VerifyOptionals((MockAbstractDataSource<object>)_src3);
+            Assert.IsTrue(((MockAbstractDataSource<object>)_src1).HasNoMoreInteraction);
+            Assert.IsTrue(((MockAbstractDataSource<object>)_src2).HasNoMoreInteraction);
+            Assert.IsTrue(((MockAbstractDataSource<object>)_src3).HasNoMoreInteraction);
         }
 
-        protected void VerifyOptionals(MockDataSource<object> underlyingDataSource)
+        protected void VerifyOptionals(MockAbstractDataSource<object> underlyingDataSource)
         {
             underlyingDataSource.VerifyMethodInvocationOrder("IsFinished", 0);
             underlyingDataSource.VerifyMethodInvocationOrder("HasResult", 1);
@@ -81,13 +81,13 @@ namespace FBCore.Tests.DataSource
             bool expectMoreInteractions)
         {
             Assert.IsTrue(((SupplierImpl<IDataSource<object>>)dataSourceSupplier).GetCallCount == 1);
-            Assert.IsTrue(((MockDataSource<object>)underlyingDataSource).DataSubscriber != null);
+            Assert.IsTrue(((MockAbstractDataSource<object>)underlyingDataSource).DataSubscriber != null);
             if (!expectMoreInteractions)
             {
                 VerifyNoMoreInteractionsAll();
             }
 
-            return ((MockDataSource<object>)underlyingDataSource).DataSubscriber;
+            return ((MockAbstractDataSource<object>)underlyingDataSource).DataSubscriber;
         }
 
         protected IDataSubscriber<object> VerifyGetAndSubscribe(
@@ -127,7 +127,7 @@ namespace FBCore.Tests.DataSource
                 case DataSourceTestUtils.ON_FAILURE:
                     Assert.IsTrue(((BaseDataSubscriber<object>)_dataSubscriber).OnNewResultCallCount == 1);
                     Assert.AreSame(dataSource, ((BaseDataSubscriber<object>)_dataSubscriber).DataSource);
-                    ((MockDataSource<object>)underlyingDataSource).VerifyMethodInvocationOrder(
+                    ((MockAbstractDataSource<object>)underlyingDataSource).VerifyMethodInvocationOrder(
                         "GetFailureCause", 0);
                     Assert.IsTrue(((BaseDataSubscriber<object>)_dataSubscriber).OnFailureCallCount == 1);
                     Assert.AreSame(dataSource, ((BaseDataSubscriber<object>)_dataSubscriber).DataSource);
@@ -156,7 +156,7 @@ namespace FBCore.Tests.DataSource
             Exception failureCause)
         {
             DataSourceTestUtils.VerifyState(
-                (MockDataSource<object>)dataSource, 
+                (MockAbstractDataSource<object>)dataSource, 
                 isClosed, 
                 isFinished, 
                 hasResult, 
@@ -168,7 +168,7 @@ namespace FBCore.Tests.DataSource
             // underlyingDataSource.GetResult()
             if (dataSourceWithResult != null)
             {
-                ((MockDataSource<object>)dataSourceWithResult).VerifyMethodInvocationOrder("GetResult", 0);
+                ((MockAbstractDataSource<object>)dataSourceWithResult).VerifyMethodInvocationOrder("GetResult", 0);
             }
 
             VerifyNoMoreInteractionsAll();
@@ -187,7 +187,7 @@ namespace FBCore.Tests.DataSource
             {
                 foreach (var underlyingDataSource in underlyingDataSources)
                 {
-                    ((MockDataSource<object>)underlyingDataSource).VerifyMethodInvocationOrder("Close", 0);
+                    ((MockAbstractDataSource<object>)underlyingDataSource).VerifyMethodInvocationOrder("Close", 0);
                 }
             }
         }
@@ -210,7 +210,7 @@ namespace FBCore.Tests.DataSource
             IDataSource<T> dataSource,
             int response)
         {
-            ((MockDataSource<T>)dataSource).RespondOnSubscribe(response);
+            ((MockAbstractDataSource<T>)dataSource).RespondOnSubscribe(response);
         }
     }
 }

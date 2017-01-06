@@ -58,7 +58,7 @@ namespace FBCore.DataSource
         /// <summary>
         /// @return true if the data source is closed, false otherwise
         /// </summary>
-        public bool IsClosed
+        public virtual bool IsClosed
         {
             get
             {
@@ -72,7 +72,7 @@ namespace FBCore.DataSource
         /// <summary>
         /// @return true if request is finished, false otherwise
         /// </summary>
-        public bool IsFinished
+        public virtual bool IsFinished
         {
             get
             {
@@ -120,7 +120,7 @@ namespace FBCore.DataSource
         /// <summary>
         /// @return true if request finished due to error
         /// </summary>
-        public bool HasFailed
+        public virtual bool HasFailed
         {
             get
             {
@@ -134,7 +134,7 @@ namespace FBCore.DataSource
         /// <summary>
         /// @return failure cause if the source has failed, else null
         /// </summary>
-        public Exception GetFailureCause()
+        public virtual Exception GetFailureCause()
         {
             lock (_gate)
             {
@@ -145,7 +145,7 @@ namespace FBCore.DataSource
         /// <summary>
         /// @return progress in range [0, 1]
         /// </summary>
-        public float GetProgress()
+        public virtual float GetProgress()
         {
             lock (_gate)
             {
@@ -199,7 +199,7 @@ namespace FBCore.DataSource
         /// 1. to clear the result when data source gets closed
         /// 2. to clear the previous result when a new result is set
         /// </summary>
-        protected void CloseResult(T result)
+        public virtual void CloseResult(T result)
         {
             // default implementation does nothing
         }
@@ -211,7 +211,7 @@ namespace FBCore.DataSource
         /// <param name="dataSubscriber"></param>
         /// <param name="executor"></param>
         /// </summary>
-        public void Subscribe(IDataSubscriber<T> dataSubscriber, IExecutorService executor)
+        public virtual void Subscribe(IDataSubscriber<T> dataSubscriber, IExecutorService executor)
         {
             Preconditions.CheckNotNull(dataSubscriber);
             Preconditions.CheckNotNull(executor);
@@ -275,7 +275,7 @@ namespace FBCore.DataSource
         {
             get
             {
-                return IsClosed && IsFinished;
+                return IsClosed && !IsFinished;
             }
         }
 

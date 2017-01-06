@@ -24,7 +24,7 @@ namespace FBCore.Tests.DataSource
         internal const int ON_CANCELLATION = 3;
 
         internal static void SetState(
-            MockDataSource<object> dataSource,
+            MockAbstractDataSource<object> dataSource,
             bool isClosed,
             bool isFinished,
             bool hasResult,
@@ -36,7 +36,7 @@ namespace FBCore.Tests.DataSource
         }
 
         internal static void VerifyState<T>(
-            MockDataSource<T> dataSource,
+            MockAbstractDataSource<T> dataSource,
             bool isClosed,
             bool isFinished,
             bool hasResult,
