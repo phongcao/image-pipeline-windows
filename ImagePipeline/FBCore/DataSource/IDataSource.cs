@@ -18,7 +18,7 @@ namespace FBCore.DataSource
         /// <summary>
         /// @return true if the data source is closed, false otherwise
         /// </summary>
-        bool IsClosed { get; }
+        bool IsClosed();
 
         /// <summary>
         /// The most recent result of the asynchronous computation.
@@ -37,17 +37,17 @@ namespace FBCore.DataSource
         /// <summary>
         /// @return true if any result (possibly of lower quality) is available right now, false otherwise
         /// </summary>
-        bool HasResult { get; }
+        bool HasResult();
 
         /// <summary>
         /// @return true if request is finished, false otherwise
         /// </summary>
-        bool IsFinished { get; }
+        bool IsFinished();
 
         /// <summary>
         /// @return true if request finished due to error
         /// </summary>
-        bool HasFailed { get; }
+        bool HasFailed();
 
         /// <summary>
         /// @return failure cause if the source has failed, else null

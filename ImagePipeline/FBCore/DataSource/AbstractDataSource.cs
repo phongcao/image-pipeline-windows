@@ -58,42 +58,33 @@ namespace FBCore.DataSource
         /// <summary>
         /// @return true if the data source is closed, false otherwise
         /// </summary>
-        public virtual bool IsClosed
+        public virtual bool IsClosed()
         {
-            get
+            lock (_gate)
             {
-                lock (_gate)
-                {
-                    return _isClosed;
-                }
+                return _isClosed;
             }
         }
 
         /// <summary>
         /// @return true if request is finished, false otherwise
         /// </summary>
-        public virtual bool IsFinished
+        public virtual bool IsFinished()
         {
-            get
+            lock (_gate)
             {
-                lock (_gate)
-                {
-                    return _dataSourceStatus != DataSourceStatus.IN_PROGRESS;
-                }
+                return _dataSourceStatus != DataSourceStatus.IN_PROGRESS;
             }
         }
 
         /// <summary>
         /// @return true if any result (possibly of lower quality) is available right now, false otherwise
         /// </summary>
-        public virtual bool HasResult
+        public virtual bool HasResult()
         {
-            get
+            lock (_gate)
             {
-                lock (_gate)
-                {
-                    return _result != null;
-                }
+                return _result != null;
             }
         }
 
@@ -120,14 +111,11 @@ namespace FBCore.DataSource
         /// <summary>
         /// @return true if request finished due to error
         /// </summary>
-        public virtual bool HasFailed
+        public virtual bool HasFailed()
         {
-            get
+            lock (_gate)
             {
-                lock (_gate)
-                {
-                    return _dataSourceStatus == DataSourceStatus.FAILURE;
-                }
+                return _dataSourceStatus == DataSourceStatus.FAILURE;
             }
         }
 
@@ -180,10 +168,11 @@ namespace FBCore.DataSource
                 CloseResult(resultToClose);
             }
 
-            if (!IsFinished)
+            if (!IsFinished())
             {
                 NotifyDataSubscribers();
             }
+
             lock (_gate)
             {
                 _subscribers.Dispose();
@@ -229,19 +218,19 @@ namespace FBCore.DataSource
                     _subscribers.Add(new KeyValuePair<IDataSubscriber<T>, IExecutorService>(dataSubscriber, executor));
                 }
 
-                shouldNotify = HasResult || IsFinished || WasCancelled;
+                shouldNotify = HasResult() || IsFinished() || WasCancelled();
             }
 
             if (shouldNotify)
             {
-                NotifyDataSubscriber(dataSubscriber, executor, HasFailed, WasCancelled);
+                NotifyDataSubscriber(dataSubscriber, executor, HasFailed(), WasCancelled());
             }
         }
 
         private void NotifyDataSubscribers()
         {
-            bool isFailure = HasFailed;
-            bool isCancellation = WasCancelled;
+            bool isFailure = HasFailed();
+            bool isCancellation = WasCancelled();
             foreach (var pair in _subscribers)
             {
                 NotifyDataSubscriber(pair.Key, pair.Value, isFailure, isCancellation);
@@ -271,12 +260,9 @@ namespace FBCore.DataSource
             });
         }
 
-        private bool WasCancelled
+        private bool WasCancelled()
         {
-            get
-            {
-                return IsClosed && !IsFinished;
-            }
+            return IsClosed() && !IsFinished();
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+﻿using FBCore.DataSource;
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 
 namespace FBCore.Tests.DataSource
@@ -36,7 +37,7 @@ namespace FBCore.Tests.DataSource
         }
 
         internal static void VerifyState<T>(
-            MockAbstractDataSource<T> dataSource,
+            AbstractDataSource<T> dataSource,
             bool isClosed,
             bool isFinished,
             bool hasResult,
@@ -44,11 +45,11 @@ namespace FBCore.Tests.DataSource
             bool hasFailed,
             Exception failureCause)
         {
-            Assert.IsTrue(isClosed == dataSource.IsClosed);
-            Assert.IsTrue(isFinished == dataSource.IsFinished);
-            Assert.IsTrue(hasResult == dataSource.HasResult);
+            Assert.IsTrue(isClosed == dataSource.IsClosed());
+            Assert.IsTrue(isFinished == dataSource.IsFinished());
+            Assert.IsTrue(hasResult == dataSource.HasResult());
             Assert.AreSame(result, dataSource.GetResult());
-            Assert.IsTrue(hasFailed == dataSource.HasFailed);
+            Assert.IsTrue(hasFailed == dataSource.HasFailed());
             Assert.AreSame(failureCause, dataSource.GetFailureCause());
         }
     }

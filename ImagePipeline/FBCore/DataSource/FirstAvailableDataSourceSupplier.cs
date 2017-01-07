@@ -77,7 +77,7 @@ namespace FBCore.DataSource
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{ ToString() }{{list={ _dataSourceSuppliers.ToString() }}}";
+            return $"{ base.ToString() }{{list={ _dataSourceSuppliers.ToString() }}}";
         }
 
         private class FirstAvailableDataSource : AbstractDataSource<T>
@@ -110,16 +110,13 @@ namespace FBCore.DataSource
                 }
             }
 
-            public override bool HasResult
+            public override bool HasResult()
             {
-                get
+                lock (_gate)
                 {
-                    lock (_gate)
-                    {
-                        IDataSource<T> dataSourceWithResult = GetDataSourceWithResult();
-                        return (dataSourceWithResult != default(IDataSource<T>)) && 
-                            dataSourceWithResult.HasResult;
-                    }
+                    IDataSource<T> dataSourceWithResult = GetDataSourceWithResult();
+                    return (dataSourceWithResult != default(IDataSource<T>)) && 
+                        dataSourceWithResult.HasResult();
                 }
             }
 
@@ -173,7 +170,7 @@ namespace FBCore.DataSource
             {
                 lock (_gate)
                 {
-                    if (!IsClosed && _index < _dataSourceSuppliers.Count)
+                    if (!IsClosed() && _index < _dataSourceSuppliers.Count)
                     {
                         return _dataSourceSuppliers[_index++];
                     }
@@ -186,7 +183,7 @@ namespace FBCore.DataSource
             {
                 lock (_gate)
                 {
-                    if (IsClosed)
+                    if (IsClosed())
                     {
                         return false;
                     }
@@ -200,7 +197,7 @@ namespace FBCore.DataSource
             {
                 lock (_gate)
                 {
-                    if (IsClosed || dataSource != _currentDataSource)
+                    if (IsClosed() || dataSource != _currentDataSource)
                     {
                         return false;
                     }
@@ -265,13 +262,13 @@ namespace FBCore.DataSource
 
             private void OnDataSourceNewResult(IDataSource<T> dataSource)
             {
-                MaybeSetDataSourceWithResult(dataSource, dataSource.IsFinished);
+                MaybeSetDataSourceWithResult(dataSource, dataSource.IsFinished());
 
                 // If the data source with the new result is our <code> _dataSourceWithResult</code>,
                 // we have to notify our subscribers about the new result.
                 if (dataSource == GetDataSourceWithResult())
                 {
-                    SetResult(default(T), dataSource.IsFinished);
+                    SetResult(default(T), dataSource.IsFinished());
                 }
             }
 
@@ -303,11 +300,11 @@ namespace FBCore.DataSource
 
                 public void OnNewResult(IDataSource<T> dataSource)
                 {
-                    if (dataSource.HasResult)
+                    if (dataSource.HasResult())
                     {
                         _parent.OnDataSourceNewResult(dataSource);
                     }
-                    else if (dataSource.IsFinished)
+                    else if (dataSource.IsFinished())
                     {
                         _parent.OnDataSourceFailed(dataSource);
                     }

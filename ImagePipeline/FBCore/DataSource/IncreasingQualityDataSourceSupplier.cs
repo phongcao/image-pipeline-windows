@@ -86,7 +86,7 @@ namespace FBCore.DataSource
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{ ToString() }{{list={ _dataSourceSuppliers.ToString() }}}";
+            return $"{ base.ToString() }{{list={ _dataSourceSuppliers.ToString() }}}";
         }
 
         private class IncreasingQualityDataSource : AbstractDataSource<T>
@@ -110,7 +110,7 @@ namespace FBCore.DataSource
                     dataSource.Subscribe(new InternalDataSubscriber(this, i), CallerThreadExecutor.Instance);
                     // there's no point in creating data sources of lower quality
                     // if the data source of a higher quality has some result already
-                    if (dataSource.HasResult)
+                    if (dataSource.HasResult())
                     {
                         break;
                     }
@@ -162,16 +162,13 @@ namespace FBCore.DataSource
                 }
             }
 
-            public override bool HasResult
+            public override bool HasResult()
             {
-                get
+                lock (_gate)
                 {
-                    lock (_gate)
-                    {
-                        IDataSource<T> dataSourceWithResult = GetDataSourceWithResult();
-                        return (dataSourceWithResult != default(IDataSource<T>)) &&
-                            dataSourceWithResult.HasResult;
-                    }
+                    IDataSource<T> dataSourceWithResult = GetDataSourceWithResult();
+                    return (dataSourceWithResult != default(IDataSource<T>)) &&
+                        dataSourceWithResult.HasResult();
                 }
             }
 
@@ -205,13 +202,13 @@ namespace FBCore.DataSource
 
             private void OnDataSourceNewResult(int index, IDataSource<T> dataSource)
             {
-                MaybeSetIndexOfDataSourceWithResult(index, dataSource, dataSource.IsFinished);
+                MaybeSetIndexOfDataSourceWithResult(index, dataSource, dataSource.IsFinished());
 
                 // If the data source with the new result is our <code> mIndexOfDataSourceWithResult</code>,
                 // we have to notify our subscribers about the new result.
                 if (dataSource == GetDataSourceWithResult())
                 {
-                    SetResult(default(T), (index == 0) && dataSource.IsFinished);
+                    SetResult(default(T), (index == 0) && dataSource.IsFinished());
                 }
             }
 
@@ -308,11 +305,11 @@ namespace FBCore.DataSource
 
                 public void OnNewResult(IDataSource<T> dataSource)
                 {
-                    if (dataSource.HasResult)
+                    if (dataSource.HasResult())
                     {
                         _parent.OnDataSourceNewResult(_index, dataSource);
                     }
-                    else if (dataSource.IsFinished)
+                    else if (dataSource.IsFinished())
                     {
                         _parent.OnDataSourceFailed(_index, dataSource);
                     }

@@ -5,7 +5,11 @@ using System.Collections.Generic;
 
 namespace FBCore.Tests.DataSource
 {
-    class MockAbstractDataSource<T> : AbstractDataSource<T>
+    /// <summary>
+    /// Mock AbstractDataSource
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class MockAbstractDataSource<T> : AbstractDataSource<T>
     {
         private bool _setState;
         private bool _isClosed;
@@ -20,6 +24,9 @@ namespace FBCore.Tests.DataSource
         private int _inOrderCount;
         private int _response;
 
+        /// <summary>
+        /// Instantiates the <see cref="MockAbstractDataSource{T}"/>
+        /// </summary>
         public MockAbstractDataSource()
         {
             _setState = false;
@@ -28,6 +35,9 @@ namespace FBCore.Tests.DataSource
             _response = -1;
         }
 
+        /// <summary>
+        /// Sets <see cref="IDataSource{T}"/> states
+        /// </summary>
         public void SetState(
             bool isClosed,
             bool isFinished,
@@ -48,13 +58,10 @@ namespace FBCore.Tests.DataSource
         /// <summary>
         /// @return true if the data source is closed, false otherwise
         /// </summary>
-        public override bool IsClosed
+        public override bool IsClosed()
         {
-            get
-            {
-                AddMethodInvocation("IsClosed");
-                return _setState ? _isClosed : base.IsClosed;
-            }
+            AddMethodInvocation("IsClosed");
+            return _setState ? _isClosed : base.IsClosed();
         }
 
         /// <summary>
@@ -78,37 +85,28 @@ namespace FBCore.Tests.DataSource
         /// <summary>
         /// @return true if any result (possibly of lower quality) is available right now, false otherwise
         /// </summary>
-        public override bool HasResult
+        public override bool HasResult()
         {
-            get
-            {
-                AddMethodInvocation("HasResult");
-                return _setState ? _hasResult : base.HasResult;
-            }
+            AddMethodInvocation("HasResult");
+            return _setState ? _hasResult : base.HasResult();
         }
 
         /// <summary>
         /// @return true if request is finished, false otherwise
         /// </summary>
-        public override bool IsFinished
+        public override bool IsFinished()
         {
-            get
-            {
-                AddMethodInvocation("IsFinished");
-                return _setState ? _isFinished : base.IsFinished;
-            }
+            AddMethodInvocation("IsFinished");
+            return _setState ? _isFinished : base.IsFinished();
         }
 
         /// <summary>
         /// @return true if request finished due to error
         /// </summary>
-        public override bool HasFailed
+        public override bool HasFailed()
         {
-            get
-            {
-                AddMethodInvocation("HasFailed");
-                return _setState ? _hasFailed : base.HasFailed;
-            }
+            AddMethodInvocation("HasFailed");
+            return _setState ? _hasFailed : base.HasFailed();
         }
 
         /// <summary>
@@ -138,7 +136,7 @@ namespace FBCore.Tests.DataSource
         public override bool Close()
         {
             AddMethodInvocation("Close");
-            return base.Close();
+            return _setState ? _isClosed : base.Close();
         }
 
         /// <summary>
@@ -151,10 +149,10 @@ namespace FBCore.Tests.DataSource
         public override void Subscribe(IDataSubscriber<T> dataSubscriber, IExecutorService executor)
         {
             AddMethodInvocation("Subscribe");
+            DataSubscriber = dataSubscriber;
 
             if (_setState)
             {
-                DataSubscriber = dataSubscriber;
                 switch (_response)
                 {
                     case DataSourceTestUtils.NO_INTERACTIONS:
@@ -204,6 +202,17 @@ namespace FBCore.Tests.DataSource
             return false;
         }
 
+        internal bool VerifyMethodInvocationOrder(string methodName)
+        {
+            IList<int> methodInvocation = default(IList<int>);
+            if (_methodInvocations.TryGetValue(methodName, out methodInvocation))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         internal bool HasNoMoreInteraction
         {
             get
@@ -232,7 +241,6 @@ namespace FBCore.Tests.DataSource
             {
                 ++methodInvocation[0];
                 methodInvocation[1] = _inOrderCount;
-                //_methodInvocations[methodName] = methodInvocation;
             }
             else
             {
