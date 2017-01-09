@@ -130,7 +130,8 @@ namespace FBCore.Tests.DataSource
             bool expectMoreInteractions)
         {
             Assert.IsTrue(((SupplierImpl<IDataSource<object>>)dataSourceSupplier).GetCallCount == 1);
-            Assert.IsTrue(((MockAbstractDataSource<object>)underlyingDataSource).VerifyMethodInvocation("Subscribe", 0));
+            Assert.IsTrue(((MockAbstractDataSource<object>)underlyingDataSource).VerifyMethodInvocation(
+                "Subscribe", 1));
             if (!expectMoreInteractions)
             {
                 VerifyNoMoreInteractionsAll();
@@ -174,20 +175,21 @@ namespace FBCore.Tests.DataSource
                     break;
 
                 case DataSourceTestUtils.ON_NEW_RESULT:
-                    Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber).OnNewResultCallCount == 1);
+                    Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber).OnNewResultCallCount != 0);
                     Assert.AreSame(dataSource, ((MockDataSubscriber<object>)_dataSubscriber).DataSource);
                     VerifyNoMoreInteractionsAll();
                     break;
 
                 case DataSourceTestUtils.ON_FAILURE:
-                    ((MockAbstractDataSource<object>)underlyingDataSource).VerifyMethodInvocation("GetFailureCause", 0);
-                    Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber).OnFailureCallCount == 1);
+                    ((MockAbstractDataSource<object>)underlyingDataSource).VerifyMethodInvocation(
+                        "GetFailureCause", 1);
+                    Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber).OnFailureCallCount != 0);
                     Assert.AreSame(dataSource, ((MockDataSubscriber<object>)_dataSubscriber).DataSource);
                     VerifyNoMoreInteractionsAll();
                     break;
 
                 case DataSourceTestUtils.ON_CANCELLATION:
-                    Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber).OnCancellationCallCount == 1);
+                    Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber).OnCancellationCallCount != 0);
                     Assert.AreSame(dataSource, ((MockDataSubscriber<object>)_dataSubscriber).DataSource);
                     VerifyNoMoreInteractionsAll();
                     break;
@@ -220,7 +222,8 @@ namespace FBCore.Tests.DataSource
             // underlyingDataSource.GetResult()
             if (dataSourceWithResult != null)
             {
-                ((MockAbstractDataSource<object>)dataSourceWithResult).VerifyMethodInvocation("GetResult", 0);
+                ((MockAbstractDataSource<object>)dataSourceWithResult).VerifyMethodInvocation(
+                    "GetResult", 1);
             }
 
             VerifyNoMoreInteractionsAll();
@@ -239,7 +242,8 @@ namespace FBCore.Tests.DataSource
             {
                 foreach (var underlyingDataSource in underlyingDataSources)
                 {
-                    ((MockAbstractDataSource<object>)underlyingDataSource).VerifyMethodInvocation("Close", 0);
+                    ((MockAbstractDataSource<object>)underlyingDataSource).VerifyMethodInvocation(
+                        "Close", 1);
                 }
             }
         }
