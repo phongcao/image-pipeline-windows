@@ -112,6 +112,7 @@
     <Compile Include="DataSource\DataSourcesTests.cs" />
     <Compile Include="DataSource\DataSourceTestUtils.cs" />
     <Compile Include="DataSource\FirstAvailableDataSourceSupplierTests.cs" />
+    <Compile Include="DataSource\IncreasingQualityDataSourceSupplierTests.cs" />
     <Compile Include="DataSource\MockAbstractDataSource.cs" />
     <Compile Include="DataSource\MockDataSubscriber.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
