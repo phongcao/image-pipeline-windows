@@ -132,6 +132,11 @@
     <Compile Include="Core\IDiskStorageFactory.cs" />
     <Compile Include="Core\IFileCacheFactory.cs" />
     <Compile Include="Datasource\AbstractProducerToDataSourceAdapter.cs" />
+    <Compile Include="Datasource\BaseBitmapDataSubscriber.cs" />
+    <Compile Include="Datasource\BaseListBitmapDataSubscriber.cs" />
+    <Compile Include="Datasource\CloseableProducerToDataSourceAdapter.cs" />
+    <Compile Include="Datasource\ListDataSource.cs" />
+    <Compile Include="Datasource\ProducerToDataSourceAdapter.cs" />
     <Compile Include="Datasource\SettableDataSource.cs" />
     <Compile Include="Listener\BaseRequestListener.cs" />
     <Compile Include="Listener\ForwardingRequestListener.cs" />

@@ -92,7 +92,7 @@ namespace FBCore.DataSource
         /// The most recent result of the asynchronous computation.
         ///
         /// <para />The caller gains ownership of the object and is responsible for releasing it.
-        /// Note that subsequent calls to getResult might give different results. Later results should be
+        /// Note that subsequent calls to GetResult might give different results. Later results should be
         /// considered to be of higher quality.
         ///
         /// <para />This method will return null in the following cases:

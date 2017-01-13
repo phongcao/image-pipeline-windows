@@ -31,7 +31,7 @@
     public abstract class BaseDataSubscriber<T> : IDataSubscriber<T>
     {
         /// <summary>
-        /// Called whenever a new value is ready to be retrieved from the DataSource.
+        /// Called whenever a new value is ready to be retrieved from the IDataSource.
         ///
         /// <para />To retrieve the new value, call <code> dataSource.GetResult()</code>.
         ///
