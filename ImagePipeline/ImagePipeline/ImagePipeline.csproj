@@ -131,10 +131,16 @@
     <Compile Include="Core\DynamicDefaultDiskStorageFactory.cs" />
     <Compile Include="Core\IDiskStorageFactory.cs" />
     <Compile Include="Core\IFileCacheFactory.cs" />
+    <Compile Include="Datasource\AbstractProducerToDataSourceAdapter.cs" />
+    <Compile Include="Datasource\SettableDataSource.cs" />
     <Compile Include="Listener\BaseRequestListener.cs" />
     <Compile Include="Listener\ForwardingRequestListener.cs" />
     <Compile Include="Listener\IRequestListener.cs" />
     <Compile Include="Listener\RequestListenerImpl.cs" />
+    <Compile Include="Producers\BaseProducerContext.cs" />
+    <Compile Include="Producers\IProducer.cs" />
+    <Compile Include="Producers\IProducerContext.cs" />
+    <Compile Include="Producers\IProducerContextCallbacks.cs" />
     <Compile Include="Producers\ProducerListenerImpl.cs" />
     <Compile Include="Listener\RequestLoggingListener.cs" />
     <Compile Include="Memory\BasePool.cs" />
@@ -173,6 +179,7 @@
     <Compile Include="Producers\DelegatingConsumer.cs" />
     <Compile Include="Producers\IConsumer.cs" />
     <Compile Include="Producers\IProducerListener.cs" />
+    <Compile Include="Producers\SettableProducerContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\BasePostprocessor.cs" />
     <Compile Include="Request\BaseRepeatedPostprocessor.cs" />

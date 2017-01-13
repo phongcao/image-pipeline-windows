@@ -3,7 +3,7 @@
 namespace ImagePipeline.Producers
 {
     /// <summary>
-    /// Consumes data produced by <see cref="IProducer"/>.
+    /// Consumes data produced by <see cref="IProducer{T}"/>.
     ///
     /// <para /> The producer uses this interface to notify its client when new data is ready or an error
     /// occurs. Execution of the image request is structured as a sequence of Producers. Each one
