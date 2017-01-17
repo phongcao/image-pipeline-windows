@@ -1,10 +1,8 @@
-﻿using FBCore.Common.References;
-using FBCore.Concurrency;
+﻿using FBCore.Concurrency;
 using FBCore.DataSource;
 using ImagePipeline.Common;
 using ImagePipeline.Datasource;
 using ImagePipeline.Listener;
-using ImagePipeline.Memory;
 using ImagePipeline.Producers;
 using ImagePipeline.Request;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
@@ -13,10 +11,10 @@ using System;
 namespace ImagePipeline.Tests.Datasource
 {
     /// <summary>
-    /// Tests for <see cref="CloseableProducerToDataSourceAdapter{T}"/>
+    /// Tests for <see cref="ProducerToDataSourceAdapter{T}"/>
     /// </summary>
     [TestClass]
-    public class CloseableProducerToDataSourceAdapterTests
+    public class ProducerToDataSourceAdapterTests
     {
         private const bool FINISHED = true;
         private const bool NOT_FINISHED = false;
@@ -48,19 +46,18 @@ namespace ImagePipeline.Tests.Datasource
         private bool _onRequestFailureInvocation;
         private bool _onRequestCancellationInvocation;
 
-        private IResourceReleaser<object> _resourceReleaser;
-        private CloseableReference<object> _resultRef1;
-        private CloseableReference<object> _resultRef2;
-        private CloseableReference<object> _resultRef3;
+        private object _result1;
+        private object _result2;
+        private object _result3;
 
-        private IDataSubscriber<CloseableReference<object>> _dataSubscriber1;
-        private IDataSubscriber<CloseableReference<object>> _dataSubscriber2;
+        private IDataSubscriber<object> _dataSubscriber1;
+        private IDataSubscriber<object> _dataSubscriber2;
 
         private SettableProducerContext _settableProducerContext;
-        private IProducer<CloseableReference<object>> _producer;
-        private IConsumer<CloseableReference<object>> _internalConsumer;
+        private IProducer<object> _producer;
+        private IConsumer<object> _internalConsumer;
 
-        private IDataSource<CloseableReference<object>> _dataSource;
+        private IDataSource<object> _dataSource;
 
         /// <summary>
         /// Initialize
@@ -78,7 +75,7 @@ namespace ImagePipeline.Tests.Datasource
                 (_) => { return false; });
             _requestListener = new RequestListenerImpl(
                 producerListener,
-                (imageRequest, callerContext, requestId, isPrefetch) => 
+                (imageRequest, callerContext, requestId, isPrefetch) =>
                 {
                     _onRequestStartInvocation = true;
                     _internalImageRequest = imageRequest;
@@ -86,14 +83,14 @@ namespace ImagePipeline.Tests.Datasource
                     _internalRequestId = requestId;
                     _internalIsPrefetch = isPrefetch;
                 },
-                (imageRequest, requestId, isPrefetch) => 
+                (imageRequest, requestId, isPrefetch) =>
                 {
                     _onRequestSuccessInvocation = true;
                     _internalImageRequest = imageRequest;
                     _internalRequestId = requestId;
                     _internalIsPrefetch = isPrefetch;
                 },
-                (imageRequest, requestId, exception, isPrefetch) => 
+                (imageRequest, requestId, exception, isPrefetch) =>
                 {
                     _onRequestFailureInvocation = true;
                     _internalImageRequest = imageRequest;
@@ -101,18 +98,17 @@ namespace ImagePipeline.Tests.Datasource
                     _internalException = exception;
                     _internalIsPrefetch = isPrefetch;
                 },
-                (requestId) => 
+                (requestId) =>
                 {
                     _onRequestCancellationInvocation = true;
                     _internalRequestId = requestId;
                 });
-            _resourceReleaser = new ResourceReleaserImpl<object>(_ => { });
-            _resultRef1 = CloseableReference<object>.of(new object(), _resourceReleaser);
-            _resultRef2 = CloseableReference<object>.of(new object(), _resourceReleaser);
-            _resultRef3 = CloseableReference<object>.of(new object(), _resourceReleaser);
+            _result1 = new object();
+            _result2 = new object();
+            _result3 = new object();
 
-            _dataSubscriber1 = new MockDataSubscriber<CloseableReference<object>>();
-            _dataSubscriber2 = new MockDataSubscriber<CloseableReference<object>>();
+            _dataSubscriber1 = new MockDataSubscriber<object>();
+            _dataSubscriber2 = new MockDataSubscriber<object>();
 
             _internalIsPrefetch = true;
             _settableProducerContext = new SettableProducerContext(
@@ -124,12 +120,12 @@ namespace ImagePipeline.Tests.Datasource
                 _isPrefetch,
                 true,
                 Priority.HIGH);
-            _producer = new ProducerImpl<CloseableReference<object>>(
+            _producer = new ProducerImpl<object>(
                 (consumer, _) =>
                 {
                     _internalConsumer = consumer;
                 });
-            _dataSource = CloseableProducerToDataSourceAdapter<object>.Create(
+            _dataSource = ProducerToDataSourceAdapter<object>.Create(
                 _producer,
                 _settableProducerContext,
                 _requestListener);
@@ -146,63 +142,29 @@ namespace ImagePipeline.Tests.Datasource
         }
 
         /// <summary>
-        /// Reference assertions
-        /// </summary>
-        private void AssertReferenceCount<T>(int expectedCount, CloseableReference<T> reference)
-        {
-            Assert.IsTrue(expectedCount == reference.GetUnderlyingReferenceTestOnly().GetRefCountTestOnly());
-        }
-
-        private void AssertReferencesSame<T>(
-            string errorMessage,
-            CloseableReference<T> expectedRef,
-            CloseableReference<T> actualRef)
-        {
-            if (expectedRef == null)
-            {
-                Assert.IsNull(actualRef, errorMessage);
-            }
-            else
-            {
-                Assert.AreSame(expectedRef.Get(), actualRef.Get(), errorMessage);
-            }
-        }
-
-        /// <summary>
         /// Verification helpers
         /// </summary>
         private void VerifyState(
             bool isFinished,
             bool hasResult,
-            CloseableReference<object> resultRef,
+            object result,
             bool hasFailed,
             Exception failureCause)
         {
-            IDataSource<CloseableReference<object>> dataSource = _dataSource;
+            IDataSource<object> dataSource = _dataSource;
             Assert.IsTrue(isFinished == dataSource.IsFinished(), "isFinished");
             Assert.IsTrue(hasResult == dataSource.HasResult(), "hasResult");
-            CloseableReference<object> dataSourceRef = dataSource.GetResult();
-            AssertReferencesSame("getResult", resultRef, dataSourceRef);
-            CloseableReference<object>.CloseSafely(dataSourceRef);
+            Assert.AreSame(result, dataSource.GetResult(), "getResult");
             Assert.IsTrue(hasFailed == dataSource.HasFailed(), "hasFailed");
             if (failureCause == NPE)
             {
                 Assert.IsNotNull(dataSource.GetFailureCause(), "failure");
                 Assert.IsTrue(dataSource.GetFailureCause().GetType() == typeof(NullReferenceException), "failure");
-            } 
-            else 
+            }
+            else
             {
                 Assert.AreSame(failureCause, dataSource.GetFailureCause(), "failure");
             }
-        }
-
-        private void VerifyReferenceCount(CloseableReference<object> resultRef)
-        {
-            // this unit test class keeps references alive, so their ref count must be 1;
-            // except for the result which have ref count of 2 because it's also kept by data source
-            AssertReferenceCount((resultRef == _resultRef1) ? 2 : 1, _resultRef1);
-            AssertReferenceCount((resultRef == _resultRef2) ? 2 : 1, _resultRef2);
-            AssertReferenceCount((resultRef == _resultRef3) ? 2 : 1, _resultRef3);
         }
 
         private void VerifyNoMoreInteractionsAndReset()
@@ -212,8 +174,8 @@ namespace ImagePipeline.Tests.Datasource
             Assert.IsFalse(_onRequestSuccessInvocation);
             Assert.IsFalse(_onRequestFailureInvocation);
             Assert.IsFalse(_onRequestCancellationInvocation);
-            Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).HasZeroInteractions);
-            Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).HasZeroInteractions);
+            Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber1).HasZeroInteractions);
+            Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber2).HasZeroInteractions);
 
             // Reset
             _internalImageRequest = null;
@@ -221,8 +183,8 @@ namespace ImagePipeline.Tests.Datasource
             _internalRequestId = null;
             _internalIsPrefetch = true;
             _internalException = null;
-            ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).Reset();
-            ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).Reset();
+            ((MockDataSubscriber<object>)_dataSubscriber1).Reset();
+            ((MockDataSubscriber<object>)_dataSubscriber2).Reset();
         }
 
         /// <summary>
@@ -231,28 +193,24 @@ namespace ImagePipeline.Tests.Datasource
         private void VerifyInitial()
         {
             VerifyState(NOT_FINISHED, WITHOUT_RESULT, null, NOT_FAILED, null);
-            VerifyReferenceCount(null);
             VerifyNoMoreInteractionsAndReset();
         }
 
-        private void VerifyWithResult(CloseableReference<object> resultRef, bool isLast)
+        private void VerifyWithResult(object result, bool isLast)
         {
-            VerifyState(isLast, resultRef != null, resultRef, NOT_FAILED, null);
-            VerifyReferenceCount(resultRef);
+            VerifyState(isLast, result != null, result, NOT_FAILED, null);
             VerifyNoMoreInteractionsAndReset();
         }
 
-        private void VerifyFailed(CloseableReference<object> resultRef, Exception throwable)
+        private void VerifyFailed(object result, Exception throwable)
         {
-            VerifyState(FINISHED, resultRef != null, resultRef, FAILED, throwable);
-            VerifyReferenceCount(resultRef);
+            VerifyState(FINISHED, result != null, result, FAILED, throwable);
             VerifyNoMoreInteractionsAndReset();
         }
 
         private void VerifyClosed(bool isFinished, Exception throwable)
         {
             VerifyState(isFinished, WITHOUT_RESULT, null, throwable != null, throwable);
-            VerifyReferenceCount(null);
             VerifyNoMoreInteractionsAndReset();
         }
 
@@ -268,19 +226,19 @@ namespace ImagePipeline.Tests.Datasource
                     break;
 
                 case ON_NEW_RESULT:
-                    Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).OnNewResultCallCount == 1);
+                    Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber2).OnNewResultCallCount == 1);
                     Assert.AreSame(
                         _dataSource,
-                        ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).DataSource);
-                    ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).OnNewResultCallCount = 0;
+                        ((MockDataSubscriber<object>)_dataSubscriber2).DataSource);
+                    ((MockDataSubscriber<object>)_dataSubscriber2).OnNewResultCallCount = 0;
                     break;
 
                 case ON_FAILURE:
-                    Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).OnFailureCallCount == 1);
+                    Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber2).OnFailureCallCount == 1);
                     Assert.AreSame(
                         _dataSource,
-                        ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).DataSource);
-                    ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).OnFailureCallCount = 0;
+                        ((MockDataSubscriber<object>)_dataSubscriber2).DataSource);
+                    ((MockDataSubscriber<object>)_dataSubscriber2).OnFailureCallCount = 0;
                     break;
             }
 
@@ -288,14 +246,14 @@ namespace ImagePipeline.Tests.Datasource
         }
 
         private void TestNewResult(
-            CloseableReference<object> resultRef,
+            object result,
             bool isLast,
             int numSubscribers)
         {
             _internalImageRequest = null;
             _internalRequestId = null;
             _internalIsPrefetch = true;
-            _internalConsumer.OnNewResult(resultRef, isLast);
+            _internalConsumer.OnNewResult(result, isLast);
             if (isLast)
             {
                 Assert.IsTrue(_onRequestSuccessInvocation);
@@ -307,27 +265,27 @@ namespace ImagePipeline.Tests.Datasource
 
             if (numSubscribers >= 1)
             {
-                Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnNewResultCallCount == 1);
+                Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber1).OnNewResultCallCount == 1);
                 Assert.AreSame(
                     _dataSource,
-                    ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).DataSource);
-                ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnNewResultCallCount = 0;
+                    ((MockDataSubscriber<object>)_dataSubscriber1).DataSource);
+                ((MockDataSubscriber<object>)_dataSubscriber1).OnNewResultCallCount = 0;
             }
 
             if (numSubscribers >= 2)
             {
-                Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).OnNewResultCallCount == 1);
+                Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber2).OnNewResultCallCount == 1);
                 Assert.AreSame(
                     _dataSource,
-                    ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).DataSource);
-                ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).OnNewResultCallCount = 0;
+                    ((MockDataSubscriber<object>)_dataSubscriber2).DataSource);
+                ((MockDataSubscriber<object>)_dataSubscriber2).OnNewResultCallCount = 0;
             }
 
-            VerifyWithResult(resultRef, isLast);
+            VerifyWithResult(result, isLast);
         }
 
         private void TestFailure(
-            CloseableReference<object> resultRef,
+            object result,
             int numSubscribers)
         {
             _internalImageRequest = null;
@@ -344,23 +302,23 @@ namespace ImagePipeline.Tests.Datasource
 
             if (numSubscribers >= 1)
             {
-                Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnFailureCallCount == 1);
+                Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber1).OnFailureCallCount == 1);
                 Assert.AreSame(
                     _dataSource,
-                    ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).DataSource);
-                ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnFailureCallCount = 0;
+                    ((MockDataSubscriber<object>)_dataSubscriber1).DataSource);
+                ((MockDataSubscriber<object>)_dataSubscriber1).OnFailureCallCount = 0;
             }
 
             if (numSubscribers >= 2)
             {
-                Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).OnFailureCallCount == 1);
+                Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber2).OnFailureCallCount == 1);
                 Assert.AreSame(
                     _dataSource,
-                    ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).DataSource);
-                ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).OnFailureCallCount = 0;
+                    ((MockDataSubscriber<object>)_dataSubscriber2).DataSource);
+                ((MockDataSubscriber<object>)_dataSubscriber2).OnFailureCallCount = 0;
             }
 
-            VerifyFailed(resultRef, _exception);
+            VerifyFailed(result, _exception);
         }
 
         private void TestClose(Exception throwable)
@@ -381,20 +339,20 @@ namespace ImagePipeline.Tests.Datasource
 
                 if (numSubscribers >= 1)
                 {
-                    Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnCancellationCallCount == 1);
+                    Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber1).OnCancellationCallCount == 1);
                     Assert.AreSame(
                         _dataSource,
-                        ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).DataSource);
-                    ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnCancellationCallCount = 0;
+                        ((MockDataSubscriber<object>)_dataSubscriber1).DataSource);
+                    ((MockDataSubscriber<object>)_dataSubscriber1).OnCancellationCallCount = 0;
                 }
 
                 if (numSubscribers >= 2)
                 {
-                    Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).OnCancellationCallCount == 1);
+                    Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber2).OnCancellationCallCount == 1);
                     Assert.AreSame(
                         _dataSource,
-                        ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).DataSource);
-                    ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).OnCancellationCallCount = 0;
+                        ((MockDataSubscriber<object>)_dataSubscriber2).DataSource);
+                    ((MockDataSubscriber<object>)_dataSubscriber2).OnCancellationCallCount = 0;
                 }
             }
 
@@ -427,7 +385,7 @@ namespace ImagePipeline.Tests.Datasource
         public void Test_C_I_a()
         {
             TestClose(NOT_FINISHED, 1);
-            _internalConsumer.OnNewResult(_resultRef2, INTERMEDIATE);
+            _internalConsumer.OnNewResult(_result2, INTERMEDIATE);
             VerifyClosed(NOT_FINISHED, null);
             TestSubscribe(NO_INTERACTIONS);
         }
@@ -439,7 +397,7 @@ namespace ImagePipeline.Tests.Datasource
         public void Test_C_L_a()
         {
             TestClose(NOT_FINISHED, 1);
-            _internalConsumer.OnNewResult(_resultRef2, LAST);
+            _internalConsumer.OnNewResult(_result2, LAST);
             VerifyClosed(NOT_FINISHED, null);
             TestSubscribe(NO_INTERACTIONS);
         }
@@ -462,7 +420,7 @@ namespace ImagePipeline.Tests.Datasource
         [TestMethod]
         public void Test_I_a_C()
         {
-            TestNewResult(_resultRef1, INTERMEDIATE, 1);
+            TestNewResult(_result1, INTERMEDIATE, 1);
             TestSubscribe(ON_NEW_RESULT);
             TestClose(NOT_FINISHED, 2);
         }
@@ -473,8 +431,8 @@ namespace ImagePipeline.Tests.Datasource
         [TestMethod]
         public void Test_I_I_a_C()
         {
-            TestNewResult(_resultRef1, INTERMEDIATE, 1);
-            TestNewResult(_resultRef2, INTERMEDIATE, 1);
+            TestNewResult(_result1, INTERMEDIATE, 1);
+            TestNewResult(_result2, INTERMEDIATE, 1);
             TestSubscribe(ON_NEW_RESULT);
             TestClose(NOT_FINISHED, 2);
         }
@@ -485,9 +443,9 @@ namespace ImagePipeline.Tests.Datasource
         [TestMethod]
         public void Test_I_I_L_a_C()
         {
-            TestNewResult(_resultRef1, INTERMEDIATE, 1);
-            TestNewResult(_resultRef2, INTERMEDIATE, 1);
-            TestNewResult(_resultRef3, LAST, 1);
+            TestNewResult(_result1, INTERMEDIATE, 1);
+            TestNewResult(_result2, INTERMEDIATE, 1);
+            TestNewResult(_result3, LAST, 1);
             TestSubscribe(ON_NEW_RESULT);
             TestClose(FINISHED, 2);
         }
@@ -498,9 +456,9 @@ namespace ImagePipeline.Tests.Datasource
         [TestMethod]
         public void Test_I_I_F_a_C()
         {
-            TestNewResult(_resultRef1, INTERMEDIATE, 1);
-            TestNewResult(_resultRef2, INTERMEDIATE, 1);
-            TestFailure(_resultRef2, 1);
+            TestNewResult(_result1, INTERMEDIATE, 1);
+            TestNewResult(_result2, INTERMEDIATE, 1);
+            TestFailure(_result2, 1);
             TestSubscribe(ON_FAILURE);
             TestClose(_exception);
         }
@@ -511,8 +469,8 @@ namespace ImagePipeline.Tests.Datasource
         [TestMethod]
         public void Test_I_L_a_C()
         {
-            TestNewResult(_resultRef1, INTERMEDIATE, 1);
-            TestNewResult(_resultRef2, LAST, 1);
+            TestNewResult(_result1, INTERMEDIATE, 1);
+            TestNewResult(_result2, LAST, 1);
             TestSubscribe(ON_NEW_RESULT);
             TestClose(FINISHED, 2);
         }
@@ -523,8 +481,8 @@ namespace ImagePipeline.Tests.Datasource
         [TestMethod]
         public void Test_I_F_a_C()
         {
-            TestNewResult(_resultRef1, INTERMEDIATE, 1);
-            TestFailure(_resultRef1, 1);
+            TestNewResult(_result1, INTERMEDIATE, 1);
+            TestFailure(_result1, 1);
             TestSubscribe(ON_FAILURE);
             TestClose(_exception);
         }
@@ -535,7 +493,7 @@ namespace ImagePipeline.Tests.Datasource
         [TestMethod]
         public void Test_L_a_C()
         {
-            TestNewResult(_resultRef1, LAST, 1);
+            TestNewResult(_result1, LAST, 1);
             TestSubscribe(ON_NEW_RESULT);
             TestClose(FINISHED, 2);
         }
@@ -546,9 +504,9 @@ namespace ImagePipeline.Tests.Datasource
         [TestMethod]
         public void Test_L_I_a_C()
         {
-            TestNewResult(_resultRef1, LAST, 1);
-            _internalConsumer.OnNewResult(_resultRef2, INTERMEDIATE);
-            VerifyWithResult(_resultRef1, LAST);
+            TestNewResult(_result1, LAST, 1);
+            _internalConsumer.OnNewResult(_result2, INTERMEDIATE);
+            VerifyWithResult(_result1, LAST);
             TestSubscribe(ON_NEW_RESULT);
             TestClose(FINISHED, 2);
         }
@@ -559,9 +517,9 @@ namespace ImagePipeline.Tests.Datasource
         [TestMethod]
         public void Test_L_L_a_C()
         {
-            TestNewResult(_resultRef1, LAST, 1);
-            _internalConsumer.OnNewResult(_resultRef2, LAST);
-            VerifyWithResult(_resultRef1, LAST);
+            TestNewResult(_result1, LAST, 1);
+            _internalConsumer.OnNewResult(_result2, LAST);
+            VerifyWithResult(_result1, LAST);
             TestSubscribe(ON_NEW_RESULT);
             TestClose(FINISHED, 2);
         }
@@ -572,9 +530,9 @@ namespace ImagePipeline.Tests.Datasource
         [TestMethod]
         public void Test_L_F_a_C()
         {
-            TestNewResult(_resultRef1, LAST, 1);
+            TestNewResult(_result1, LAST, 1);
             _internalConsumer.OnFailure(_exception);
-            VerifyWithResult(_resultRef1, LAST);
+            VerifyWithResult(_result1, LAST);
             TestSubscribe(ON_NEW_RESULT);
             TestClose(FINISHED, 2);
         }
@@ -597,7 +555,7 @@ namespace ImagePipeline.Tests.Datasource
         public void Test_F_I_a_C()
         {
             TestFailure(null, 1);
-            _internalConsumer.OnNewResult(_resultRef1, INTERMEDIATE);
+            _internalConsumer.OnNewResult(_result1, INTERMEDIATE);
             VerifyFailed(null, _exception);
             TestSubscribe(ON_FAILURE);
             TestClose(_exception);
@@ -610,7 +568,7 @@ namespace ImagePipeline.Tests.Datasource
         public void Test_F_L_a_C()
         {
             TestFailure(null, 1);
-            _internalConsumer.OnNewResult(_resultRef1, LAST);
+            _internalConsumer.OnNewResult(_result1, LAST);
             VerifyFailed(null, _exception);
             TestSubscribe(ON_FAILURE);
             TestClose(_exception);
@@ -636,14 +594,14 @@ namespace ImagePipeline.Tests.Datasource
         public void Test_NI_S_a_C()
         {
             _internalConsumer.OnNewResult(null, INTERMEDIATE);
-            Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnNewResultCallCount == 1);
+            Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber1).OnNewResultCallCount == 1);
             Assert.AreSame(
                 _dataSource,
-                ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).DataSource);
-            ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnNewResultCallCount = 0;
+                ((MockDataSubscriber<object>)_dataSubscriber1).DataSource);
+            ((MockDataSubscriber<object>)_dataSubscriber1).OnNewResultCallCount = 0;
             VerifyWithResult(null, INTERMEDIATE);
 
-            TestNewResult(_resultRef1, LAST, 1);
+            TestNewResult(_result1, LAST, 1);
             TestSubscribe(ON_NEW_RESULT);
             TestClose(FINISHED, 2);
         }
@@ -655,11 +613,11 @@ namespace ImagePipeline.Tests.Datasource
         public void Test_NI_a_NL_C()
         {
             _internalConsumer.OnNewResult(null, INTERMEDIATE);
-            Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnNewResultCallCount == 1);
+            Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber1).OnNewResultCallCount == 1);
             Assert.AreSame(
                 _dataSource,
-                ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).DataSource);
-            ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnNewResultCallCount = 0;
+                ((MockDataSubscriber<object>)_dataSubscriber1).DataSource);
+            ((MockDataSubscriber<object>)_dataSubscriber1).OnNewResultCallCount = 0;
             VerifyWithResult(null, INTERMEDIATE);
 
             TestSubscribe(NO_INTERACTIONS);
@@ -673,16 +631,16 @@ namespace ImagePipeline.Tests.Datasource
             Assert.AreSame(_internalRequestId, _requestId);
             Assert.IsFalse(_internalIsPrefetch);
             _onRequestSuccessInvocation = false;
-            Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnNewResultCallCount == 1);
+            Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber1).OnNewResultCallCount == 1);
             Assert.AreSame(
                 _dataSource,
-                ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).DataSource);
-            ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnNewResultCallCount = 0;
-            Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).OnNewResultCallCount == 1);
+                ((MockDataSubscriber<object>)_dataSubscriber1).DataSource);
+            ((MockDataSubscriber<object>)_dataSubscriber1).OnNewResultCallCount = 0;
+            Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber2).OnNewResultCallCount == 1);
             Assert.AreSame(
                 _dataSource,
-                ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).DataSource);
-            ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).OnNewResultCallCount = 0;
+                ((MockDataSubscriber<object>)_dataSubscriber2).DataSource);
+            ((MockDataSubscriber<object>)_dataSubscriber2).OnNewResultCallCount = 0;
             VerifyWithResult(null, LAST);
 
             TestClose(FINISHED, 2);
@@ -694,7 +652,7 @@ namespace ImagePipeline.Tests.Datasource
         [TestMethod]
         public void Test_I_NL_a_C()
         {
-            TestNewResult(_resultRef1, INTERMEDIATE, 1);
+            TestNewResult(_result1, INTERMEDIATE, 1);
 
             _internalImageRequest = null;
             _internalRequestId = null;
@@ -705,11 +663,11 @@ namespace ImagePipeline.Tests.Datasource
             Assert.AreSame(_internalRequestId, _requestId);
             Assert.IsFalse(_internalIsPrefetch);
             _onRequestSuccessInvocation = false;
-            Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnNewResultCallCount == 1);
+            Assert.IsTrue(((MockDataSubscriber<object>)_dataSubscriber1).OnNewResultCallCount == 1);
             Assert.AreSame(
                 _dataSource,
-                ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).DataSource);
-            ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnNewResultCallCount = 0;
+                ((MockDataSubscriber<object>)_dataSubscriber1).DataSource);
+            ((MockDataSubscriber<object>)_dataSubscriber1).OnNewResultCallCount = 0;
             VerifyWithResult(null, LAST);
 
             TestSubscribe(ON_NEW_RESULT);
