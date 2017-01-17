@@ -102,6 +102,9 @@
   <ItemGroup>
     <Compile Include="Cache\BufferedDiskCacheTests.cs" />
     <Compile Include="Cache\StagingAreaTests.cs" />
+    <Compile Include="Datasource\CloseableProducerToDataSourceAdapterTests.cs" />
+    <Compile Include="Datasource\ListDataSourceTests.cs" />
+    <Compile Include="Datasource\MockDataSubscriber.cs" />
     <Compile Include="Memory\BitmapCounterTests.cs" />
     <Compile Include="Memory\BitmapPoolTests.cs" />
     <Compile Include="Memory\FlexByteArrayPoolTests.cs" />

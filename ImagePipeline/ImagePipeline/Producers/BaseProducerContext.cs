@@ -16,10 +16,10 @@ namespace ImagePipeline.Producers
         private readonly string _id;
         private readonly IProducerListener _producerListener;
         private readonly object _callerContext;
-        private readonly RequestLevel _lowestPermittedRequestLevel;
+        private readonly int _lowestPermittedRequestLevel;
 
         private bool _isPrefetch;
-        private Priority _priority;
+        private int _priority;
         private bool _isIntermediateResultExpected;
         private bool _isCancelled;
         private readonly IList<IProducerContextCallbacks> _callbacks;
@@ -32,10 +32,10 @@ namespace ImagePipeline.Producers
             string id,
             IProducerListener producerListener,
             object callerContext,
-            RequestLevel lowestPermittedRequestLevel,
+            int lowestPermittedRequestLevel,
             bool isPrefetch,
             bool isIntermediateResultExpected,
-            Priority priority)
+            int priority)
         {
             _imageRequest = imageRequest;
             _id = id;
@@ -98,7 +98,7 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// @return the lowest permitted <see cref="RequestLevel"/>
         /// </summary>
-        public RequestLevel LowestPermittedRequestLevel
+        public int LowestPermittedRequestLevel
         {
             get
             {
@@ -123,7 +123,7 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// @return priority of the request.
         /// </summary>
-        public Priority Priority
+        public int Priority
         {
             get
             {
@@ -225,7 +225,7 @@ namespace ImagePipeline.Producers
         ///
         /// @return list of callbacks if the value actually changes, null otherwise
         /// </summary>
-        public IList<IProducerContextCallbacks> SetPriorityNoCallbacks(Priority priority)
+        public IList<IProducerContextCallbacks> SetPriorityNoCallbacks(int priority)
         {
             lock (_gate)
             {

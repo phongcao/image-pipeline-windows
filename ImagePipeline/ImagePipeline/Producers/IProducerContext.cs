@@ -7,12 +7,12 @@ namespace ImagePipeline.Producers
     /// Used to pass context information to producers.
     ///
     /// <para /> Object implementing this interface is passed to all producers participating in pipeline
-    /// request {@see Producer#produceResults}. Its responsibility is to instruct producers which image
+    /// request {@see Producer.ProduceResults}. Its responsibility is to instruct producers which image
     /// should be fetched/decoded/resized/cached etc. This class also handles request cancellation.
     ///
     /// <para />  In order to be notified when cancellation is requested, a producer should use the
-    /// <code> runOnCancellationRequested</code> method which takes an instance of Runnable and executes it
-    /// when the pipeline client cancels the image request.
+    /// <code> RunOnCancellationRequested</code> method which takes an instance of Runnable and executes 
+    /// it when the pipeline client cancels the image request.
     /// </summary>
     public interface IProducerContext
     {
@@ -39,7 +39,7 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// @return the lowest permitted <see cref="RequestLevel"/>
         /// </summary>
-        RequestLevel LowestPermittedRequestLevel { get; }
+        int LowestPermittedRequestLevel { get; }
 
         /// <summary>
         /// @return true if the request is a prefetch, false otherwise.
@@ -49,7 +49,7 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// @return priority of the request.
         /// </summary>
-        Priority Priority { get; }
+        int Priority { get; }
 
         /// <summary>
         /// @return true if request's owner expects intermediate results

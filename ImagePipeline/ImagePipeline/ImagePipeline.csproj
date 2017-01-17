@@ -146,6 +146,7 @@
     <Compile Include="Producers\IProducer.cs" />
     <Compile Include="Producers\IProducerContext.cs" />
     <Compile Include="Producers\IProducerContextCallbacks.cs" />
+    <Compile Include="Producers\ProducerImpl.cs" />
     <Compile Include="Producers\ProducerListenerImpl.cs" />
     <Compile Include="Listener\RequestLoggingListener.cs" />
     <Compile Include="Memory\BasePool.cs" />

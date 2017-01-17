@@ -16,10 +16,10 @@ namespace ImagePipeline.Producers
             string id,
             IProducerListener producerListener,
             object callerContext,
-            RequestLevel lowestPermittedRequestLevel,
+            int lowestPermittedRequestLevel,
             bool isPrefetch,
             bool isIntermediateResultExpected,
-            Priority priority) : base(
+            int priority) : base(
                 imageRequest,
                 id,
                 producerListener,
@@ -54,7 +54,7 @@ namespace ImagePipeline.Producers
         /// Set the priority of the request
         /// <param name="priority"></param>
         /// </summary>
-        public void SetPriority(Priority priority)
+        public void SetPriority(int priority)
         {
             CallOnPriorityChanged(SetPriorityNoCallbacks(priority));
         }
