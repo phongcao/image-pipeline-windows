@@ -186,6 +186,8 @@
     <Compile Include="Producers\IConsumer.cs" />
     <Compile Include="Producers\IProducerListener.cs" />
     <Compile Include="Producers\SettableProducerContext.cs" />
+    <Compile Include="Producers\ThreadHandoffProducer.cs" />
+    <Compile Include="Producers\ThreadHandoffProducerQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\BasePostprocessor.cs" />
     <Compile Include="Request\BaseRepeatedPostprocessor.cs" />

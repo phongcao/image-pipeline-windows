@@ -107,6 +107,8 @@
     <Compile Include="Common\References\MockResourceReleaser.cs" />
     <Compile Include="Common\Statfs\MockStatFsHelper.cs" />
     <Compile Include="Common\Statfs\StatFsHelperTests.cs" />
+    <Compile Include="Concurrency\MockStatefulRunnable.cs" />
+    <Compile Include="Concurrency\StatefulRunnableTests.cs" />
     <Compile Include="DataSource\AbstractDataSourceSupplier.cs" />
     <Compile Include="DataSource\AbstractDataSourceTests.cs" />
     <Compile Include="DataSource\DataSourcesTests.cs" />

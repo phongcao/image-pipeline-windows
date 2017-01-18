@@ -16,8 +16,6 @@
         /// <summary>
         /// Start producing results for given context. Provided consumer is notified whenever 
         /// progress is made (new value is ready or error occurs).
-        /// <param name="consumer"></param>
-        /// <param name="context"></param>
         /// </summary>
         void ProduceResults(IConsumer<T> consumer, IProducerContext context);
     }
