@@ -117,28 +117,28 @@ namespace FBCore.Concurrency
         /// Called after computing result successfully.
         /// <param name="result"></param>
         /// </summary>
-        internal virtual void OnSuccess(T result) { }
+        protected internal virtual void OnSuccess(T result) { }
 
         /// <summary>
         /// Called if exception occurred during computation.
         /// <param name="e"></param>
         /// </summary>
-        internal virtual void OnFailure(Exception e) { }
+        protected internal virtual void OnFailure(Exception e) { }
 
         /// <summary>
         /// Called when the runnable is cancelled.
         /// </summary>
-        internal virtual void OnCancellation() { }
+        protected internal virtual void OnCancellation() { }
 
         /// <summary>
         /// Called after OnSuccess callback completes in order to dispose the result.
         /// <param name="result"></param>
         /// </summary>
-        internal virtual void DisposeResult(T result) { }
+        protected internal virtual void DisposeResult(T result) { }
 
         /// <summary>
         /// Gets the result of the runnable
         /// </summary>
-        internal abstract T GetResult();
+        protected internal abstract T GetResult();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FBCore.Common.Internal;
+using System.Collections.Generic;
 
 namespace ImagePipeline.Producers
 {
@@ -32,38 +33,46 @@ namespace ImagePipeline.Producers
         {
             IProducerListener producerListener = context.Listener;
             string requestId = context.Id;
-    //            StatefulProducerRunnable<T> statefulRunnable = new StatefulProducerRunnable<T>(
-    //                consumer,
-    //                producerListener,
-    //                PRODUCER_NAME,
-    //                requestId) {
-    //        @Override
-    //        protected void onSuccess(T ignored)
-    //        {
-    //            producerListener.onProducerFinishWithSuccess(requestId, PRODUCER_NAME, null);
-    //            mInputProducer.produceResults(consumer, context);
-    //        }
+            StatefulProducerRunnable<T> statefulRunnable = new StatefulProducerRunnableImpl<T>(
+                consumer,
+                producerListener,
+                PRODUCER_NAME,
+                requestId,
+                (T ignored) =>
+                {
+                    producerListener.OnProducerFinishWithSuccess(requestId, PRODUCER_NAME, null);
+                    _inputProducer.ProduceResults(consumer, context);
+                },
+                (_) => { },
+                () => { },
+                (_) => 
+                {
+                    return default(IDictionary<string, string>);
+                },
+                (_) =>
+                {
+                    return default(IDictionary<string, string>);
+                },
+                () => 
+                {
+                    return default(IDictionary<string, string>);
+                },
+                (_) => { },
+                () => 
+                {
+                    return default(T);
+                });
 
-    //        @Override
-    //        protected void disposeResult(T ignored) { }
+            context.AddCallbacks(new BaseProducerContextCallbacks(() =>
+            {
+                statefulRunnable.Cancel();
+                _threadHandoffProducerQueue.Remove(statefulRunnable.Runnable);
+            },
+            () => { },
+            () => { },
+            () => { }));
 
-    //        @Override
-    //        protected T getResult() throws Exception
-    //        {
-    //        return null;
-    //        }
-    //    };
-    //    context.addCallbacks(
-    //        new BaseProducerContextCallbacks()
-    //    {
-    //        @Override
-    //            public void onCancellationRequested()
-    //    {
-    //        statefulRunnable.cancel();
-    //        mThreadHandoffProducerQueue.remove(statefulRunnable);
-    //    }
-    //});
-            //ThreadHandoffProducerQueue.addToQueueOrExecute(statefulRunnable);
+            _threadHandoffProducerQueue.AddToQueueOrExecute(statefulRunnable.Runnable);
         }
     }
 }

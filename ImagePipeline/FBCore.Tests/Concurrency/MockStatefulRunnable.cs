@@ -19,7 +19,7 @@ namespace FBCore.Tests.Concurrency
         /// Called after computing result successfully.
         /// <param name="result"></param>
         /// </summary>
-        internal override void OnSuccess(T result)
+        protected internal override void OnSuccess(T result)
         {
             Interlocked.Increment(ref _onSuccessCallCount);
 
@@ -33,7 +33,7 @@ namespace FBCore.Tests.Concurrency
         /// Called if exception occurred during computation.
         /// <param name="e"></param>
         /// </summary>
-        internal override void OnFailure(Exception e)
+        protected internal override void OnFailure(Exception e)
         {
             Interlocked.Increment(ref _onFailureCallCount);
         }
@@ -41,7 +41,7 @@ namespace FBCore.Tests.Concurrency
         /// <summary>
         /// Called when the runnable is cancelled.
         /// </summary>
-        internal override void OnCancellation()
+        protected internal override void OnCancellation()
         {
             Interlocked.Increment(ref _onCancellationCallCount);
         }
@@ -50,7 +50,7 @@ namespace FBCore.Tests.Concurrency
         /// Called after OnSuccess callback completes in order to dispose the result.
         /// <param name="result"></param>
         /// </summary>
-        internal override void DisposeResult(T result)
+        protected internal override void DisposeResult(T result)
         {
             Interlocked.Increment(ref _disposeResultCallCount);
             CallbackResult = result;
@@ -59,7 +59,7 @@ namespace FBCore.Tests.Concurrency
         /// <summary>
         /// Gets the result of the runnable
         /// </summary>
-        internal override T GetResult()
+        protected internal override T GetResult()
         {
             Interlocked.Increment(ref _getResultCallCount);
 
