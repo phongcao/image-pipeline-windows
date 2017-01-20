@@ -43,8 +43,8 @@ namespace ImagePipeline.Producers
                     producerListener.OnProducerFinishWithSuccess(requestId, PRODUCER_NAME, null);
                     _inputProducer.ProduceResults(consumer, context);
                 },
-                (_) => { },
-                () => { },
+                (_) => {},
+                () => {},
                 (_) => 
                 {
                     return default(IDictionary<string, string>);
@@ -57,7 +57,7 @@ namespace ImagePipeline.Producers
                 {
                     return default(IDictionary<string, string>);
                 },
-                (_) => { },
+                (_) => {},
                 () => 
                 {
                     return default(T);
@@ -68,9 +68,9 @@ namespace ImagePipeline.Producers
                 statefulRunnable.Cancel();
                 _threadHandoffProducerQueue.Remove(statefulRunnable.Runnable);
             },
-            () => { },
-            () => { },
-            () => { }));
+            () => {},
+            () => {},
+            () => {}));
 
             _threadHandoffProducerQueue.AddToQueueOrExecute(statefulRunnable.Runnable);
         }

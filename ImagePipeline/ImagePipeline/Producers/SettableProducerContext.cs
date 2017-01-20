@@ -1,5 +1,4 @@
-﻿using ImagePipeline.Common;
-using ImagePipeline.Request;
+﻿using ImagePipeline.Request;
 
 namespace ImagePipeline.Producers
 {

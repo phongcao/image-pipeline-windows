@@ -30,12 +30,12 @@ namespace ImagePipeline.Tests.Datasource
         private const int ON_NEW_RESULT = 1;
         private const int ON_FAILURE = 2;
 
-        private static readonly Exception NPE = new NullReferenceException();
-        private static readonly string _requestId = "requestId";
-        private static readonly ImageRequest _imageRequest = ImageRequest.FromUri("http://microsoft.com");
-        private static readonly object _callerContext = new object();
-        private static readonly bool _isPrefetch = false;
-        private static readonly Exception _exception = new Exception();
+        private readonly Exception NPE = new NullReferenceException();
+        private readonly string REQUEST_ID = "requestId";
+        private readonly ImageRequest IMAGE_REQUEST = ImageRequest.FromUri("http://microsoft.com");
+        private readonly object CALLER_CONTEXT = new object();
+        private readonly bool IS_PREFETCH = false;
+        private readonly Exception EXCEPTION = new Exception();
 
         private IRequestListener _requestListener;
         private ImageRequest _internalImageRequest;
@@ -70,11 +70,11 @@ namespace ImagePipeline.Tests.Datasource
         {
             // Initializes the mock RequestListener
             ProducerListenerImpl producerListener = new ProducerListenerImpl(
-                (_, __) => { },
-                (_, __, ___) => { },
-                (_, __, ___) => { },
-                (_, __, ___, ____) => { },
-                (_, __, ___) => { },
+                (_, __) => {},
+                (_, __, ___) => {},
+                (_, __, ___) => {},
+                (_, __, ___, ____) => {},
+                (_, __, ___) => {},
                 (_) => { return false; });
             _requestListener = new RequestListenerImpl(
                 producerListener,
@@ -106,7 +106,7 @@ namespace ImagePipeline.Tests.Datasource
                     _onRequestCancellationInvocation = true;
                     _internalRequestId = requestId;
                 });
-            _resourceReleaser = new ResourceReleaserImpl<object>(_ => { });
+            _resourceReleaser = new ResourceReleaserImpl<object>(_ => {});
             _resultRef1 = CloseableReference<object>.of(new object(), _resourceReleaser);
             _resultRef2 = CloseableReference<object>.of(new object(), _resourceReleaser);
             _resultRef3 = CloseableReference<object>.of(new object(), _resourceReleaser);
@@ -116,12 +116,12 @@ namespace ImagePipeline.Tests.Datasource
 
             _internalIsPrefetch = true;
             _settableProducerContext = new SettableProducerContext(
-                _imageRequest,
-                _requestId,
+                IMAGE_REQUEST,
+                REQUEST_ID,
                 producerListener,
-                _callerContext,
+                CALLER_CONTEXT,
                 RequestLevel.FULL_FETCH,
-                _isPrefetch,
+                IS_PREFETCH,
                 true,
                 Priority.HIGH);
             _producer = new ProducerImpl<CloseableReference<object>>(
@@ -135,9 +135,9 @@ namespace ImagePipeline.Tests.Datasource
                 _requestListener);
 
             Assert.IsTrue(_onRequestStartInvocation);
-            Assert.AreSame(_internalImageRequest, _imageRequest);
-            Assert.AreSame(_internalCallerContext, _callerContext);
-            Assert.AreSame(_internalRequestId, _requestId);
+            Assert.AreSame(_internalImageRequest, IMAGE_REQUEST);
+            Assert.AreSame(_internalCallerContext, CALLER_CONTEXT);
+            Assert.AreSame(_internalRequestId, REQUEST_ID);
             Assert.IsFalse(_internalIsPrefetch);
             Assert.IsNotNull(_internalConsumer);
             _onRequestStartInvocation = false;
@@ -299,8 +299,8 @@ namespace ImagePipeline.Tests.Datasource
             if (isLast)
             {
                 Assert.IsTrue(_onRequestSuccessInvocation);
-                Assert.AreSame(_internalImageRequest, _imageRequest);
-                Assert.AreSame(_internalRequestId, _requestId);
+                Assert.AreSame(_internalImageRequest, IMAGE_REQUEST);
+                Assert.AreSame(_internalRequestId, REQUEST_ID);
                 Assert.IsFalse(_internalIsPrefetch);
                 _onRequestSuccessInvocation = false;
             }
@@ -334,11 +334,11 @@ namespace ImagePipeline.Tests.Datasource
             _internalRequestId = null;
             _internalException = null;
             _internalIsPrefetch = true;
-            _internalConsumer.OnFailure(_exception);
+            _internalConsumer.OnFailure(EXCEPTION);
             Assert.IsTrue(_onRequestFailureInvocation);
-            Assert.AreSame(_internalImageRequest, _imageRequest);
-            Assert.AreSame(_internalRequestId, _requestId);
-            Assert.AreSame(_internalException, _exception);
+            Assert.AreSame(_internalImageRequest, IMAGE_REQUEST);
+            Assert.AreSame(_internalRequestId, REQUEST_ID);
+            Assert.AreSame(_internalException, EXCEPTION);
             Assert.IsFalse(_internalIsPrefetch);
             _onRequestFailureInvocation = false;
 
@@ -360,7 +360,7 @@ namespace ImagePipeline.Tests.Datasource
                 ((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber2).OnFailureCallCount = 0;
             }
 
-            VerifyFailed(resultRef, _exception);
+            VerifyFailed(resultRef, EXCEPTION);
         }
 
         private void TestClose(Exception throwable)
@@ -376,7 +376,7 @@ namespace ImagePipeline.Tests.Datasource
             if (!isFinished)
             {
                 Assert.IsTrue(_onRequestCancellationInvocation);
-                Assert.AreSame(_internalRequestId, _requestId);
+                Assert.AreSame(_internalRequestId, REQUEST_ID);
                 _onRequestCancellationInvocation = false;
 
                 if (numSubscribers >= 1)
@@ -451,7 +451,7 @@ namespace ImagePipeline.Tests.Datasource
         public void TestC_F_a()
         {
             TestClose(NOT_FINISHED, 1);
-            _internalConsumer.OnFailure(_exception);
+            _internalConsumer.OnFailure(EXCEPTION);
             VerifyClosed(NOT_FINISHED, null);
             TestSubscribe(NO_INTERACTIONS);
         }
@@ -502,7 +502,7 @@ namespace ImagePipeline.Tests.Datasource
             TestNewResult(_resultRef2, INTERMEDIATE, 1);
             TestFailure(_resultRef2, 1);
             TestSubscribe(ON_FAILURE);
-            TestClose(_exception);
+            TestClose(EXCEPTION);
         }
 
         /// <summary>
@@ -526,7 +526,7 @@ namespace ImagePipeline.Tests.Datasource
             TestNewResult(_resultRef1, INTERMEDIATE, 1);
             TestFailure(_resultRef1, 1);
             TestSubscribe(ON_FAILURE);
-            TestClose(_exception);
+            TestClose(EXCEPTION);
         }
 
         /// <summary>
@@ -573,7 +573,7 @@ namespace ImagePipeline.Tests.Datasource
         public void Test_L_F_a_C()
         {
             TestNewResult(_resultRef1, LAST, 1);
-            _internalConsumer.OnFailure(_exception);
+            _internalConsumer.OnFailure(EXCEPTION);
             VerifyWithResult(_resultRef1, LAST);
             TestSubscribe(ON_NEW_RESULT);
             TestClose(FINISHED, 2);
@@ -587,7 +587,7 @@ namespace ImagePipeline.Tests.Datasource
         {
             TestFailure(null, 1);
             TestSubscribe(ON_FAILURE);
-            TestClose(_exception);
+            TestClose(EXCEPTION);
         }
 
         /// <summary>
@@ -598,9 +598,9 @@ namespace ImagePipeline.Tests.Datasource
         {
             TestFailure(null, 1);
             _internalConsumer.OnNewResult(_resultRef1, INTERMEDIATE);
-            VerifyFailed(null, _exception);
+            VerifyFailed(null, EXCEPTION);
             TestSubscribe(ON_FAILURE);
-            TestClose(_exception);
+            TestClose(EXCEPTION);
         }
 
         /// <summary>
@@ -611,9 +611,9 @@ namespace ImagePipeline.Tests.Datasource
         {
             TestFailure(null, 1);
             _internalConsumer.OnNewResult(_resultRef1, LAST);
-            VerifyFailed(null, _exception);
+            VerifyFailed(null, EXCEPTION);
             TestSubscribe(ON_FAILURE);
-            TestClose(_exception);
+            TestClose(EXCEPTION);
         }
 
         /// <summary>
@@ -624,9 +624,9 @@ namespace ImagePipeline.Tests.Datasource
         {
             TestFailure(null, 1);
             _internalConsumer.OnFailure(new Exception());
-            VerifyFailed(null, _exception);
+            VerifyFailed(null, EXCEPTION);
             TestSubscribe(ON_FAILURE);
-            TestClose(_exception);
+            TestClose(EXCEPTION);
         }
 
         /// <summary>
@@ -669,8 +669,8 @@ namespace ImagePipeline.Tests.Datasource
             _internalIsPrefetch = true;
             _internalConsumer.OnNewResult(null, LAST);
             Assert.IsTrue(_onRequestSuccessInvocation);
-            Assert.AreSame(_internalImageRequest, _imageRequest);
-            Assert.AreSame(_internalRequestId, _requestId);
+            Assert.AreSame(_internalImageRequest, IMAGE_REQUEST);
+            Assert.AreSame(_internalRequestId, REQUEST_ID);
             Assert.IsFalse(_internalIsPrefetch);
             _onRequestSuccessInvocation = false;
             Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnNewResultCallCount == 1);
@@ -701,8 +701,8 @@ namespace ImagePipeline.Tests.Datasource
             _internalIsPrefetch = true;
             _internalConsumer.OnNewResult(null, LAST);
             Assert.IsTrue(_onRequestSuccessInvocation);
-            Assert.AreSame(_internalImageRequest, _imageRequest);
-            Assert.AreSame(_internalRequestId, _requestId);
+            Assert.AreSame(_internalImageRequest, IMAGE_REQUEST);
+            Assert.AreSame(_internalRequestId, REQUEST_ID);
             Assert.IsFalse(_internalIsPrefetch);
             _onRequestSuccessInvocation = false;
             Assert.IsTrue(((MockDataSubscriber<CloseableReference<object>>)_dataSubscriber1).OnNewResultCallCount == 1);
