@@ -12,13 +12,35 @@ namespace FBCore.Concurrency
     /// </summary>
     public class SerialExecutorService : IExecutorService, IDisposable
     {
-        private readonly object _gate = new object();
-        private int _disposed;
+        /// <summary>
+        /// Lock
+        /// </summary>
+        protected readonly object _gate = new object();
 
-        private readonly string _name;
-        private readonly Action<Exception> _handler;
-        private readonly TaskScheduler _taskScheduler;
-        private readonly TaskFactory _taskFactory;
+        /// <summary>
+        /// Dispose flag
+        /// </summary>
+        protected int _disposed;
+
+        /// <summary>
+        /// The name of the executor
+        /// </summary>
+        protected readonly string _name;
+
+        /// <summary>
+        /// The exception handler
+        /// </summary>
+        protected readonly Action<Exception> _handler;
+
+        /// <summary>
+        /// The task scheduler
+        /// </summary>
+        protected readonly TaskScheduler _taskScheduler;
+
+        /// <summary>
+        /// The task factory
+        /// </summary>
+        protected readonly TaskFactory _taskFactory;
 
         /// <summary>
         /// Instantiates the <see cref="SerialExecutorService"/>.
@@ -57,7 +79,7 @@ namespace FBCore.Concurrency
         {
             get
             {
-                return _disposed > 0;
+                return Volatile.Read(ref _disposed) > 0;
             }
         }
 
@@ -65,7 +87,8 @@ namespace FBCore.Concurrency
         /// Queues an action to run.
         /// </summary>
         /// <param name="action">The action.</param>
-        public Task Execute(Action action)
+        /// <param name="token">The cancellation token.</param>
+        public virtual Task Execute(Action action, CancellationToken token)
         {
             if (action == null)
             {
@@ -84,6 +107,11 @@ namespace FBCore.Concurrency
                 {
                     lock (_gate)
                     {
+                        if (token != CancellationToken.None)
+                        {
+                            token.ThrowIfCancellationRequested();
+                        }
+
                         if (!IsDisposed)
                         {
                             action();
@@ -98,11 +126,21 @@ namespace FBCore.Concurrency
         }
 
         /// <summary>
+        /// Queues an action to run.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        public Task Execute(Action action)
+        {
+            return Execute(action, CancellationToken.None);
+        }
+
+        /// <summary>
         /// Queues a function to run.
         /// </summary>
         /// <typeparam name="T">Type of response.</typeparam>
         /// <param name="func">The function.</param>
-        public Task<T> Execute<T>(Func<T> func)
+        /// <param name="token">The cancellation token.</param>
+        public virtual Task<T> Execute<T>(Func<T> func, CancellationToken token)
         {
             if (func == null)
             {
@@ -121,6 +159,11 @@ namespace FBCore.Concurrency
                 {
                     lock (_gate)
                     {
+                        if (token != CancellationToken.None)
+                        {
+                            token.ThrowIfCancellationRequested();
+                        }
+
                         if (!IsDisposed)
                         {
                             return func();
@@ -134,6 +177,16 @@ namespace FBCore.Concurrency
 
                 return default(T);
             });
+        }
+
+        /// <summary>
+        /// Queues a function to run.
+        /// </summary>
+        /// <typeparam name="T">Type of response.</typeparam>
+        /// <param name="func">The function.</param>
+        public Task<T> Execute<T>(Func<T> func)
+        {
+            return Execute(func, CancellationToken.None);
         }
 
         /// <summary>

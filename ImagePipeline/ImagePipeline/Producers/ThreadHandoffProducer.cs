@@ -1,5 +1,6 @@
 ﻿using FBCore.Common.Internal;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ImagePipeline.Producers
 {
@@ -12,6 +13,7 @@ namespace ImagePipeline.Producers
 
         private readonly IProducer<T> _inputProducer;
         private readonly ThreadHandoffProducerQueue _threadHandoffProducerQueue;
+        private CancellationTokenSource _tokenSource;
 
         /// <summary>
         /// Instantiates the <see cref="ThreadHandoffProducer{T}"/>
@@ -20,6 +22,7 @@ namespace ImagePipeline.Producers
             IProducer<T> inputProducer,
             ThreadHandoffProducerQueue inputThreadHandoffProducerQueue)
         {
+            _tokenSource = new CancellationTokenSource();
             _inputProducer = Preconditions.CheckNotNull(inputProducer);
             _threadHandoffProducerQueue = inputThreadHandoffProducerQueue;
         }
@@ -43,8 +46,8 @@ namespace ImagePipeline.Producers
                     producerListener.OnProducerFinishWithSuccess(requestId, PRODUCER_NAME, null);
                     _inputProducer.ProduceResults(consumer, context);
                 },
-                (_) => {},
-                () => {},
+                null,
+                null,
                 (_) => 
                 {
                     return default(IDictionary<string, string>);
@@ -57,7 +60,7 @@ namespace ImagePipeline.Producers
                 {
                     return default(IDictionary<string, string>);
                 },
-                (_) => {},
+                null,
                 () => 
                 {
                     return default(T);
@@ -65,6 +68,7 @@ namespace ImagePipeline.Producers
 
             context.AddCallbacks(new BaseProducerContextCallbacks(() =>
             {
+                _tokenSource.Cancel();
                 statefulRunnable.Cancel();
                 _threadHandoffProducerQueue.Remove(statefulRunnable.Runnable);
             },
@@ -72,7 +76,7 @@ namespace ImagePipeline.Producers
             () => {},
             () => {}));
 
-            _threadHandoffProducerQueue.AddToQueueOrExecute(statefulRunnable.Runnable);
+            _threadHandoffProducerQueue.AddToQueueOrExecute(statefulRunnable.Runnable, _tokenSource.Token);
         }
     }
 }

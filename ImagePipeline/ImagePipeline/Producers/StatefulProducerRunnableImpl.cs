@@ -54,7 +54,14 @@ namespace ImagePipeline.Producers
         /// </summary>
         protected override void OnSuccess(T result)
         {
-            _onSuccessFunc(result);
+            if (_onSuccessFunc == null)
+            {
+                base.OnSuccess(result);
+            }
+            else
+            {
+                _onSuccessFunc(result);
+            }
         }
 
         /// <summary>
@@ -63,7 +70,14 @@ namespace ImagePipeline.Producers
         /// </summary>
         protected override void OnFailure(Exception e)
         {
-            _onFailureFunc(e);
+            if (_onSuccessFunc == null)
+            {
+                base.OnFailure(e);
+            }
+            else
+            {
+                _onFailureFunc(e);
+            }
         }
 
         /// <summary>
@@ -71,7 +85,14 @@ namespace ImagePipeline.Producers
         /// </summary>
         protected override void OnCancellation()
         {
-            _onCancellation();
+            if (_onCancellation == null)
+            {
+                base.OnCancellation();
+            }
+            else
+            {
+                _onCancellation();
+            }
         }
 
         /// <summary>
@@ -79,7 +100,14 @@ namespace ImagePipeline.Producers
         /// </summary>
         protected override IDictionary<string, string> GetExtraMapOnSuccess(T result)
         {
-            return _getExtraMapOnSuccessFunc(result);
+            if (_getExtraMapOnSuccessFunc == null)
+            {
+                return base.GetExtraMapOnSuccess(result);
+            }
+            else
+            {
+                return _getExtraMapOnSuccessFunc(result);
+            }
         }
 
         /// <summary>
@@ -87,7 +115,14 @@ namespace ImagePipeline.Producers
         /// </summary>
         protected override IDictionary<string, string> GetExtraMapOnFailure(Exception exception)
         {
-            return _getExtraMapOnFailureFunc(exception);
+            if (_getExtraMapOnFailureFunc == null)
+            {
+                return base.GetExtraMapOnFailure(exception);
+            }
+            else
+            {
+                return _getExtraMapOnFailureFunc(exception);
+            }
         }
 
         /// <summary>
@@ -95,7 +130,14 @@ namespace ImagePipeline.Producers
         /// </summary>
         protected override IDictionary<string, string> GetExtraMapOnCancellation()
         {
-            return _getExtraMapOnCancellationFunc();
+            if (_getExtraMapOnCancellationFunc == null)
+            {
+                return base.GetExtraMapOnCancellation();
+            }
+            else
+            {
+                return _getExtraMapOnCancellationFunc();
+            }
         }
 
         /// <summary>

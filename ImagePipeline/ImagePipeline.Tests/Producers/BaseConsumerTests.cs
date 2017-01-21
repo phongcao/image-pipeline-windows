@@ -39,7 +39,7 @@ namespace ImagePipeline.Tests.Producers
                 {
                     _delegatedConsumer.OnCancellation();
                 },
-                null);
+                (_) => { });
         }
 
         /// <summary>

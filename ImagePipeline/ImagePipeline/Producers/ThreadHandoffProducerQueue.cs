@@ -2,6 +2,7 @@
 using FBCore.Concurrency;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ImagePipeline.Producers
 {
@@ -30,7 +31,7 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Adds the action to the end of the queue
         /// </summary>
-        public void AddToQueueOrExecute(Action runnable)
+        public void AddToQueueOrExecute(Action runnable, CancellationToken token)
         {
             lock (_gate)
             {
@@ -40,7 +41,7 @@ namespace ImagePipeline.Producers
                 }
                 else
                 {
-                    _executor.Execute(runnable);
+                    _executor.Execute(runnable, token);
                 }
             }
         }

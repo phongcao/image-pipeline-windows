@@ -1,5 +1,4 @@
-﻿using ImagePipeline.Common;
-using ImagePipeline.Request;
+﻿using ImagePipeline.Request;
 using System.Collections.Generic;
 
 namespace ImagePipeline.Producers
@@ -190,7 +189,7 @@ namespace ImagePipeline.Producers
         /// </summary>
         public void Cancel()
         {
-            BaseProducerContext.CallOnCancellationRequested(CancelNoCallbacks());
+            CallOnCancellationRequested(CancelNoCallbacks());
         }
 
         /// <summary>
