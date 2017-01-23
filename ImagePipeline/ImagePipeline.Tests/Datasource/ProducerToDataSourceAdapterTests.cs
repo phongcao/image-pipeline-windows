@@ -67,11 +67,11 @@ namespace ImagePipeline.Tests.Datasource
         {
             // Initializes the mock RequestListener
             ProducerListenerImpl producerListener = new ProducerListenerImpl(
-                (_, __) => {},
-                (_, __, ___) => {},
-                (_, __, ___) => {},
-                (_, __, ___, ____) => {},
-                (_, __, ___) => {},
+                (_, __) => { },
+                (_, __, ___) => { },
+                (_, __, ___) => { },
+                (_, __, ___, ____) => { },
+                (_, __, ___) => { },
                 (_) => { return false; });
             _requestListener = new RequestListenerImpl(
                 producerListener,

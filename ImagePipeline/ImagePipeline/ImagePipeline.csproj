@@ -142,11 +142,16 @@
     <Compile Include="Listener\ForwardingRequestListener.cs" />
     <Compile Include="Listener\IRequestListener.cs" />
     <Compile Include="Listener\RequestListenerImpl.cs" />
+    <Compile Include="Producers\BaseNetworkFetcher.cs" />
     <Compile Include="Producers\BaseProducerContext.cs" />
     <Compile Include="Producers\BaseProducerContextCallbacks.cs" />
+    <Compile Include="Producers\FetchState.cs" />
+    <Compile Include="Producers\HttpUrlConnectionNetworkFetcher.cs" />
+    <Compile Include="Producers\INetworkFetcher.cs" />
     <Compile Include="Producers\IProducer.cs" />
     <Compile Include="Producers\IProducerContext.cs" />
     <Compile Include="Producers\IProducerContextCallbacks.cs" />
+    <Compile Include="Producers\NetworkFetchProducer.cs" />
     <Compile Include="Producers\NullProducer.cs" />
     <Compile Include="Producers\ProducerImpl.cs" />
     <Compile Include="Producers\ProducerListenerImpl.cs" />

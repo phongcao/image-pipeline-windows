@@ -91,6 +91,15 @@ namespace ImagePipeline.Tests.Cache
         }
 
         /// <summary>
+        /// Cleanup
+        /// </summary>
+        [TestCleanup]
+        public void Cleanup()
+        {
+            _token.Dispose();
+        }
+
+        /// <summary>
         /// Tests adding key to file cache
         /// </summary>
         [TestMethod]

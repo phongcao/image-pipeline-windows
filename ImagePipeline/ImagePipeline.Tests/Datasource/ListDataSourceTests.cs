@@ -31,7 +31,7 @@ namespace ImagePipeline.Tests.Datasource
         [TestInitialize]
         public void Initialize()
         {
-            _resourceReleaser = new ResourceReleaserImpl<int>(_ => {});
+            _resourceReleaser = new ResourceReleaserImpl<int>(_ => { });
             _dataSubscriber = new MockDataSubscriber<IList<CloseableReference<int>>>();
             _settableDataSource1 = SettableDataSource<int>.Create<int>();
             _settableDataSource2 = SettableDataSource<int>.Create<int>();

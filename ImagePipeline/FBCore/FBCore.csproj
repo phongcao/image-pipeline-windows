@@ -157,6 +157,7 @@
     <Compile Include="Concurrency\LimitedConcurrencyTaskScheduler.cs" />
     <Compile Include="Concurrency\SerialExecutorService.cs" />
     <Compile Include="Concurrency\StatefulRunnable.cs" />
+    <Compile Include="Concurrency\TaskCancellationManager.cs" />
     <Compile Include="DataSource\AbstractDataSource.cs" />
     <Compile Include="DataSource\BaseBooleanSubscriber.cs" />
     <Compile Include="DataSource\BaseBooleanSubscriberImpl.cs" />

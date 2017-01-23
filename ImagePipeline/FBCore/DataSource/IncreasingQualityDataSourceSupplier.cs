@@ -107,7 +107,9 @@ namespace FBCore.DataSource
                 {
                     IDataSource<T> dataSource = _dataSourceSuppliers[i].Get();
                     _dataSources.Add(dataSource);
-                    dataSource.Subscribe(new InternalDataSubscriber(this, i), CallerThreadExecutor.Instance);
+                    dataSource.Subscribe(
+                        new InternalDataSubscriber(this, i), 
+                        CallerThreadExecutor.Instance);
                     // there's no point in creating data sources of lower quality
                     // if the data source of a higher quality has some result already
                     if (dataSource.HasResult())

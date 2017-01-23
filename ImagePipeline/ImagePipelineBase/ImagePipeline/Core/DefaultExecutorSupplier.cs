@@ -30,25 +30,25 @@ namespace ImagePipeline.Core
                 "io_bound", 
                 NUM_IO_BOUND_THREADS, 
                 WorkItemPriority.Normal,
-                _ => {});
+                _ => { });
 
             _decodeExecutor = Executors.NewFixedThreadPool(
                 "decode",
                 numCpuBoundThreads,
                 WorkItemPriority.Low,
-                _ => {});
+                _ => { });
 
             _backgroundExecutor = Executors.NewFixedThreadPool(
                 "background",
                 numCpuBoundThreads,
                 WorkItemPriority.Low,
-                _ => {});
+                _ => { });
 
             _lightWeightBackgroundExecutor = Executors.NewFixedThreadPool(
                 "lightweight_background",
                 NUM_LIGHTWEIGHT_BACKGROUND_THREADS,
                 WorkItemPriority.Low,
-                _ => {});
+                _ => { });
         }
 
         /// <summary>

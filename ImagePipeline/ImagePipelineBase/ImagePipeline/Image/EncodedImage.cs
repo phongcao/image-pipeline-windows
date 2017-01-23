@@ -280,7 +280,8 @@ namespace ImagePipeline.Image
             // dimensions
             if (!ImageFormatHelper.IsWebpFormat(Format))
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(GetInputStream());
+                KeyValuePair<int, int> dimensions = 
+                    await BitmapUtil.DecodeDimensionsAsync(GetInputStream()).ConfigureAwait(false);
                 if (!dimensions.Equals(default(KeyValuePair<int, int>)))
                 {
                     Width = dimensions.Key;

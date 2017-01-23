@@ -21,7 +21,7 @@ namespace ImagePipeline.Tests.Producers
                 "MockSerialExecutorService",
                 1,
                 WorkItemPriority.Low,
-                (_) => {})
+                (_) => { })
         {
         }
 

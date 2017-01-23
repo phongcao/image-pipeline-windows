@@ -70,11 +70,11 @@ namespace ImagePipeline.Tests.Datasource
         {
             // Initializes the mock RequestListener
             ProducerListenerImpl producerListener = new ProducerListenerImpl(
-                (_, __) => {},
-                (_, __, ___) => {},
-                (_, __, ___) => {},
-                (_, __, ___, ____) => {},
-                (_, __, ___) => {},
+                (_, __) => { },
+                (_, __, ___) => { },
+                (_, __, ___) => { },
+                (_, __, ___, ____) => { },
+                (_, __, ___) => { },
                 (_) => { return false; });
             _requestListener = new RequestListenerImpl(
                 producerListener,
@@ -106,7 +106,7 @@ namespace ImagePipeline.Tests.Datasource
                     _onRequestCancellationInvocation = true;
                     _internalRequestId = requestId;
                 });
-            _resourceReleaser = new ResourceReleaserImpl<object>(_ => {});
+            _resourceReleaser = new ResourceReleaserImpl<object>(_ => { });
             _resultRef1 = CloseableReference<object>.of(new object(), _resourceReleaser);
             _resultRef2 = CloseableReference<object>.of(new object(), _resourceReleaser);
             _resultRef3 = CloseableReference<object>.of(new object(), _resourceReleaser);

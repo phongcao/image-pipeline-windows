@@ -34,11 +34,11 @@ namespace ImagePipeline.Tests.Producers
         {
             // Initializes the mock producer listener
             ProducerListenerImpl producerListener = new ProducerListenerImpl(
-                (_, __) => {},
-                (_, __, ___) => {},
-                (_, __, ___) => {},
-                (_, __, ___, ____) => {},
-                (_, __, ___) => {},
+                (_, __) => { },
+                (_, __, ___) => { },
+                (_, __, ___) => { },
+                (_, __, ___, ____) => { },
+                (_, __, ___) => { },
                 (_) => 
                 {
                     return false;

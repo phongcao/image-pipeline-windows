@@ -29,7 +29,7 @@ namespace FBCore.DataSource
         /// <param name="onNewResultImplFunc"></param>
         public BaseBooleanSubscriberImpl(Action<bool> onNewResultImplFunc) : this(
             onNewResultImplFunc,
-            (_) => {})
+            (_) => { })
         {
         }
 

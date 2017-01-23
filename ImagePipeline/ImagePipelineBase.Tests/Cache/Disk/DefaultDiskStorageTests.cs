@@ -638,11 +638,13 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             IInserter inserter,
             byte[] content)
         {
-            inserter.WriteData(new WriterCallbackImpl(os =>
-            {
-                os.Write(content, 0, content.Length);
-            }),
-            null);
+            inserter.WriteData(
+                new WriterCallbackImpl(
+                    os =>
+                    {
+                        os.Write(content, 0, content.Length);
+                    }),
+                    null);
         }
 
         private void PurgeUnexpectedFiles(DefaultDiskStorage storage)

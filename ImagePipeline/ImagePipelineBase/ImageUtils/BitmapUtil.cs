@@ -86,7 +86,7 @@ namespace ImageUtils
         public static async Task<KeyValuePair<int, int>> DecodeDimensionsAsync(byte[] bytes)
         {
             // Wrapping with ByteArrayInputStream is cheap and we don't have duplicate implementation
-            return await DecodeDimensionsAsync(new MemoryStream(bytes));
+            return await DecodeDimensionsAsync(new MemoryStream(bytes)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -100,8 +100,10 @@ namespace ImageUtils
             Preconditions.CheckNotNull(inputStream);
             try
             {
-                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(inputStream.AsRandomAccessStream());
-                return new KeyValuePair<int, int>((int)decoder.OrientedPixelWidth, (int)decoder.OrientedPixelHeight);
+                BitmapDecoder decoder = 
+                    await BitmapDecoder.CreateAsync(inputStream.AsRandomAccessStream());
+                return new KeyValuePair<int, int>(
+                    (int)decoder.OrientedPixelWidth, (int)decoder.OrientedPixelHeight);
             }
             catch (Exception)
             {

@@ -121,6 +121,7 @@
     <Compile Include="Memory\PoolStats.cs" />
     <Compile Include="Memory\SharedByteArrayTests.cs" />
     <Compile Include="Producers\BaseConsumerTests.cs" />
+    <Compile Include="Producers\HttpUrlConnectionNetworkFetcherTests.cs" />
     <Compile Include="Producers\MockBaseConsumer.cs" />
     <Compile Include="Producers\MockSerialExecutorService.cs" />
     <Compile Include="Producers\NullProducerTests.cs" />

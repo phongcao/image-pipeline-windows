@@ -20,7 +20,7 @@ namespace FBCore.Concurrency
                 "default",
                 maxDegreeOfParallelism,
                 WorkItemPriority.Normal,
-                _ => {});
+                _ => { });
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace FBCore.Concurrency
                 "default",
                 maxDegreeOfParallelism,
                 priority,
-                _ => {});
+                _ => { });
         }
 
         /// <summary>

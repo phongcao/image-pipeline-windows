@@ -46,9 +46,9 @@ namespace ImagePipeline.Tests.Producers
                     _consumerInternalResult = result;
                     _consumerInternalIsLast = isLast;
                 },
-                (_) => {},
-                () => {},
-                (_) => {});
+                (_) => { },
+                () => { },
+                (_) => { });
             _producerContext = new SettableProducerContext(
                 IMAGE_REQUEST,
                 REQUEST_ID,

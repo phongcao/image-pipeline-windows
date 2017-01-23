@@ -24,6 +24,21 @@ namespace FBCore.Common.Time
         }
 
         /// <summary>
+        /// Gets the number of milliseconds elapsed since the system started.
+        /// </summary>
+        /// <returns>
+        /// A 32-bit signed integer containing the amount of time in milliseconds that has
+        /// passed since the last time the computer was started.
+        /// </returns>
+        public static long UptimeMillis
+        {
+            get
+            {
+                return Environment.TickCount;
+            }
+        }
+
+        /// <summary>
         /// Gets the current time in milliseconds.
         ///
         /// @return the current time in milliseconds.

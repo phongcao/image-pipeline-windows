@@ -162,7 +162,7 @@ namespace ImagePipeline.Tests.Memory
         {
             byte[] buf = new byte[100];
             PooledByteBufferInputStream inputStream = new PooledByteBufferInputStream(
-              new TrivialPooledByteBuffer(new byte[] {}));
+              new TrivialPooledByteBuffer(new byte[] { }));
             Assert.AreEqual(0, inputStream.Read(buf, 0, 1));
         }
 
