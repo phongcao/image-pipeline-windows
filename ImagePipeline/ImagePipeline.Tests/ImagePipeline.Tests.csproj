@@ -124,6 +124,7 @@
     <Compile Include="Producers\HttpUrlConnectionNetworkFetcherTests.cs" />
     <Compile Include="Producers\MockBaseConsumer.cs" />
     <Compile Include="Producers\MockSerialExecutorService.cs" />
+    <Compile Include="Producers\NetworkFetchProducerTests.cs" />
     <Compile Include="Producers\NullProducerTests.cs" />
     <Compile Include="Producers\SettableProducerContextTests.cs" />
     <Compile Include="Producers\StatefulProducerRunnableTests.cs" />

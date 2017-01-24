@@ -18,7 +18,6 @@ namespace ImagePipeline.Tests.Producers
         private const string FAILURE_URL = "https://httpbin.org/image_not_found.png";
         private const string SUCCESS_REDIRECT_URL = "http://httpbin.org/redirect-to?url=https%3A%2F%2Fwww.microsoft.com%2F";
         private const string FAILURE_REDIRECT_URL = "http://httpbin.org/redirect-to?url=http%3A%2F%2Fhttpbin.org%2F";
-        private const string REQUEST_ID = "TEST_REQUEST_ID";
 
         private static HttpUrlConnectionNetworkFetcher _fetcher;
 
@@ -63,14 +62,14 @@ namespace ImagePipeline.Tests.Producers
         /// <summary>
         /// Tests out the callback with success
         /// </summary>
-        [TestMethod]
+        [TestMethod, Timeout(3000)]
         public void TestFetchSendsSuccessToCallback()
         {
             ManualResetEvent completion = new ManualResetEvent(false);
             bool failed = false;
             _producerContext = new SettableProducerContext(
                 ImageRequest.FromUri(SUCCESS_URL),
-                REQUEST_ID,
+                SUCCESS_URL,
                 _producerListener,
                 new object(),
                 RequestLevel.FULL_FETCH,
@@ -106,14 +105,14 @@ namespace ImagePipeline.Tests.Producers
         /// <summary>
         /// Tests out the callback with failure
         /// </summary>
-        [TestMethod]
+        [TestMethod, Timeout(3000)]
         public void TestFetchSendsErrorToCallbackAfterHttpError()
         {
             ManualResetEvent completion = new ManualResetEvent(false);
             bool failed = false;
             _producerContext = new SettableProducerContext(
                 ImageRequest.FromUri(FAILURE_URL),
-                REQUEST_ID,
+                FAILURE_URL,
                 _producerListener,
                 new object(),
                 RequestLevel.FULL_FETCH,
@@ -148,14 +147,14 @@ namespace ImagePipeline.Tests.Producers
         /// <summary>
         /// Tests out the callback with successful redirection
         /// </summary>
-        [TestMethod]
+        [TestMethod, Timeout(3000)]
         public void TestFetchSendsSuccessToCallbackAfterRedirect()
         {
             ManualResetEvent completion = new ManualResetEvent(false);
             bool failed = false;
             _producerContext = new SettableProducerContext(
                 ImageRequest.FromUri(SUCCESS_REDIRECT_URL),
-                REQUEST_ID,
+                SUCCESS_REDIRECT_URL,
                 _producerListener,
                 new object(),
                 RequestLevel.FULL_FETCH,
@@ -191,14 +190,14 @@ namespace ImagePipeline.Tests.Producers
         /// <summary>
         /// Tests out the callback with failed redirection
         /// </summary>
-        [TestMethod]
+        [TestMethod, Timeout(3000)]
         public void TestFetchSendsErrorToCallbackAfterRedirectToSameLocation()
         {
             ManualResetEvent completion = new ManualResetEvent(false);
             bool failed = false;
             _producerContext = new SettableProducerContext(
                 ImageRequest.FromUri(FAILURE_REDIRECT_URL),
-                REQUEST_ID,
+                FAILURE_REDIRECT_URL,
                 _producerListener,
                 new object(),
                 RequestLevel.FULL_FETCH,

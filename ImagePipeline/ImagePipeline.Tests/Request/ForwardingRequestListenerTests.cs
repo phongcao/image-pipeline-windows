@@ -71,39 +71,6 @@ namespace ImagePipeline.Tests.Request
             _error = new Exception();
             _immutableMap = new Dictionary<string, string>();
 
-            _onRequestStartFuncCalls1 = 0;
-            _onRequestSuccessFuncCall1 = 0;
-            _onRequestFailureFuncCalls1 = 0;
-            _onRequestCancellationFuncCalls1 = 0;
-            _onProducerStartFuncCalls1 = 0;
-            _onProducerEventFuncCalls1 = 0;
-            _onProducerFinishWithSuccessFuncCalls1 = 0;
-            _onProducerFinishWithFailureFuncCalls1 = 0;
-            _onProducerFinishWithCancellationFuncCalls1 = 0;
-            _requiresExtraMapFuncCalls1 = 0;
-
-            _onRequestStartFuncCalls2 = 0;
-            _onRequestSuccessFuncCall2 = 0;
-            _onRequestFailureFuncCalls2 = 0;
-            _onRequestCancellationFuncCalls2 = 0;
-            _onProducerStartFuncCalls2 = 0;
-            _onProducerEventFuncCalls2 = 0;
-            _onProducerFinishWithSuccessFuncCalls2 = 0;
-            _onProducerFinishWithFailureFuncCalls2 = 0;
-            _onProducerFinishWithCancellationFuncCalls2 = 0;
-            _requiresExtraMapFuncCalls2 = 0;
-
-            _onRequestStartFuncCalls3 = 0;
-            _onRequestSuccessFuncCall3 = 0;
-            _onRequestFailureFuncCalls3 = 0;
-            _onRequestCancellationFuncCalls3 = 0;
-            _onProducerStartFuncCalls3 = 0;
-            _onProducerEventFuncCalls3 = 0;
-            _onProducerFinishWithSuccessFuncCalls3 = 0;
-            _onProducerFinishWithFailureFuncCalls3 = 0;
-            _onProducerFinishWithCancellationFuncCalls3 = 0;
-            _requiresExtraMapFuncCalls3 = 0;
-
             ProducerListenerImpl producerListener1 = new ProducerListenerImpl(
                 (_, __) => { ++_onProducerStartFuncCalls1; },
                 (_, __, ___) => { ++_onProducerEventFuncCalls1; },

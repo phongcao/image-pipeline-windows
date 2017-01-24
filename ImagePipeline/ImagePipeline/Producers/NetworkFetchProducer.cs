@@ -104,15 +104,12 @@ namespace ImagePipeline.Producers
             try
             {
                 int length;
-                while ((length = responseData.Read(ioArray, 0, ioArray.Length)) >= 0)
+                while ((length = responseData.Read(ioArray, 0, ioArray.Length)) > 0)
                 {
-                    if (length > 0)
-                    {
-                        pooledOutputStream.Write(ioArray, 0, length);
-                        MaybeHandleIntermediateResult(pooledOutputStream, fetchState);
-                        float progress = CalculateProgress(pooledOutputStream.Size, responseContentLength);
-                        fetchState.Consumer.OnProgressUpdate(progress);
-                    }
+                    pooledOutputStream.Write(ioArray, 0, length);
+                    MaybeHandleIntermediateResult(pooledOutputStream, fetchState);
+                    float progress = CalculateProgress(pooledOutputStream.Size, responseContentLength);
+                    fetchState.Consumer.OnProgressUpdate(progress);
                 }
 
                 _networkFetcher.OnFetchCompletion(fetchState, pooledOutputStream.Size);
@@ -183,7 +180,7 @@ namespace ImagePipeline.Producers
             try
             {
                 encodedImage = new EncodedImage(result);
-                encodedImage.ParseMetaDataAsync().RunSynchronously();
+                encodedImage.ParseMetaDataAsync().GetAwaiter().GetResult();
                 consumer.OnNewResult(encodedImage, isFinal);
             }
             finally

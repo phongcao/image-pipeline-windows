@@ -109,7 +109,12 @@ namespace ImagePipeline.Producers
 
                 if (response != null)
                 {
-                    using (var inputStream = response.Content.ReadAsInputStreamAsync().AsTask().Result)
+                    using (var inputStream = response
+                        .Content
+                        .ReadAsInputStreamAsync()
+                        .AsTask()
+                        .GetAwaiter()
+                        .GetResult())
                     {
                         callback.OnResponse(inputStream.AsStreamForRead(), -1);
                     }

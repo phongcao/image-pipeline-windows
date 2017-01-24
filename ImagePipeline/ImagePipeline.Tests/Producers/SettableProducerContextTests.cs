@@ -62,6 +62,7 @@ namespace ImagePipeline.Tests.Producers
                 {
                     ++_onPriorityChangedCount1;
                 });
+
             _callbacks2 = new BaseProducerContextCallbacks(
                 () => 
                 {
@@ -89,15 +90,6 @@ namespace ImagePipeline.Tests.Producers
                 false,
                 true,
                 Priority.MEDIUM);
-
-            _onCancellationRequestedCount1 = 0;
-            _onIsPrefetchChangedCount1 = 0;
-            _onIsIntermediateResultExpectedChangedCount1 = 0;
-            _onPriorityChangedCount1 = 0;
-            _onCancellationRequestedCount2 = 0;
-            _onIsPrefetchChangedCount2 = 0;
-            _onIsIntermediateResultExpectedChangedCount2 = 0;
-            _onPriorityChangedCount2 = 0;
         }
 
         /// <summary>
