@@ -2,6 +2,7 @@
 using FBCore.Concurrency;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FBCore.DataSource
 {
@@ -68,7 +69,7 @@ namespace FBCore.DataSource
             }
             
             FirstAvailableDataSourceSupplier<T> that = (FirstAvailableDataSourceSupplier<T>)other;
-            return Equals(_dataSourceSuppliers, that._dataSourceSuppliers);
+            return _dataSourceSuppliers.SequenceEqual(that._dataSourceSuppliers);
         }
 
         /// <summary>

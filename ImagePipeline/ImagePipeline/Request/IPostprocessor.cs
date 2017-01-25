@@ -41,6 +41,6 @@ namespace ImagePipeline.Request
         /// postprocessor class will be overwritten.
         /// @return The CacheKey to use for the result of this postprocessor
         /// </summary>
-        ICacheKey GetPostprocessorCacheKey();
+        ICacheKey PostprocessorCacheKey { get; }
     }
 }

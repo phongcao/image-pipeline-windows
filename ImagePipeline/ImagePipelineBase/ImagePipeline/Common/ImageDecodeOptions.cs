@@ -115,7 +115,7 @@
         }
 
         /// <summary>
-        /// Custom GetHashCode method
+        /// Calculates the hash code basing on properties
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode()
@@ -129,13 +129,13 @@
         }
 
         /// <summary>
-        /// Custom ToString method
+        /// Provides the custom ToString method
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
             return string.Format(
-                "{0}-{0:B}-{0:B}-{0:B}-{0:B}",
+                "{0}-{1:B}-{2:B}-{3:B}-{4:B}",
                 MinDecodeIntervalMs,
                 DecodePreviewFrame,
                 UseLastFrameForPreview,

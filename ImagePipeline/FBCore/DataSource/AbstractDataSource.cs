@@ -2,7 +2,6 @@
 using FBCore.Concurrency;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace FBCore.DataSource
 {
@@ -43,7 +42,7 @@ namespace FBCore.DataSource
 
         private float _progress = 0;
 
-        private readonly BlockingCollection<KeyValuePair<IDataSubscriber<T>, IExecutorService>> _subscribers;
+        private readonly BlockingCollection<Tuple<IDataSubscriber<T>, IExecutorService>> _subscribers;
 
         /// <summary>
         /// Instantiates the <see cref="AbstractDataSource{T}"/>
@@ -52,7 +51,7 @@ namespace FBCore.DataSource
         {
             _isClosed = false;
             _dataSourceStatus = DataSourceStatus.IN_PROGRESS;
-            _subscribers = new BlockingCollection<KeyValuePair<IDataSubscriber<T>, IExecutorService>>();
+            _subscribers = new BlockingCollection<Tuple<IDataSubscriber<T>, IExecutorService>>();
         }
 
         /// <summary>
@@ -215,7 +214,7 @@ namespace FBCore.DataSource
 
                 if (_dataSourceStatus == DataSourceStatus.IN_PROGRESS)
                 {
-                    _subscribers.Add(new KeyValuePair<IDataSubscriber<T>, IExecutorService>(dataSubscriber, executor));
+                    _subscribers.Add(new Tuple<IDataSubscriber<T>, IExecutorService>(dataSubscriber, executor));
                 }
 
                 shouldNotify = HasResult() || IsFinished() || WasCancelled();
@@ -233,7 +232,7 @@ namespace FBCore.DataSource
             bool isCancellation = WasCancelled();
             foreach (var pair in _subscribers)
             {
-                NotifyDataSubscriber(pair.Key, pair.Value, isFailure, isCancellation);
+                NotifyDataSubscriber(pair.Item1, pair.Item2, isFailure, isCancellation);
             }
         }
 
@@ -434,8 +433,8 @@ namespace FBCore.DataSource
         {
             foreach (var pair in _subscribers)
             {
-                IDataSubscriber<T> subscriber = pair.Key;
-                IExecutorService executor = pair.Value;
+                IDataSubscriber<T> subscriber = pair.Item1;
+                IExecutorService executor = pair.Item2;
                 executor.Execute(() =>
                 {
                     subscriber.OnProgressUpdate(this);

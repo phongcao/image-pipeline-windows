@@ -66,7 +66,7 @@ namespace BinaryResource
             }
 
             FileBinaryResource that = (FileBinaryResource)obj;
-            return _file.Equals(that._file);
+            return _file.FullName.Equals(that._file.FullName);
         }
 
         /// <summary>

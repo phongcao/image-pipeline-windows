@@ -2,6 +2,7 @@
 using ImagePipeline.Memory;
 using ImagePipeline.Testing;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -115,9 +116,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(2, b1.Length);
             Assert.IsTrue(_pool.InUseValues.Contains(b1));
             _stats.Refresh();
-            var testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            var testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  2, new KeyValuePair<int, int>(1, 0) }
+                {  2, new Tuple<int, int>(1, 0) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -136,10 +137,10 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(4, b2.Length);
             Assert.IsTrue(_pool.InUseValues.Contains(b2));
             _stats.Refresh();
-            testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  2, new KeyValuePair<int, int>(0, 1) },
-                {  4, new KeyValuePair<int, int>(1, 0) }
+                {  2, new Tuple<int, int>(0, 1) },
+                {  4, new Tuple<int, int>(1, 0) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -166,11 +167,11 @@ namespace ImagePipeline.Tests.Memory
 
             // Get current stats
             _stats.Refresh();
-            var testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            var testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  2, new KeyValuePair<int, int>(0, 1) },
-                {  4, new KeyValuePair<int, int>(0, 0) },
-                {  6, new KeyValuePair<int, int>(0, 1) }
+                {  2, new Tuple<int, int>(0, 1) },
+                {  4, new Tuple<int, int>(0, 0) },
+                {  6, new Tuple<int, int>(0, 1) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -180,11 +181,11 @@ namespace ImagePipeline.Tests.Memory
             _stats.Refresh();
 
             // Validate stats
-            testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  2, new KeyValuePair<int, int>(0, 0) },
-                {  4, new KeyValuePair<int, int>(1, 0) },
-                {  6, new KeyValuePair<int, int>(0, 1) }
+                {  2, new Tuple<int, int>(0, 0) },
+                {  4, new Tuple<int, int>(1, 0) },
+                {  6, new Tuple<int, int>(0, 1) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -206,9 +207,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.IsNotNull(b1);
             Assert.AreEqual(2, b1.Length);
             _stats.Refresh();
-            var testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            var testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  2, new KeyValuePair<int, int>(0, 1) }
+                {  2, new Tuple<int, int>(0, 1) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -223,9 +224,9 @@ namespace ImagePipeline.Tests.Memory
             Assert.AreEqual(2, b2.Length);
             Assert.IsTrue(_pool.InUseValues.Contains(b2));
             _stats.Refresh();
-            testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  2, new KeyValuePair<int, int>(1, 0) }
+                {  2, new Tuple<int, int>(1, 0) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -268,9 +269,9 @@ namespace ImagePipeline.Tests.Memory
 
             // Verify stats
             _stats.Refresh();
-            var testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            var testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  2, new KeyValuePair<int, int>(0, 1) }
+                {  2, new Tuple<int, int>(0, 1) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -293,9 +294,9 @@ namespace ImagePipeline.Tests.Memory
             byte[] b3 = _pool.Get(6);
             _pool.Release(b3);
             _stats.Refresh();
-            var testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            var testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  6, new KeyValuePair<int, int>(1, 0) }
+                {  6, new Tuple<int, int>(1, 0) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -319,9 +320,9 @@ namespace ImagePipeline.Tests.Memory
             byte[] b1 = _pool.Get(4);
             _pool.Release(b1);
             _stats.Refresh();
-            var testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            var testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  4, new KeyValuePair<int, int>(0, 0) }
+                {  4, new Tuple<int, int>(0, 0) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -344,9 +345,9 @@ namespace ImagePipeline.Tests.Memory
             _pool.Get(2);
             _pool.Get(2);
             _stats.Refresh();
-            var testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            var testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  2, new KeyValuePair<int, int>(3, 0) }
+                {  2, new Tuple<int, int>(3, 0) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -358,9 +359,9 @@ namespace ImagePipeline.Tests.Memory
             // Now release one of the buffers
             _pool.Release(b0);
             _stats.Refresh();
-            testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  2, new KeyValuePair<int, int>(2, 0) }
+                {  2, new Tuple<int, int>(2, 0) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -387,9 +388,9 @@ namespace ImagePipeline.Tests.Memory
 
             // Verify stats
             _stats.Refresh();
-            var testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            var testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  2, new KeyValuePair<int, int>(1, 0) }
+                {  2, new Tuple<int, int>(1, 0) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -415,9 +416,9 @@ namespace ImagePipeline.Tests.Memory
 
             // Verify stats
             _stats.Refresh();
-            var testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            var testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  2, new KeyValuePair<int, int>(0, 0) }
+                {  2, new Tuple<int, int>(0, 0) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -533,11 +534,11 @@ namespace ImagePipeline.Tests.Memory
             _stats.Refresh();
             Assert.AreEqual(6, _stats.FreeBytes);
             Assert.AreEqual(2, _stats.UsedBytes);
-            var testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            var testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  2, new KeyValuePair<int, int>(1, 0) },
-                {  4, new KeyValuePair<int, int>(0, 0) },
-                {  6, new KeyValuePair<int, int>(0, 1) }
+                {  2, new Tuple<int, int>(1, 0) },
+                {  4, new Tuple<int, int>(0, 0) },
+                {  6, new Tuple<int, int>(0, 1) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));
@@ -547,11 +548,11 @@ namespace ImagePipeline.Tests.Memory
             _stats.Refresh();
             Assert.AreEqual(0, _stats.FreeBytes);
             Assert.AreEqual(2, _stats.UsedBytes);
-            testStat = new Dictionary<int, KeyValuePair<int, int>>()
+            testStat = new Dictionary<int, Tuple<int, int>>()
             {
-                {  2, new KeyValuePair<int, int>(1, 0) },
-                {  4, new KeyValuePair<int, int>(0, 0) },
-                {  6, new KeyValuePair<int, int>(0, 0) }
+                {  2, new Tuple<int, int>(1, 0) },
+                {  4, new Tuple<int, int>(0, 0) },
+                {  6, new Tuple<int, int>(0, 0) }
             };
 
             Assert.IsTrue(testStat.All(e => _stats.BucketStats.Contains(e)));

@@ -37,7 +37,7 @@ namespace ImagePipeline.Request
                 {
                     if (_sourceFile == null)
                     {
-                        _sourceFile = new DirectoryInfo(SourceUri.AbsoluteUri);
+                        _sourceFile = new DirectoryInfo(SourceUri.LocalPath);
                     }
 
                     return _sourceFile;

@@ -1,7 +1,6 @@
 ﻿using ImageUtils;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
@@ -71,24 +70,24 @@ namespace ImagePipelineBase.Tests.ImageUtils
                 new Uri("ms-appx:///Assets/ImageUtils/pngs/1.png"));
             using (var stream = await file1.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(240, 181), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(240, 181), dimensions);
             }
 
             var file2 = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/ImageUtils/pngs/2.png"));
             using (var stream = await file2.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(240, 246), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(240, 246), dimensions);
             }
 
             var file3 = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/ImageUtils/pngs/3.png"));
             using (var stream = await file3.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(240, 180), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(240, 180), dimensions);
             }
         }
 
@@ -102,24 +101,24 @@ namespace ImagePipelineBase.Tests.ImageUtils
                 new Uri("ms-appx:///Assets/ImageUtils/jpegs/1.jpeg"));
             using (var stream = await file1.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(240, 181), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(240, 181), dimensions);
             }
 
             var file2 = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/ImageUtils/jpegs/2.jpeg"));
             using (var stream = await file2.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(240, 93), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(240, 93), dimensions);
             }
 
             var file3 = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/ImageUtils/jpegs/3.jpeg"));
             using (var stream = await file3.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(240, 240), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(240, 240), dimensions);
             }
         }
 
@@ -133,8 +132,8 @@ namespace ImagePipelineBase.Tests.ImageUtils
                 new Uri("ms-appx:///Assets/ImageUtils/jpegs/1cut.jpeg"));
             using (var stream = await file.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(240, 181), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(240, 181), dimensions);
             }
         }
 
@@ -148,16 +147,16 @@ namespace ImagePipelineBase.Tests.ImageUtils
                 new Uri("ms-appx:///Assets/ImageUtils/jpegs/1prog.jpeg"));
             using (var stream = await file1.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(981, 657), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(981, 657), dimensions);
             }
 
             var file2 = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/ImageUtils/jpegs/2prog.jpeg"));
             using (var stream = await file2.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(800, 531), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(800, 531), dimensions);
             }
         }
 
@@ -171,24 +170,24 @@ namespace ImagePipelineBase.Tests.ImageUtils
                 new Uri("ms-appx:///Assets/ImageUtils/gifs/1.gif"));
             using (var stream = await file1.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(240, 181), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(240, 181), dimensions);
             }
 
             var file2 = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/ImageUtils/gifs/2.gif"));
             using (var stream = await file2.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(240, 246), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(240, 246), dimensions);
             }
 
             var file3 = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/ImageUtils/gifs/3.gif"));
             using (var stream = await file3.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(240, 180), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(240, 180), dimensions);
             }
         }
 
@@ -202,16 +201,16 @@ namespace ImagePipelineBase.Tests.ImageUtils
                 new Uri("ms-appx:///Assets/ImageUtils/animatedgifs/1.gif"));
             using (var stream = await file1.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(500, 500), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(500, 500), dimensions);
             }
 
             var file2 = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/ImageUtils/animatedgifs/2.gif"));
             using (var stream = await file2.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(550, 400), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(550, 400), dimensions);
             }
         }
 
@@ -225,24 +224,24 @@ namespace ImagePipelineBase.Tests.ImageUtils
                 new Uri("ms-appx:///Assets/ImageUtils/bmps/1.bmp"));
             using (var stream = await file1.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(240, 181), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(240, 181), dimensions);
             }
 
             var file2 = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/ImageUtils/bmps/2.bmp"));
             using (var stream = await file2.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(240, 246), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(240, 246), dimensions);
             }
 
             var file3 = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/ImageUtils/bmps/3.bmp"));
             using (var stream = await file3.OpenReadAsync())
             {
-                KeyValuePair<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
-                Assert.AreEqual(new KeyValuePair<int, int>(240, 180), dimensions);
+                Tuple<int, int> dimensions = await BitmapUtil.DecodeDimensionsAsync(stream.AsStream());
+                Assert.AreEqual(new Tuple<int, int>(240, 180), dimensions);
             }
         }
     }

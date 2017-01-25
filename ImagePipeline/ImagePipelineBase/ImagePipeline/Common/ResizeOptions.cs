@@ -37,12 +37,39 @@ namespace ImagePipeline.Common
         }
 
         /// <summary>
-        /// Gets the hash code for width, height
+        /// Calculates the hash code basing on width and height
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode()
         {
             return HashCodeUtil.HashCode(Width, Height);
+        }
+
+        /// <summary>
+        /// Compares with other ResizeOptions objects
+        /// </summary>
+        public override bool Equals(object other)
+        {
+            if (other == this)
+            {
+                return true;
+            }
+
+            if (other.GetType() != typeof(ResizeOptions))
+            {
+                return false;
+            }
+
+            ResizeOptions that = (ResizeOptions)other;
+            return Width == that.Width && Height == that.Height;
+        }
+
+        /// <summary>
+        /// Provides the custom ToString method
+        /// </summary>
+        public override string ToString()
+        {
+            return string.Format("{0}x{1}", Width, Height);
         }
     }
 }

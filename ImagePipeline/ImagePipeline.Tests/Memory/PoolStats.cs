@@ -1,4 +1,5 @@
 ﻿using ImagePipeline.Memory;
+using System;
 using System.Collections.Generic;
 
 namespace ImagePipeline.Tests.Memory
@@ -36,7 +37,7 @@ namespace ImagePipeline.Tests.Memory
         /// <summary>
         /// Keep track of bucket stats
         /// </summary>
-        public Dictionary<int, KeyValuePair<int, int>> BucketStats { get; set; }
+        public Dictionary<int, Tuple<int, int>> BucketStats { get; set; }
 
         /// <summary>
         /// Constructor
@@ -44,7 +45,7 @@ namespace ImagePipeline.Tests.Memory
         public PoolStats(BasePool<T> pool)
         {
             Pool = pool;
-            BucketStats = new Dictionary<int, KeyValuePair<int, int>>();
+            BucketStats = new Dictionary<int, Tuple<int, int>>();
         }
 
         /// <summary>
@@ -85,7 +86,7 @@ namespace ImagePipeline.Tests.Memory
             {
                 int bucketedSize = entry.Key;
                 Bucket<T> bucket = entry.Value;
-                BucketStats.Add(bucketedSize, new KeyValuePair<int, int>(bucket.GetInUseCount(), bucket.GetFreeListSize()));
+                BucketStats.Add(bucketedSize, new Tuple<int, int>(bucket.GetInUseCount(), bucket.GetFreeListSize()));
             }
         }
     }

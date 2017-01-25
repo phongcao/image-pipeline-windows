@@ -1,6 +1,7 @@
 ﻿using FBCore.Common.Internal;
 using FBCore.Concurrency;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FBCore.DataSource
 {
@@ -61,7 +62,7 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Custom Equals method
+        /// Compares with other IncreasingQualityDataSourceSupplier objects
         /// </summary>
         /// <param name="other"></param>
         public override bool Equals(object other)
@@ -77,7 +78,7 @@ namespace FBCore.DataSource
             }
 
             IncreasingQualityDataSourceSupplier<T> that = (IncreasingQualityDataSourceSupplier<T>)other;
-            return Equals(_dataSourceSuppliers, that._dataSourceSuppliers);
+            return _dataSourceSuppliers.SequenceEqual(that._dataSourceSuppliers);
         }
 
         /// <summary>

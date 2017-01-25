@@ -133,7 +133,7 @@ namespace ImagePipeline.Tests.Producers
                 .Build();
             _producerContext = new SettableProducerContext(
                 _imageRequest,
-                _imageRequest.SourceUri.AbsoluteUri,
+                _imageRequest.SourceUri.ToString(),
                 _producerListener,
                 new object(),
                 RequestLevel.FULL_FETCH,
@@ -147,7 +147,7 @@ namespace ImagePipeline.Tests.Producers
             _completion.WaitOne();
 
             Assert.IsTrue(_onProducerFinishWithFailureFuncCalls == 1);
-            Assert.AreEqual(_internalRequestId, _imageRequest.SourceUri.AbsoluteUri);
+            Assert.AreEqual(_internalRequestId, _imageRequest.SourceUri.ToString());
             Assert.AreEqual(_internalProducerName, NetworkFetchProducer.PRODUCER_NAME);
             Assert.IsNotNull(_internalError);
             Assert.IsNull(_internalExtraMap);
@@ -165,7 +165,7 @@ namespace ImagePipeline.Tests.Producers
                 .Build();
             _producerContext = new SettableProducerContext(
                 _imageRequest,
-                $"{ _imageRequest.SourceUri.AbsoluteUri }1",
+                $"{ _imageRequest.SourceUri.ToString() }1",
                 _producerListener,
                 new object(),
                 RequestLevel.FULL_FETCH,
@@ -194,7 +194,7 @@ namespace ImagePipeline.Tests.Producers
                 .Build();
             _producerContext = new SettableProducerContext(
                 _imageRequest,
-                $"{ _imageRequest.SourceUri.AbsoluteUri }2",
+                $"{ _imageRequest.SourceUri.ToString() }2",
                 _producerListener,
                 new object(),
                 RequestLevel.FULL_FETCH,

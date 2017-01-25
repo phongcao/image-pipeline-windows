@@ -123,14 +123,27 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\BitmapMemoryCacheFactory.cs" />
+    <Compile Include="Cache\BitmapMemoryCacheKey.cs" />
     <Compile Include="Cache\BufferedDiskCache.cs" />
+    <Compile Include="Cache\DefaultBitmapMemoryCacheParamsSupplier.cs" />
+    <Compile Include="Cache\DefaultCacheKeyFactory.cs" />
+    <Compile Include="Cache\DefaultEncodedMemoryCacheParamsSupplier.cs" />
+    <Compile Include="Cache\EncodedCountingMemoryCacheFactory.cs" />
+    <Compile Include="Cache\EncodedMemoryCacheFactory.cs" />
+    <Compile Include="Cache\ICacheKeyFactory.cs" />
     <Compile Include="Cache\IImageCacheStatsTracker.cs" />
+    <Compile Include="Cache\IMemoryCacheTracker.cs" />
+    <Compile Include="Cache\InstrumentedMemoryCache.cs" />
+    <Compile Include="Cache\MemoryCacheTrackerImpl.cs" />
+    <Compile Include="Cache\NativeMemoryCacheTrimStrategy.cs" />
     <Compile Include="Cache\NoOpImageCacheStatsTracker.cs" />
     <Compile Include="Cache\StagingArea.cs" />
     <Compile Include="Core\DiskStorageCacheFactory.cs" />
     <Compile Include="Core\DynamicDefaultDiskStorageFactory.cs" />
     <Compile Include="Core\IDiskStorageFactory.cs" />
     <Compile Include="Core\IFileCacheFactory.cs" />
+    <Compile Include="Core\ProducerFactory.cs" />
     <Compile Include="Datasource\AbstractProducerToDataSourceAdapter.cs" />
     <Compile Include="Datasource\BaseBitmapDataSubscriber.cs" />
     <Compile Include="Datasource\BaseListBitmapDataSubscriber.cs" />

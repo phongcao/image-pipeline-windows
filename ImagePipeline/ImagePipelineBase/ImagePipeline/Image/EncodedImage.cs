@@ -4,7 +4,6 @@ using ImageFormatUtils;
 using ImagePipeline.Memory;
 using ImageUtils;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -280,12 +279,12 @@ namespace ImagePipeline.Image
             // dimensions
             if (!ImageFormatHelper.IsWebpFormat(Format))
             {
-                KeyValuePair<int, int> dimensions = 
+                Tuple<int, int> dimensions = 
                     await BitmapUtil.DecodeDimensionsAsync(GetInputStream()).ConfigureAwait(false);
-                if (!dimensions.Equals(default(KeyValuePair<int, int>)))
+                if (!dimensions.Equals(default(Tuple<int, int>)))
                 {
-                    Width = dimensions.Key;
-                    Height = dimensions.Value;
+                    Width = dimensions.Item1;
+                    Height = dimensions.Item2;
 
                     // Load the rotation angle only if we have the dimensions
                     if (Format == ImageFormat.JPEG)

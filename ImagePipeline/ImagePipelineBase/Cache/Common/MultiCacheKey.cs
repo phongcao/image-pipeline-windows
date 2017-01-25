@@ -1,20 +1,23 @@
 ﻿using FBCore.Common.Internal;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cache.Common
 {
     /// <summary>
     /// A cache key that wraps multiple cache keys.
     ///
-    /// Note: <code> equals</code> and <code> hashcode</code> are implemented in a way that two MultiCacheKeys are
-    /// equal if and only if the underlying list of cache keys is equal. That implies AllOf semantics.
-    /// Unfortunately, it is not possible to implement AnyOf semantics for <code> equals</code> because the
-    /// transitivity requirement wouldn't be satisfied. I.e. we would have:
+    /// Note: <code>Equals</code> and <code>GetHashcode</code> are implemented in a way 
+    /// that two MultiCacheKeys are equal if and only if the underlying list of cache keys 
+    /// is equal. That implies AllOf semantics. Unfortunately, it is not possible to implement 
+    /// AnyOf semantics for <code>Equals</code> because the transitivity requirement wouldn't 
+    /// be satisfied. I.e. we would have:
     /// {A} = {A, B}, {A, B} = {B}, but {A} != {B}.
     ///
-    /// It is fine to use this key with AnyOf semantics, but one should be aware of <code> equals</code> and
-    /// <code> hashcode</code> behavior, and should implement AnyOf logic manually.
+    /// It is fine to use this key with AnyOf semantics, but one should be aware of 
+    /// <code>Equals</code> and <code>GetHashcode</code> behavior, and should implement AnyOf 
+    /// logic manually.
     /// </summary>
     public class MultiCacheKey : ICacheKey
     {
@@ -64,7 +67,7 @@ namespace Cache.Common
             if (o.GetType() == typeof(MultiCacheKey)) 
             {
                 MultiCacheKey otherKey = (MultiCacheKey)o;
-                return _cacheKeys.Equals(otherKey._cacheKeys);
+                return _cacheKeys.SequenceEqual(otherKey._cacheKeys);
             }
 
             return false;

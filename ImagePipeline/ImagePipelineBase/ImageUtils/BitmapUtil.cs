@@ -1,6 +1,5 @@
 ﻿using FBCore.Common.Internal;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -83,7 +82,7 @@ namespace ImageUtils
         /// <param name="bytes">the input byte array of the image</param>
         /// @return dimensions of the image
         /// </summary>
-        public static async Task<KeyValuePair<int, int>> DecodeDimensionsAsync(byte[] bytes)
+        public static async Task<Tuple<int, int>> DecodeDimensionsAsync(byte[] bytes)
         {
             // Wrapping with ByteArrayInputStream is cheap and we don't have duplicate implementation
             return await DecodeDimensionsAsync(new MemoryStream(bytes)).ConfigureAwait(false);
@@ -95,19 +94,19 @@ namespace ImageUtils
         /// <param name="inputStream">the InputStream containing the image data</param>
         /// @return dimensions of the image
         /// </summary>
-        public static async Task<KeyValuePair<int, int>> DecodeDimensionsAsync(Stream inputStream)
+        public static async Task<Tuple<int, int>> DecodeDimensionsAsync(Stream inputStream)
         {
             Preconditions.CheckNotNull(inputStream);
             try
             {
                 BitmapDecoder decoder = 
                     await BitmapDecoder.CreateAsync(inputStream.AsRandomAccessStream());
-                return new KeyValuePair<int, int>(
+                return new Tuple<int, int>(
                     (int)decoder.OrientedPixelWidth, (int)decoder.OrientedPixelHeight);
             }
             catch (Exception)
             {
-                return default(KeyValuePair<int, int>);
+                return default(Tuple<int, int>);
             }   
         }
 

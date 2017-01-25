@@ -95,9 +95,12 @@ namespace ImagePipeline.Request
         /// The default implementation of the CacheKey for a Postprocessor is null
         /// @return The CacheKey to use for caching. Not used if null
         /// </summary>
-        public ICacheKey GetPostprocessorCacheKey()
+        public ICacheKey PostprocessorCacheKey
         {
-            return null;
+            get
+            {
+                return null;
+            }
         }
     }
 }
