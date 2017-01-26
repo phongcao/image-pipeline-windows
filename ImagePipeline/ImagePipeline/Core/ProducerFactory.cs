@@ -1,4 +1,5 @@
 ﻿using Cache.Common;
+using FBCore.Common.References;
 using ImagePipeline.Bitmaps;
 using ImagePipeline.Cache;
 using ImagePipeline.Decoder;
@@ -96,12 +97,31 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Instantiates the <see cref="AddImageTransformMetaDataProducer"/>
         /// </summary>
-        /// <param name="inputProducer"></param>
-        /// <returns></returns>
+        /// <param name="inputProducer">The input producer.</param>
         public static AddImageTransformMetaDataProducer NewAddImageTransformMetaDataProducer(
             IProducer<EncodedImage> inputProducer)
         {
             return new AddImageTransformMetaDataProducer(inputProducer);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="BitmapMemoryCacheGetProducer"/>
+        /// </summary>
+        /// <param name="inputProducer">The input producer.</param>
+        public BitmapMemoryCacheGetProducer NewBitmapMemoryCacheGetProducer(
+            IProducer<CloseableReference<CloseableImage>> inputProducer)
+        {
+            return new BitmapMemoryCacheGetProducer(_bitmapMemoryCache, _cacheKeyFactory, inputProducer);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="BitmapMemoryCacheProducer"/>
+        /// </summary>
+        /// <param name="inputProducer">The input producer.</param>
+        public BitmapMemoryCacheProducer NewBitmapMemoryCacheProducer(
+            IProducer<CloseableReference<CloseableImage>> inputProducer)
+        {
+            return new BitmapMemoryCacheProducer(_bitmapMemoryCache, _cacheKeyFactory, inputProducer);
         }
     }
 }

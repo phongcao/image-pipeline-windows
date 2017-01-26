@@ -163,6 +163,7 @@
     <Compile Include="Producers\BaseNetworkFetcher.cs" />
     <Compile Include="Producers\BaseProducerContext.cs" />
     <Compile Include="Producers\BaseProducerContextCallbacks.cs" />
+    <Compile Include="Producers\BitmapMemoryCacheGetProducer.cs" />
     <Compile Include="Producers\BitmapMemoryCacheProducer.cs" />
     <Compile Include="Producers\FetchState.cs" />
     <Compile Include="Producers\HttpUrlConnectionNetworkFetcher.cs" />

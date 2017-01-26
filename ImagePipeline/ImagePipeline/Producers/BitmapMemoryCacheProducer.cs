@@ -107,7 +107,7 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Wraps the target consumer by the BitmapMemoryCacheConsumer
         /// </summary>
-        protected IConsumer<CloseableReference<CloseableImage>> WrapConsumer(
+        protected virtual IConsumer<CloseableReference<CloseableImage>> WrapConsumer(
             IConsumer<CloseableReference<CloseableImage>> consumer,
             ICacheKey cacheKey)
         {
@@ -120,7 +120,7 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Gets the producer name
         /// </summary>
-        protected string ProducerName
+        protected virtual string ProducerName
         {
             get
             {
