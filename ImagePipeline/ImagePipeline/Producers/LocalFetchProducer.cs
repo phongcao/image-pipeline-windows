@@ -1,0 +1,137 @@
+﻿using FBCore.Common.Internal;
+using FBCore.Common.References;
+using FBCore.Concurrency;
+using ImagePipeline.Image;
+using ImagePipeline.Memory;
+using ImagePipeline.Request;
+using System.IO;
+
+namespace ImagePipeline.Producers
+{
+    /// <summary>
+    /// Represents a local fetch producer.
+    /// </summary>
+    public abstract class LocalFetchProducer : IProducer<EncodedImage>
+    {
+        private readonly IExecutorService _executor;
+        private readonly IPooledByteBufferFactory _pooledByteBufferFactory;
+
+        /// <summary>
+        /// Instantiates the <see cref="LocalFetchProducer"/>
+        /// </summary>
+        protected LocalFetchProducer(
+            IExecutorService executor,
+            IPooledByteBufferFactory pooledByteBufferFactory)
+        {
+            _executor = executor;
+            _pooledByteBufferFactory = pooledByteBufferFactory;
+        }
+
+        /// <summary>
+        /// Start producing results for given context. Provided consumer is notified whenever 
+        /// progress is made (new value is ready or error occurs).
+        /// </summary>
+        public void ProduceResults(
+            IConsumer<EncodedImage> consumer,
+            IProducerContext producerContext)
+        {
+
+            IProducerListener listener = producerContext.Listener;
+            string requestId = producerContext.Id;
+            ImageRequest imageRequest = producerContext.ImageRequest;
+            StatefulProducerRunnable<EncodedImage> cancellableProducerRunnable =
+                new StatefulProducerRunnableImpl<EncodedImage>(
+                    consumer,
+                    listener,
+                    ProducerName,
+                    requestId,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    (result) =>
+                    {
+                        EncodedImage.CloseSafely(result);
+                    },
+                    () =>
+                    {
+                        EncodedImage encodedImage = GetEncodedImage(imageRequest);
+                        if (encodedImage == null)
+                        {
+                            return null;
+                        }
+
+                        encodedImage.ParseMetaDataAsync().GetAwaiter().GetResult();
+                        return encodedImage;
+                    });
+
+            producerContext.AddCallbacks(
+                new BaseProducerContextCallbacks(
+                    () =>
+                    {
+                        cancellableProducerRunnable.Cancel();
+                    },
+                    () => { },
+                    () => { },
+                    () => { }));
+
+            _executor.Execute(cancellableProducerRunnable.Runnable);
+        }
+
+        /// <summary>
+        /// Creates a memory-backed encoded image from the stream. The stream is closed.
+        /// </summary>
+        protected EncodedImage GetByteBufferBackedEncodedImage(
+            Stream inputStream, 
+            int length)
+        {
+            var reference = default(CloseableReference<IPooledByteBuffer>);
+            try
+            {
+                if (length <= 0)
+                {
+                    reference = CloseableReference<IPooledByteBuffer>.of(
+                        _pooledByteBufferFactory.NewByteBuffer(inputStream));
+                }
+                else
+                {
+                    reference = CloseableReference<IPooledByteBuffer>.of(
+                        _pooledByteBufferFactory.NewByteBuffer(inputStream, length));
+                }
+
+                return new EncodedImage(reference);
+            }
+            finally
+            {
+                Closeables.CloseQuietly(inputStream);
+                CloseableReference<IPooledByteBuffer>.CloseSafely(reference);
+            }
+        }
+
+        /// <summary>
+        /// Gets the encoded image.
+        /// </summary>
+        protected EncodedImage GetEncodedImage(
+            Stream inputStream,
+            int length)
+        {
+            return GetByteBufferBackedEncodedImage(inputStream, length);
+        }
+
+        /// <summary>
+        /// Gets an encoded image from the local resource. It can be either backed 
+        /// by a FileStream or a PooledByteBuffer
+        /// <param name="imageRequest">Request that includes the local resource that 
+        /// is being accessed</param>
+        /// @throws IOException
+        /// </summary>
+        protected abstract EncodedImage GetEncodedImage(ImageRequest imageRequest);
+
+        /// <summary>
+        /// The name of the Producer
+        /// </summary>
+        protected abstract string ProducerName { get; }
+    }
+}

@@ -133,5 +133,25 @@ namespace ImagePipeline.Core
         {
             return new BitmapMemoryCacheProducer(_bitmapMemoryCache, _cacheKeyFactory, inputProducer);
         }
+
+        /// <summary>
+        /// Instantiates the <see cref="BranchOnSeparateImagesProducer"/>
+        /// </summary>
+        /// <param name="inputProducer1">The first input producer.</param>
+        /// <param name="inputProducer2">The second input producer.</param>
+        public static BranchOnSeparateImagesProducer NewBranchOnSeparateImagesProducer(
+            IProducer<EncodedImage> inputProducer1,
+            IProducer<EncodedImage> inputProducer2)
+        {
+            return new BranchOnSeparateImagesProducer(inputProducer1, inputProducer2);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="DataFetchProducer"/>
+        /// </summary>
+        public DataFetchProducer NewDataFetchProducer()
+        {
+            return new DataFetchProducer(_pooledByteBufferFactory, _decodeFileDescriptorEnabled);
+        }
     }
 }

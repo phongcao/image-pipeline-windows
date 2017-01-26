@@ -166,12 +166,15 @@
     <Compile Include="Producers\BitmapMemoryCacheGetProducer.cs" />
     <Compile Include="Producers\BitmapMemoryCacheKeyMultiplexProducer.cs" />
     <Compile Include="Producers\BitmapMemoryCacheProducer.cs" />
+    <Compile Include="Producers\BranchOnSeparateImagesProducer.cs" />
+    <Compile Include="Producers\DataFetchProducer.cs" />
     <Compile Include="Producers\FetchState.cs" />
     <Compile Include="Producers\HttpUrlConnectionNetworkFetcher.cs" />
     <Compile Include="Producers\INetworkFetcher.cs" />
     <Compile Include="Producers\IProducer.cs" />
     <Compile Include="Producers\IProducerContext.cs" />
     <Compile Include="Producers\IProducerContextCallbacks.cs" />
+    <Compile Include="Producers\LocalFetchProducer.cs" />
     <Compile Include="Producers\MultiplexProducer.cs" />
     <Compile Include="Producers\NetworkFetchProducer.cs" />
     <Compile Include="Producers\NullProducer.cs" />
@@ -219,6 +222,7 @@
     <Compile Include="Producers\StatefulProducerRunnableImpl.cs" />
     <Compile Include="Producers\ThreadHandoffProducer.cs" />
     <Compile Include="Producers\ThreadHandoffProducerQueue.cs" />
+    <Compile Include="Producers\ThumbnailSizeChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\BasePostprocessor.cs" />
     <Compile Include="Request\BaseRepeatedPostprocessor.cs" />
