@@ -148,8 +148,8 @@ namespace ImagePipeline.Producers
                 ICacheKey cacheKey) : 
                 base(consumer)
             {
-                _cacheKey = cacheKey;
                 _memoryCache = memoryCache;
+                _cacheKey = cacheKey;
             }
 
             protected override void OnNewResultImpl(

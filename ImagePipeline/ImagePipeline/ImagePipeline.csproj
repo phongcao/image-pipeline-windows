@@ -168,6 +168,9 @@
     <Compile Include="Producers\BitmapMemoryCacheProducer.cs" />
     <Compile Include="Producers\BranchOnSeparateImagesProducer.cs" />
     <Compile Include="Producers\DataFetchProducer.cs" />
+    <Compile Include="Producers\DecodeProducer.cs" />
+    <Compile Include="Producers\EncodedCacheKeyMultiplexProducer.cs" />
+    <Compile Include="Producers\EncodedMemoryCacheProducer.cs" />
     <Compile Include="Producers\FetchState.cs" />
     <Compile Include="Producers\HttpUrlConnectionNetworkFetcher.cs" />
     <Compile Include="Producers\INetworkFetcher.cs" />

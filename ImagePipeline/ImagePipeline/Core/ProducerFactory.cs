@@ -153,5 +153,46 @@ namespace ImagePipeline.Core
         {
             return new DataFetchProducer(_pooledByteBufferFactory, _decodeFileDescriptorEnabled);
         }
+
+        /// <summary>
+        /// Instantiates the <see cref="DecodeProducer"/>
+        /// </summary>
+        /// <param name="inputProducer">The input producer.</param>
+        public DecodeProducer NewDecodeProducer(IProducer<EncodedImage> inputProducer)
+        {
+            return new DecodeProducer(
+                _byteArrayPool,
+                _executorSupplier.ForDecode,
+                _imageDecoder,
+                _progressiveJpegConfig,
+                _downsampleEnabled,
+                _resizeAndRotateEnabledForNetwork,
+                inputProducer);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="EncodedCacheKeyMultiplexProducer"/>
+        /// </summary>
+        /// <param name="inputProducer">The input producer.</param>
+        public EncodedCacheKeyMultiplexProducer NewEncodedCacheKeyMultiplexProducer(
+            IProducer<EncodedImage> inputProducer)
+        {
+            return new EncodedCacheKeyMultiplexProducer(
+                _cacheKeyFactory,
+                inputProducer);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="EncodedMemoryCacheProducer"/>
+        /// </summary>
+        /// <param name="inputProducer">The input producer.</param>
+        public EncodedMemoryCacheProducer NewEncodedMemoryCacheProducer(
+            IProducer<EncodedImage> inputProducer)
+        {
+            return new EncodedMemoryCacheProducer(
+                _encodedMemoryCache,
+                _cacheKeyFactory,
+                inputProducer);
+        }
     }
 }
