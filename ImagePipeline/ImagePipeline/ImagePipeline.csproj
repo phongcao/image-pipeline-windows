@@ -164,6 +164,7 @@
     <Compile Include="Producers\BaseProducerContext.cs" />
     <Compile Include="Producers\BaseProducerContextCallbacks.cs" />
     <Compile Include="Producers\BitmapMemoryCacheGetProducer.cs" />
+    <Compile Include="Producers\BitmapMemoryCacheKeyMultiplexProducer.cs" />
     <Compile Include="Producers\BitmapMemoryCacheProducer.cs" />
     <Compile Include="Producers\FetchState.cs" />
     <Compile Include="Producers\HttpUrlConnectionNetworkFetcher.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Producers\IProducer.cs" />
     <Compile Include="Producers\IProducerContext.cs" />
     <Compile Include="Producers\IProducerContextCallbacks.cs" />
+    <Compile Include="Producers\MultiplexProducer.cs" />
     <Compile Include="Producers\NetworkFetchProducer.cs" />
     <Compile Include="Producers\NullProducer.cs" />
     <Compile Include="Producers\ProducerImpl.cs" />

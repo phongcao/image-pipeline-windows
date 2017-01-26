@@ -62,7 +62,7 @@ namespace ImagePipeline.Tests.Producers
         /// <summary>
         /// Tests out the callback with success
         /// </summary>
-        [TestMethod, Timeout(3000)]
+        [TestMethod, Timeout(5000)]
         public void TestFetchSendsSuccessToCallback()
         {
             ManualResetEvent completion = new ManualResetEvent(false);

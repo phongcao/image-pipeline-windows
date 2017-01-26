@@ -59,9 +59,9 @@ namespace ImagePipeline.Listener
         }
 
         /// <summary>
-        /// Called whenever a producer starts processing unit of work. This method might be called multiple
-        /// times, but between any two consecutive calls to onProducerStart onProducerFinishWithSuccess
-        /// will be called exactly once.
+        /// Called whenever a producer starts processing unit of work. This method 
+        /// might be called multiple times, but between any two consecutive calls to 
+        /// OnProducerStart OnProducerFinishWithSuccess will be called exactly once.
         /// </summary>
         public void OnProducerStart(string requestId, string producerName)
         {
@@ -84,8 +84,8 @@ namespace ImagePipeline.Listener
         ///
         /// <param name="requestId">Request id</param>
         /// <param name="producerName">Producer name</param>
-        /// <param name="extraMap">Additional parameters about the producer. This map is immutable and will</param>
-        /// throw an exception if attempts are made to modify it.
+        /// <param name="extraMap">Additional parameters about the producer. This map is 
+        /// immutable and will throw an exception if attempts are made to modify it.</param>
         /// </summary>
         public void OnProducerFinishWithSuccess(
             string requestId, 
@@ -111,9 +111,9 @@ namespace ImagePipeline.Listener
         ///
         /// <param name="requestId">Request id</param>
         /// <param name="producerName">Producer name</param>
-        /// <param name="extraMap">Additional parameters about the producer. This map is immutable and will</param>
+        /// <param name="extraMap">Additional parameters about the producer. This map is 
+        /// immutable and will throw an exception if attempts are made to modify it.</param>
         /// <param name="error">Error</param>
-        /// throw an exception if attempts are made to modify it.
         /// </summary>
         public void OnProducerFinishWithFailure(
             string requestId,
@@ -140,8 +140,8 @@ namespace ImagePipeline.Listener
         ///
         /// <param name="requestId">Request id</param>
         /// <param name="producerName">Producer name</param>
-        /// <param name="extraMap">Additional parameters about the producer. This map is immutable and will</param>
-        /// throw an exception if attempts are made to modify it.
+        /// <param name="extraMap">Additional parameters about the producer. This map is 
+        /// immutable and will throw an exception if attempts are made to modify it.</param>
         /// </summary>
         public void OnProducerFinishWithCancellation(
             string requestId, 
@@ -163,9 +163,9 @@ namespace ImagePipeline.Listener
         }
 
         /// <summary>
-        /// Called whenever an important producer-specific event occurs. This may only be called if
-        /// onProducerStart has been called, but corresponding OnProducerFinishWith method has not been
-        /// called yet.
+        /// Called whenever an important producer-specific event occurs. This may only 
+        /// be called if OnProducerStart has been called, but corresponding 
+        /// OnProducerFinishWith method has not been called yet.
         /// </summary>
         public void OnProducerEvent(
             string requestId, 

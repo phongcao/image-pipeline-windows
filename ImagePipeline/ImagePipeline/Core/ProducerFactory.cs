@@ -115,6 +115,16 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
+        /// Instantiates the <see cref="BitmapMemoryCacheKeyMultiplexProducer"/>
+        /// </summary>
+        /// <param name="inputProducer">The input producer.</param>
+        public BitmapMemoryCacheKeyMultiplexProducer NewBitmapMemoryCacheKeyMultiplexProducer(
+            IProducer<CloseableReference<CloseableImage>> inputProducer)
+        {
+            return new BitmapMemoryCacheKeyMultiplexProducer(_cacheKeyFactory, inputProducer);
+        }
+
+        /// <summary>
         /// Instantiates the <see cref="BitmapMemoryCacheProducer"/>
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>

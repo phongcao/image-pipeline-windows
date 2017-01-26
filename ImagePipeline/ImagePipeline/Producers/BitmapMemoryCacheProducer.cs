@@ -4,6 +4,7 @@ using ImagePipeline.Cache;
 using ImagePipeline.Image;
 using ImagePipeline.Request;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace ImagePipeline.Producers
 {
@@ -63,7 +64,9 @@ namespace ImagePipeline.Producers
                     listener.OnProducerFinishWithSuccess(
                         requestId,
                         ProducerName,
-                        listener.RequiresExtraMap(requestId) ? extraMap : null);
+                        listener.RequiresExtraMap(requestId) ? 
+                        new ReadOnlyDictionary<string, string>(extraMap) : 
+                        null);
                     consumer.OnProgressUpdate(1f);
                 }
 
@@ -85,7 +88,9 @@ namespace ImagePipeline.Producers
                 listener.OnProducerFinishWithSuccess(
                     requestId,
                     ProducerName,
-                    listener.RequiresExtraMap(requestId) ? extraMap : null);
+                    listener.RequiresExtraMap(requestId) ?
+                    new ReadOnlyDictionary<string, string>(extraMap) : 
+                    null);
                 consumer.OnNewResult(null, true);
                 return;
             }
@@ -100,7 +105,9 @@ namespace ImagePipeline.Producers
             listener.OnProducerFinishWithSuccess(
                 requestId,
                 ProducerName,
-                listener.RequiresExtraMap(requestId) ? extraMap : null);
+                listener.RequiresExtraMap(requestId) ?
+                new ReadOnlyDictionary<string, string>(extraMap) : 
+                null);
             _inputProducer.ProduceResults(wrappedConsumer, producerContext);
         }
 
