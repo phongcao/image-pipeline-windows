@@ -1,7 +1,7 @@
 ﻿namespace ImagePipeline.Common
 {
     /// <summary>
-    /// Options for changing the behavior of the <code> ImageDecoder</code>.
+    /// Options for changing the behavior of the ImageDecoder.
     /// </summary>
     public class ImageDecodeOptions
     {

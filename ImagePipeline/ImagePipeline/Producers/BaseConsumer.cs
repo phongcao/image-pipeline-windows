@@ -7,11 +7,11 @@ namespace ImagePipeline.Producers
     /// Base implementation of Consumer that implements error handling conforming to the
     /// Consumer's contract.
     ///
-    /// <para /> This class also prevents execution of callbacks if one of final methods was called before:
-    /// OnFinish(isLast = true), onFailure or onCancellation.
+    /// <para /> This class also prevents execution of callbacks if one of final methods 
+    /// was called before: OnFinish(isLast = true), OnFailure or OnCancellation.
     ///
-    /// <para /> All callbacks are executed within a synchronized block, so that clients can act as if all
-    /// callbacks are called on single thread.
+    /// <para /> All callbacks are executed within a synchronized block, so that clients 
+    /// can act as if all callbacks are called on single thread.
     ///
     /// </summary>
     public abstract class BaseConsumer<T> : IConsumer<T>
@@ -19,8 +19,8 @@ namespace ImagePipeline.Producers
         private readonly object _gate = new object();
 
         /// <summary>
-        /// Set to true when OnNewResult(isLast = true), OnFailure or OnCancellation is called. Further
-        /// calls to any of the 3 methods are not propagated
+        /// Set to true when OnNewResult(isLast = true), OnFailure or OnCancellation is 
+        /// called. Further calls to any of the 3 methods are not propagated
         /// </summary>
         private bool _isFinished;
 
@@ -33,14 +33,16 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called by a producer whenever new data is produced. This method should not throw an exception.
+        /// Called by a producer whenever new data is produced. This method should not 
+        /// throw an exception.
         ///
-        /// <para /> In case when result is closeable resource producer will close it after onNewResult returns.
-        /// Consumer needs to make copy of it if the resource must be accessed after that. Fortunately,
-        /// with CloseableReferences, that should not impose too much overhead.
+        /// <para /> In case when result is closeable resource producer will close it 
+        /// after OnNewResult returns. Consumer needs to make copy of it if the resource 
+        /// must be accessed after that. Fortunately, with CloseableReferences, that 
+        /// should not impose too much overhead.
         ///
-        /// <param name="newResult"></param>
-        /// <param name="isLast">true if newResult is the last result</param>
+        /// <param name="newResult">The result provided by the producer</param>
+        /// <param name="isLast">True if newResult is the last result</param>
         /// </summary>
         public void OnNewResult(T newResult, bool isLast)
         {
@@ -65,8 +67,8 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called by a producer whenever it terminates further work due to Throwable being thrown. This
-        /// method should not throw an exception.
+        /// Called by a producer whenever it terminates further work due to Throwable 
+        /// being thrown. This method should not throw an exception.
         /// </summary>
         public void OnFailure(Exception error)
         {
@@ -91,7 +93,8 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called by a producer whenever it is cancelled and won't produce any more results
+        /// Called by a producer whenever it is cancelled and won't produce any more 
+        /// results
         /// </summary>
         public void OnCancellation()
         {

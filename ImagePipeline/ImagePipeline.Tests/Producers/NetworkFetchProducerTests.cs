@@ -32,7 +32,6 @@ namespace ImagePipeline.Tests.Producers
         private IConsumer<EncodedImage> _consumer;
         private NetworkFetchProducer _networkFetchProducer;
         private SettableProducerContext _producerContext;
-        private FetchState _fetchState;
         private ManualResetEvent _completion;
         private int _onProducerFinishWithSuccessFuncCalls;
         private int _onProducerFinishWithFailureFuncCalls;
@@ -140,7 +139,6 @@ namespace ImagePipeline.Tests.Producers
                 false,
                 true,
                 Priority.MEDIUM);
-            _fetchState = new FetchState(_consumer, _producerContext);
             _networkFetchProducer.ProduceResults(_consumer, _producerContext);
 
             // Wait for callback
@@ -172,7 +170,6 @@ namespace ImagePipeline.Tests.Producers
                 false,
                 true,
                 Priority.MEDIUM);
-            _fetchState = new FetchState(_consumer, _producerContext);
             _networkFetchProducer.ProduceResults(_consumer, _producerContext);
 
             // Wait for callback
@@ -201,7 +198,6 @@ namespace ImagePipeline.Tests.Producers
                 false,
                 true,
                 Priority.MEDIUM);
-            _fetchState = new FetchState(_consumer, _producerContext);
             _networkFetchProducer.ProduceResults(_consumer, _producerContext);
 
             // Wait for callback

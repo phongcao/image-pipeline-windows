@@ -4,7 +4,7 @@
     /// Building block for image processing in the image pipeline.
     ///
     /// <para /> Execution of image request consists of multiple different tasks such as network fetch,
-    /// disk caching, memory caching, decoding, applying transformations etc. Producer{T} represents
+    /// disk caching, memory caching, decoding, applying transformations etc. IProducer{T} represents
     /// single task whose result is an instance of T. Breaking entire request into sequence of
     /// Producers allows us to construct different requests while reusing the same blocks.
     ///

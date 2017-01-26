@@ -160,6 +160,7 @@
     <Compile Include="ImageFormatUtils\GifFormatChecker.cs" />
     <Compile Include="ImageFormatUtils\ImageFormatHelper.cs" />
     <Compile Include="ImageFormatUtils\ImageFormatChecker.cs" />
+    <Compile Include="ImagePipeline\AnimatedFactory\IAnimatedImageFactory.cs" />
     <Compile Include="ImagePipeline\Bitmaps\BitmapCreationObserverImpl.cs" />
     <Compile Include="ImagePipeline\Bitmaps\IBitmapCreationObserver.cs" />
     <Compile Include="ImagePipeline\Bitmaps\PlatformBitmapFactory.cs" />

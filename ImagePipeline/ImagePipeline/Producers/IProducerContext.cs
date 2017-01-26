@@ -1,18 +1,14 @@
-﻿using ImagePipeline.Common;
-using ImagePipeline.Request;
+﻿using ImagePipeline.Request;
 
 namespace ImagePipeline.Producers
 {
     /// <summary>
     /// Used to pass context information to producers.
     ///
-    /// <para /> Object implementing this interface is passed to all producers participating in pipeline
-    /// request {@see Producer.ProduceResults}. Its responsibility is to instruct producers which image
-    /// should be fetched/decoded/resized/cached etc. This class also handles request cancellation.
-    ///
-    /// <para />  In order to be notified when cancellation is requested, a producer should use the
-    /// <code> RunOnCancellationRequested</code> method which takes an instance of Runnable and executes 
-    /// it when the pipeline client cancels the image request.
+    /// <para /> Object implementing this interface is passed to all producers 
+    /// participating in pipeline request <see cref="IProducer{T}.ProduceResults"/>. 
+    /// Its responsibility is to instruct producers which image should be 
+    /// fetched/decoded/resized/cached etc. This class also handles request cancellation.
     /// </summary>
     public interface IProducerContext
     {

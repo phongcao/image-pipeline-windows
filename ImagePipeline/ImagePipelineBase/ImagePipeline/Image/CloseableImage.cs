@@ -35,7 +35,8 @@ namespace ImagePipeline.Image
 
         /// <summary>
         /// Returns quality information for the image.
-        /// <para /> Image classes that can contain intermediate results should override this as appropriate.
+        /// <para /> Image classes that can contain intermediate results should 
+        /// override this as appropriate.
         /// </summary>
         public virtual IQualityInfo QualityInfo
         {
@@ -46,9 +47,10 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Whether or not this image contains state for a particular view of the image (for example,
-        /// the image for an animated GIF might contain the current frame being viewed). This means
-        /// that the image should not be stored in the bitmap cache.
+        /// Whether or not this image contains state for a particular view of 
+        /// the image (for example, the image for an animated GIF might contain 
+        /// the current frame being viewed). This means that the image should 
+        /// not be stored in the bitmap cache.
         /// </summary>
         public bool Stateful
         {

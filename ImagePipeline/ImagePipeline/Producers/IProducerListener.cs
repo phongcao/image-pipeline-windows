@@ -6,22 +6,22 @@ namespace ImagePipeline.Producers
     /// <summary>
     /// Instrumentation for Producers.
     ///
-    /// <para /> Implementation of a producer should call these methods when appropriate to notify other
-    /// components interested in execution progress.
+    /// <para /> Implementation of a producer should call these methods when appropriate 
+    /// to notify other components interested in execution progress.
     /// </summary>
     public interface IProducerListener
     {
         /// <summary>
-        /// Called whenever a producer starts processing unit of work. This method might be called multiple
-        /// times, but between any two consecutive calls to onProducerStart onProducerFinishWithSuccess
-        /// will be called exactly once.
+        /// Called whenever a producer starts processing unit of work. This method might 
+        /// be called multiple times, but between any two consecutive calls to OnProducerStart 
+        /// OnProducerFinishWithSuccess will be called exactly once.
         /// </summary>
         void OnProducerStart(string requestId, string producerName);
 
         /// <summary>
-        /// Called whenever an important producer-specific event occurs. This may only be called if
-        /// onProducerStart has been called, but corresponding OnProducerFinishWith method has not been
-        /// called yet.
+        /// Called whenever an important producer-specific event occurs. This may only be called 
+        /// if OnProducerStart has been called, but corresponding OnProducerFinishWith method has 
+        /// not been called yet.
         /// </summary>
         void OnProducerEvent(string requestId, string producerName, string eventName);
 
@@ -30,8 +30,8 @@ namespace ImagePipeline.Producers
         ///
         /// <param name="requestId">Request id</param>
         /// <param name="producerName">Producer name</param>
-        /// <param name="extraMap">Additional parameters about the producer. This map is immutable and will</param>
-        /// throw an exception if attempts are made to modify it.
+        /// <param name="extraMap">Additional parameters about the producer. This map is immutable 
+        /// and will throw an exception if attempts are made to modify it.</param>
         /// </summary>
         void OnProducerFinishWithSuccess(
             string requestId,
@@ -43,9 +43,9 @@ namespace ImagePipeline.Producers
         ///
         /// <param name="requestId">Request id</param>
         /// <param name="producerName">Producer name</param>
-        /// <param name="extraMap">Additional parameters about the producer. This map is immutable and will</param>
         /// <param name="error">Error</param>
-        /// throw an exception if attempts are made to modify it.
+        /// <param name="extraMap">Additional parameters about the producer. This map is immutable 
+        /// and will throw an exception if attempts are made to modify it.</param>
         /// </summary>
         void OnProducerFinishWithFailure(
             string requestId,
@@ -58,8 +58,8 @@ namespace ImagePipeline.Producers
         ///
         /// <param name="requestId">Request id</param>
         /// <param name="producerName">Producer name</param>
-        /// <param name="extraMap">Additional parameters about the producer. This map is immutable and will</param>
-        /// throw an exception if attempts are made to modify it.
+        /// <param name="extraMap">Additional parameters about the producer. This map is immutable 
+        /// and will throw an exception if attempts are made to modify it.</param>
         /// </summary>
         void OnProducerFinishWithCancellation(
             string requestId,

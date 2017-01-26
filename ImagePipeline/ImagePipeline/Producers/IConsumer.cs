@@ -27,20 +27,22 @@ namespace ImagePipeline.Producers
     public interface IConsumer<T>
     {
         /// <summary>
-        /// Called by a producer whenever new data is produced. This method should not throw an exception.
+        /// Called by a producer whenever new data is produced. This method should 
+        /// not throw an exception.
         ///
-        /// <para /> In case when result is closeable resource producer will close it after onNewResult returns.
-        /// Consumer needs to make copy of it if the resource must be accessed after that. Fortunately,
-        /// with CloseableReferences, that should not impose too much overhead.
+        /// <para /> In case when result is closeable resource producer will close 
+        /// it after OnNewResult returns. Consumer needs to make copy of it if the 
+        /// resource must be accessed after that. Fortunately, with CloseableReferences, 
+        /// that should not impose too much overhead.
         ///
-        /// <param name="newResult"></param>
+        /// <param name="newResult">The result provided by the producer</param>
         /// <param name="isLast">true if newResult is the last result</param>
         /// </summary>
         void OnNewResult(T newResult, bool isLast);
 
         /// <summary>
-        /// Called by a producer whenever it terminates further work due to Throwable being thrown. This
-        /// method should not throw an exception.
+        /// Called by a producer whenever it terminates further work due to Throwable being 
+        /// thrown. This method should not throw an exception.
         /// </summary>
         void OnFailure(Exception error);
 
