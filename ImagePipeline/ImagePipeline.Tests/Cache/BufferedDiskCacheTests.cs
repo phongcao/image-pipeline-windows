@@ -32,7 +32,7 @@ namespace ImagePipeline.Tests.Cache
         private IImageCacheStatsTracker _imageCacheStatsTracker;
         private IPooledByteBuffer _pooledByteBuffer;
         private MultiCacheKey _cacheKey;
-        private CancellationTokenSource _token;
+        private AtomicBoolean _isCancelled;
         private BufferedDiskCache _bufferedDiskCache;
         private CloseableReference<IPooledByteBuffer> _closeableReference;
         private EncodedImage _encodedImage;
@@ -76,7 +76,7 @@ namespace ImagePipeline.Tests.Cache
             _cacheKey = new MultiCacheKey(keys);
 
             // Initializes the executors
-            _token = new CancellationTokenSource();
+            _isCancelled = new AtomicBoolean(false);
             _readPriorityExecutor = Executors.NewFixedThreadPool(1);
             _writePriorityExecutor = Executors.NewFixedThreadPool(1);
 
@@ -88,15 +88,6 @@ namespace ImagePipeline.Tests.Cache
                 _readPriorityExecutor,
                 _writePriorityExecutor,
                 _imageCacheStatsTracker);
-        }
-
-        /// <summary>
-        /// Cleanup
-        /// </summary>
-        [TestCleanup]
-        public void Cleanup()
-        {
-            _token.Dispose();
         }
 
         /// <summary>
@@ -169,7 +160,7 @@ namespace ImagePipeline.Tests.Cache
         public async Task TestQueriesDiskCache()
         {
             await _bufferedDiskCache.Put(_cacheKey, _encodedImage);
-            EncodedImage image = await _bufferedDiskCache.Get(_cacheKey, _token.Token);
+            EncodedImage image = await _bufferedDiskCache.Get(_cacheKey, _isCancelled);
             Assert.IsTrue(2 == image.GetByteBufferRef().GetUnderlyingReferenceTestOnly().GetRefCountTestOnly());
             byte[] buf1 = new byte[_pooledByteBuffer.Size];
             _pooledByteBuffer.Read(0, buf1, 0, _pooledByteBuffer.Size);
@@ -188,8 +179,8 @@ namespace ImagePipeline.Tests.Cache
 
             try
             {
-                _token.Cancel();
-                await _bufferedDiskCache.Get(_cacheKey, _token.Token);
+                _isCancelled.Value = true;
+                await _bufferedDiskCache.Get(_cacheKey, _isCancelled);
                 Assert.Fail();
             }
             catch (Exception)
@@ -218,7 +209,7 @@ namespace ImagePipeline.Tests.Cache
         public async Task TestCacheMiss()
         {
             ICacheKey cacheKey = new SimpleCacheKey("http://hello.uri");
-            EncodedImage image = await _bufferedDiskCache.Get(cacheKey, _token.Token);
+            EncodedImage image = await _bufferedDiskCache.Get(cacheKey, _isCancelled);
             Assert.IsNull(image);
         }
 
@@ -264,7 +255,7 @@ namespace ImagePipeline.Tests.Cache
         public async Task TestFromStagingAreaLater()
         {
             await _bufferedDiskCache.Put(_cacheKey, _encodedImage);
-            EncodedImage image = await _bufferedDiskCache.Get(_cacheKey, _token.Token);
+            EncodedImage image = await _bufferedDiskCache.Get(_cacheKey, _isCancelled);
             Assert.IsTrue(_encodedImage.Size == image.Size);
 
             // Ref count should be equal to 3 (One for _closeableReference, one that is cloned when

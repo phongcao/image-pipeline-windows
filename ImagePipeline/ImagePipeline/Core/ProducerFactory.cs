@@ -171,6 +171,21 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
+        /// Instantiates the <see cref="DiskCacheProducer"/>
+        /// </summary>
+        /// <param name="inputProducer">The input producer.</param>
+        public DiskCacheProducer NewDiskCacheProducer(
+            IProducer<EncodedImage> inputProducer)
+        {
+            return new DiskCacheProducer(
+                _defaultBufferedDiskCache,
+                _smallImageBufferedDiskCache,
+                _cacheKeyFactory,
+                inputProducer,
+                _forceSmallCacheThresholdBytes);
+        }
+
+        /// <summary>
         /// Instantiates the <see cref="EncodedCacheKeyMultiplexProducer"/>
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>

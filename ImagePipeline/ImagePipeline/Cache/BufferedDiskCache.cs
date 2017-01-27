@@ -4,20 +4,18 @@ using Cache.Disk;
 using FBCore.Common.Internal;
 using FBCore.Common.References;
 using FBCore.Concurrency;
-using ImagePipeline.Core;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// BufferedDiskCache provides get and put operations to take care of scheduling disk-cache
-    /// read/writes.
+    /// BufferedDiskCache provides get and put operations to take care of scheduling 
+    /// disk-cache read/writes.
     /// </summary>
     public class BufferedDiskCache
     {
@@ -58,8 +56,8 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Returns true if the key is in the in-memory key index.
         ///
-        /// Not guaranteed to be correct. The cache may yet have this key even if this returns false.
-        /// But if it returns true, it definitely has it.
+        /// Not guaranteed to be correct. The cache may yet have this key even if 
+        /// this returns false. But if it returns true, it definitely has it.
         ///
         /// Avoids a disk read.
         /// </summary>
@@ -69,11 +67,13 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Performs a key-value look up in the disk cache. If no value is found in the staging area,
-        /// then disk cache checks are scheduled on a background thread. Any error manifests itself as a
-        /// cache miss, i.e. the returned Task resolves to false.
-        /// <param name="key"></param>
-        /// @return Task that resolves to true if an element is found, or false otherwise
+        /// Performs a key-value look up in the disk cache. If no value is found in 
+        /// the staging area, then disk cache checks are scheduled on a background 
+        /// thread. Any error manifests itself as a cache miss, i.e. the returned 
+        /// Task resolves to false.
+        /// <param name="key">The cache key.</param>
+        /// @return Task that resolves to true if an element is found, or false 
+        /// otherwise.
         /// </summary>
         public Task<bool> Contains(ICacheKey key)
         {
@@ -116,15 +116,16 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Performs key-value look up in disk cache. If value is not found in disk cache staging area
-        /// then disk cache read is scheduled on background thread. Any error manifests itself as
-        /// cache miss, i.e. the returned task resolves to null.
-        /// <param name="key"></param>
-        /// <param name="token"></param>
-        /// @return Task that resolves to cached element or null if one cannot be retrieved;
-        ///   returned task never rethrows any exception
+        /// Performs key-value look up in disk cache. If value is not found in disk 
+        /// cache staging area then disk cache read is scheduled on background thread. 
+        /// Any error manifests itself as cache miss, i.e. the returned task resolves 
+        /// to null.
+        /// <param name="key">The cache key.</param>
+        /// <param name="isCancelled">The cancellation flag.</param>
+        /// @return Task that resolves to cached element or null if one cannot be 
+        /// retrieved; returned task never rethrows any exception.
         /// </summary>
-        public Task<EncodedImage> Get(ICacheKey key, CancellationToken token)
+        public Task<EncodedImage> Get(ICacheKey key, AtomicBoolean isCancelled)
         {
             EncodedImage pinnedImage = _stagingArea.Get(key);
             if (pinnedImage != null)
@@ -132,14 +133,15 @@ namespace ImagePipeline.Cache
                 return FoundPinnedImage(key, pinnedImage);
             }
 
-            return GetAsync(key, token);
+            return GetAsync(key, isCancelled);
         }
 
         /// <summary>
         /// Performs key-value loop up in staging area and file cache.
         /// Any error manifests itself as a miss, i.e. returns false.
-        /// <param name="key"></param>
-        /// @return true if the image is found in staging area or File cache, false if not found
+        /// <param name="key">The cache key.</param>
+        /// @return true if the image is found in staging area or File cache, 
+        /// false if not found.
         /// </summary>
         private bool CheckInStagingAreaAndFileCache(ICacheKey key)
         {
@@ -167,11 +169,15 @@ namespace ImagePipeline.Cache
             }
         }
 
-        private Task<EncodedImage> GetAsync(ICacheKey key, CancellationToken token)
+        private Task<EncodedImage> GetAsync(ICacheKey key, AtomicBoolean isCancelled)
         {
             try
             {
-                token.ThrowIfCancellationRequested();
+                if (isCancelled.Value)
+                {
+                    throw new OperationCanceledException();
+                }
+
                 EncodedImage result = _stagingArea.Get(key);
                 if (result != null)
                 {
@@ -185,7 +191,9 @@ namespace ImagePipeline.Cache
                     try
                     {
                         IPooledByteBuffer buffer = ReadFromDiskCache(key);
-                        CloseableReference<IPooledByteBuffer> reference = CloseableReference<IPooledByteBuffer>.of(buffer);
+                        CloseableReference<IPooledByteBuffer> reference = 
+                            CloseableReference<IPooledByteBuffer>.of(buffer);
+
                         try
                         {
                             result = new EncodedImage(reference);
@@ -332,7 +340,9 @@ namespace ImagePipeline.Cache
                 IPooledByteBuffer byteBuffer;
                 using (Stream inputStream = diskCacheResource.OpenStream())
                 {
-                    byteBuffer = _pooledByteBufferFactory.NewByteBuffer(inputStream, (int)diskCacheResource.GetSize());
+                    byteBuffer = _pooledByteBufferFactory.NewByteBuffer(
+                        inputStream, 
+                        (int)diskCacheResource.GetSize());
                 }
 
                 Debug.WriteLine($"Successful read from disk cache for { key.ToString() }");

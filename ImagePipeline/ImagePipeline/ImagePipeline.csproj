@@ -169,6 +169,7 @@
     <Compile Include="Producers\BranchOnSeparateImagesProducer.cs" />
     <Compile Include="Producers\DataFetchProducer.cs" />
     <Compile Include="Producers\DecodeProducer.cs" />
+    <Compile Include="Producers\DiskCacheProducer.cs" />
     <Compile Include="Producers\EncodedCacheKeyMultiplexProducer.cs" />
     <Compile Include="Producers\EncodedMemoryCacheProducer.cs" />
     <Compile Include="Producers\FetchState.cs" />

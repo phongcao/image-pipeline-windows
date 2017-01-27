@@ -127,6 +127,7 @@
     <Compile Include="Common\File\IFileTreeVisitor.cs" />
     <Compile Include="Common\File\ParentDirNotFoundException.cs" />
     <Compile Include="Common\File\RenameException.cs" />
+    <Compile Include="Common\Internal\AtomicBoolean.cs" />
     <Compile Include="Common\Internal\ByteStreams.cs" />
     <Compile Include="Common\Internal\Closeables.cs" />
     <Compile Include="Common\Internal\Files.cs" />
