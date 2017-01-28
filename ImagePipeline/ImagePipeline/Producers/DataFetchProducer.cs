@@ -32,8 +32,7 @@ namespace ImagePipeline.Producers
         /// Instantiates the <see cref="DataFetchProducer"/>
         /// </summary>
         public DataFetchProducer(
-            IPooledByteBufferFactory pooledByteBufferFactory,
-            bool fileDescriptorEnabled) : base(
+            IPooledByteBufferFactory pooledByteBufferFactory) : base(
                 CallerThreadExecutor.Instance,
                 pooledByteBufferFactory)
         {

@@ -20,7 +20,6 @@ namespace ImagePipeline.Core
         private readonly IProgressiveJpegConfig _progressiveJpegConfig;
         private readonly bool _downsampleEnabled;
         private readonly bool _resizeAndRotateEnabledForNetwork;
-        private readonly bool _decodeFileDescriptorEnabled;
 
         // Dependencies used by multiple steps
         private readonly IExecutorSupplier _executorSupplier;
@@ -90,8 +89,6 @@ namespace ImagePipeline.Core
             _cacheKeyFactory = cacheKeyFactory;
 
             _platformBitmapFactory = platformBitmapFactory;
-
-            _decodeFileDescriptorEnabled = decodeFileDescriptorEnabled;
         }
 
         /// <summary>
@@ -151,7 +148,7 @@ namespace ImagePipeline.Core
         /// </summary>
         public DataFetchProducer NewDataFetchProducer()
         {
-            return new DataFetchProducer(_pooledByteBufferFactory, _decodeFileDescriptorEnabled);
+            return new DataFetchProducer(_pooledByteBufferFactory);
         }
 
         /// <summary>
@@ -207,6 +204,187 @@ namespace ImagePipeline.Core
             return new EncodedMemoryCacheProducer(
                 _encodedMemoryCache,
                 _cacheKeyFactory,
+                inputProducer);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="LocalAssetFetchProducer"/>
+        /// </summary>
+        public LocalAssetFetchProducer NewLocalAssetFetchProducer()
+        {
+            return new LocalAssetFetchProducer(
+                _executorSupplier.ForLocalStorageRead,
+                _pooledByteBufferFactory);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="LocalContentUriFetchProducer"/>
+        /// </summary>
+        public LocalContentUriFetchProducer NewLocalContentUriFetchProducer()
+        {
+            return new LocalContentUriFetchProducer(
+                _executorSupplier.ForLocalStorageRead,
+                _pooledByteBufferFactory);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="LocalContentUriThumbnailFetchProducer"/>
+        /// </summary>
+        public LocalContentUriThumbnailFetchProducer NewLocalContentUriThumbnailFetchProducer()
+        {
+            return new LocalContentUriThumbnailFetchProducer(
+                _executorSupplier.ForLocalStorageRead,
+                _pooledByteBufferFactory);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="LocalExifThumbnailProducer"/>
+        /// </summary>
+        public LocalExifThumbnailProducer NewLocalExifThumbnailProducer()
+        {
+            return new LocalExifThumbnailProducer(
+                _executorSupplier.ForLocalStorageRead,
+                _pooledByteBufferFactory);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="ThumbnailBranchProducer"/>
+        /// </summary>
+        public ThumbnailBranchProducer NewThumbnailBranchProducer(
+            IThumbnailProducer<EncodedImage>[] thumbnailProducers)
+        {
+            return new ThumbnailBranchProducer(thumbnailProducers);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="LocalFileFetchProducer"/>
+        /// </summary>
+        public LocalFileFetchProducer NewLocalFileFetchProducer()
+        {
+            return new LocalFileFetchProducer(
+                _executorSupplier.ForLocalStorageRead,
+                _pooledByteBufferFactory);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="LocalResourceFetchProducer"/>
+        /// </summary>
+        public LocalResourceFetchProducer NewLocalResourceFetchProducer()
+        {
+            return new LocalResourceFetchProducer(
+                _executorSupplier.ForLocalStorageRead,
+                _pooledByteBufferFactory);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="LocalVideoThumbnailProducer"/>
+        /// </summary>
+        public LocalVideoThumbnailProducer NewLocalVideoThumbnailProducer()
+        {
+            return new LocalVideoThumbnailProducer(_executorSupplier.ForLocalStorageRead);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="NetworkFetchProducer"/>
+        /// </summary>
+        public NetworkFetchProducer NewNetworkFetchProducer(INetworkFetcher<FetchState> networkFetcher)
+        {
+            return new NetworkFetchProducer(
+                _pooledByteBufferFactory,
+                _byteArrayPool,
+                networkFetcher);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="NullProducer{T}"/>
+        /// </summary>
+        public static NullProducer<T> NewNullProducer<T>()
+        {
+            return new NullProducer<T>();
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="PostprocessedBitmapMemoryCacheProducer"/>
+        /// </summary>
+        /// <param name="inputProducer">The input producer.</param>
+        public PostprocessedBitmapMemoryCacheProducer NewPostprocessorBitmapMemoryCacheProducer(
+            IProducer<CloseableReference<CloseableImage>> inputProducer)
+        {
+            return new PostprocessedBitmapMemoryCacheProducer(
+                _bitmapMemoryCache, _cacheKeyFactory, inputProducer);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="PostprocessorProducer"/>
+        /// </summary>
+        /// <param name="inputProducer">The input producer.</param>
+        public PostprocessorProducer NewPostprocessorProducer(
+            IProducer<CloseableReference<CloseableImage>> inputProducer)
+        {
+            return new PostprocessorProducer(
+                inputProducer, _platformBitmapFactory, _executorSupplier.ForBackgroundTasks);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="ResizeAndRotateProducer"/>
+        /// </summary>
+        /// <param name="inputProducer">The input producer.</param>
+        public ResizeAndRotateProducer NewResizeAndRotateProducer(IProducer<EncodedImage> inputProducer)
+        {
+            return new ResizeAndRotateProducer(
+                _executorSupplier.ForBackgroundTasks,
+                _pooledByteBufferFactory,
+                inputProducer);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="SwallowResultProducer{T}"/>
+        /// </summary>
+        /// <param name="inputProducer">The input producer.</param>
+        public static SwallowResultProducer<T> NewSwallowResultProducer<T>(IProducer<T> inputProducer)
+        {
+            return new SwallowResultProducer<T>(inputProducer);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="ThreadHandoffProducer{T}"/>
+        /// </summary>
+        /// <param name="inputProducer">The input producer.</param>
+        /// <param name="inputThreadHandoffProducerQueue">The thread handoff producer queue.</param>
+        public ThreadHandoffProducer<T> NewBackgroundThreadHandoffProducer<T>(
+            IProducer<T> inputProducer, 
+            ThreadHandoffProducerQueue inputThreadHandoffProducerQueue)
+        {
+            return new ThreadHandoffProducer<T>(
+                inputProducer,
+                inputThreadHandoffProducerQueue);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="ThrottlingProducer{T}"/>
+        /// </summary>
+        /// <param name="maxSimultaneousRequests">The max simultaneous requests.</param>
+        /// <param name="inputProducer">The input producer.</param>
+        public ThrottlingProducer<T> NewThrottlingProducer<T>(
+            int maxSimultaneousRequests,
+            IProducer<T> inputProducer)
+        {
+            return new ThrottlingProducer<T>(
+                maxSimultaneousRequests,
+                _executorSupplier.ForLightweightBackgroundTasks,
+                inputProducer);
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="WebpTranscodeProducer"/>
+        /// </summary>
+        /// <param name="inputProducer">The input producer.</param>
+        public WebpTranscodeProducer NewWebpTranscodeProducer(
+            IProducer<EncodedImage> inputProducer)
+        {
+            return new WebpTranscodeProducer(
+                _executorSupplier.ForBackgroundTasks,
+                _pooledByteBufferFactory,
                 inputProducer);
         }
     }
