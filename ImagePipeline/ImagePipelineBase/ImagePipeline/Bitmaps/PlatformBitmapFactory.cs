@@ -38,7 +38,7 @@ namespace ImagePipeline.Bitmaps
         /// </summary>
         public CloseableReference<SoftwareBitmap> CreateBitmap(int width, int height)
         {
-            return CreateBitmap(width, height, BitmapPixelFormat.Rgba8);
+            return CreateBitmap(width, height, BitmapPixelFormat.Bgra8);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace ImagePipeline.Bitmaps
             int height,
             object callerContext)
         {
-            return CreateBitmap(width, height, BitmapPixelFormat.Rgba8, callerContext);
+            return CreateBitmap(width, height, BitmapPixelFormat.Bgra8, callerContext);
         }
 
         /// <summary>

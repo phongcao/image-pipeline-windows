@@ -8,7 +8,8 @@ namespace FBCore.Common.Internal
     /// </summary>
     public class SupplierImpl<T> : ISupplier<T>
     {
-        private readonly Func<T> _func;
+        private readonly Func<T> _getFunc;
+        private readonly Func<string> _toStringFunc;
 
         /// <summary>
         /// Test-only variables
@@ -20,12 +21,20 @@ namespace FBCore.Common.Internal
         /// <summary>
         /// Instantiates the <see cref="SupplierImpl{T}"/>
         /// </summary>
-        public SupplierImpl(Func<T> func)
+        public SupplierImpl(Func<T> getFunc, Func<string> toStringFunc)
         {
-            _func = func;
+            _getFunc = getFunc;
+            _toStringFunc = toStringFunc;
 
             // For unit test
             _getCallCount = 0;
+        }
+
+        /// <summary>
+        /// Instantiates the <see cref="SupplierImpl{T}"/>
+        /// </summary>
+        public SupplierImpl(Func<T> getFunc) : this(getFunc, null)
+        {
         }
 
         /// <summary>
@@ -39,7 +48,21 @@ namespace FBCore.Common.Internal
             // For unit test
             Interlocked.Increment(ref _getCallCount);
 
-            return _func();
+            return _getFunc();
+        }
+
+        /// <summary>
+        /// Overrides the base ToString method.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            if (_toStringFunc != null)
+            {
+                return _toStringFunc();
+            }
+
+            return base.ToString();
         }
 
         /// <summary>

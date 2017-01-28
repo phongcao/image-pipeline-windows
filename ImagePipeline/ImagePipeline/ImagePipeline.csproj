@@ -123,6 +123,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bitmaps\WinRTBitmapFactory.cs" />
     <Compile Include="Cache\BitmapMemoryCacheFactory.cs" />
     <Compile Include="Cache\BitmapMemoryCacheKey.cs" />
     <Compile Include="Cache\BufferedDiskCache.cs" />
@@ -143,6 +144,10 @@
     <Compile Include="Core\DynamicDefaultDiskStorageFactory.cs" />
     <Compile Include="Core\IDiskStorageFactory.cs" />
     <Compile Include="Core\IFileCacheFactory.cs" />
+    <Compile Include="Core\ImagePipeline.cs" />
+    <Compile Include="Core\ImagePipelineConfig.cs" />
+    <Compile Include="Core\ImagePipelineExperiments.cs" />
+    <Compile Include="Core\ImagePipelineFactory.cs" />
     <Compile Include="Core\ProducerFactory.cs" />
     <Compile Include="Core\ProducerSequenceFactory.cs" />
     <Compile Include="Datasource\AbstractProducerToDataSourceAdapter.cs" />
@@ -155,6 +160,7 @@
     <Compile Include="Decoder\DecodeException.cs" />
     <Compile Include="Decoder\ImageDecoder.cs" />
     <Compile Include="Decoder\IProgressiveJpegConfig.cs" />
+    <Compile Include="Decoder\SimpleProgressiveJpegConfig.cs" />
     <Compile Include="Listener\BaseRequestListener.cs" />
     <Compile Include="Listener\ForwardingRequestListener.cs" />
     <Compile Include="Listener\IRequestListener.cs" />

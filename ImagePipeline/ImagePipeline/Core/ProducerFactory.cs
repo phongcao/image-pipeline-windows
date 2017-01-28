@@ -52,7 +52,6 @@ namespace ImagePipeline.Core
         /// <param name="smallImageBufferedDiskCache">The buffered disk cache used for small images.</param>
         /// <param name="cacheKeyFactory">The factory that creates cache keys for the pipeline.</param>
         /// <param name="platformBitmapFactory">The bitmap factory used for post process.</param>
-        /// <param name="decodeFileDescriptorEnabled">Enabling the file descriptor.</param>
         /// <param name="forceSmallCacheThresholdBytes">The threshold set for using the small buffered disk cache.</param>
         public ProducerFactory(
             IByteArrayPool byteArrayPool,
@@ -68,7 +67,6 @@ namespace ImagePipeline.Core
             BufferedDiskCache smallImageBufferedDiskCache,
             ICacheKeyFactory cacheKeyFactory,
             PlatformBitmapFactory platformBitmapFactory,
-            bool decodeFileDescriptorEnabled,
             int forceSmallCacheThresholdBytes)
         {
             _forceSmallCacheThresholdBytes = forceSmallCacheThresholdBytes;
