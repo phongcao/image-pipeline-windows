@@ -144,6 +144,7 @@
     <Compile Include="Core\IDiskStorageFactory.cs" />
     <Compile Include="Core\IFileCacheFactory.cs" />
     <Compile Include="Core\ProducerFactory.cs" />
+    <Compile Include="Core\ProducerSequenceFactory.cs" />
     <Compile Include="Datasource\AbstractProducerToDataSourceAdapter.cs" />
     <Compile Include="Datasource\BaseBitmapDataSubscriber.cs" />
     <Compile Include="Datasource\BaseListBitmapDataSubscriber.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="Producers\BaseNetworkFetcher.cs" />
     <Compile Include="Producers\BaseProducerContext.cs" />
     <Compile Include="Producers\BaseProducerContextCallbacks.cs" />
+    <Compile Include="Producers\BaseThumbnailProducer.cs" />
     <Compile Include="Producers\BitmapMemoryCacheGetProducer.cs" />
     <Compile Include="Producers\BitmapMemoryCacheKeyMultiplexProducer.cs" />
     <Compile Include="Producers\BitmapMemoryCacheProducer.cs" />
@@ -231,6 +233,7 @@
     <Compile Include="Producers\DelegatingConsumer.cs" />
     <Compile Include="Producers\IConsumer.cs" />
     <Compile Include="Producers\IProducerListener.cs" />
+    <Compile Include="Producers\RemoveImageTransformMetaDataProducer.cs" />
     <Compile Include="Producers\ResizeAndRotateProducer.cs" />
     <Compile Include="Producers\SettableProducerContext.cs" />
     <Compile Include="Producers\StatefulProducerRunnable.cs" />

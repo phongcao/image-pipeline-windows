@@ -135,6 +135,7 @@
     <Compile Include="Common\Internal\Preconditions.cs" />
     <Compile Include="Common\Internal\SupplierImpl.cs" />
     <Compile Include="Common\Internal\Suppliers.cs" />
+    <Compile Include="Common\Media\MediaUtils.cs" />
     <Compile Include="Common\Memory\IMemoryTrimmable.cs" />
     <Compile Include="Common\Memory\IMemoryTrimmableRegistry.cs" />
     <Compile Include="Common\Memory\MemoryTrimType.cs" />
