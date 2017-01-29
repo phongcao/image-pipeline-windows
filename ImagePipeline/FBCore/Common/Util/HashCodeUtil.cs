@@ -196,5 +196,21 @@
             acc = X * acc + i6;
             return acc;
         }
+
+        /// <summary>
+        /// Calculates hash code
+        /// </summary>
+        public static int HashCode(
+            string s)
+        {
+            int length = s.Length;
+            int hash = 0;
+            for (int i = 0; i < length; ++i)
+            {
+                hash = 31 * hash + s[i];
+            }
+
+            return hash;
+        }
     }
 }

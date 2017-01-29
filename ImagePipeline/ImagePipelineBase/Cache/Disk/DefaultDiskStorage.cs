@@ -4,6 +4,7 @@ using FBCore.Common.File;
 using FBCore.Common.File.Extensions;
 using FBCore.Common.Internal;
 using FBCore.Common.Time;
+using FBCore.Common.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -233,7 +234,8 @@ namespace Cache.Disk
         /// </summary>
         private string GetSubdirectoryPath(string resourceId)
         {
-            string subdirectory = Math.Abs(resourceId.GetHashCode() % SHARDING_BUCKET_COUNT).ToString();
+            int hashCode = HashCodeUtil.HashCode(resourceId);
+            string subdirectory = Math.Abs(hashCode % SHARDING_BUCKET_COUNT).ToString();
             return Path.Combine(_versionDirectory.FullName, subdirectory);
         }
 
