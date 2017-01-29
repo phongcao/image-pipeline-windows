@@ -16,7 +16,8 @@ namespace ImagePipeline.AnimatedFactory
             PlatformBitmapFactory platformBitmapFactory,
             IExecutorSupplier executorSupplier)
         {
-            throw new NotImplementedException();
+            // TODO: Adding animated factory
+            return default(IAnimatedFactory);
         }
     }
 }

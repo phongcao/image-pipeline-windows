@@ -112,6 +112,7 @@ namespace ImagePipeline.Producers
                       listener.RequiresExtraMap(requestId) ?
                             new ReadOnlyDictionary<string, string>(extraMap) :
                             null);
+
                 _inputProducer.ProduceResults(consumerOfInputProducer, producerContext);
             }
             finally

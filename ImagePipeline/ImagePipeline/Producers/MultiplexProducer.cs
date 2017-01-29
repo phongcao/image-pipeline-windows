@@ -252,7 +252,7 @@ namespace ImagePipeline.Producers
                     // not propagate it
                     lock (_gate)
                     {
-                        if (!lastIntermediateResult.Equals(_lastIntermediateResult))
+                        if (!Equals(lastIntermediateResult, _lastIntermediateResult))
                         {
                             lastIntermediateResult = default(T);
                         }
@@ -487,18 +487,15 @@ namespace ImagePipeline.Producers
                     }
 
                     iterator = _consumerContextPairs.GetEnumerator();
+                    while (iterator.MoveNext())
+                    {
+                        iterator.Current.Key.Item1.OnFailure(t);
+                    }
+
                     _consumerContextPairs.Clear();
                     _parent.RemoveMultiplexer(_key, this);
                     CloseSafely(_lastIntermediateResult);
                     _lastIntermediateResult = default(T);
-                }
-
-                while (iterator.MoveNext())
-                {
-                    lock (iterator)
-                    {
-                        iterator.Current.Key.Item1.OnFailure(t);
-                    }
                 }
             }
 
@@ -520,6 +517,11 @@ namespace ImagePipeline.Producers
                     _lastIntermediateResult = default(T);
 
                     iterator = _consumerContextPairs.GetEnumerator();
+                    while (iterator.MoveNext())
+                    {
+                        iterator.Current.Key.Item1.OnNewResult(closeableObject, isFinal);
+                    }
+
                     if (!isFinal)
                     {
                         _lastIntermediateResult = _parent.CloneOrNull(closeableObject);
@@ -528,14 +530,6 @@ namespace ImagePipeline.Producers
                     {
                         _consumerContextPairs.Clear();
                         _parent.RemoveMultiplexer(_key, this);
-                    }
-                }
-
-                while (iterator.MoveNext())
-                {
-                    lock (iterator)
-                    {
-                        iterator.Current.Key.Item1.OnNewResult(closeableObject, isFinal);
                     }
                 }
             }
@@ -612,22 +606,22 @@ namespace ImagePipeline.Producers
 
                 protected override void OnNewResultImpl(T newResult, bool isLast)
                 {
-                    //_parent.OnNextResult(this, newResult, isLast);
+                    _parent.OnNextResult(this, newResult, isLast);
                 }
 
                 protected override void OnFailureImpl(Exception t)
                 {
-                    //_parent.OnFailure(this, t);
+                    _parent.OnFailure(this, t);
                 }
 
                 protected override void OnCancellationImpl()
                 {
-                    //_parent.OnCancelled(this);
+                    _parent.OnCancelled(this);
                 }
 
                 protected override void OnProgressUpdateImpl(float progress)
                 {
-                    //_parent.OnProgressUpdate(this, progress);
+                    _parent.OnProgressUpdate(this, progress);
                 }
             }
         }

@@ -129,7 +129,8 @@ namespace ImagePipeline.Core
         public static IPlatformDecoder BuildPlatformDecoder(
             PoolFactory poolFactory, bool webpSupportEnabled)
         {
-            throw new NotImplementedException();
+            // TODO: Adding platform decoder
+            return default(IPlatformDecoder);
         }
 
         /// <summary>

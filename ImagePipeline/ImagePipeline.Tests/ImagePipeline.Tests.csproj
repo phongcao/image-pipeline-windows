@@ -102,6 +102,7 @@
   <ItemGroup>
     <Compile Include="Cache\BufferedDiskCacheTests.cs" />
     <Compile Include="Cache\StagingAreaTests.cs" />
+    <Compile Include="Core\ImagePipelineTests.cs" />
     <Compile Include="Datasource\CloseableProducerToDataSourceAdapterTests.cs" />
     <Compile Include="Datasource\ListDataSourceTests.cs" />
     <Compile Include="Datasource\MockDataSubscriber.cs" />

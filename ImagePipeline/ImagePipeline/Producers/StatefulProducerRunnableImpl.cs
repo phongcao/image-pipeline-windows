@@ -146,7 +146,7 @@ namespace ImagePipeline.Producers
         /// </summary>
         protected override void DisposeResult(T result)
         {
-            _disposeResultFunc(result);
+            _disposeResultFunc?.Invoke(result);
         }
 
         /// <summary>

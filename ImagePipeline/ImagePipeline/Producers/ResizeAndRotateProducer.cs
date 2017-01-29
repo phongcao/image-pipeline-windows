@@ -48,7 +48,9 @@ namespace ImagePipeline.Producers
         /// </summary>
         public void ProduceResults(IConsumer<EncodedImage> consumer, IProducerContext context)
         {
-            throw new NotImplementedException();
+            // TODO: Adding TransformingConsumer
+            // _inputProducer.ProduceResults(new TransformingConsumer(consumer, context), context);
+            _inputProducer.ProduceResults(consumer, context);
         }
     }
 }
