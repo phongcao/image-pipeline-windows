@@ -54,8 +54,12 @@ namespace ImagePipeline.Core
         {
             get
             {
-                return Preconditions.CheckNotNull(
-                    _instance, "ImagePipelineFactory was not initialized!");
+                if (_instance == null)
+                {
+                    Initialize();
+                }
+
+                return _instance;
             }
         }
 
@@ -63,7 +67,7 @@ namespace ImagePipeline.Core
         /// Initializes <see cref="ImagePipelineFactory"/> with default config.
         /// </summary>
 
-        public static void Initialize()
+        private static void Initialize()
         {
             Initialize(ImagePipelineConfig.NewBuilder().Build());
         }

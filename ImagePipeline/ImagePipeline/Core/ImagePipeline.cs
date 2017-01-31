@@ -2,6 +2,7 @@
 using FBCore.Common.Internal;
 using FBCore.Common.References;
 using FBCore.Common.Util;
+using FBCore.Concurrency;
 using FBCore.DataSource;
 using ImagePipeline.Cache;
 using ImagePipeline.Common;
@@ -9,12 +10,15 @@ using ImagePipeline.Datasource;
 using ImagePipeline.Image;
 using ImagePipeline.Listener;
 using ImagePipeline.Memory;
+using ImagePipeline.Platform;
 using ImagePipeline.Producers;
 using ImagePipeline.Request;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace ImagePipeline.Core
 {
@@ -261,6 +265,62 @@ namespace ImagePipeline.Core
             {
                 return DataSources.ImmediateFailedDataSource<CloseableReference<IPooledByteBuffer>>(exception);
             }
+        }
+
+        /// <summary>
+        /// Submits a request for execution and returns a Task{BitmapImage}.
+        /// <param name="uri">The image uri.</param>
+        /// @return a Task{BitmapImage}.
+        /// </summary>
+        public Task<BitmapImage> FetchXamlBitmapImage(Uri uri)
+        {
+            var taskCompletionSource = new TaskCompletionSource<BitmapImage>();
+            var imageRequest = ImageRequestBuilder
+                .NewBuilderWithSource(uri)
+                .SetProgressiveRenderingEnabled(false)
+                .Build();
+
+            var callerContext = new object();
+            var dataSource = FetchEncodedImage(imageRequest, callerContext);
+            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IPooledByteBuffer>>(
+                response =>
+                {
+                    CloseableReference<IPooledByteBuffer> reference = response.GetResult();
+                    if (reference != null)
+                    {
+                        try
+                        {
+                            IPooledByteBuffer result = reference.Get();
+                            byte[] buffer = new byte[result.Size];
+                            result.Read(0, buffer, 0, result.Size);
+                            DispatcherHelpers.RunOnDispatcher(async () =>
+                            {
+                                using (var bufferStream = new MemoryStream(buffer))
+                                using (var imageStream = bufferStream.AsRandomAccessStream())
+                                {
+                                    var bitmapImage = new BitmapImage();
+                                    await bitmapImage.SetSourceAsync(imageStream)
+                                        .AsTask()
+                                        .ConfigureAwait(false);
+
+                                    taskCompletionSource.SetResult(bitmapImage);
+                                }
+                            });
+                        }
+                        finally
+                        {
+                            CloseableReference<IPooledByteBuffer>.CloseSafely(reference);
+                        }
+                    }
+                },
+                response =>
+                {
+                    Exception error = response.GetFailureCause();
+                    taskCompletionSource.SetException(error);
+                });
+
+            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            return taskCompletionSource.Task;
         }
 
         /// <summary>

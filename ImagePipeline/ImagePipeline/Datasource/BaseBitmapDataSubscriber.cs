@@ -68,6 +68,6 @@ namespace ImagePipeline.Datasource
         /// <para />The framework will free the bitmap's memory after this method has completed.
         /// <param name="bitmap"></param>
         /// </summary>
-        protected abstract void OnNewResultImpl(SoftwareBitmap bitmap);
+        public abstract void OnNewResultImpl(SoftwareBitmap bitmap);
     }
 }

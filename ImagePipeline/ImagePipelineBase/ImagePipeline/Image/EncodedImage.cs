@@ -281,6 +281,7 @@ namespace ImagePipeline.Image
             {
                 Tuple<int, int> dimensions = 
                     await BitmapUtil.DecodeDimensionsAsync(GetInputStream()).ConfigureAwait(false);
+
                 if (!dimensions.Equals(default(Tuple<int, int>)))
                 {
                     Width = dimensions.Item1;

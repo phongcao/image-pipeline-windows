@@ -99,8 +99,11 @@ namespace ImageUtils
             Preconditions.CheckNotNull(inputStream);
             try
             {
-                BitmapDecoder decoder = 
-                    await BitmapDecoder.CreateAsync(inputStream.AsRandomAccessStream());
+                BitmapDecoder decoder = await BitmapDecoder
+                    .CreateAsync(inputStream.AsRandomAccessStream())
+                    .AsTask()
+                    .ConfigureAwait(false);
+
                 return new Tuple<int, int>(
                     (int)decoder.OrientedPixelWidth, (int)decoder.OrientedPixelHeight);
             }

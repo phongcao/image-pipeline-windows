@@ -152,6 +152,7 @@
     <Compile Include="Core\ProducerSequenceFactory.cs" />
     <Compile Include="Datasource\AbstractProducerToDataSourceAdapter.cs" />
     <Compile Include="Datasource\BaseBitmapDataSubscriber.cs" />
+    <Compile Include="Datasource\BaseBitmapDataSubscriberImpl.cs" />
     <Compile Include="Datasource\BaseListBitmapDataSubscriber.cs" />
     <Compile Include="Datasource\CloseableProducerToDataSourceAdapter.cs" />
     <Compile Include="Datasource\ListDataSource.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Listener\ForwardingRequestListener.cs" />
     <Compile Include="Listener\IRequestListener.cs" />
     <Compile Include="Listener\RequestListenerImpl.cs" />
+    <Compile Include="Platform\DispatcherHelpers.cs" />
     <Compile Include="Platform\IPlatformDecoder.cs" />
     <Compile Include="Producers\AddImageTransformMetaDataProducer.cs" />
     <Compile Include="Producers\BaseNetworkFetcher.cs" />

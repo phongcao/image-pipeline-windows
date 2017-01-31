@@ -35,7 +35,6 @@ namespace ImagePipeline.Tests.Core
         public void Test1()
         {
             var completion = new ManualResetEvent(false);
-            ImagePipelineFactory.Initialize();
             var imagePipeline = ImagePipelineFactory.Instance.GetImagePipeline();
             var imageRequest = ImageRequestBuilder
                 .NewBuilderWithSource(IMAGE_URL)

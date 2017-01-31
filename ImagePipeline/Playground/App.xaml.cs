@@ -21,9 +21,6 @@ namespace Playground
         {
             InitializeComponent();
             Suspending += OnSuspending;
-
-            // Initialize ImagePipeline
-            ImagePipelineFactory.Initialize();
         }
 
         /// <summary>
