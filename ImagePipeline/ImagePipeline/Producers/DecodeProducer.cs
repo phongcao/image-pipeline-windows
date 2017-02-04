@@ -146,16 +146,16 @@ namespace ImagePipeline.Producers
 
                 _producerContext.AddCallbacks(
                     new BaseProducerContextCallbacks(
-                    () => { },
-                    () => { },
-                    () => 
-                    {
-                        if (_producerContext.IsIntermediateResultExpected)
+                        () => { },
+                        () => { },
+                        () => 
                         {
-                            _jobScheduler.ScheduleJob();
-                        }
-                    },
-                    () => { }));
+                            if (_producerContext.IsIntermediateResultExpected)
+                            {
+                                _jobScheduler.ScheduleJob();
+                            }
+                        },
+                        () => { }));
             }
 
             /// <summary>

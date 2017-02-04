@@ -1,4 +1,5 @@
 ﻿using Cache.Common;
+using FBCore.Common.Internal;
 using FBCore.Common.References;
 using ImagePipeline.Bitmaps;
 using System;
@@ -74,9 +75,14 @@ namespace ImagePipeline.Request
         /// <param name="destBitmap">the destination bitmap to be used as output</param>
         /// <param name="sourceBitmap">the source bitmap to be used as input</param>
         /// </summary>
-        public void Process(SoftwareBitmap destBitmap, SoftwareBitmap sourceBitmap)
+        public virtual void Process(SoftwareBitmap destBitmap, SoftwareBitmap sourceBitmap)
         {
-            throw new NotImplementedException();
+            Preconditions.CheckArgument(sourceBitmap.BitmapPixelFormat == destBitmap.BitmapPixelFormat);
+            Preconditions.CheckArgument(!destBitmap.IsReadOnly);
+            Preconditions.CheckArgument(destBitmap.PixelWidth == sourceBitmap.PixelWidth);
+            Preconditions.CheckArgument(destBitmap.PixelHeight == sourceBitmap.PixelHeight);
+            sourceBitmap.CopyTo(destBitmap);
+            Process(destBitmap);
         }
 
         /// <summary>
@@ -87,7 +93,7 @@ namespace ImagePipeline.Request
         ///
         /// <param name="bitmap">the bitmap to be used both as input and as output</param>
         /// </summary>
-        public void Process(SoftwareBitmap bitmap)
+        public virtual void Process(SoftwareBitmap bitmap)
         {
         }
 
@@ -95,7 +101,7 @@ namespace ImagePipeline.Request
         /// The default implementation of the CacheKey for a Postprocessor is null
         /// @return The CacheKey to use for caching. Not used if null
         /// </summary>
-        public ICacheKey PostprocessorCacheKey
+        public virtual ICacheKey PostprocessorCacheKey
         {
             get
             {
