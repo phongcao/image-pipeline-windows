@@ -324,6 +324,42 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
+        /// Submits a request for execution and returns a Task{BitmapImage}.
+        /// <param name="imageRequest">The image request.</param>
+        /// @return a Task{BitmapImage}.
+        /// </summary>
+        public Task<SoftwareBitmapSource> FetchDecodedXamlBitmapImage(ImageRequest imageRequest)
+        {
+            var taskCompletionSource = new TaskCompletionSource<SoftwareBitmapSource>();
+            var callerContext = new object();
+            var dataSource = FetchDecodedImage(imageRequest, callerContext);
+            var dataSubscriber = new BaseBitmapDataSubscriberImpl(
+                bitmap =>
+                {
+                    if (bitmap != null)
+                    {
+                        DispatcherHelpers.RunOnDispatcher(async () =>
+                        {
+                            var bitmapSource = new SoftwareBitmapSource();
+                            await bitmapSource.SetBitmapAsync(bitmap)
+                                .AsTask()
+                                .ConfigureAwait(false);
+
+                            taskCompletionSource.SetResult(bitmapSource);
+                        });
+                    }
+                },
+                response =>
+                {
+                    Exception error = response.GetFailureCause();
+                    taskCompletionSource.SetException(error);
+                });
+
+            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            return taskCompletionSource.Task;
+        }
+
+        /// <summary>
         /// Submits a request for prefetching to the bitmap cache.
         /// <param name="imageRequest">The request to submit.</param>
         /// <param name="callerContext">The caller context for image request.</param>

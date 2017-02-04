@@ -161,6 +161,7 @@
     <Compile Include="Decoder\DecodeException.cs" />
     <Compile Include="Decoder\ImageDecoder.cs" />
     <Compile Include="Decoder\IProgressiveJpegConfig.cs" />
+    <Compile Include="Decoder\ProgressiveJpegParser.cs" />
     <Compile Include="Decoder\SimpleProgressiveJpegConfig.cs" />
     <Compile Include="Listener\BaseRequestListener.cs" />
     <Compile Include="Listener\ForwardingRequestListener.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Listener\RequestListenerImpl.cs" />
     <Compile Include="Platform\DispatcherHelpers.cs" />
     <Compile Include="Platform\IPlatformDecoder.cs" />
+    <Compile Include="Platform\WinRTDecoder.cs" />
     <Compile Include="Producers\AddImageTransformMetaDataProducer.cs" />
     <Compile Include="Producers\BaseNetworkFetcher.cs" />
     <Compile Include="Producers\BaseProducerContext.cs" />
@@ -180,6 +182,7 @@
     <Compile Include="Producers\DataFetchProducer.cs" />
     <Compile Include="Producers\DecodeProducer.cs" />
     <Compile Include="Producers\DiskCacheProducer.cs" />
+    <Compile Include="Producers\DownsampleUtil.cs" />
     <Compile Include="Producers\EncodedCacheKeyMultiplexProducer.cs" />
     <Compile Include="Producers\EncodedMemoryCacheProducer.cs" />
     <Compile Include="Producers\FetchState.cs" />
@@ -189,6 +192,7 @@
     <Compile Include="Producers\IProducerContext.cs" />
     <Compile Include="Producers\IProducerContextCallbacks.cs" />
     <Compile Include="Producers\IThumbnailProducer.cs" />
+    <Compile Include="Producers\JobScheduler.cs" />
     <Compile Include="Producers\LocalAssetFetchProducer.cs" />
     <Compile Include="Producers\LocalContentUriFetchProducer.cs" />
     <Compile Include="Producers\LocalContentUriThumbnailFetchProducer.cs" />

@@ -133,8 +133,7 @@ namespace ImagePipeline.Core
         public static IPlatformDecoder BuildPlatformDecoder(
             PoolFactory poolFactory, bool webpSupportEnabled)
         {
-            // TODO: Adding platform decoder
-            return default(IPlatformDecoder);
+            return new WinRTDecoder(poolFactory.FlexByteArrayPoolMaxNumThreads);
         }
 
         /// <summary>

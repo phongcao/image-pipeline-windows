@@ -1,8 +1,11 @@
-﻿using ImagePipeline.AnimatedFactory;
+﻿using FBCore.Common.References;
+using ImageFormatUtils;
+using ImagePipeline.AnimatedFactory;
 using ImagePipeline.Common;
 using ImagePipeline.Image;
 using ImagePipeline.Platform;
 using System;
+using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Decoder
@@ -41,13 +44,40 @@ namespace ImagePipeline.Decoder
         /// <param name="qualityInfo">quality information for the image</param>
         /// <param name="options">options that cange decode behavior</param>
         /// </summary>
-        public CloseableImage DecodeImage(
+        public Task<CloseableImage> DecodeImageAsync(
             EncodedImage encodedImage,
             int length,
             IQualityInfo qualityInfo,
             ImageDecodeOptions options)
         {
-            throw new NotImplementedException();
+            ImageFormat imageFormat = encodedImage.Format;
+            if (imageFormat == ImageFormat.UNINITIALIZED || imageFormat == ImageFormat.UNKNOWN)
+            {
+                imageFormat = ImageFormatChecker.GetImageFormat_WrapIOException(
+                    encodedImage.GetInputStream());
+
+                encodedImage.Format = imageFormat;
+            }
+
+            switch (imageFormat)
+            {
+                case ImageFormat.UNKNOWN:
+                    throw new ArgumentException("unknown image format");
+
+                case ImageFormat.JPEG:
+                    return DecodeJpegAsync(encodedImage, length, qualityInfo)
+                        .ContinueWith(task => ((CloseableImage)task.Result));
+
+                case ImageFormat.GIF:
+                    return DecodeGifAsync(encodedImage, options);
+
+                case ImageFormat.WEBP_ANIMATED:
+                    return DecodeAnimatedWebpAsync(encodedImage, options);
+
+                default:
+                    return DecodeStaticImageAsync(encodedImage)
+                        .ContinueWith(task => ((CloseableImage)task.Result));
+            }
         }
 
         /// <summary>
@@ -57,7 +87,7 @@ namespace ImagePipeline.Decoder
         /// <param name="options">decode options</param>
         /// @return a CloseableImage
         /// </summary>
-        public CloseableImage DecodeGif(
+        public Task<CloseableImage> DecodeGifAsync(
             EncodedImage encodedImage,
             ImageDecodeOptions options)
         {
@@ -68,9 +98,24 @@ namespace ImagePipeline.Decoder
         /// <param name="encodedImage">input image (encoded bytes plus meta data)</param>
         /// @return a CloseableStaticBitmap
         /// </summary>
-        public CloseableStaticBitmap DecodeStaticImage(EncodedImage encodedImage)
+        public Task<CloseableStaticBitmap> DecodeStaticImageAsync(EncodedImage encodedImage)
         {
-            throw new NotImplementedException();
+            return _platformDecoder
+                .DecodeFromEncodedImageAsync(encodedImage, _bitmapConfig)
+                .ContinueWith(task =>
+                {
+                    try
+                    {
+                        return new CloseableStaticBitmap(
+                            task.Result,
+                            ImmutableQualityInfo.FULL_QUALITY,
+                            encodedImage.RotationAngle);
+                    }
+                    finally
+                    {
+                        task.Result.Dispose();
+                    }
+                });
         }
 
         /// <summary>
@@ -81,12 +126,27 @@ namespace ImagePipeline.Decoder
         /// <param name="qualityInfo">quality info for the image</param>
         /// @return a CloseableStaticBitmap
         /// </summary>
-        public CloseableStaticBitmap DecodeJpeg(
+        public Task<CloseableStaticBitmap> DecodeJpegAsync(
             EncodedImage encodedImage,
             int length,
             IQualityInfo qualityInfo)
         {
-            throw new NotImplementedException();
+            return _platformDecoder
+                .DecodeJPEGFromEncodedImageAsync(encodedImage, _bitmapConfig, length)
+                .ContinueWith(task =>
+                {
+                    try
+                    {
+                        return new CloseableStaticBitmap(
+                            task.Result,
+                            qualityInfo,
+                            encodedImage.RotationAngle);
+                    }
+                    finally
+                    {
+                        task.Result.Dispose();
+                    }
+                });
         }
 
         /// <summary>
@@ -98,7 +158,7 @@ namespace ImagePipeline.Decoder
         /// <param name="options"></param>
         /// @return a <see cref="CloseableImage"/>
         /// </summary>
-        public CloseableImage DecodeAnimatedWebp(
+        public Task<CloseableImage> DecodeAnimatedWebpAsync(
             EncodedImage encodedImage,
             ImageDecodeOptions options)
         {

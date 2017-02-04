@@ -18,22 +18,21 @@ namespace ImageUtils
         public static int ReadPackedInt(Stream inputStream, int numBytes, bool isLittleEndian)
         {
             int value = 0;
-            byte[] buf = new byte[1];
             for (int i = 0; i < numBytes; i++)
             {
-                int result = inputStream.Read(buf, 0, 1);
-                if (result == 0)
+                int result = inputStream.ReadByte();
+                if (result == -1)
                 {
                     throw new IOException("no more bytes");
                 }
 
                 if (isLittleEndian)
                 {
-                    value |= (buf[0] & 0xFF) << (i * 8);
+                    value |= (result & 0xFF) << (i * 8);
                 }
                 else
                 {
-                    value = (value << 8) | (buf[0] & 0xFF);
+                    value = (value << 8) | (result & 0xFF);
                 }
             }
 

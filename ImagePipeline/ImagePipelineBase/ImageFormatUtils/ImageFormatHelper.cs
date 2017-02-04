@@ -8,6 +8,11 @@ namespace ImageFormatUtils
     public enum ImageFormat
     {
         /// <summary>
+        /// Uninitialized
+        /// </summary>
+        UNINITIALIZED,
+
+        /// <summary>
         /// WebP simple
         /// </summary>
         WEBP_SIMPLE,

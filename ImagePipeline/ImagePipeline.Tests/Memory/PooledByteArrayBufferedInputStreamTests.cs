@@ -57,11 +57,9 @@ namespace ImagePipeline.Tests.Memory
         public void TestSeek()
         {
             // Buffer some data
-            byte[] buf = new byte[1];
-            _pooledByteArrayBufferedInputStream.Read(buf, 0, 1);
+            _pooledByteArrayBufferedInputStream.ReadByte();
             Assert.AreEqual(100, _pooledByteArrayBufferedInputStream.Seek(99, SeekOrigin.Current));
-            Assert.AreEqual(1, _pooledByteArrayBufferedInputStream.Read(buf, 0, 1));
-            Assert.AreEqual(100, buf[0]);
+            Assert.AreEqual(100, _pooledByteArrayBufferedInputStream.ReadByte());
         }
 
         /// <summary>
@@ -70,12 +68,10 @@ namespace ImagePipeline.Tests.Memory
         [TestMethod]
         public void TestSeek2()
         {
-            byte[] buf = new byte[1];
             int i = 0;
             while (i < 256)
             {
-                Assert.AreEqual(1, _pooledByteArrayBufferedInputStream.Read(buf, 0, 1));
-                Assert.AreEqual(i, buf[0]);
+                Assert.AreEqual(i, _pooledByteArrayBufferedInputStream.ReadByte());
                 Assert.AreEqual(i + 8, _pooledByteArrayBufferedInputStream.Seek(7, SeekOrigin.Current));
                 i += 8;
             }

@@ -120,7 +120,6 @@ namespace FBCore.Common.Internal
             int expectedSize)
         {
             byte[] bytes = new byte[expectedSize];
-            byte[] buf = new byte[1];
             int remaining = expectedSize;
 
             while (remaining > 0)
@@ -140,15 +139,15 @@ namespace FBCore.Common.Internal
             }
 
             // bytes is now full
-            int b = inputStream.Read(buf, 0, 1);
-            if (b == 0)
+            int b = inputStream.ReadByte();
+            if (b == -1)
             {
                 return bytes;
             }
 
             // The stream was longer, so read the rest normally
             FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream();
-            outputStream.Write(buf, 0, 1); // write the byte we read when testing for end of stream
+            outputStream.WriteByte((byte)b); // write the byte we read when testing for end of stream
             Copy(inputStream, outputStream);
 
             byte[] result = new byte[bytes.Length + outputStream.Length];

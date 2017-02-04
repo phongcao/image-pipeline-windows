@@ -14,10 +14,10 @@ namespace ImagePipeline.Image
     /// a byte buffer or a supplier of input streams) and the extracted meta data that is useful for
     /// image transforms.
     ///
-    /// <para />Only one of the input stream supplier or the byte buffer can be set. If using an input stream
-    /// supplier, the methods that return a byte buffer will simply return null. However, GetInputStream
-    /// will always be supported, either from the supplier or an input stream created from the byte
-    /// buffer held.
+    /// <para />Only one of the input stream supplier or the byte buffer can be set. If using an 
+    /// input stream supplier, the methods that return a byte buffer will simply return null. However, 
+    /// GetInputStream will always be supported, either from the supplier or an input stream created 
+    /// from the byte buffer held.
     ///
     /// <para />Currently the data is useful for rotation and resize.
     /// </summary>
@@ -78,7 +78,8 @@ namespace ImagePipeline.Image
         /// <summary>
         /// Instantiates the <see cref="EncodedImage"/> with provided params
         /// </summary>
-        public EncodedImage(ISupplier<FileStream> inputStreamSupplier, int streamSize) : this(inputStreamSupplier)
+        public EncodedImage(ISupplier<FileStream> inputStreamSupplier, int streamSize) : 
+            this(inputStreamSupplier)
         {
             StreamSize = streamSize;
         }

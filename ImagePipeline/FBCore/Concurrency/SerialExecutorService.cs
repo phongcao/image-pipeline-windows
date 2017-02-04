@@ -10,7 +10,7 @@ namespace FBCore.Concurrency
     /// Provides default implementations of IExecutorService execution methods
     /// using <see cref="LimitedConcurrencyTaskScheduler"/>
     /// </summary>
-    public class SerialExecutorService : IExecutorService, IDisposable
+    public class SerialExecutorService : IScheduledExecutorService, IDisposable
     {
         /// <summary>
         /// Lock
@@ -135,6 +135,37 @@ namespace FBCore.Concurrency
         }
 
         /// <summary>
+        /// Creates and executes a one-shot action that becomes enabled after the given delay.
+        /// </summary>
+        /// <remarks>
+        /// The action will be submitted to the end of the event queue
+        /// even if it is being submitted from the same queue Thread.
+        /// </remarks>
+        /// <param name="action">The action.</param>
+        /// <param name="delay">The delay in milliseconds.</param>
+        public Task Schedule(Action action, long delay)
+        {
+            return Task.Delay((int)delay).ContinueWith(
+                _ => Execute(action, CancellationToken.None));
+        }
+
+        /// <summary>
+        /// Creates and executes a one-shot action that becomes enabled after the given delay.
+        /// </summary>
+        /// <remarks>
+        /// The action will be submitted to the end of the event queue
+        /// even if it is being submitted from the same queue Thread.
+        /// </remarks>
+        /// <param name="action">The action.</param>
+        /// <param name="delay">The delay in milliseconds.</param>
+        /// <param name="token">The cancellation token.</param>
+        public Task Schedule(Action action, long delay, CancellationToken token)
+        {
+            return Task.Delay((int)delay).ContinueWith(
+                _ => Execute(action, token));
+        }
+
+        /// <summary>
         /// Queues a function to run.
         /// </summary>
         /// <typeparam name="T">Type of response.</typeparam>
@@ -187,6 +218,39 @@ namespace FBCore.Concurrency
         public Task<T> Execute<T>(Func<T> func)
         {
             return Execute(func, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Creates and executes a one-shot function that becomes enabled after the given delay.
+        /// </summary>
+        /// <remarks>
+        /// The function will be submitted to the end of the event queue
+        /// even if it is being submitted from the same queue Thread.
+        /// </remarks>
+        /// <typeparam name="T">Type of response.</typeparam>
+        /// <param name="func">The action.</param>
+        /// <param name="delay">The delay in milliseconds.</param>
+        public Task<T> Schedule<T>(Func<T> func, long delay)
+        {
+            return Task.Delay((int)delay).ContinueWith(
+                _ => Execute(func, CancellationToken.None)).Unwrap();
+        }
+
+        /// <summary>
+        /// Creates and executes a one-shot function that becomes enabled after the given delay.
+        /// </summary>
+        /// <remarks>
+        /// The function will be submitted to the end of the event queue
+        /// even if it is being submitted from the same queue Thread.
+        /// </remarks>
+        /// <typeparam name="T">Type of response.</typeparam>
+        /// <param name="func">The function.</param>
+        /// <param name="delay">The delay in milliseconds.</param>
+        /// <param name="token">The cancellation token.</param>
+        public Task<T> Schedule<T>(Func<T> func, long delay, CancellationToken token)
+        {
+            return Task.Delay((int)delay).ContinueWith(
+                _ => Execute(func, token)).Unwrap();
         }
 
         /// <summary>

@@ -45,8 +45,10 @@ namespace ImagePipeline.Datasource
 
             CloseableReference<CloseableImage> closeableImageRef = dataSource.GetResult();
             SoftwareBitmap bitmap = null;
+            var aaa = closeableImageRef.Get().GetType();
             if (closeableImageRef != null &&
-                closeableImageRef.Get().GetType() == typeof(CloseableBitmap))
+                (closeableImageRef.Get().GetType() == typeof(CloseableBitmap) ||
+                 closeableImageRef.Get().GetType() == typeof(CloseableStaticBitmap)))
             {
                 bitmap = ((CloseableBitmap)closeableImageRef.Get()).UnderlyingBitmap;
             }

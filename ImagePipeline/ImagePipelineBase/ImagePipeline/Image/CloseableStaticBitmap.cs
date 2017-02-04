@@ -1,6 +1,5 @@
 ﻿using FBCore.Common.Internal;
 using FBCore.Common.References;
-using ImagePipeline.Memory;
 using ImageUtils;
 using Windows.Graphics.Imaging;
 

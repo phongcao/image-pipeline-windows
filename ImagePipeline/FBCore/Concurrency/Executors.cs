@@ -14,7 +14,7 @@ namespace FBCore.Concurrency
         ///
         /// <param name="maxDegreeOfParallelism">The degrees of parallelism.</param>
         /// </summary>
-        public static IExecutorService NewFixedThreadPool(int maxDegreeOfParallelism)
+        public static IScheduledExecutorService NewFixedThreadPool(int maxDegreeOfParallelism)
         {
             return new SerialExecutorService(
                 "default",
@@ -31,7 +31,7 @@ namespace FBCore.Concurrency
         /// <param name="priority">The priority of the work item relative to work items 
         /// in the thread pool. The value of this parameter can be Low, Normal, or High.</param>
         /// </summary>
-        public static IExecutorService NewFixedThreadPool(int maxDegreeOfParallelism, WorkItemPriority priority)
+        public static IScheduledExecutorService NewFixedThreadPool(int maxDegreeOfParallelism, WorkItemPriority priority)
         {
             return new SerialExecutorService(
                 "default",
@@ -50,7 +50,7 @@ namespace FBCore.Concurrency
         /// in the thread pool. The value of this parameter can be Low, Normal, or High.</param>
         /// <param name="handler">The exception handler.</param>
         /// </summary>
-        public static IExecutorService NewFixedThreadPool(
+        public static IScheduledExecutorService NewFixedThreadPool(
             string name, 
             int maxDegreeOfParallelism, 
             WorkItemPriority priority,

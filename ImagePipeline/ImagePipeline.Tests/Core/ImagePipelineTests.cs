@@ -31,7 +31,7 @@ namespace ImagePipeline.Tests.Core
         /// <summary>
         /// Test 1.
         /// </summary>
-        [TestMethod, Timeout(30000)]
+        [TestMethod, Timeout(3000)]
         public void Test1()
         {
             var completion = new ManualResetEvent(false);

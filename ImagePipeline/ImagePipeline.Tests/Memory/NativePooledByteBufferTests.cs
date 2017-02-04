@@ -126,8 +126,7 @@ namespace ImagePipeline.Tests.Memory
                 Assert.AreEqual(BYTES[i], tmp[i]);
             }
 
-            byte[] readBuf = new byte[1];
-            Assert.AreEqual(0, inputStream.Read(readBuf, 0, 1));
+            Assert.AreEqual(-1, inputStream.ReadByte());
         }
 
         /// <summary>
