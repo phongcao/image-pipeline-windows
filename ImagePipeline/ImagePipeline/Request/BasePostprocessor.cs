@@ -2,6 +2,8 @@
 using FBCore.Common.Internal;
 using FBCore.Common.References;
 using ImagePipeline.Bitmaps;
+using System;
+using System.Runtime.InteropServices;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Request
@@ -27,13 +29,13 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// Clients should override this method only if the post-processed bitmap has to be of a different
-        /// size than the source bitmap. If the post-processed bitmap is of the same size, clients should
-        /// override one of the other two methods.
+        /// Clients should override this method only if the post-processed bitmap has to be of a 
+        /// different size than the source bitmap. If the post-processed bitmap is of the same size, 
+        /// clients should override one of the other two methods.
         ///
-        /// <para /> The source bitmap must not be modified as it may be shared by the other clients. The
-        /// implementation must create a new bitmap that is safe to be modified and return a reference
-        /// to it. Clients should use <code>bitmapFactory</code> to create a new bitmap.
+        /// <para /> The source bitmap must not be modified as it may be shared by the other clients. 
+        /// The implementation must create a new bitmap that is safe to be modified and return a 
+        /// reference to it. Clients should use <code>bitmapFactory</code> to create a new bitmap.
         ///
         /// <param name="sourceBitmap">The source bitmap.</param>
         /// <param name="bitmapFactory">The factory to create a destination bitmap.</param>
@@ -48,6 +50,7 @@ namespace ImagePipeline.Request
                     sourceBitmap.PixelWidth,
                     sourceBitmap.PixelHeight,
                     sourceBitmap.BitmapPixelFormat);
+
             try
             {
                 Process(destBitmapRef.Get(), sourceBitmap);
@@ -62,7 +65,8 @@ namespace ImagePipeline.Request
         /// <summary>
         /// Clients should override this method if the post-processing cannot be done in place. If the
         /// post-processing can be done in place, clients should override the 
-        /// <see cref="Process(SoftwareBitmap)"/> method.
+        /// Process(byte[] data, int width, int height, BitmapPixelFormat format, BitmapAlphaMode alpha) 
+        /// method.
         ///
         /// <para /> The provided destination bitmap is of the same size as the source bitmap. There 
         /// are no guarantees on the initial content of the destination bitmap, so the implementation 
@@ -74,14 +78,28 @@ namespace ImagePipeline.Request
         /// <param name="destBitmap">the destination bitmap to be used as output</param>
         /// <param name="sourceBitmap">the source bitmap to be used as input</param>
         /// </summary>
-        public virtual void Process(SoftwareBitmap destBitmap, SoftwareBitmap sourceBitmap)
+        public unsafe virtual void Process(SoftwareBitmap destBitmap, SoftwareBitmap sourceBitmap)
         {
             Preconditions.CheckArgument(sourceBitmap.BitmapPixelFormat == destBitmap.BitmapPixelFormat);
             Preconditions.CheckArgument(!destBitmap.IsReadOnly);
             Preconditions.CheckArgument(destBitmap.PixelWidth == sourceBitmap.PixelWidth);
             Preconditions.CheckArgument(destBitmap.PixelHeight == sourceBitmap.PixelHeight);
             sourceBitmap.CopyTo(destBitmap);
-            Process(destBitmap);
+            uint capacity = default(int);
+            using (var buffer = destBitmap.LockBuffer(BitmapBufferAccessMode.Write))
+            using (var reference = buffer.CreateReference())
+            {
+                byte* dataInBytes;
+                ((IMemoryBufferByteAccess)reference).GetBuffer(
+                    out dataInBytes, out capacity);
+
+                byte[] data = new byte[capacity];
+                Marshal.Copy((IntPtr)dataInBytes, data, 0, (int)capacity);
+                Process(data, destBitmap.PixelWidth, destBitmap.PixelHeight,
+                    destBitmap.BitmapPixelFormat, destBitmap.BitmapAlphaMode);
+
+                Marshal.Copy(data, 0, (IntPtr)dataInBytes, (int)capacity);
+            }
         }
 
         /// <summary>
@@ -90,9 +108,18 @@ namespace ImagePipeline.Request
         /// <para /> The provided bitmap is a copy of the source bitmap and the implementation is 
         /// free to modify it.
         ///
-        /// <param name="bitmap">the bitmap to be used both as input and as output</param>
+        /// <param name="data">The bitmap pixel data.</param>
+        /// <param name="width">The width of the new software bitmap, in pixels.</param>
+        /// <param name="height">The height of the new software bitmap, in pixels.</param>
+        /// <param name="format">The pixel format of the new software bitmap.</param>
+        /// <param name="alpha">The alpha mode of the new software bitmap.</param>
         /// </summary>
-        public virtual void Process(SoftwareBitmap bitmap)
+        public virtual void Process(
+            byte[] data,
+            int width, 
+            int height,
+            BitmapPixelFormat format,
+            BitmapAlphaMode alpha)
         {
         }
 
@@ -107,5 +134,13 @@ namespace ImagePipeline.Request
                 return null;
             }
         }
+    }
+
+    [ComImport]
+    [Guid("5B0D3235-4DBA-4D44-865E-8F1D0E4FD04D")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    unsafe interface IMemoryBufferByteAccess
+    {
+        void GetBuffer(out byte* buffer, out uint capacity);
     }
 }

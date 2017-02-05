@@ -9,12 +9,13 @@ namespace ImagePipeline.Request
     public class BasePostprocessorImpl : BasePostprocessor
     {
         private Func<string> _nameFunc;
-        private Action<SoftwareBitmap> _processFunc;
+        private Action<byte[], int, int, BitmapPixelFormat, BitmapAlphaMode> _processFunc;
 
         /// <summary>
         /// Instantiates the <see cref="BasePostprocessorImpl"/>
         /// </summary>
-        public BasePostprocessorImpl(Action<SoftwareBitmap> processFunc) : 
+        public BasePostprocessorImpl(
+            Action<byte[], int, int, BitmapPixelFormat, BitmapAlphaMode> processFunc) : 
             this(null, processFunc)
         {
         }
@@ -22,7 +23,9 @@ namespace ImagePipeline.Request
         /// <summary>
         /// Instantiates the <see cref="BasePostprocessorImpl"/>
         /// </summary>
-        public BasePostprocessorImpl(Func<string> nameFunc, Action<SoftwareBitmap> processFunc)
+        public BasePostprocessorImpl(
+            Func<string> nameFunc,
+            Action<byte[], int, int, BitmapPixelFormat, BitmapAlphaMode> processFunc)
         {
             _nameFunc = nameFunc;
             _processFunc = processFunc;
@@ -49,14 +52,25 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// The provided bitmap is a copy of the source bitmap and the implementation is 
+        /// Clients should override this method if the post-processing can be done in place.
+        ///
+        /// <para /> The provided bitmap is a copy of the source bitmap and the implementation is 
         /// free to modify it.
         ///
-        /// <param name="bitmap">The bitmap to be used both as input and as output.</param>
+        /// <param name="data">The bitmap pixel data.</param>
+        /// <param name="width">The width of the new software bitmap, in pixels.</param>
+        /// <param name="height">The height of the new software bitmap, in pixels.</param>
+        /// <param name="format">The pixel format of the new software bitmap.</param>
+        /// <param name="alpha">The alpha mode of the new software bitmap.</param>
         /// </summary>
-        public override void Process(SoftwareBitmap bitmap)
+        public override void Process(
+            byte[] data,
+            int width,
+            int height,
+            BitmapPixelFormat format,
+            BitmapAlphaMode alpha)
         {
-            _processFunc(bitmap);
+            _processFunc(data, width, height, format, alpha);
         }
     }
 }

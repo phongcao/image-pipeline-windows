@@ -16,49 +16,9 @@ namespace Playground
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private readonly Uri IMAGE_URL = new Uri("http://i.imgur.com/9rkjHkK.jpg");
-
         public MainPage()
         {
             InitializeComponent();
-
-            var imagePipeline = ImagePipelineFactory.Instance.GetImagePipeline();
-            var imageRequest = ImageRequestBuilder
-                .NewBuilderWithSource(IMAGE_URL)
-                .SetProgressiveRenderingEnabled(false)
-                .Build();
-
-            var dataSource = imagePipeline.FetchEncodedImage(imageRequest, new object());
-            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IPooledByteBuffer>>(
-                response =>
-                {
-                    if (!response.IsFinished())
-                    {
-                        // if we are not interested in the intermediate images,
-                        // we can just return here.
-                        return;
-                    }
-
-                    CloseableReference<IPooledByteBuffer> reference = response.GetResult();
-                    if (reference != null)
-                    {
-                        try
-                        {
-                            // do something with the result
-                            IPooledByteBuffer result = reference.Get();
-                        }
-                        finally
-                        {
-                            CloseableReference<IPooledByteBuffer>.CloseSafely(reference);
-                        }
-                    }
-                },
-                response =>
-                {
-                    Exception error = response.GetFailureCause();
-                });
-
-            dataSource.Subscribe(dataSubscriber, Executors.NewFixedThreadPool(1));
         }
     }
 }
