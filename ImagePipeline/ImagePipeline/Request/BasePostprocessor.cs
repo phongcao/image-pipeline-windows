@@ -2,7 +2,6 @@
 using FBCore.Common.Internal;
 using FBCore.Common.References;
 using ImagePipeline.Bitmaps;
-using System;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Request
@@ -19,7 +18,7 @@ namespace ImagePipeline.Request
         ///
         /// <para />Used for logging and analytics.
         /// </summary>
-        public string Name
+        public virtual string Name
         {
             get
             {
@@ -62,12 +61,12 @@ namespace ImagePipeline.Request
 
         /// <summary>
         /// Clients should override this method if the post-processing cannot be done in place. If the
-        /// post-processing can be done in place, clients should override the <see cref="Process(SoftwareBitmap)"/>
-        /// method.
+        /// post-processing can be done in place, clients should override the 
+        /// <see cref="Process(SoftwareBitmap)"/> method.
         ///
-        /// <para /> The provided destination bitmap is of the same size as the source bitmap. There are no
-        /// guarantees on the initial content of the destination bitmap, so the implementation has to make
-        /// sure that it properly populates it.
+        /// <para /> The provided destination bitmap is of the same size as the source bitmap. There 
+        /// are no guarantees on the initial content of the destination bitmap, so the implementation 
+        /// has to make sure that it properly populates it.
         ///
         /// <para /> The source bitmap must not be modified as it may be shared by the other clients.
         /// The implementation must use the provided destination bitmap as its output.
@@ -88,8 +87,8 @@ namespace ImagePipeline.Request
         /// <summary>
         /// Clients should override this method if the post-processing can be done in place.
         ///
-        /// <para /> The provided bitmap is a copy of the source bitmap and the implementation is free to
-        /// modify it.
+        /// <para /> The provided bitmap is a copy of the source bitmap and the implementation is 
+        /// free to modify it.
         ///
         /// <param name="bitmap">the bitmap to be used both as input and as output</param>
         /// </summary>

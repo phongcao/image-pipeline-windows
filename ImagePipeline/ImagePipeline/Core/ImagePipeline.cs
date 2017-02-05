@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace ImagePipeline.Core
@@ -170,6 +171,54 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
+        /// Submits a request for bitmap cache lookup.
+        ///
+        /// <param name="imageRequest">The request to submit.</param>
+        /// @return a Task{SoftwareBitmapSource} representing the image.
+        /// </summary>
+        public Task<SoftwareBitmapSource> FetchImageFromBitmapCache(ImageRequest imageRequest)
+        {
+            var taskCompletionSource = new TaskCompletionSource<SoftwareBitmapSource>();
+            var callerContext = new object();
+            var dataSource = FetchDecodedImage(
+                imageRequest, 
+                callerContext,
+                new RequestLevel(RequestLevel.BITMAP_MEMORY_CACHE));
+
+            var dataSubscriber = new BaseBitmapDataSubscriberImpl(
+                bitmap =>
+                {
+                    if (bitmap != null)
+                    {
+                        // Creates a copy of bitmap to return since bitmap will be released as soon
+                        // as the OnNewResultImpl method has finished.
+                        var bitmapCopy = SoftwareBitmap.Copy(bitmap);
+                        DispatcherHelpers.RunOnDispatcher(async () =>
+                        {
+                            var bitmapSource = new SoftwareBitmapSource();
+                            await bitmapSource.SetBitmapAsync(bitmapCopy)
+                                .AsTask()
+                                .ConfigureAwait(false);
+
+                            taskCompletionSource.SetResult(bitmapSource);
+                        });
+                    }
+                    else
+                    {
+                        taskCompletionSource.SetResult(null);
+                    }
+                },
+                response =>
+                {
+                    Exception error = response.GetFailureCause();
+                    taskCompletionSource.SetException(error);
+                });
+
+            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            return taskCompletionSource.Task;
+        }
+
+        /// <summary>
         /// Submits a request for execution and returns a DataSource representing the 
         /// pending decoded image(s).
         /// <para />The returned DataSource must be closed once the client has finished with it.
@@ -312,6 +361,10 @@ namespace ImagePipeline.Core
                             CloseableReference<IPooledByteBuffer>.CloseSafely(reference);
                         }
                     }
+                    else
+                    {
+                        taskCompletionSource.SetResult(null);
+                    }
                 },
                 response =>
                 {
@@ -324,9 +377,9 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Submits a request for execution and returns a Task{BitmapImage}.
+        /// Submits a request for execution and returns a Task{SoftwareBitmapSource}.
         /// <param name="imageRequest">The image request.</param>
-        /// @return a Task{BitmapImage}.
+        /// @return a Task{SoftwareBitmapSource}.
         /// </summary>
         public Task<SoftwareBitmapSource> FetchDecodedXamlBitmapImage(ImageRequest imageRequest)
         {
@@ -338,15 +391,22 @@ namespace ImagePipeline.Core
                 {
                     if (bitmap != null)
                     {
+                        // Creates a copy of bitmap to return since bitmap will be released as soon
+                        // as the OnNewResultImpl method has finished.
+                        var bitmapCopy = SoftwareBitmap.Copy(bitmap);
                         DispatcherHelpers.RunOnDispatcher(async () =>
                         {
                             var bitmapSource = new SoftwareBitmapSource();
-                            await bitmapSource.SetBitmapAsync(bitmap)
+                            await bitmapSource.SetBitmapAsync(bitmapCopy)
                                 .AsTask()
                                 .ConfigureAwait(false);
 
                             taskCompletionSource.SetResult(bitmapSource);
                         });
+                    }
+                    else
+                    {
+                        taskCompletionSource.SetResult(null);
                     }
                 },
                 response =>
@@ -389,6 +449,36 @@ namespace ImagePipeline.Core
             {
                 return DataSources.ImmediateFailedDataSource<object>(exception);
             }
+        }
+
+        /// <summary>
+        /// Submits a request for prefetching to the bitmap cache.
+        /// <param name="uri">The image uri.</param>
+        /// @return a DataSource that can safely be ignored.
+        /// </summary>
+        public Task PrefetchToBitmapCache(Uri uri)
+        {
+            var taskCompletionSource = new TaskCompletionSource<object>();
+            var imageRequest = ImageRequestBuilder
+                .NewBuilderWithSource(uri)
+                .SetProgressiveRenderingEnabled(false)
+                .Build();
+
+            var callerContext = new object();
+            var dataSource = PrefetchToBitmapCache(imageRequest, callerContext);
+            var dataSubscriber = new BaseDataSubscriberImpl<object>(
+                response =>
+                {
+                    taskCompletionSource.SetResult(null);
+                },
+                response =>
+                {
+                    Exception error = response.GetFailureCause();
+                    taskCompletionSource.SetException(error);
+                });
+
+            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            return taskCompletionSource.Task;
         }
 
         /// <summary>
@@ -437,6 +527,36 @@ namespace ImagePipeline.Core
             {
                 return DataSources.ImmediateFailedDataSource<object>(exception);
             }
+        }
+
+        /// <summary>
+        /// Submits a request for prefetching to the disk cache.
+        /// <param name="uri">The image uri.</param>
+        /// @return a DataSource that can safely be ignored.
+        /// </summary>
+        public Task PrefetchToDiskCache(Uri uri)
+        {
+            var taskCompletionSource = new TaskCompletionSource<object>();
+            var imageRequest = ImageRequestBuilder
+                .NewBuilderWithSource(uri)
+                .SetProgressiveRenderingEnabled(false)
+                .Build();
+
+            var callerContext = new object();
+            var dataSource = PrefetchToDiskCache(imageRequest, callerContext);
+            var dataSubscriber = new BaseDataSubscriberImpl<object>(
+                response =>
+                {
+                    taskCompletionSource.SetResult(null);
+                },
+                response =>
+                {
+                    Exception error = response.GetFailureCause();
+                    taskCompletionSource.SetException(error);
+                });
+
+            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            return taskCompletionSource.Task;
         }
 
         /// <summary>

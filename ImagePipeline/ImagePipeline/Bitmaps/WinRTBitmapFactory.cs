@@ -22,7 +22,9 @@ namespace ImagePipeline.Bitmaps
             int height,
             BitmapPixelFormat bitmapConfig)
         {
-            SoftwareBitmap bitmap = new SoftwareBitmap(bitmapConfig, width, height);
+            SoftwareBitmap bitmap = new SoftwareBitmap(
+                bitmapConfig, width, height, BitmapAlphaMode.Premultiplied);
+
             return CloseableReference<SoftwareBitmap>.of(bitmap, SimpleBitmapReleaser.Instance);
         }
     }

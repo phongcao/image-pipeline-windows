@@ -94,6 +94,7 @@ namespace ImagePipeline.Producers
                         listener.RequiresExtraMap(requestId) ?
                             new ReadOnlyDictionary<string, string>(extraMap) :
                             null);
+
                     consumer.OnNewResult(null, true);
                     return;
                 }

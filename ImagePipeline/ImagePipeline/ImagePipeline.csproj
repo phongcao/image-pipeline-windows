@@ -259,6 +259,7 @@
     <Compile Include="Producers\WebpTranscodeProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\BasePostprocessor.cs" />
+    <Compile Include="Request\BasePostprocessorImpl.cs" />
     <Compile Include="Request\BaseRepeatedPostprocessor.cs" />
     <Compile Include="Request\ImageRequest.cs" />
     <Compile Include="Request\ImageRequestBuilder.cs" />

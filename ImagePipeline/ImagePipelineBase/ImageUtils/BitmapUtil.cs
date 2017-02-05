@@ -64,12 +64,10 @@ namespace ImageUtils
             if (bitmap != null)
             {
                 using (BitmapBuffer buffer = bitmap.LockBuffer(BitmapBufferAccessMode.Read))
+                using (var reference = buffer.CreateReference())
                 {
-                    using (var reference = buffer.CreateReference())
-                    {
-                        byte* dataInBytes;
-                        ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacity);
-                    }
+                    byte* dataInBytes;
+                    ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacity);
                 }
             }
 

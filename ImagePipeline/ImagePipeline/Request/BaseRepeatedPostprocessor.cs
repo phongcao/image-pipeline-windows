@@ -10,7 +10,7 @@
 
         /// <summary>
         /// Callback used to pass the postprocessor a reference to the object that will run the
-        /// postprocessor's <code> PostProcessor#process</code> method when the client requires.
+        /// postprocessor's <code> PostProcessor.Process</code> method when the client requires.
         /// <param name="runner"></param>
         /// </summary>
         public void SetCallback(IRepeatedPostprocessorRunner runner)
