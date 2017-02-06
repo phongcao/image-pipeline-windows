@@ -643,11 +643,6 @@ namespace ImagePipeline.Tests.Memory
             {
                 return value.Length;
             }
-
-            protected internal override int GetSizeInBytes(int bucketedSize)
-            {
-                return bucketedSize;
-            }
         }
     }
 }

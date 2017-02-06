@@ -35,7 +35,7 @@ namespace ImagePipeline.Core
         private BufferedDiskCache _mainBufferedDiskCache;
         private IFileCache _mainFileCache;
         private ImageDecoder _imageDecoder;
-        private ImagePipeline _imagePipeline;
+        private ImagePipelineCore _imagePipeline;
         private ProducerFactory _producerFactory;
         private ProducerSequenceFactory _producerSequenceFactory;
         private BufferedDiskCache _smallImageBufferedDiskCache;
@@ -281,12 +281,12 @@ namespace ImagePipeline.Core
         /// Gets the imagepipeline.
         /// </summary>
         /// <returns></returns>
-        public ImagePipeline GetImagePipeline()
+        public ImagePipelineCore GetImagePipeline()
         {
             if (_imagePipeline == null)
             {
                 _imagePipeline =
-                    new ImagePipeline(
+                    new ImagePipelineCore(
                         GetProducerSequenceFactory(),
                         _config.RequestListeners,
                         _config.IsPrefetchEnabledSupplier,

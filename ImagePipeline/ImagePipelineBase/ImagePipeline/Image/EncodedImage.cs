@@ -21,7 +21,7 @@ namespace ImagePipeline.Image
     ///
     /// <para />Currently the data is useful for rotation and resize.
     /// </summary>
-    public class EncodedImage : IDisposable
+    public sealed class EncodedImage : IDisposable
     {
         /// <summary>
         /// Rotation angle default value

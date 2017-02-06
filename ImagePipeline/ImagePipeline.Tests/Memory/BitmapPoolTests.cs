@@ -103,9 +103,9 @@ namespace ImagePipeline.Tests.Memory
             using (SoftwareBitmap b1 = _pool.Alloc(12),
                                   b2 = MockBitmapFactory.Create(3, 4, BitmapPixelFormat.Bgra8),
                                   b3 = MockBitmapFactory.Create(3, 4, BitmapPixelFormat.Gray16),
-                                  b4 = MockBitmapFactory.Create(3, 4, BitmapPixelFormat.Bgra8),
                                   b5 = MockBitmapFactory.Create(3, 4, BitmapPixelFormat.Bgra8).GetReadOnlyView())
             {
+                SoftwareBitmap b4 = MockBitmapFactory.Create(3, 4, BitmapPixelFormat.Bgra8);
                 Assert.IsTrue(_pool.IsReusable(b1));
                 Assert.IsTrue(_pool.IsReusable(b2));
                 Assert.IsTrue(_pool.IsReusable(b3));

@@ -71,9 +71,9 @@ namespace ImageFormatUtils
                     offset = (offset + 1) % buffer.Length;
                 }
             }
-            catch (IOException ioe)
+            catch (IOException)
             {
-                throw ioe;
+                throw;
             }
 
             return false;

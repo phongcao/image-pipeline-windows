@@ -34,13 +34,13 @@ namespace FBCore.Common.Util
                 byte[] bytes = Encoding.UTF8.GetBytes(text);
                 return MakeSHA1Hash(bytes);
             }
-            catch (EncoderFallbackException e)
+            catch (EncoderFallbackException)
             {
-                throw e;
+                throw;
             }
-            catch (ArgumentNullException e)
+            catch (ArgumentNullException)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -75,9 +75,9 @@ namespace FBCore.Common.Util
                     .Replace('+', '-')
                     .Replace('/', '_'); ;
             }
-            catch (ArgumentNullException e)
+            catch (ArgumentNullException)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -93,13 +93,13 @@ namespace FBCore.Common.Util
                 byte[] bytes = Encoding.UTF8.GetBytes(text);
                 return MakeMD5Hash(bytes);
             }
-            catch (EncoderFallbackException e)
+            catch (EncoderFallbackException)
             {
-                throw e;
+                throw;
             }
-            catch (ArgumentNullException e)
+            catch (ArgumentNullException)
             {
-                throw e;
+                throw;
             }
         }
 

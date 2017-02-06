@@ -586,9 +586,9 @@ namespace ImagePipeline.Producers
                         obj.Dispose();
                     }
                 }
-                catch (IOException ioe)
+                catch (IOException)
                 {
-                    throw ioe;
+                    throw;
                 }
             }
 

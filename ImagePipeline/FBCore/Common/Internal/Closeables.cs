@@ -61,7 +61,7 @@ namespace FBCore.Common.Internal
                 }
                 else
                 {
-                    throw e;
+                    throw;
                 }
             }
         }
@@ -86,9 +86,9 @@ namespace FBCore.Common.Internal
             {
                 Close(inputStream, true);
             }
-            catch (IOException impossible)
+            catch (IOException)
             {
-                throw impossible;
+                throw;
             }
         }
 
@@ -111,9 +111,9 @@ namespace FBCore.Common.Internal
             {
                 Close(reader, true);
             }
-            catch (IOException impossible)
+            catch (IOException)
             {
-                throw impossible;
+                throw;
             }
         }
     }

@@ -11,7 +11,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
     /// Basic tests for closeable static bitmap
     /// </summary>
     [TestClass]
-    public class CloseableStaticBitmapTests
+    public sealed class CloseableStaticBitmapTests : IDisposable
     {
         private SoftwareBitmap _bitmap;
         private CloseableStaticBitmap _closeableStaticBitmap;
@@ -26,6 +26,15 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
             IResourceReleaser<SoftwareBitmap> resourceReleaser = SimpleBitmapReleaser.Instance;
             _closeableStaticBitmap = new CloseableStaticBitmap(
                 _bitmap, resourceReleaser, ImmutableQualityInfo.FULL_QUALITY, 0);
+        }
+
+        /// <summary>
+        /// Test cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            _bitmap.Dispose();
+            _closeableStaticBitmap.Dispose();
         }
 
         /// <summary>

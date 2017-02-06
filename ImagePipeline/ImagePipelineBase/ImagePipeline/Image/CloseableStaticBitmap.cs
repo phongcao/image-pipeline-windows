@@ -1,6 +1,7 @@
 ﻿using FBCore.Common.Internal;
 using FBCore.Common.References;
 using ImageUtils;
+using System;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Image
@@ -56,10 +57,11 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Releases the bitmap to the pool.
+        /// This has to be called before we get rid of this object in order to release underlying memory
         /// </summary>
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
             CloseableReference<SoftwareBitmap> reference = DetachBitmapReference();
             if (reference != null)
             {

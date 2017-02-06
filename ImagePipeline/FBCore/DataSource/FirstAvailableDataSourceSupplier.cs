@@ -96,7 +96,7 @@ namespace FBCore.DataSource
 
                 if (!StartNextDataSource())
                 {
-                    SetFailure(new Exception("No data source supplier or supplier returned null."));
+                    base.SetFailure(new Exception("No data source supplier or supplier returned null."));
                 }
             }
 
@@ -158,6 +158,7 @@ namespace FBCore.DataSource
                     dataSource.Subscribe(
                         new InternalDataSubscriber(this), 
                         CallerThreadExecutor.Instance);
+
                     return true;
                 }
                 else
@@ -171,7 +172,7 @@ namespace FBCore.DataSource
             {
                 lock (_gate)
                 {
-                    if (!IsClosed() && _index < _dataSourceSuppliers.Count)
+                    if (!base.IsClosed() && _index < _dataSourceSuppliers.Count)
                     {
                         return _dataSourceSuppliers[_index++];
                     }
@@ -184,7 +185,7 @@ namespace FBCore.DataSource
             {
                 lock (_gate)
                 {
-                    if (IsClosed())
+                    if (base.IsClosed())
                     {
                         return false;
                     }
@@ -198,7 +199,7 @@ namespace FBCore.DataSource
             {
                 lock (_gate)
                 {
-                    if (IsClosed() || dataSource != _currentDataSource)
+                    if (base.IsClosed() || dataSource != _currentDataSource)
                     {
                         return false;
                     }

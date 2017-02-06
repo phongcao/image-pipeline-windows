@@ -11,7 +11,7 @@ namespace ImagePipeline.Tests.Producers
     /// Tests for <see cref="StatefulProducerRunnable{T}"/>
     /// </summary>
     [TestClass]
-    public class StatefulProducerRunnableTests
+    public sealed class StatefulProducerRunnableTests : IDisposable
     {
         private const string REQUEST_ID = "awesomeRequestId";
         private const string PRODUCER_NAME = "aBitLessAwesomeButStillAwesomeProducerName";
@@ -68,6 +68,7 @@ namespace ImagePipeline.Tests.Producers
                     ++_consumerOnCancellationCount;
                 },
                 (_) => { });
+
             _producerListener = new ProducerListenerImpl(
                 (requestId, producerName) =>
                 {
@@ -102,6 +103,7 @@ namespace ImagePipeline.Tests.Producers
                 {
                     return _requiresExtraMap;
                 });
+
             _resultSupplier = new SupplierImpl<IDisposable>(() =>
             {
                 if (_throwExceptionInResultSupplierGet)
@@ -157,6 +159,18 @@ namespace ImagePipeline.Tests.Producers
 
             _throwExceptionInResultSupplierGet = false;
             _requiresExtraMap = false;
+        }
+
+        /// <summary>
+        /// Test cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            RESULT.Dispose();
+            if (_consumerInternalResult != null)
+            {
+                ((SoftwareBitmap)_consumerInternalResult).Dispose();
+            }
         }
 
         /// <summary>

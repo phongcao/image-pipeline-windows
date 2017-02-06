@@ -24,11 +24,6 @@ namespace ImagePipeline.Image
         public abstract int Height { get; }
 
         /// <summary>
-        /// Closes this instance and releases the resources.
-        /// </summary>
-        public abstract void Dispose();
-
-        /// <summary>
         /// Returns whether this instance is closed.
         /// </summary>
         public abstract bool IsClosed { get; }
@@ -61,9 +56,18 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Ensures that the underlying resources are always properly released.
+        /// Closes this instance and releases the resources.
         /// </summary>
-        ~CloseableImage()
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// This has to be called before we get rid of this object in order to release underlying memory
+        /// </summary>
+        protected virtual void Dispose(bool disposing)
         {
             if (IsClosed)
             {
@@ -71,15 +75,6 @@ namespace ImagePipeline.Image
             }
 
             Debug.WriteLine($"Finalize: { GetType().Name } { GetHashCode() } still open.");
-
-            try
-            {
-                Dispose();
-            }
-            finally
-            {
-                // Do nothing
-            }
         }
     }
 }

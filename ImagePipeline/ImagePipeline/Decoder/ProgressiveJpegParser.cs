@@ -131,10 +131,10 @@ namespace ImagePipeline.Decoder
                 StreamUtil.Skip(bufferedDataStream, _bytesParsed);
                 return DoParseMoreData(bufferedDataStream);
             }
-            catch (IOException ioe)
+            catch (IOException)
             {
                 // Does not happen - streams returned by PooledByteBuffers do not throw IOExceptions
-                throw ioe;
+                throw;
             }
             finally
             {
@@ -245,11 +245,11 @@ namespace ImagePipeline.Decoder
                     _lastByteRead = nextByte;
                 }
             }
-            catch (IOException ioe)
+            catch (IOException)
             {
                 // does not happen, input stream returned by pooled byte buffer does not 
                 // throw IOExceptions
-                throw ioe;
+                throw;
             }
 
             return _parserState != NOT_A_JPEG && _bestScanNumber != oldBestScanNumber;

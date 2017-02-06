@@ -117,6 +117,7 @@ namespace FBCore.Tests.Common.References
             public void Dispose()
             {
                 Dispose(true);
+                GC.SuppressFinalize(this);
             }
 
             protected virtual void Dispose(bool disposing)
@@ -136,6 +137,7 @@ namespace FBCore.Tests.Common.References
 
             protected override void Dispose(bool disposing)
             {
+                base.Dispose(disposing);
                 throw new IOException("");
             }
         }

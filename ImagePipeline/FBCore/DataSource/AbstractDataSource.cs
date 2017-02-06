@@ -8,8 +8,8 @@ namespace FBCore.DataSource
     /// <summary>
     /// An abstract implementation of <see cref="IDataSource{T}"/> interface.
     ///
-    /// <para /> It is highly recommended that other data sources extend this class as it takes care of the
-    /// state, as well as of notifying listeners when the state changes.
+    /// <para /> It is highly recommended that other data sources extend this class as it takes 
+    /// care of the state, as well as of notifying listeners when the state changes.
     ///
     /// <para /> Subclasses should override <see cref="CloseResult"/> if results need clean up
     /// </summary>

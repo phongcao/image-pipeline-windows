@@ -155,7 +155,7 @@ namespace ImagePipeline.Memory
 
                 return ret;
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 if (bitmaps != null)
                 {
@@ -170,7 +170,7 @@ namespace ImagePipeline.Memory
                     }
                 }
 
-                throw exception;
+                throw;
             }
         }
     }

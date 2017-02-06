@@ -363,10 +363,10 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             ((DiskStorageWithReadFailures)_storage).SetPoisonResourceId(resourceId2);
 
             Assert.IsNull(_cache.GetResource(key2));
-            VerifyListenerOnReadException(key2, DiskStorageWithReadFailures.POISON_EXCEPTION);
+            VerifyListenerOnReadException(key2, new IOException("Poisoned resource requested"));
 
             Assert.IsFalse(_cache.Probe(key2));
-            VerifyListenerOnReadException(key2, DiskStorageWithReadFailures.POISON_EXCEPTION);
+            VerifyListenerOnReadException(key2, new IOException("Poisoned resource requested"));
 
             DuplicatingCacheEventListener listener = (DuplicatingCacheEventListener)_cacheEventListener;
             Assert.IsTrue(listener.GetEvents("OnCleared").Count == 0);
@@ -518,9 +518,9 @@ namespace ImagePipelineBase.Tests.Cache.Disk
                         // the write lock forever.
                         barrier.SignalAndWait();
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-                        throw e;
+                        throw;
                     }
                 });
 
@@ -831,9 +831,6 @@ namespace ImagePipelineBase.Tests.Cache.Disk
 
         class DiskStorageWithReadFailures : DynamicDefaultDiskStorage
         {
-            public static readonly IOException POISON_EXCEPTION = 
-                new IOException("Poisoned resource requested");
-
             private string _poisonResourceId;
 
             public DiskStorageWithReadFailures(
@@ -859,7 +856,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             {
                 if (resourceId.Equals(_poisonResourceId))
                 {
-                    throw POISON_EXCEPTION;
+                    throw new IOException("Poisoned resource requested");
                 }
 
                 return Get().GetResource(resourceId, debugInfo);
@@ -869,7 +866,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             {
                 if (resourceId.Equals(_poisonResourceId))
                 {
-                    throw POISON_EXCEPTION;
+                    throw new IOException("Poisoned resource requested");
                 }
 
                 return base.Touch(resourceId, debugInfo);

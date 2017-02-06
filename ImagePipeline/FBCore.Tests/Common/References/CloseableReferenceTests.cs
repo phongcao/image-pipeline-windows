@@ -8,7 +8,7 @@ namespace FBCore.Tests.Common.References
     /// Basic tests for closeable references
     /// </summary>
     [TestClass]
-    public class CloseableReferenceTest
+    public sealed class CloseableReferenceTest : IDisposable
     {
         private MockDisposable _mockCloseable;
         private CloseableReference<IDisposable> _closeableReference;
@@ -21,6 +21,15 @@ namespace FBCore.Tests.Common.References
         {
             _mockCloseable = new MockDisposable();
             _closeableReference = CloseableReference<IDisposable>.of(_mockCloseable);
+        }
+
+        /// <summary>
+        /// Test cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            _mockCloseable.Dispose();
+            _closeableReference.Dispose();
         }
 
         /// <summary>

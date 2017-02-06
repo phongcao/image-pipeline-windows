@@ -14,7 +14,7 @@ namespace ImagePipeline.Producers
     /// <para /> Apps requiring more sophisticated networking should implement their own
     /// <see cref="INetworkFetcher{FetchState}"/>.
     /// </summary>
-    public class HttpUrlConnectionNetworkFetcher : BaseNetworkFetcher<FetchState>
+    public class HttpUrlConnectionNetworkFetcher : BaseNetworkFetcher<FetchState>, IDisposable
     {
         private const int NUM_NETWORK_THREADS = 10;
         private const int MAX_REDIRECTS = 5;
@@ -26,8 +26,29 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Instantiates the <see cref="HttpUrlConnectionNetworkFetcher"/>
         /// </summary>
-        public HttpUrlConnectionNetworkFetcher() : this(Executors.NewFixedThreadPool(NUM_NETWORK_THREADS))
+        public HttpUrlConnectionNetworkFetcher() : 
+            this(Executors.NewFixedThreadPool(NUM_NETWORK_THREADS))
         {
+        }
+
+        /// <summary>
+        /// Cleanup resources.
+        /// </summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _client.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Cleanup resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         internal HttpUrlConnectionNetworkFetcher(IExecutorService executorService)
@@ -39,14 +60,6 @@ namespace ImagePipeline.Producers
                 {
                     AllowAutoRedirect = false,
                 });
-        }
-
-        /// <summary>
-        /// Cleanup resources
-        /// </summary>
-        ~HttpUrlConnectionNetworkFetcher()
-        {
-            _client.Dispose();
         }
 
         /// <summary>

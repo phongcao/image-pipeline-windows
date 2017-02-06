@@ -34,10 +34,10 @@ namespace Cache.Common
 
                 return ids;
             }
-            catch (EncoderFallbackException e)
+            catch (EncoderFallbackException)
             {
                 // This should never happen. All VMs support UTF-8
-                throw e;
+                throw;
             }
         }
 
@@ -58,10 +58,10 @@ namespace Cache.Common
                     return SecureHashKey(key);
                 }
             }
-            catch (EncoderFallbackException e)
+            catch (EncoderFallbackException)
             {
                 // This should never happen. All VMs support UTF-8
-                throw e;
+                throw;
             }
         }
 

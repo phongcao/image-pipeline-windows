@@ -138,6 +138,7 @@ namespace ImagePipeline.Memory
         /// </summary>
         protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
             CloseableReference<NativeMemoryChunk>.CloseSafely(_bufRef);
             _bufRef = null;
             _count = -1;

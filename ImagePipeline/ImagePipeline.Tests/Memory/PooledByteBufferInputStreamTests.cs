@@ -9,7 +9,7 @@ namespace ImagePipeline.Tests.Memory
     /// Tests for PooledByteBufferInputStream 
     /// </summary>
     [TestClass]
-    public class PooledByteBufferInputStreamTests
+    public sealed class PooledByteBufferInputStreamTests : IDisposable
     {
         private static readonly byte[] BYTES = new byte[] { 1, 123, 20, 3, 6, 23, 1 };
         private PooledByteBufferInputStream _stream;
@@ -22,6 +22,14 @@ namespace ImagePipeline.Tests.Memory
         {
             IPooledByteBuffer buffer = new TrivialPooledByteBuffer(BYTES);
             _stream = new PooledByteBufferInputStream(buffer);
+        }
+
+        /// <summary>
+        /// Test cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            _stream.Dispose();
         }
 
         /// <summary>

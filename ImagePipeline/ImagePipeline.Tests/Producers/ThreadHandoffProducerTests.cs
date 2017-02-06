@@ -3,6 +3,7 @@ using ImagePipeline.Common;
 using ImagePipeline.Producers;
 using ImagePipeline.Request;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using System;
 using System.Collections.Generic;
 
 namespace ImagePipeline.Tests.Producers
@@ -11,7 +12,7 @@ namespace ImagePipeline.Tests.Producers
     /// Tests for <see cref="ThreadHandoffProducer{T}"/>
     /// </summary>
     [TestClass]
-    public class ThreadHandoffProducerTests
+    public sealed class ThreadHandoffProducerTests : IDisposable
     {
         private readonly ImageRequest IMAGE_REQUEST = ImageRequest.FromUri("http://microsoft.com");
         private const string REQUEST_ID = "RequestId";
@@ -109,6 +110,14 @@ namespace ImagePipeline.Tests.Producers
                 _inputProducer,
                 new ThreadHandoffProducerQueue(_testExecutorService));
             _finishRunning = false;
+        }
+
+        /// <summary>
+        /// Test cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            ((MockSerialExecutorService)_testExecutorService).Dispose();
         }
 
         /// <summary>

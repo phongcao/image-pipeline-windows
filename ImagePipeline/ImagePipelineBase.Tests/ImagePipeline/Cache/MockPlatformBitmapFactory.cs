@@ -1,6 +1,7 @@
 ﻿using FBCore.Common.References;
 using ImagePipeline.Bitmaps;
 using ImagePipeline.Memory;
+using System;
 using System.Threading;
 using Windows.Graphics.Imaging;
 
@@ -9,10 +10,11 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
     /// <summary>
     /// Mock PlatformBitmapFactory
     /// </summary>
-    class MockPlatformBitmapFactory : PlatformBitmapFactory
+    sealed class MockPlatformBitmapFactory : PlatformBitmapFactory, IDisposable
     {
         private static readonly IResourceReleaser<SoftwareBitmap> BITMAP_RESOURCE_RELEASER = 
             new ResourceReleaserImpl<SoftwareBitmap>(b => b.Dispose());
+
         private int _addBitmapReferenceCallCount = 0;
         private SoftwareBitmap _bitmap;
 
@@ -22,6 +24,17 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
         public MockPlatformBitmapFactory()
         {
             _bitmapCreationObserver = null;
+        }
+
+        /// <summary>
+        /// Resources cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_bitmap != null)
+            {
+                _bitmap.Dispose();
+            }
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace ImagePipeline.Tests.Producers
     /// Tests for <see cref="NetworkFetchProducer"/>
     /// </summary>
     [TestClass]
-    public class NetworkFetchProducerTests
+    public sealed class NetworkFetchProducerTests : IDisposable
     {
         private readonly Uri IMAGE_URL = new Uri("http://i.imgur.com/9rkjHkK.jpg");
         private readonly Uri FAILURE_URL = new Uri("https://httpbin.org/image_not_found.png");
@@ -50,6 +50,17 @@ namespace ImagePipeline.Tests.Producers
         public static void GlobalInitialize(TestContext testContext)
         {
             _networkFetcher = new HttpUrlConnectionNetworkFetcher();
+        }
+
+        /// <summary>
+        /// Test cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_completion != null)
+            {
+                _completion.Dispose();
+            }
         }
 
         /// <summary>

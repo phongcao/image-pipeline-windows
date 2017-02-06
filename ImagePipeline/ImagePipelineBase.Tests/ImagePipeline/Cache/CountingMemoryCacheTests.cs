@@ -13,7 +13,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
     /// Tests for <see cref="CountingMemoryCache{K, V}"/>
     /// </summary>
     [TestClass]
-    public class CountingMemoryCacheTests
+    public sealed class CountingMemoryCacheTests : IDisposable
     {
         private const int CACHE_MAX_SIZE = 1200;
         private const int CACHE_MAX_COUNT = 4;
@@ -77,17 +77,29 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
                 CACHE_EVICTION_QUEUE_MAX_SIZE,
                 CACHE_EVICTION_QUEUE_MAX_COUNT,
                 CACHE_ENTRY_MAX_SIZE);
+
             _paramsSupplier = new MockSupplier<MemoryCacheParams>(_params);
             _platformBitmapFactory = new MockPlatformBitmapFactory();
             _bitmap = new SoftwareBitmap(BitmapPixelFormat.Rgba8, 50, 50);
             _bitmapReference = CloseableReference<SoftwareBitmap>.of(
                 _bitmap, BITMAP_RESOURCE_RELEASER);
+
             _cache = new CountingMemoryCache<string, int>(
                 _valueDescriptor,
                 _cacheTrimStrategy,
                 _paramsSupplier,
                 _platformBitmapFactory,
                 true);
+        }
+
+        /// <summary>
+        /// Test cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            _bitmap.Dispose();
+            _platformBitmapFactory.Dispose();
+            _bitmapReference.Dispose();
         }
 
         /// <summary>

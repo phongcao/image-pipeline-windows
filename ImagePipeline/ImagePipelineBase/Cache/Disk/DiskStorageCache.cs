@@ -23,12 +23,18 @@ namespace Cache.Disk
         /// no longer using this constant, it can be removed.
         public const int START_OF_VERSIONING = 1;
 
-        private static readonly long FUTURE_TIMESTAMP_THRESHOLD_MS = (long)TimeSpan.FromHours(2).TotalMilliseconds;
+        private static readonly long FUTURE_TIMESTAMP_THRESHOLD_MS = 
+            (long)TimeSpan.FromHours(2).TotalMilliseconds;
 
         /// <summary>
         /// Force recalculation of the ground truth for filecache size at this interval
         /// </summary>
         private static readonly long FILECACHE_SIZE_UPDATE_PERIOD_MS = (long)TimeSpan.FromMinutes(30).TotalMilliseconds;
+
+        /// <summary>
+        /// Used for indexPopulateAtStartupEnabled.
+        /// </summary>
+        private readonly CountdownEvent _countdownEvent = new CountdownEvent(1);
 
         private const double TRIMMING_LOWER_BOUND = 0.02;
         private const long UNINITIALIZED = -1;
@@ -36,7 +42,6 @@ namespace Cache.Disk
 
         private readonly long _lowDiskSpaceCacheSizeLimit;
         private readonly long _defaultCacheSizeLimit;
-        private readonly CountdownEvent _countdownEvent;
         private long _cacheSizeLimit;
 
         private readonly ICacheEventListener _cacheEventListener;
@@ -200,8 +205,6 @@ namespace Cache.Disk
 
             if (_indexPopulateAtStartupEnabled)
             {
-                _countdownEvent = new CountdownEvent(1);
-
                 Task.Run(() =>
                 {
                     try
@@ -216,10 +219,10 @@ namespace Cache.Disk
                         _countdownEvent.Signal();
                     }
                 });
-            } 
-            else 
+            }
+            else
             {
-                _countdownEvent = new CountdownEvent(0);
+                _countdownEvent.Reset(0);
             }
         }
 
@@ -244,8 +247,8 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Blocks current thread until having finished initialization in Memory Index. Call only when you
-        /// need memory index in cold start.
+        /// Blocks current thread until having finished initialization in Memory Index. 
+        /// Call only when you need memory index in cold start.
         /// </summary>
         protected internal void AwaitIndex()
         {
@@ -441,7 +444,7 @@ namespace Cache.Disk
                 cacheEvent.SetException(ioe);
                 _cacheEventListener.OnWriteException(cacheEvent);
                 Debug.WriteLine("Failed inserting a file into the cache");
-                throw ioe;
+                throw;
             }
             finally
             {
@@ -591,7 +594,8 @@ namespace Cache.Disk
                     CacheErrorCategory.EVICTION,
                     typeof(DiskStorageCache),
                     "evictAboveSize: " + ioe.Message);
-                throw ioe;
+
+                throw;
             }
 
             long cacheSizeBeforeClearance = _cacheStats.Size;

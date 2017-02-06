@@ -20,7 +20,7 @@ namespace ImagePipeline.Tests.Cache
     /// Tests for <see cref="BufferedDiskCache"/>
     /// </summary>
     [TestClass]
-    public class BufferedDiskCacheTests
+    public sealed class BufferedDiskCacheTests : IDisposable
     {
         private IFileCache _fileCache;
         private IFileCacheFactory _fileCacheFactory;
@@ -87,6 +87,14 @@ namespace ImagePipeline.Tests.Cache
                 _readPriorityExecutor,
                 _writePriorityExecutor,
                 _imageCacheStatsTracker);
+        }
+
+        /// <summary>
+        /// Test cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            _encodedImage.Dispose();
         }
 
         /// <summary>

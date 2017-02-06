@@ -112,33 +112,6 @@ namespace FBCore.Common.References
         }
 
         /// <summary>
-        /// Perform cleanup operations on unmanaged resources held by the current object before 
-        /// the object is destroyed
-        /// </summary>
-        ~CloseableReference()
-        {
-            try
-            {
-                // We put synchronized here so that lint doesn't warn about accessing _isClosed, which is
-                // guarded by this. Lint isn't aware of finalize semantics.
-                lock (_referenceGate)
-                {
-                    if (_isClosed)
-                    {
-                        return;
-                    }
-                }
-
-                Debug.WriteLine($"Finalized without closing: { GetHashCode() } { _sharedReference.GetHashCode() } (type = { _sharedReference.GetType() })");
-                Dispose(false);
-            }
-            finally
-            {
-                // Do nothing
-            }
-        }
-
-        /// <summary>
         /// Closes this CloseableReference.
         ///
         /// <para />Decrements the reference count of the underlying object. If it is zero, the object
@@ -152,18 +125,28 @@ namespace FBCore.Common.References
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Perform cleanup operations on unmanaged resources held by the current object before 
+        /// the object is destroyed
+        /// </summary>
         private void Dispose(bool disposing)
         {
+            // We put synchronized here so that lint doesn't warn about accessing _isClosed, which is
+            // guarded by this. Lint isn't aware of finalize semantics.
             lock (_referenceGate)
             {
                 if (_isClosed)
                 {
                     return;
                 }
-
-                _isClosed = true;
             }
 
+            if (!disposing)
+            {
+                Debug.WriteLine($"Finalized without closing: { GetHashCode() } { _sharedReference.GetHashCode() } (type = { _sharedReference.GetType() })");
+            }
+
+            _isClosed = true;
             _sharedReference.DeleteReference();
         }
 

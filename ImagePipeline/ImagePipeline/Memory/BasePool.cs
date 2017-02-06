@@ -14,8 +14,8 @@ namespace ImagePipeline.Memory
     /// <para />
     /// The pool supports two main operations:
     /// <ul>
-    ///   <li> <see cref="Get(int)"/> - returns a value of size that's the same or larger than specified, hopefully
-    ///   from the pool; otherwise, this value is allocated (via the alloc function)</li>
+    ///   <li> <see cref="Get(int)"/> - returns a value of size that's the same or larger than specified, 
+    ///   hopefully from the pool; otherwise, this value is allocated (via the alloc function)</li>
     ///   <li> <see cref="Release(T)"/> - releases a value to the pool</li>
     /// </ul>
     /// In addition, the pool subscribes to the <see cref="IMemoryTrimmableRegistry"/>, and responds to
@@ -72,8 +72,8 @@ namespace ImagePipeline.Memory
     ///   free portion has fallen to zero, the pool may still be larger than its maxSizeSoftCap.
     ///   On a <see cref="Release(T)"/> request, the value will be 'freed' instead of being added to
     ///   the free portion of the pool, if the pool exceeds its maxSizeSoftCap.
-    ///   The invariant we want to maintain - see <see cref="EnsurePoolSizeInvariant()"/> - is that the pool
-    ///   must be below the max size soft cap OR the free lists must be empty. </li>
+    ///   The invariant we want to maintain - see <see cref="EnsurePoolSizeInvariant()"/> - is that the 
+    ///   pool must be below the max size soft cap OR the free lists must be empty. </li>
     ///   <li> <see cref="PoolParams.MaxSizeHardCap"/>
     ///   The hard cap is a stronger limit on the pool size. When this limit is reached, we first
     ///   attempt to trim the pool. If the pool size is still over the hard, the
@@ -237,7 +237,7 @@ namespace ImagePipeline.Memory
                 // but that would have blocked out other operations on the pool
                 value = Alloc(bucketedSize);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // Assumption we made previously is not valid - allocation failed. We need to fix internal
                 // counters.
@@ -251,7 +251,7 @@ namespace ImagePipeline.Memory
                     }
                 }
 
-                throw e;
+                throw;
             }
 
             // NOTE: We checked for hard caps earlier, and then did the alloc above. Now we need to
@@ -388,7 +388,10 @@ namespace ImagePipeline.Memory
         /// <param name="bucketedSize">The bucketed size</param>
         /// @return size in bytes
         /// </summary>
-        protected internal abstract int GetSizeInBytes(int bucketedSize);
+        protected internal int GetSizeInBytes(int bucketedSize)
+        {
+            return bucketedSize;
+        }
 
         /// <summary>
         /// The pool parameters may have changed. Subclasses can override this to update any state they

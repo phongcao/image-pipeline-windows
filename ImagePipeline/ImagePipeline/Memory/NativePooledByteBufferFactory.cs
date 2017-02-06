@@ -85,9 +85,9 @@ namespace ImagePipeline.Memory
                 outputStream.Write(bytes, 0, bytes.Length);
                 return outputStream.ToByteBuffer();
             }
-            catch (IOException ioe)
+            catch (IOException)
             {
-                throw ioe;
+                throw;
             }
             finally
             {

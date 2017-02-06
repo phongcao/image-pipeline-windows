@@ -26,11 +26,8 @@ namespace ImagePipeline.Core
     /// <summary>
     /// The entry point for the image pipeline.
     /// </summary>
-    public class ImagePipeline
+    public class ImagePipelineCore
     {
-        private static readonly OperationCanceledException PREFETCH_EXCEPTION =
-            new OperationCanceledException("Prefetching is not enabled");
-
         private readonly ProducerSequenceFactory _producerSequenceFactory;
         private readonly IRequestListener _requestListener;
         private readonly ISupplier<bool> _isPrefetchEnabledSupplier;
@@ -43,7 +40,7 @@ namespace ImagePipeline.Core
         private long _idCounter;
 
         /// <summary>
-        /// Instantiates the <see cref="ImagePipeline"/>.
+        /// Instantiates the <see cref="ImagePipelineCore"/>.
         /// </summary>
         /// <param name="producerSequenceFactory">The factory that creates all producer sequences.</param>
         /// <param name="requestListeners">The listeners for the image requests.</param>
@@ -54,7 +51,7 @@ namespace ImagePipeline.Core
         /// <param name="smallImageBufferedDiskCache">The buffered disk cache used for small images.</param>
         /// <param name="cacheKeyFactory">The factory that creates cache keys for the pipeline.</param>
         /// <param name="threadHandoffProducerQueue">Move further computation to different thread.</param>
-        public ImagePipeline(
+        public ImagePipelineCore(
             ProducerSequenceFactory producerSequenceFactory,
             HashSet<IRequestListener> requestListeners,
             ISupplier<bool> isPrefetchEnabledSupplier,
@@ -431,7 +428,8 @@ namespace ImagePipeline.Core
         {
             if (!_isPrefetchEnabledSupplier.Get())
             {
-                return DataSources.ImmediateFailedDataSource<object>(PREFETCH_EXCEPTION);
+                return DataSources.ImmediateFailedDataSource<object>(
+                    new OperationCanceledException("Prefetching is not enabled"));
             }
             try
             {
@@ -508,7 +506,8 @@ namespace ImagePipeline.Core
         {
             if (!_isPrefetchEnabledSupplier.Get())
             {
-                return DataSources.ImmediateFailedDataSource<object>(PREFETCH_EXCEPTION);
+                return DataSources.ImmediateFailedDataSource<object>(
+                    new OperationCanceledException("Prefetching is not enabled"));
             }
 
             try

@@ -31,11 +31,9 @@ namespace ImagePipeline.Tests.Memory
         public void TestDispose()
         {
             int size = 128;
-            using (NativeMemoryChunk nativeMemoryChunk = new NativeMemoryChunk(size))
-            {
-                nativeMemoryChunk.Dispose();
-                Assert.IsTrue(nativeMemoryChunk.Closed);
-            }
+            NativeMemoryChunk nativeMemoryChunk = new NativeMemoryChunk(size);
+            nativeMemoryChunk.Dispose();
+            Assert.IsTrue(nativeMemoryChunk.Closed);
         }
 
         /// <summary>

@@ -24,12 +24,20 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Size of the memory region
         /// </summary>
-        public virtual int Size { get; }
+        public virtual int Size
+        {
+            get
+            {
+                return _size;
+            }
+        }
 
         /// <summary>
         /// Flag indicating if this object was closed
         /// </summary>
         private bool _closed;
+
+        private int _size;
 
         /// <summary>
         /// Instantiates the <see cref="NativeMemoryChunk"/>.
@@ -38,8 +46,8 @@ namespace ImagePipeline.Memory
         public NativeMemoryChunk(int size)
         {
             Preconditions.CheckArgument(size > 0);
-            Size = size;
-            _nativePtr = ImagePipelineNative.NativeMemoryChunk.NativeAllocate(Size);
+            _size = size;
+            _nativePtr = ImagePipelineNative.NativeMemoryChunk.NativeAllocate(size);
             _closed = false;
         }
 
@@ -48,26 +56,9 @@ namespace ImagePipeline.Memory
         /// </summary>
         public NativeMemoryChunk()
         {
-            Size = 0;
+            _size = 0;
             _nativePtr = 0;
             _closed = true;
-        }
-
-        /// <summary>
-        /// A finalizer, just in case. Just delegates to <see cref="Dispose()"/>
-        /// @throws Throwable
-        /// </summary>
-        ~NativeMemoryChunk()
-        {
-            if (Closed)
-            {
-                return;
-            }
-
-            Debug.WriteLine($"finalize: Chunk { GetHashCode().ToString("X4") } still active. Underlying address = { _nativePtr.ToString("X4") }");
-
-            // Do the actual clearing
-            Dispose(false);
         }
 
         /// <summary>
@@ -88,6 +79,7 @@ namespace ImagePipeline.Memory
             {
                 if (!_closed)
                 {
+                    Debug.WriteLine($"finalize: Chunk { GetHashCode().ToString("X4") } still active. Underlying address = { _nativePtr.ToString("X4") }");
                     _closed = true;
                     ImagePipelineNative.NativeMemoryChunk.NativeFree(_nativePtr);
                 }

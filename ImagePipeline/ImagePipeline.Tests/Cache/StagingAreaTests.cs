@@ -4,6 +4,7 @@ using ImagePipeline.Cache;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using System;
 
 namespace ImagePipeline.Tests.Cache
 {
@@ -11,7 +12,7 @@ namespace ImagePipeline.Tests.Cache
     /// Tests for <see cref="StagingArea"/> class
     /// </summary>
     [TestClass]
-    public class StagingAreaTests
+    public sealed class StagingAreaTests : IDisposable
     {
         private static readonly byte[] BYTES = new byte[] { 1, 123, 20, 3, 6, 23, 1 };
 
@@ -35,6 +36,15 @@ namespace ImagePipeline.Tests.Cache
             _secondEncodedImage = new EncodedImage(_closeableReference2);
             _cacheKey = new SimpleCacheKey("http://this.is/uri");
             _stagingArea.Put(_cacheKey, _encodedImage);
+        }
+
+        /// <summary>
+        /// Test cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            _encodedImage.Dispose();
+            _secondEncodedImage.Dispose();
         }
 
         /// <summary>

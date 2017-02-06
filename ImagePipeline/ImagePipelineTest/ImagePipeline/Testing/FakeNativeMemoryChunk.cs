@@ -26,6 +26,7 @@ namespace ImagePipeline.Testing
         /// </summary>
         protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
             _buf = null;
         }
 

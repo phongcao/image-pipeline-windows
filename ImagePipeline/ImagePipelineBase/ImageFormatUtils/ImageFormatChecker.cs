@@ -164,9 +164,9 @@ namespace ImageFormatUtils
             {
                 return GetImageFormat(inputStream);
             }
-            catch (IOException ioe)
+            catch (IOException)
             {
-                throw ioe;
+                throw;
             }
         }
 

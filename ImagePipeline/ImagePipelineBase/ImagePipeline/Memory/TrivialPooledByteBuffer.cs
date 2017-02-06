@@ -5,7 +5,7 @@ namespace ImagePipeline.Memory
     /// <summary>
     /// A trivial implementation of <see cref="IPooledByteBuffer"/>
     /// </summary>
-    public class TrivialPooledByteBuffer : IPooledByteBuffer
+    public sealed class TrivialPooledByteBuffer : IPooledByteBuffer
     {
         private byte[] _buf;
         private long _nativePtr;

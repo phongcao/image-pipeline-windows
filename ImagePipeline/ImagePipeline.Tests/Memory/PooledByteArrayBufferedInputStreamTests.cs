@@ -1,6 +1,7 @@
 ﻿using ImagePipeline.Memory;
 using ImagePipeline.Testing;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using System;
 using System.IO;
 
 namespace ImagePipeline.Tests.Memory
@@ -9,7 +10,7 @@ namespace ImagePipeline.Tests.Memory
     /// Tests for PooledByteArrayBufferedInputStreamTests 
     /// </summary>
     [TestClass]
-    public class PooledByteArrayBufferedInputStreamTests
+    public sealed class PooledByteArrayBufferedInputStreamTests : IDisposable
     {
         private MockResourceReleaser<byte[]> _resourceReleaser;
         private byte[] _buffer;
@@ -34,6 +35,14 @@ namespace ImagePipeline.Tests.Memory
                 unbufferedStream,
                 _buffer,
                 _resourceReleaser);
+        }
+
+        /// <summary>
+        /// Test cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            _pooledByteArrayBufferedInputStream.Dispose();
         }
 
         /// <summary>

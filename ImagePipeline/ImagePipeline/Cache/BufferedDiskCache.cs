@@ -91,12 +91,12 @@ namespace ImagePipeline.Cache
             {
                 return _readExecutor.Execute(() => CheckInStagingAreaAndFileCache(key));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // Log failure
                 // TODO: 3697790
                 Debug.WriteLine($"Failed to schedule disk-cache read for { key.ToString() }");
-                throw e;
+                throw;
             }
         }
 
@@ -211,12 +211,12 @@ namespace ImagePipeline.Cache
 
                 return Task.FromResult(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // Log failure
                 // TODO: 3697790
                 Debug.WriteLine($"Failed to schedule disk-cache read for { key.ToString() }");
-                throw e;
+                throw;
             }
         }
 
@@ -251,14 +251,14 @@ namespace ImagePipeline.Cache
                     }
                 });
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // We failed to enqueue cache write. Log failure and decrement ref count
                 // TODO: 3697790
                 Debug.WriteLine($"Failed to schedule disk-cache write for { key.ToString() }");
                 _stagingArea.Remove(key, encodedImage);
                 EncodedImage.CloseSafely(finalEncodedImage);
-                throw e;
+                throw;
             }
         }
 
@@ -277,12 +277,12 @@ namespace ImagePipeline.Cache
                     _fileCache.Remove(key);
                 });
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 // Log failure
                 // TODO: 3697790
                 Debug.WriteLine($"Failed to schedule disk-cache remove for { key.ToString() }");
-                throw exception;
+                throw;
             }
         }
 
@@ -300,12 +300,12 @@ namespace ImagePipeline.Cache
                     _fileCache.ClearAll();
                 });
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 // Log failure
                 // TODO: 3697790
                 Debug.WriteLine("Failed to schedule disk-cache clear");
-                throw exception;
+                throw;
             }
         }
 
@@ -348,14 +348,14 @@ namespace ImagePipeline.Cache
                 Debug.WriteLine($"Successful read from disk cache for { key.ToString() }");
                 return byteBuffer;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // TODO: 3697790 log failures
                 // TODO: 5258772 - uncomment line below
                 // _fileCache.Remove(key);
                 Debug.WriteLine($"Exception reading from cache for { key.ToString() }");
                 _imageCacheStatsTracker.OnDiskCacheGetFail();
-                throw e;
+                throw;
             }
         }
 

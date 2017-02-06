@@ -259,6 +259,7 @@ namespace FBCore.Concurrency
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>

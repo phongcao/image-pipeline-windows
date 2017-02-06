@@ -7,7 +7,7 @@ namespace ImagePipeline.Memory
     /// An implementation of <see cref="IPooledByteBuffer"/> that uses native memory
     /// (<see cref="NativeMemoryChunk"/>) to store data
     /// </summary>
-    public class NativePooledByteBuffer : IPooledByteBuffer
+    public sealed class NativePooledByteBuffer : IPooledByteBuffer
     {
         private readonly object _poolGate = new object();
         private readonly int _size;

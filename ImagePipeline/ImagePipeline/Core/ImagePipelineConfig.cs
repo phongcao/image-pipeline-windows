@@ -8,6 +8,7 @@ using ImagePipeline.Decoder;
 using ImagePipeline.Listener;
 using ImagePipeline.Memory;
 using ImagePipeline.Producers;
+using System;
 using System.Collections.Generic;
 using Windows.Graphics.Imaging;
 
@@ -28,7 +29,7 @@ namespace ImagePipeline.Core
     ///
     /// <para />This should only be done once per process.
     /// </summary>
-    public class ImagePipelineConfig
+    public class ImagePipelineConfig : IDisposable
     {
         // If a member here is marked @Nullable, it must be constructed by ImagePipelineFactory
         // on demand if needed.
@@ -109,6 +110,29 @@ namespace ImagePipeline.Core
                 new DefaultExecutorSupplier(numCpuBoundThreads);
 
             _imagePipelineExperiments = builder.Experiment.Build();
+        }
+
+        /// <summary>
+        /// Cleanup resources.
+        /// </summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_networkFetcher.GetType() == typeof(HttpUrlConnectionNetworkFetcher))
+                {
+                    ((HttpUrlConnectionNetworkFetcher)_networkFetcher).Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Cleanup resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>

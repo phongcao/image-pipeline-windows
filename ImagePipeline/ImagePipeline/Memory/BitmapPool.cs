@@ -83,16 +83,6 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Gets the size in bytes for the given bucketed size
-        /// <param name="bucketedSize">The bucketed size</param>
-        /// @return size in bytes
-        /// </summary>
-        protected internal override int GetSizeInBytes(int bucketedSize)
-        {
-            return bucketedSize;
-        }
-
-        /// <summary>
         /// Determine if this bitmap is reusable (i.e.) if subsequent Get(int) requests can
         /// use this value.
         /// The bitmap is reusable if

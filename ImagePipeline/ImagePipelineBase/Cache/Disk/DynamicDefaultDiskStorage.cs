@@ -301,13 +301,14 @@ namespace Cache.Disk
             {
                 FileUtils.Mkdirs(rootDirectory);
             }
-            catch (CreateDirectoryException cde)
+            catch (CreateDirectoryException)
             {
                 _cacheErrorLogger.LogError(
                     CacheErrorCategory.WRITE_CREATE_DIR,
                     typeof(DynamicDefaultDiskStorage),
                     "createRootDirectoryIfNecessary");
-                throw cde;
+
+                throw;
             }
 
             Debug.WriteLine($"Created cache directory { rootDirectory.FullName }");

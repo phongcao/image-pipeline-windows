@@ -363,7 +363,7 @@ namespace Truncon.Collections
 
             if (arrayIndex < 0)
             {
-                throw new ArgumentOutOfRangeException("arrayIndex", arrayIndex, String.Format(CultureInfo.CurrentCulture, "The given array was too small to hold the items.", 0));
+                throw new ArgumentOutOfRangeException("arrayIndex", arrayIndex, String.Format(CultureInfo.CurrentCulture, "The given array was too small to hold the items."));
             }
 
             if (dictionary.Count > array.Length - arrayIndex)
@@ -536,7 +536,7 @@ namespace Truncon.Collections
 
                 if (arrayIndex < 0)
                 {
-                    throw new ArgumentOutOfRangeException("arrayIndex", arrayIndex, String.Format("The given array was too small to hold the items.", 0));
+                    throw new ArgumentOutOfRangeException("arrayIndex", arrayIndex, "The given array was too small to hold the items.");
                 }
 
                 if (parent.dictionary.Count > array.Length - arrayIndex)

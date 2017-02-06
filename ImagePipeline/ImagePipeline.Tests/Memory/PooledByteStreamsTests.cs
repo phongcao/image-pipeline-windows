@@ -11,7 +11,7 @@ namespace ImagePipeline.Tests.Memory
     /// Tests for PooledByteStreams 
     /// </summary>
     [TestClass]
-    public class PooledByteStreamsTests
+    public sealed class PooledByteStreamsTests : IDisposable
     {
         private const int POOLED_ARRAY_SIZE = 4;
 
@@ -36,6 +36,15 @@ namespace ImagePipeline.Tests.Memory
             _is = new MemoryStream(_data);
             _os = new MemoryStream();
             _pooledByteStreams = new PooledByteStreams(_byteArrayPool, POOLED_ARRAY_SIZE);
+        }
+
+        /// <summary>
+        /// Test cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            _is.Dispose();
+            _os.Dispose();
         }
 
         /// <summary>

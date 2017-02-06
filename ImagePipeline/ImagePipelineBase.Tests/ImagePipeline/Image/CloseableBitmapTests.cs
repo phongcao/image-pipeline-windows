@@ -2,6 +2,7 @@
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using System;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipelineBase.Tests.ImagePipeline.Image
@@ -10,7 +11,7 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
     /// Basic tests for closeable bitmap
     /// </summary>
     [TestClass]
-    public class CloseableBitmapTests
+    public sealed class CloseableBitmapTests : IDisposable
     {
         private SoftwareBitmap _bitmap;
         private CloseableStaticBitmap _closeableStaticBitmap;
@@ -31,8 +32,18 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
                     b.Dispose();
                     ++_releaseCallCount;
                 });
+
             _closeableStaticBitmap = new CloseableStaticBitmap(
                 _bitmap, _resourceReleaser, ImmutableQualityInfo.FULL_QUALITY, 0);
+        }
+
+        /// <summary>
+        /// Test cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            _bitmap.Dispose();
+            _closeableStaticBitmap.Dispose();
         }
 
         /// <summary>

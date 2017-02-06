@@ -58,20 +58,14 @@ namespace ImagePipeline.Memory
         {
             if (!_closed)
             {
+                if (!disposing)
+                {
+                    Debug.WriteLine("Finalized without closing");
+                }
+
+                base.Dispose(disposing);
                 _closed = true;
                 _resourceReleaser.Release(_byteArray);
-            }
-        }
-
-        /// <summary>
-        /// Cleanup resources
-        /// </summary>
-        ~PooledByteArrayBufferedInputStream()
-        {
-            if (!_closed)
-            {
-                Debug.WriteLine("Finalized without closing");
-                Dispose(false);
             }
         }
 

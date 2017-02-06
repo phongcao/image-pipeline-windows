@@ -389,13 +389,14 @@ namespace Cache.Disk
             {
                 FileUtils.Mkdirs(directory);
             }
-            catch (CreateDirectoryException cde)
+            catch (CreateDirectoryException)
             {
                 _cacheErrorLogger.LogError(
                     CacheErrorCategory.WRITE_CREATE_DIR,
                     typeof(DefaultDiskStorage),
                     message);
-                throw cde;
+
+                throw;
             }
         }
 
@@ -425,13 +426,14 @@ namespace Cache.Disk
                 FileInfo file = info.CreateTempFile(parent);
                 return new InserterImpl(this, resourceId, file);
             }
-            catch (IOException ioe)
+            catch (IOException)
             {
                 _cacheErrorLogger.LogError(
                     CacheErrorCategory.WRITE_CREATE_TEMPFILE,
                   typeof(DefaultDiskStorage),
                   "insert");
-                throw ioe;
+
+                throw;
             }
         }
 
@@ -852,13 +854,14 @@ namespace Cache.Disk
                 {
                     fileStream = _temporaryFile.Create();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     _parent._cacheErrorLogger.LogError(
                     CacheErrorCategory.WRITE_UPDATE_FILE_NOT_FOUND,
                     typeof(DefaultDiskStorage),
                     "updateResource");
-                    throw e;
+
+                    throw;
                 }
 
                 long length;
@@ -902,14 +905,15 @@ namespace Cache.Disk
                 {
                     FileUtils.Rename(_temporaryFile, targetFile);
                 }
-                catch (RenameException re)
+                catch (RenameException)
                 {
                     CacheErrorCategory category = CacheErrorCategory.WRITE_RENAME_FILE_OTHER;
                     _parent._cacheErrorLogger.LogError(
                         category,
                         typeof(DefaultDiskStorage),
                         "commit");
-                    throw re;
+
+                    throw;
                 }
 
                 if (targetFile.Exists)

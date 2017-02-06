@@ -64,16 +64,6 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Gets the size in bytes for the given 'bucketed' size
-        /// <param name="bucketedSize">The bucketed size</param>
-        /// @return size in bytes
-        /// </summary>
-        protected internal override int GetSizeInBytes(int bucketedSize)
-        {
-            return bucketedSize;
-        }
-
-        /// <summary>
         /// Get the 'bucketed' size for the given request size. The 'bucketed' size is a size that is
         /// the same or larger than the request size. We walk through our list of pre-defined bucket
         /// sizes, and use that to determine the smallest bucket size that is larger than the requested

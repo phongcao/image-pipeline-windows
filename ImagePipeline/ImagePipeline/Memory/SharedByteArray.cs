@@ -22,6 +22,12 @@ namespace ImagePipeline.Memory
     public class SharedByteArray : IMemoryTrimmable
     {
         private readonly object _arrayGate = new object();
+
+        /// <summary>
+        /// Synchronization primitive used by this implementation
+        /// </summary>
+        internal readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+
         internal readonly int _minByteArraySize;
         internal readonly int _maxByteArraySize;
 
@@ -32,11 +38,6 @@ namespace ImagePipeline.Memory
         /// it will be cleared to reduce memory pressure.
         /// </summary>
         internal readonly OOMSoftReference<byte[]> _byteArraySoftRef;
-
-        /// <summary>
-        /// Synchronization primitive used by this implementation
-        /// </summary>
-        internal readonly SemaphoreSlim _semaphore;
 
         private readonly ResourceReleaserImpl<byte[]> _resourceReleaser;
 
@@ -56,7 +57,6 @@ namespace ImagePipeline.Memory
             _maxByteArraySize = args.MaxBucketSize;
             _minByteArraySize = args.MinBucketSize;
             _byteArraySoftRef = new OOMSoftReference<byte[]>();
-            _semaphore = new SemaphoreSlim(1, 1);
             _resourceReleaser = new ResourceReleaserImpl<byte[]>(value =>
             {
                 _semaphore.Release();
@@ -82,10 +82,10 @@ namespace ImagePipeline.Memory
                 byte[] byteArray = GetByteArray(size);
                 return CloseableReference<byte[]>.of(byteArray, _resourceReleaser);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _semaphore.Release();
-                throw e;
+                throw;
             }
         }
 

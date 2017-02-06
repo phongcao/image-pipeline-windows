@@ -11,7 +11,7 @@ namespace ImagePipeline.Tests.Memory
     /// Basic tests for <see cref="NativePooledByteBuffer"/>
     /// </summary>
     [TestClass]
-    public class NativePooledByteBufferTests
+    public sealed class NativePooledByteBufferTests : IDisposable
     {
         private static readonly byte[] BYTES = new byte[] { 1, 4, 5, 0, 100, 34, 0, 1, 2, 2 };
         private static readonly int BUFFER_LENGTH = BYTES.Length - 2;
@@ -33,7 +33,17 @@ namespace ImagePipeline.Tests.Memory
             _pooledByteBuffer = new NativePooledByteBuffer(
                 poolRef,
                 BUFFER_LENGTH);
+
             poolRef.Dispose();
+        }
+
+        /// <summary>
+        /// Test cleanup.
+        /// </summary>
+        public void Dispose()
+        {
+            _pooledByteBuffer.Dispose();
+            _chunk.Dispose();
         }
 
         /// <summary>
