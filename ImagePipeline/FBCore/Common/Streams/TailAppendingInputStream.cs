@@ -9,7 +9,7 @@ namespace FBCore.Common.Streams
     /// </summary>
     public class TailAppendingInputStream : Stream
     {
-        private long _currentOffset;
+        private int _currentOffset;
         private readonly Stream _inputStream;
         private readonly byte[] _tail;
         private int _tailOffset;
@@ -30,7 +30,7 @@ namespace FBCore.Common.Streams
             }
 
             _inputStream = inputStream;
-            _currentOffset = inputStream.Position;
+            _currentOffset = (int)inputStream.Position;
             _tail = tail;
         }
 
@@ -174,11 +174,21 @@ namespace FBCore.Common.Streams
         /// if the end of the stream has been reached.</returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            int readResult = _inputStream.Read(buffer, offset, count);
-            if (readResult != 0)
+            if (buffer == null)
             {
-                _currentOffset += readResult;
-                return readResult;
+                throw new ArgumentNullException("buffer is null");
+            }
+
+            if (offset < 0 || count < 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    offset < 0 ? "offset is negative." : "count is negative.");
+            }
+
+            if (offset + count > buffer.Length)
+            {
+                throw new ArgumentException(
+                    "The sum of offset and count is larger than the buffer length.");
             }
 
             if (count == 0)
@@ -186,7 +196,14 @@ namespace FBCore.Common.Streams
                 return 0;
             }
 
-            int bytesRead = 0;
+            int available = (int)(_inputStream.Length - _inputStream.Position);
+            int bytesRead = _inputStream.Read(buffer, offset, count);
+            _currentOffset += bytesRead;
+            if (bytesRead != 0 && bytesRead != available)
+            {
+                return bytesRead;
+            }
+
             while (bytesRead < count)
             {
                 int nextByte = ReadNextTailByte();
@@ -196,10 +213,9 @@ namespace FBCore.Common.Streams
                 }
 
                 buffer[offset + bytesRead] = (byte)nextByte;
-                bytesRead++;
+                ++bytesRead;
             }
 
-            _currentOffset += bytesRead;
             return bytesRead > 0 ? bytesRead : 0;
         }
 
@@ -269,6 +285,10 @@ namespace FBCore.Common.Streams
             newOffset = Math.Min(newOffset, size);
             newOffset = Math.Max(newOffset, 0);
             Position = newOffset;
+            if (newOffset < _inputStream.Length)
+            {
+                _inputStream.Position = newOffset;
+            }
 
             return newOffset;
         }

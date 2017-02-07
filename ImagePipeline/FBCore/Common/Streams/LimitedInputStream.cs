@@ -8,7 +8,7 @@ namespace FBCore.Common.Streams
     /// </summary>
     public class LimitedInputStream : Stream
     {
-        private long _currentOffset;
+        private int _currentOffset;
         private readonly Stream _inputStream;
         private int _bytesToRead;
         private int _limit;
@@ -29,7 +29,7 @@ namespace FBCore.Common.Streams
             }
 
             _inputStream = inputStream;
-            _currentOffset = inputStream.Position;
+            _currentOffset = (int)inputStream.Position;
             _bytesToRead = limit;
             _limit = limit;
         }
@@ -127,6 +127,8 @@ namespace FBCore.Common.Streams
             set
             {
                 _currentOffset = (int)value;
+                _inputStream.Position = _currentOffset;
+                _bytesToRead = _limit - _currentOffset;
             }
         }
 

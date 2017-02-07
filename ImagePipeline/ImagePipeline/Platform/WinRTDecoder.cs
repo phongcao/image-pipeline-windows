@@ -83,25 +83,25 @@ namespace ImagePipeline.Platform
         public Task<CloseableReference<SoftwareBitmap>> DecodeJPEGFromEncodedImageAsync(
             EncodedImage encodedImage, BitmapPixelFormat bitmapConfig, int length)
         {
-            bool isJpegComplete = encodedImage.IsCompleteAt(length);
-            Stream jpegDataStream = encodedImage.GetInputStream();
-
-            // At this point the InputStream from the encoded image should not be null since in the
-            // pipeline,this comes from a call stack where this was checked before. Also this method 
-            // needs the Stream to decode the image so this can't be null.
-            Preconditions.CheckNotNull(jpegDataStream);
-            if (encodedImage.Size > length)
-            {
-                jpegDataStream = new LimitedInputStream(jpegDataStream, length);
-            }
-
-            if (!isJpegComplete)
-            {
-                jpegDataStream = new TailAppendingInputStream(jpegDataStream, EOI_TAIL);
-            }
-
             return _executor.Execute(async () =>
             {
+                bool isJpegComplete = encodedImage.IsCompleteAt(length);
+                Stream jpegDataStream = encodedImage.GetInputStream();
+
+                // At this point the InputStream from the encoded image should not be null since in the
+                // pipeline,this comes from a call stack where this was checked before. Also this method 
+                // needs the Stream to decode the image so this can't be null.
+                Preconditions.CheckNotNull(jpegDataStream);
+                if (encodedImage.Size > length)
+                {
+                    jpegDataStream = new LimitedInputStream(jpegDataStream, length);
+                }
+
+                if (!isJpegComplete)
+                {
+                    jpegDataStream = new TailAppendingInputStream(jpegDataStream, EOI_TAIL);
+                }
+
                 BitmapDecoder decoder = await BitmapDecoder.CreateAsync(
                     jpegDataStream.AsRandomAccessStream())
                     .AsTask()

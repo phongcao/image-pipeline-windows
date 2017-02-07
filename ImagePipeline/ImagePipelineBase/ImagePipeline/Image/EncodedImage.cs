@@ -224,8 +224,8 @@ namespace ImagePipeline.Image
         public int StreamSize { get; set; } = UNKNOWN_STREAM_SIZE;
 
         /// <summary>
-        /// Returns true if the image is a JPEG and its data is already complete at the specified length,
-        /// false otherwise.
+        /// Returns true if the image is a JPEG and its data is already complete at the 
+        /// specified length, false otherwise.
         /// </summary>
         public bool IsCompleteAt(int length)
         {
@@ -234,7 +234,8 @@ namespace ImagePipeline.Image
                 return true;
             }
 
-            // If the image is backed by FileStream return true since they will always be complete.
+            // If the image is backed by FileStream return true since they will always be 
+            // complete.
             if (_inputStreamSupplier != null)
             {
                 return true;

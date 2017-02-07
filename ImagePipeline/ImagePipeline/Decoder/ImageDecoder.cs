@@ -66,7 +66,9 @@ namespace ImagePipeline.Decoder
 
                 case ImageFormat.JPEG:
                     return DecodeJpegAsync(encodedImage, length, qualityInfo)
-                        .ContinueWith(task => ((CloseableImage)task.Result));
+                        .ContinueWith(
+                        task => ((CloseableImage)task.Result), 
+                        TaskContinuationOptions.ExecuteSynchronously);
 
                 case ImageFormat.GIF:
                     return DecodeGifAsync(encodedImage, options);
@@ -76,7 +78,9 @@ namespace ImagePipeline.Decoder
 
                 default:
                     return DecodeStaticImageAsync(encodedImage)
-                        .ContinueWith(task => ((CloseableImage)task.Result));
+                        .ContinueWith(
+                        task => ((CloseableImage)task.Result),
+                        TaskContinuationOptions.ExecuteSynchronously);
             }
         }
 
@@ -102,7 +106,8 @@ namespace ImagePipeline.Decoder
         {
             return _platformDecoder
                 .DecodeFromEncodedImageAsync(encodedImage, _bitmapConfig)
-                .ContinueWith(task =>
+                .ContinueWith(
+                task =>
                 {
                     try
                     {
@@ -115,7 +120,8 @@ namespace ImagePipeline.Decoder
                     {
                         task.Result.Dispose();
                     }
-                });
+                },
+                TaskContinuationOptions.ExecuteSynchronously);
         }
 
         /// <summary>
@@ -133,7 +139,8 @@ namespace ImagePipeline.Decoder
         {
             return _platformDecoder
                 .DecodeJPEGFromEncodedImageAsync(encodedImage, _bitmapConfig, length)
-                .ContinueWith(task =>
+                .ContinueWith(
+                task =>
                 {
                     try
                     {
@@ -146,7 +153,8 @@ namespace ImagePipeline.Decoder
                     {
                         task.Result.Dispose();
                     }
-                });
+                },
+                TaskContinuationOptions.ExecuteSynchronously);
         }
 
         /// <summary>

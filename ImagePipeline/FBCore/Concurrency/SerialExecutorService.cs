@@ -146,7 +146,8 @@ namespace FBCore.Concurrency
         public Task Schedule(Action action, long delay)
         {
             return Task.Delay((int)delay).ContinueWith(
-                _ => Execute(action, CancellationToken.None));
+                _ => Execute(action, CancellationToken.None),
+                TaskContinuationOptions.ExecuteSynchronously);
         }
 
         /// <summary>
@@ -162,7 +163,8 @@ namespace FBCore.Concurrency
         public Task Schedule(Action action, long delay, CancellationToken token)
         {
             return Task.Delay((int)delay).ContinueWith(
-                _ => Execute(action, token));
+                _ => Execute(action, token),
+                TaskContinuationOptions.ExecuteSynchronously);
         }
 
         /// <summary>
@@ -233,7 +235,9 @@ namespace FBCore.Concurrency
         public Task<T> Schedule<T>(Func<T> func, long delay)
         {
             return Task.Delay((int)delay).ContinueWith(
-                _ => Execute(func, CancellationToken.None)).Unwrap();
+                _ => Execute(func, CancellationToken.None),
+                TaskContinuationOptions.ExecuteSynchronously)
+                .Unwrap();
         }
 
         /// <summary>
@@ -250,7 +254,9 @@ namespace FBCore.Concurrency
         public Task<T> Schedule<T>(Func<T> func, long delay, CancellationToken token)
         {
             return Task.Delay((int)delay).ContinueWith(
-                _ => Execute(func, token)).Unwrap();
+                _ => Execute(func, token),
+                TaskContinuationOptions.ExecuteSynchronously)
+                .Unwrap();
         }
 
         /// <summary>
