@@ -185,9 +185,9 @@ namespace Cache.Disk
             internal ISupplier<FileSystemInfo> _baseDirectoryPathSupplier;
 
             // Phong Cao: Increases disk cache size for Windows devices
-            internal long _maxCacheSize = 100 * ByteConstants.MB; // 40 * ByteConstants.MB;
-            internal long _maxCacheSizeOnLowDiskSpace = 50 * ByteConstants.MB; // 10 * ByteConstants.MB;
-            internal long _maxCacheSizeOnVeryLowDiskSpace = 20 * ByteConstants.MB; // 2 * ByteConstants.MB;
+            internal long _maxCacheSize = 400 * ByteConstants.MB; // 40 * ByteConstants.MB;
+            internal long _maxCacheSizeOnLowDiskSpace = 200 * ByteConstants.MB; // 10 * ByteConstants.MB;
+            internal long _maxCacheSizeOnVeryLowDiskSpace = 50 * ByteConstants.MB; // 2 * ByteConstants.MB;
 
             internal IEntryEvictionComparatorSupplier _entryEvictionComparatorSupplier =
                 new DefaultEntryEvictionComparatorSupplier();
