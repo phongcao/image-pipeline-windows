@@ -2,11 +2,11 @@
 using FBCore.Concurrency;
 using FBCore.DataSource;
 using ImagePipeline.Core;
-using ImagePipeline.Memory;
 using ImagePipeline.Request;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 using System.Threading;
+using Windows.Storage.Streams;
 
 namespace ImagePipeline.Tests.Core
 {
@@ -18,7 +18,6 @@ namespace ImagePipeline.Tests.Core
     {
         private readonly Uri IMAGE_URL = new Uri("http://i.imgur.com/9rkjHkK.jpg");
         private readonly Uri FAILURE_URL = new Uri("https://httpbin.org/image_not_found.png");
-        private const int MAX_DEGREE_OF_PARALLELISM = 10;
 
         /// <summary>
         /// Initialize
@@ -41,10 +40,10 @@ namespace ImagePipeline.Tests.Core
                 .SetProgressiveRenderingEnabled(false)
                 .Build();
 
-            IDataSource<CloseableReference<IPooledByteBuffer>>
+            IDataSource<CloseableReference<IRandomAccessStream>>
                 dataSource = imagePipeline.FetchEncodedImage(imageRequest, new object());
 
-            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IPooledByteBuffer>>(
+            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IRandomAccessStream>>(
                 response =>
                 {
                     if (!response.IsFinished())
@@ -54,18 +53,20 @@ namespace ImagePipeline.Tests.Core
                         return;
                     }
 
-                    CloseableReference<IPooledByteBuffer> reference = response.GetResult();
+                    CloseableReference<IRandomAccessStream> reference = response.GetResult();
                     if (reference != null)
                     {
                         try
                         {
-                            // do something with the result
-                            IPooledByteBuffer result = reference.Get();
-                            completion.Set();
+                            // Do something with the result
+                            using (var result = reference.Get())
+                            {
+                                completion.Set();
+                            }
                         }
                         finally
                         {
-                            CloseableReference<IPooledByteBuffer>.CloseSafely(reference);
+                            CloseableReference<IRandomAccessStream>.CloseSafely(reference);
                         }
                     }
                 },
@@ -75,7 +76,7 @@ namespace ImagePipeline.Tests.Core
                     completion.Set();
                 });
 
-            dataSource.Subscribe(dataSubscriber, Executors.NewFixedThreadPool(MAX_DEGREE_OF_PARALLELISM));
+            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
 
             // Wait for callback
             completion.WaitOne();
