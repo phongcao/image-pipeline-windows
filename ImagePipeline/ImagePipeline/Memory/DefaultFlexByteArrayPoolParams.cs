@@ -12,7 +12,8 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// The default max buffer size we'll use
         /// </summary>
-        public const int DEFAULT_MAX_BYTE_ARRAY_SIZE = 4 * ByteConstants.MB;
+        // Phong Cao: Increases pool size for Windows devices
+        public const int DEFAULT_MAX_BYTE_ARRAY_SIZE = 10 * ByteConstants.MB; // 4 * ByteConstants.MB;
 
         /// <summary>
         /// The min buffer size we'll use

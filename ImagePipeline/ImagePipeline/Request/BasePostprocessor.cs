@@ -2,6 +2,7 @@
 using FBCore.Common.Internal;
 using FBCore.Common.References;
 using ImagePipeline.Bitmaps;
+using ImagePipeline.Memory;
 using System;
 using System.Runtime.InteropServices;
 using Windows.Graphics.Imaging;
@@ -39,11 +40,13 @@ namespace ImagePipeline.Request
         ///
         /// <param name="sourceBitmap">The source bitmap.</param>
         /// <param name="bitmapFactory">The factory to create a destination bitmap.</param>
-        /// @return a reference to the newly created bitmap
+        /// <param name="flexByteArrayPool">The memory pool used for post process.</param>
+        /// @return a reference to the newly created bitmap.
         /// </summary>
         public CloseableReference<SoftwareBitmap> Process(
             SoftwareBitmap sourceBitmap,
-            PlatformBitmapFactory bitmapFactory)
+            PlatformBitmapFactory bitmapFactory,
+            FlexByteArrayPool flexByteArrayPool)
         {
             CloseableReference<SoftwareBitmap> destBitmapRef =
                 bitmapFactory.CreateBitmapInternal(
@@ -53,7 +56,7 @@ namespace ImagePipeline.Request
 
             try
             {
-                Process(destBitmapRef.Get(), sourceBitmap);
+                Process(destBitmapRef.Get(), sourceBitmap, flexByteArrayPool);
                 return CloseableReference<SoftwareBitmap>.CloneOrNull(destBitmapRef);
             }
             finally
@@ -75,30 +78,54 @@ namespace ImagePipeline.Request
         /// <para /> The source bitmap must not be modified as it may be shared by the other clients.
         /// The implementation must use the provided destination bitmap as its output.
         ///
-        /// <param name="destBitmap">the destination bitmap to be used as output</param>
-        /// <param name="sourceBitmap">the source bitmap to be used as input</param>
+        /// <param name="destBitmap">The destination bitmap to be used as output.</param>
+        /// <param name="sourceBitmap">The source bitmap to be used as input.</param>
+        /// <param name="flexByteArrayPool">The memory pool used for post process.</param>
         /// </summary>
-        public unsafe virtual void Process(SoftwareBitmap destBitmap, SoftwareBitmap sourceBitmap)
+        public unsafe virtual void Process(
+            SoftwareBitmap destBitmap, 
+            SoftwareBitmap sourceBitmap,
+            FlexByteArrayPool flexByteArrayPool)
         {
             Preconditions.CheckArgument(sourceBitmap.BitmapPixelFormat == destBitmap.BitmapPixelFormat);
             Preconditions.CheckArgument(!destBitmap.IsReadOnly);
             Preconditions.CheckArgument(destBitmap.PixelWidth == sourceBitmap.PixelWidth);
             Preconditions.CheckArgument(destBitmap.PixelHeight == sourceBitmap.PixelHeight);
             sourceBitmap.CopyTo(destBitmap);
-            uint capacity = default(int);
+
             using (var buffer = destBitmap.LockBuffer(BitmapBufferAccessMode.Write))
             using (var reference = buffer.CreateReference())
             {
-                byte* dataInBytes;
-                ((IMemoryBufferByteAccess)reference).GetBuffer(
-                    out dataInBytes, out capacity);
+                // Get input data
+                byte* srcData;
+                uint capacity;
+                ((IMemoryBufferByteAccess)reference).GetBuffer(out srcData, out capacity);
 
-                byte[] data = new byte[capacity];
-                Marshal.Copy((IntPtr)dataInBytes, data, 0, (int)capacity);
-                Process(data, destBitmap.PixelWidth, destBitmap.PixelHeight,
+                // Allocate temp buffer for processing
+                byte[] desData = default(byte[]);
+                CloseableReference<byte[]> bytesArrayRef = default(CloseableReference<byte[]>);
+
+                try
+                {
+                    bytesArrayRef = flexByteArrayPool.Get((int)capacity);
+                    desData = bytesArrayRef.Get();
+                }
+                catch (Exception)
+                {
+                    // Allocates the byte array since the pool couldn't provide one
+                    desData = new byte[capacity];
+                }
+                finally
+                {
+                    CloseableReference<byte[]>.CloseSafely(bytesArrayRef);
+                }
+
+                // Process output data
+                Marshal.Copy((IntPtr)srcData, desData, 0, (int)capacity);
+                Process(desData, destBitmap.PixelWidth, destBitmap.PixelHeight,
                     destBitmap.BitmapPixelFormat, destBitmap.BitmapAlphaMode);
 
-                Marshal.Copy(data, 0, (IntPtr)dataInBytes, (int)capacity);
+                Marshal.Copy(desData, 0, (IntPtr)srcData, (int)capacity);
             }
         }
 
@@ -124,8 +151,8 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// The default implementation of the CacheKey for a Postprocessor is null
-        /// @return The CacheKey to use for caching. Not used if null
+        /// The default implementation of the CacheKey for a Postprocessor is null.
+        /// @return The CacheKey to use for caching. Not used if null.
         /// </summary>
         public virtual ICacheKey PostprocessorCacheKey
         {

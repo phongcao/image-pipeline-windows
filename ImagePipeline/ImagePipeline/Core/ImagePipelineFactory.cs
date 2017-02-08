@@ -368,6 +368,7 @@ namespace ImagePipeline.Core
                         GetSmallImageBufferedDiskCache(),
                         _config.CacheKeyFactory,
                         GetPlatformBitmapFactory(),
+                        _config.PoolFactory.FlexByteArrayPool,
                         _config.Experiments.ForceSmallCacheThresholdBytes);
             }
 

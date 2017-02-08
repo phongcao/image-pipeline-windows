@@ -12,10 +12,10 @@ namespace ImagePipeline.Memory
         private readonly int[] _bucketSizes;
 
         /// <summary>
-        /// Creates a new instance of the NativeMemoryChunkPool class
-        /// <param name="memoryTrimmableRegistry">the memory manager to register with</param>
-        /// <param name="poolParams">provider for pool parameters</param>
-        /// <param name="nativeMemoryChunkPoolStatsTracker"></param>
+        /// Creates a new instance of the <see cref="NativeMemoryChunkPool"/> class.
+        /// <param name="memoryTrimmableRegistry">The memory manager to register with.</param>
+        /// <param name="poolParams">Provider for pool parameters.</param>
+        /// <param name="nativeMemoryChunkPoolStatsTracker">The pool stats tracker.</param>
         /// </summary>
         public NativeMemoryChunkPool(
             IMemoryTrimmableRegistry memoryTrimmableRegistry,
@@ -32,8 +32,8 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Gets the smallest size supported by the pool
-        /// @return the smallest size supported by the pool
+        /// Gets the smallest size supported by the pool.
+        /// @return the smallest size supported by the pool.
         /// </summary>
         public int GetMinBufferSize()
         {
@@ -41,9 +41,10 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Allocate a native memory chunk larger than or equal to the specified size
+        /// Allocate a native memory chunk larger than or equal to the specified size.
         /// <param name="bucketedSize">size of the buffer requested</param>
-        /// @return a native memory chunk of the specified or larger size. Null if the size is invalid
+        /// @return a native memory chunk of the specified or larger size. Null if the 
+        /// size is invalid.
         /// </summary>
         protected internal override NativeMemoryChunk Alloc(int bucketedSize)
         {
@@ -61,14 +62,14 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Get the 'bucketed' size for the given request size. The 'bucketed' size is a size that is
-        /// the same or larger than the request size. We walk through our list of pre-defined bucket
-        /// sizes, and use that to determine the smallest bucket size that is larger than the requested
-        /// size.
-        /// If no such 'bucketedSize' is found, then we simply return "requestSize"
-        /// <param name="requestSize">the logical request size</param>
-        /// @return the bucketed size
-        /// @throws InvalidSizeException, if the requested size was invalid
+        /// Get the 'bucketed' size for the given request size. The 'bucketed' size is a 
+        /// size that is the same or larger than the request size. We walk through our 
+        /// list of pre-defined bucket sizes, and use that to determine the smallest bucket 
+        /// size that is larger than the requested size.
+        /// If no such 'bucketedSize' is found, then we simply return "requestSize".
+        /// <param name="requestSize">the logical request size.</param>
+        /// @return the bucketed size.
+        /// @throws InvalidSizeException, if the requested size was invalid.
         /// </summary>
         protected internal override int GetBucketedSize(int requestSize)
         {
@@ -93,9 +94,9 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Gets the bucketed size of the value
-        /// <param name="value">the value</param>
-        /// @return just the length of the value
+        /// Gets the bucketed size of the value.
+        /// <param name="value">The value.</param>
+        /// @return just the length of the value.
         /// </summary>
         protected internal override int GetBucketedSizeForValue(NativeMemoryChunk value)
         {
@@ -104,11 +105,12 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Checks if the value is reusable (for subsequent <see cref="BasePool{T}.Get(int)"/> operations.
+        /// Checks if the value is reusable (for subsequent <see cref="BasePool{T}.Get(int)"/> 
+        /// operations.
         /// The value is reusable, if
-        ///  - it hasn't already been freed
-        /// <param name="value">the value to test for reusability</param>
-        /// @return true, if the value is reusable
+        ///  - it hasn't already been freed.
+        /// <param name="value">the value to test for reusability.</param>
+        /// @return true, if the value is reusable.
         /// </summary>
         protected internal override bool IsReusable(NativeMemoryChunk value)
         {

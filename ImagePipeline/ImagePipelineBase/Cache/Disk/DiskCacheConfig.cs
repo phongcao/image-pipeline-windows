@@ -183,11 +183,15 @@ namespace Cache.Disk
             internal int _version = 1;
             internal string _baseDirectoryName = "image_cache";
             internal ISupplier<FileSystemInfo> _baseDirectoryPathSupplier;
-            internal long _maxCacheSize = 40 * ByteConstants.MB;
-            internal long _maxCacheSizeOnLowDiskSpace = 10 * ByteConstants.MB;
-            internal long _maxCacheSizeOnVeryLowDiskSpace = 2 * ByteConstants.MB;
+
+            // Phong Cao: Increases disk cache size for Windows devices
+            internal long _maxCacheSize = 100 * ByteConstants.MB; // 40 * ByteConstants.MB;
+            internal long _maxCacheSizeOnLowDiskSpace = 50 * ByteConstants.MB; // 10 * ByteConstants.MB;
+            internal long _maxCacheSizeOnVeryLowDiskSpace = 20 * ByteConstants.MB; // 2 * ByteConstants.MB;
+
             internal IEntryEvictionComparatorSupplier _entryEvictionComparatorSupplier =
                 new DefaultEntryEvictionComparatorSupplier();
+
             internal ICacheErrorLogger _cacheErrorLogger;
             internal ICacheEventListener _cacheEventListener;
             internal IDiskTrimmableRegistry _diskTrimmableRegistry;

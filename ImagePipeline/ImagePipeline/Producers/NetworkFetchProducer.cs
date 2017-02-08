@@ -1,5 +1,6 @@
 ﻿using FBCore.Common.References;
 using FBCore.Common.Time;
+using FBCore.Common.Util;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
 using System;
@@ -33,7 +34,7 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Read size
         /// </summary>
-        private const int READ_SIZE = 16 * 1024;
+        private const int READ_SIZE = 16 * ByteConstants.KB;
 
         /// <summary>
         /// Time between two consecutive partial results are propagated upstream
@@ -101,6 +102,7 @@ namespace ImagePipeline.Producers
             }
 
             byte[] ioArray = _byteArrayPool.Get(READ_SIZE);
+
             try
             {
                 int length;

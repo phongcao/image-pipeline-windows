@@ -8,6 +8,7 @@ using ImagePipeline.Request;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.Graphics.Imaging;
+using ImagePipeline.Memory;
 
 namespace ImagePipeline.Producers
 {
@@ -24,6 +25,7 @@ namespace ImagePipeline.Producers
 
         private IProducer<CloseableReference<CloseableImage>> _inputProducer;
         private PlatformBitmapFactory _bitmapFactory;
+        private FlexByteArrayPool _flexByteArrayPool;
         private IExecutorService _executor;
 
         /// <summary>
@@ -32,10 +34,12 @@ namespace ImagePipeline.Producers
         public PostprocessorProducer(
             IProducer<CloseableReference<CloseableImage>> inputProducer,
             PlatformBitmapFactory platformBitmapFactory,
+            FlexByteArrayPool flexByteArrayPool,
             IExecutorService executor)
         {
             _inputProducer = Preconditions.CheckNotNull(inputProducer);
             _bitmapFactory = platformBitmapFactory;
+            _flexByteArrayPool = flexByteArrayPool;
             _executor = Preconditions.CheckNotNull(executor);
         }
 
@@ -294,7 +298,7 @@ namespace ImagePipeline.Producers
                 CloseableStaticBitmap staticBitmap = (CloseableStaticBitmap)sourceImage;
                 SoftwareBitmap sourceBitmap = staticBitmap.UnderlyingBitmap;
                 CloseableReference<SoftwareBitmap> bitmapRef = 
-                    _postprocessor.Process(sourceBitmap, _parent._bitmapFactory);
+                    _postprocessor.Process(sourceBitmap, _parent._bitmapFactory, _parent._flexByteArrayPool);
 
                 int rotationAngle = staticBitmap.RotationAngle;
 

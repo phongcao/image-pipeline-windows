@@ -1,6 +1,7 @@
 ﻿using Cache.Common;
 using FBCore.Common.References;
 using ImagePipeline.Bitmaps;
+using ImagePipeline.Memory;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Request
@@ -15,6 +16,7 @@ namespace ImagePipeline.Request
         ///
         /// <param name="sourceBitmap">The source bitmap.</param>
         /// <param name="bitmapFactory">The factory to create a destination bitmap.</param>
+        /// <param name="flexByteArrayPool">The memory pool used for post process.</param>
         ///
         /// <para /> The Postprocessor must not modify the source bitmap as it may be shared by the other
         /// clients. The implementation must create a new bitmap that is safe to be modified and return a
@@ -22,7 +24,8 @@ namespace ImagePipeline.Request
         /// </summary>
         CloseableReference<SoftwareBitmap> Process(
             SoftwareBitmap sourceBitmap, 
-            PlatformBitmapFactory bitmapFactory);
+            PlatformBitmapFactory bitmapFactory,
+            FlexByteArrayPool flexByteArrayPool);
 
         /// <summary>
         /// Returns the name of this postprocessor.

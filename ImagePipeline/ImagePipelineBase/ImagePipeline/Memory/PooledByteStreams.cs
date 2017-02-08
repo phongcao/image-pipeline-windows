@@ -1,12 +1,12 @@
 ﻿using FBCore.Common.Internal;
-using ImagePipeline.Memory;
+using FBCore.Common.Util;
 using System;
 using System.IO;
 
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// Helper class for interacting with java streams, similar to guava's ByteSteams.
+    /// Helper class for interacting with streams.
     /// To prevent numerous allocations of temp buffers pool of byte arrays is used.
     /// </summary>
     public class PooledByteStreams
@@ -14,7 +14,7 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Size of temporary buffer to use for copying (16 kb)
         /// </summary>
-        private const int DEFAULT_TEMP_BUF_SIZE = 16 * 1024;
+        private const int DEFAULT_TEMP_BUF_SIZE = 16 * ByteConstants.KB;
 
         private readonly int _tempBufSize;
         private readonly IByteArrayPool _byteArrayPool;
@@ -23,7 +23,8 @@ namespace ImagePipeline.Memory
         /// Instantiates the <see cref="PooledByteStreams"/>.
         /// </summary>
         /// <param name="byteArrayPool"></param>
-        public PooledByteStreams(IByteArrayPool byteArrayPool) : this(byteArrayPool, DEFAULT_TEMP_BUF_SIZE)
+        public PooledByteStreams(IByteArrayPool byteArrayPool) : 
+            this(byteArrayPool, DEFAULT_TEMP_BUF_SIZE)
         {
         }
 
@@ -38,11 +39,11 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Copy all bytes from InputStream to OutputStream.
-        /// <param name="from">InputStream</param>
-        /// <param name="to">OutputStream</param>
-        /// @return number of copied bytes
-        /// @throws IOException
+        /// Copy all bytes from the input stream to the output stream.
+        /// <param name="from">The intput stream.</param>
+        /// <param name="to">The output stream.</param>
+        /// @return number of copied bytes.
+        /// @throws IOException.
         /// </summary>
         public long Copy(Stream from, Stream to)
         {
@@ -70,12 +71,12 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-       /// Copy at most number of bytes from InputStream to OutputStream.
-       /// <param name="from">InputStream</param>
-       /// <param name="to">OutputStream</param>
-       /// <param name="bytesToCopy">bytes to copy</param>
-       /// @return number of copied bytes
-       /// @throws IOException
+       /// Copy at most number of bytes from the input stream to the output stream.
+       /// <param name="from">The input stream.</param>
+       /// <param name="to">The output stream.</param>
+       /// <param name="bytesToCopy">Bytes to copy.</param>
+       /// @return number of copied bytes.
+       /// @throws IOException.
        /// </summary>
         public long Copy(Stream from, Stream to, long bytesToCopy)
         {

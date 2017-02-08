@@ -8,6 +8,7 @@ using ImagePipeline.Producers;
 using ImagePipeline.Request;
 using System;
 using System.Collections.Generic;
+using Windows.Storage.Streams;
 
 namespace ImagePipeline.Core
 {
@@ -29,7 +30,7 @@ namespace ImagePipeline.Core
         // Saved sequences
         internal IProducer<CloseableReference<CloseableImage>> _networkFetchSequence;
         internal IProducer<EncodedImage> _backgroundNetworkFetchToEncodedMemorySequence;
-        internal IProducer<CloseableReference<IPooledByteBuffer>> _encodedImageProducerSequence;
+        internal IProducer<CloseableReference<IRandomAccessStream>> _encodedImageProducerSequence;
         internal IProducer<object> _networkFetchToEncodedMemoryPrefetchSequence;
         internal IProducer<EncodedImage> _commonNetworkFetchToEncodedMemorySequence;
         internal IProducer<CloseableReference<CloseableImage>> _localImageFileFetchSequence;
@@ -78,7 +79,7 @@ namespace ImagePipeline.Core
         /// <param name="imageRequest">the request that will be submitted</param>
         /// @return the sequence that should be used to process the request
         /// </summary>
-        public IProducer<CloseableReference<IPooledByteBuffer>> GetEncodedImageProducerSequence(
+        public IProducer<CloseableReference<IRandomAccessStream>> GetEncodedImageProducerSequence(
             ImageRequest imageRequest)
         {
             ValidateEncodedImageRequest(imageRequest);

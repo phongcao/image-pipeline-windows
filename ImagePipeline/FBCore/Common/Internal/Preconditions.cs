@@ -287,7 +287,7 @@ namespace FBCore.Common.Internal
         /// <param name="index">A user-supplied index identifying an element of an array, list or string</param>
         /// <param name="size">The size of that array, list or string</param>
         /// @return the value of <code> index</code>
-        /// @throws IndexOutOfBoundsException if <code> index</code> is negative or is not less than <code> size</code>
+        /// @throws ArgumentOutOfRangeException if <code> index</code> is negative or is not less than <code> size</code>
         /// @throws IllegalArgumentException if <code> size</code> is negative
         /// </summary>
         public static int CheckElementIndex(int index, int size)
@@ -303,7 +303,7 @@ namespace FBCore.Common.Internal
         /// <param name="size">The size of that array, list or string</param>
         /// <param name="desc">The text to use to describe this index in an error message</param>
         /// @return the value of <code> index</code>
-        /// @throws IndexOutOfBoundsException if <code> index</code> is negative or is not less than <code> size</code>
+        /// @throws ArgumentOutOfRangeException if <code> index</code> is negative or is not less than <code> size</code>
         /// @throws IllegalArgumentException if <code> size</code> is negative
         /// </summary>
         public static int CheckElementIndex(int index, int size, string desc)
@@ -341,7 +341,7 @@ namespace FBCore.Common.Internal
         /// <param name="index">A user-supplied index identifying a position in an array, list or string</param>
         /// <param name="size">The size of that array, list or string</param>
         /// @return the value of <code> index</code>
-        /// @throws IndexOutOfBoundsException if <code> index</code> is negative or is greater than <code> size</code>
+        /// @throws ArgumentOutOfRangeException if <code> index</code> is negative or is greater than <code> size</code>
         /// @throws IllegalArgumentException if <code> size</code> is negative
         /// </summary>
         public static int CheckPositionIndex(int index, int size)
@@ -357,7 +357,7 @@ namespace FBCore.Common.Internal
         /// <param name="size">The size of that array, list or string</param>
         /// <param name="desc">The text to use to describe this index in an error message</param>
         /// @return the value of <code> index</code>
-        /// @throws IndexOutOfBoundsException if <code> index</code> is negative or is greater than <code> size</code>
+        /// @throws ArgumentOutOfRangeException if <code> index</code> is negative or is greater than <code> size</code>
         /// @throws IllegalArgumentException if <code> size</code> is negative
         /// </summary>
         public static int CheckPositionIndex(int index, int size, string desc)
@@ -396,7 +396,7 @@ namespace FBCore.Common.Internal
         /// <param name="start">A user-supplied index identifying a starting position in an array, list or string</param>
         /// <param name="end">A user-supplied index identifying a ending position in an array, list or string</param>
         /// <param name="size">The size of that array, list or string</param>
-        /// @throws IndexOutOfBoundsException if either index is negative or is greater than <code> size</code>,
+        /// @throws ArgumentOutOfRangeException if either index is negative or is greater than <code> size</code>,
         ///     or if <code> end</code> is less than <code> start</code>
         /// @throws IllegalArgumentException if <code> size</code> is negative
         /// </summary>

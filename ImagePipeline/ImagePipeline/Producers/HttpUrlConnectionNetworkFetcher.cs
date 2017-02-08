@@ -16,7 +16,7 @@ namespace ImagePipeline.Producers
     /// </summary>
     public class HttpUrlConnectionNetworkFetcher : BaseNetworkFetcher<FetchState>, IDisposable
     {
-        private const int NUM_NETWORK_THREADS = 10;
+        private const int NUM_NETWORK_THREADS = 5;
         private const int MAX_REDIRECTS = 5;
 
         private readonly IExecutorService _executorService;

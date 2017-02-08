@@ -30,7 +30,7 @@ namespace ImagePipeline.Cache
 
         private int GetMaxCacheSize()
         {
-            ulong maxMemory = Math.Min(MemoryManager.AppMemoryUsageLimit, int.MaxValue);
+            int maxMemory = (int)Math.Min(MemoryManager.AppMemoryUsageLimit, int.MaxValue);
 
             if (maxMemory < 32 * ByteConstants.MB)
             {
@@ -42,7 +42,7 @@ namespace ImagePipeline.Cache
             }
             else
             {
-                return (int)(maxMemory / 4);
+                return maxMemory / 4;
             }
         }
     }

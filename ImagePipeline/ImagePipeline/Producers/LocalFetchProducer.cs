@@ -83,9 +83,7 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Creates a memory-backed encoded image from the stream. The stream is closed.
         /// </summary>
-        protected EncodedImage GetByteBufferBackedEncodedImage(
-            Stream inputStream, 
-            int length)
+        protected EncodedImage GetByteBufferBackedEncodedImage(Stream inputStream, int length)
         {
             var reference = default(CloseableReference<IPooledByteBuffer>);
             try
@@ -111,11 +109,30 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Gets the encoded image.
+        /// Creates an encoded image from a file stream.
         /// </summary>
-        protected EncodedImage GetEncodedImage(
-            Stream inputStream,
-            int length)
+        protected EncodedImage GetInputStreamBackedEncodedImage(FileSystemInfo file, int length)
+        {
+            ISupplier<FileStream> sup = new SupplierImpl<FileStream>(
+                () =>
+                {
+                    try
+                    {
+                        return new FileStream(file.FullName, FileMode.Open, FileAccess.Read);
+                    }
+                    catch (IOException)
+                    {
+                        throw;
+                    }
+                });
+
+            return new EncodedImage(sup, length);
+        }
+
+        /// <summary>
+        /// Creates an encoded image from a byte buffer.
+        /// </summary>
+        protected EncodedImage GetEncodedImage(Stream inputStream, int length)
         {
             return GetByteBufferBackedEncodedImage(inputStream, length);
         }

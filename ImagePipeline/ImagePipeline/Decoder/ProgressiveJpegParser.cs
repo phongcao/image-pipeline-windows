@@ -58,7 +58,7 @@ namespace ImagePipeline.Decoder
         private const int NOT_A_JPEG = 6;
 
         ///  The buffer size in bytes to use. 
-        private const int BUFFER_SIZE = 16 * 1024;
+        private const int BUFFER_SIZE = 16 * ByteConstants.KB;
 
         private int _parserState;
         private int _lastByteRead;

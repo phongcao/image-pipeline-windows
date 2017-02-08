@@ -56,7 +56,7 @@ namespace FBCore.Common.Internal
         /// <para />If <code> b</code> is null, a <code> NullPointerException</code> is thrown. If
         /// <code> off</code> is negative, or <code> len</code> is negative, or <code> off+len</code> is
         /// greater than the length of the array <code> b</code>, then an
-        /// <code> IndexOutOfBoundsException</code> is thrown. If <code> len</code> is zero, then
+        /// <code> ArgumentOutOfRangeException</code> is thrown. If <code> len</code> is zero, then
         /// no bytes are read. Otherwise, the first byte read is stored into element
         /// <code> b[off]</code>, the next one into <code> b[off+1]</code>, and so on. The number
         /// of bytes read is, at most, equal to <code> len</code>.

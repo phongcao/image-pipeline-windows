@@ -5,8 +5,8 @@ namespace ImagePipeline.Memory
 {
     /// <summary>
     /// A pool of byte arrays.
-    /// The pool manages a number of byte arrays of a predefined set of sizes. This set of sizes is
-    /// typically, but not required to be, based on powers of 2.
+    /// The pool manages a number of byte arrays of a predefined set of sizes. 
+    /// This set of sizes is typically, but not required to be, based on powers of 2.
     /// The pool supports a get/release paradigm.
     /// On a get request, the pool attempts to find an existing byte array whose size
     /// is at least as big as the requested size.
@@ -18,10 +18,10 @@ namespace ImagePipeline.Memory
         private int[] _bucketSizes;
 
         /// <summary>
-        /// Creates a new instance of the GenericByteArrayPool class
-        /// <param name="memoryTrimmableRegistry">The memory manager to register with</param>
-        /// <param name="poolParams">Provider for pool parameters</param>
-        /// <param name="poolStatsTracker">Listener that logs pool statistics</param>
+        /// Creates a new instance of the GenericByteArrayPool class.
+        /// <param name="memoryTrimmableRegistry">The memory manager to register with.</param>
+        /// <param name="poolParams">Provider for pool parameters.</param>
+        /// <param name="poolStatsTracker">Listener that logs pool statistics.</param>
         /// </summary>
         public GenericByteArrayPool(
             IMemoryTrimmableRegistry memoryTrimmableRegistry,
@@ -35,8 +35,8 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Gets the smallest buffer size supported by the pool
-        /// @return the smallest buffer size supported by the pool
+        /// Gets the smallest buffer size supported by the pool.
+        /// @return the smallest buffer size supported by the pool.
         /// </summary>
         public int GetMinBufferSize()
         {
@@ -45,8 +45,9 @@ namespace ImagePipeline.Memory
 
         /// <summary>
         /// Allocate a buffer greater than or equal to the specified size
-        /// <param name="bucketedSize">Size of the buffer requested</param>
-        /// @return a byte array of the specified or larger size. Null if the size is invalid
+        /// <param name="bucketedSize">Size of the buffer requested.</param>
+        /// @return a byte array of the specified or larger size. Null if the size 
+        /// is invalid.
         /// </summary>
         protected internal override byte[] Alloc(int bucketedSize)
         {
@@ -60,18 +61,18 @@ namespace ImagePipeline.Memory
         protected internal override void Free(byte[] value)
         {
             Preconditions.CheckNotNull(value);
-            // do nothing. Let the GC take care of this
+            // Do nothing. Let the GC take care of this
         }
 
         /// <summary>
-        /// Get the 'bucketed' size for the given request size. The 'bucketed' size is a size that is
-        /// the same or larger than the request size. We walk through our list of pre-defined bucket
-        /// sizes, and use that to determine the smallest bucket size that is larger than the requested
-        /// size.
-        /// If no such 'bucketedSize' is found, then we simply return "requestSize"
-        /// <param name="requestSize">The logical request size</param>
-        /// @return the bucketed size
-        /// @throws InvalidSizeException, if the requested size was invalid
+        /// Get the 'bucketed' size for the given request size. The 'bucketed' size is 
+        /// a size that is the same or larger than the request size. We walk through our 
+        /// list of pre-defined bucket sizes, and use that to determine the smallest bucket 
+        /// size that is larger than the requested size.
+        /// If no such 'bucketedSize' is found, then we simply return "requestSize".
+        /// <param name="requestSize">The logical request size.</param>
+        /// @return the bucketed size.
+        /// @throws InvalidSizeException, if the requested size was invalid.
         /// </summary>
         protected internal override int GetBucketedSize(int requestSize)
         {
@@ -90,15 +91,16 @@ namespace ImagePipeline.Memory
                 }
             }
 
-            // requested size doesn't match our existing buckets - just return the requested size
-            // this will eventually translate into a plain alloc/free paradigm
+            // Requested size doesn't match our existing buckets - just return the 
+            // requested size. This will eventually translate into a plain alloc/free 
+            // paradigm
             return requestSize;
         }
 
         /// <summary>
-        /// Gets the bucketed size of the value
-        /// <param name="value">The value</param>
-        /// @return just the length of the value
+        /// Gets the bucketed size of the value.
+        /// <param name="value">The value.</param>
+        /// @return just the length of the value.
         /// </summary>
         protected internal override int GetBucketedSizeForValue(byte[] value)
         {

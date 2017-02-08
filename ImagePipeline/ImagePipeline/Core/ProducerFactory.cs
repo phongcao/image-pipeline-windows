@@ -35,6 +35,7 @@ namespace ImagePipeline.Core
 
         // Postproc dependencies
         private readonly PlatformBitmapFactory _platformBitmapFactory;
+        private readonly FlexByteArrayPool _flexByteArrayPool;
 
         /// <summary>
         /// Instantiates the <see cref="ProducerFactory"/>
@@ -52,6 +53,7 @@ namespace ImagePipeline.Core
         /// <param name="smallImageBufferedDiskCache">The buffered disk cache used for small images.</param>
         /// <param name="cacheKeyFactory">The factory that creates cache keys for the pipeline.</param>
         /// <param name="platformBitmapFactory">The bitmap factory used for post process.</param>
+        /// <param name="flexByteArrayPool">The memory pool used for post process.</param>
         /// <param name="forceSmallCacheThresholdBytes">The threshold set for using the small buffered disk cache.</param>
         public ProducerFactory(
             IByteArrayPool byteArrayPool,
@@ -67,6 +69,7 @@ namespace ImagePipeline.Core
             BufferedDiskCache smallImageBufferedDiskCache,
             ICacheKeyFactory cacheKeyFactory,
             PlatformBitmapFactory platformBitmapFactory,
+            FlexByteArrayPool flexByteArrayPool,
             int forceSmallCacheThresholdBytes)
         {
             _forceSmallCacheThresholdBytes = forceSmallCacheThresholdBytes;
@@ -87,6 +90,7 @@ namespace ImagePipeline.Core
             _cacheKeyFactory = cacheKeyFactory;
 
             _platformBitmapFactory = platformBitmapFactory;
+            _flexByteArrayPool = flexByteArrayPool;
         }
 
         /// <summary>
@@ -320,7 +324,10 @@ namespace ImagePipeline.Core
             IProducer<CloseableReference<CloseableImage>> inputProducer)
         {
             return new PostprocessorProducer(
-                inputProducer, _platformBitmapFactory, _executorSupplier.ForBackgroundTasks);
+                inputProducer, 
+                _platformBitmapFactory,
+                _flexByteArrayPool,
+                _executorSupplier.ForBackgroundTasks);
         }
 
         /// <summary>

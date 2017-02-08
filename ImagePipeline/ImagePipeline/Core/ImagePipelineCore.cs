@@ -19,6 +19,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace ImagePipeline.Core
@@ -134,12 +135,12 @@ namespace ImagePipeline.Core
         /// <param name="callerContext">The caller context of the caller of data source supplier.</param>
         /// @return a IDataSource representing pending results and completion of the request.
         /// </summary>
-        public ISupplier<IDataSource<CloseableReference<IPooledByteBuffer>>> 
+        public ISupplier<IDataSource<CloseableReference<IRandomAccessStream>>> 
             GetEncodedImageDataSourceSupplier(
                 ImageRequest imageRequest,
                 object callerContext)
         {
-            return new SupplierImpl<IDataSource<CloseableReference<IPooledByteBuffer>>>(
+            return new SupplierImpl<IDataSource<CloseableReference<IRandomAccessStream>>>(
                 () =>
                 {
                     return FetchEncodedImage(imageRequest, callerContext);
@@ -176,10 +177,9 @@ namespace ImagePipeline.Core
         public Task<SoftwareBitmapSource> FetchImageFromBitmapCache(ImageRequest imageRequest)
         {
             var taskCompletionSource = new TaskCompletionSource<SoftwareBitmapSource>();
-            var callerContext = new object();
             var dataSource = FetchDecodedImage(
                 imageRequest, 
-                callerContext,
+                null,
                 new RequestLevel(RequestLevel.BITMAP_MEMORY_CACHE));
 
             var dataSubscriber = new BaseBitmapDataSubscriberImpl(
@@ -187,18 +187,24 @@ namespace ImagePipeline.Core
                 {
                     if (bitmap != null)
                     {
-                        // Creates a copy of bitmap to return since bitmap will be released as soon
-                        // as the OnNewResultImpl method has finished.
-                        var bitmapCopy = SoftwareBitmap.Copy(bitmap);
-                        DispatcherHelpers.RunOnDispatcher(async () =>
+                        DispatcherHelpers.CallOnDispatcher(async () =>
                         {
-                            var bitmapSource = new SoftwareBitmapSource();
-                            await bitmapSource.SetBitmapAsync(bitmapCopy)
-                                .AsTask()
-                                .ConfigureAwait(false);
+                            try
+                            {
+                                var bitmapSource = new SoftwareBitmapSource();
+                                await bitmapSource.SetBitmapAsync(bitmap)
+                                    .AsTask()
+                                    .ConfigureAwait(false);
 
-                            taskCompletionSource.SetResult(bitmapSource);
-                        });
+                                taskCompletionSource.SetResult(bitmapSource);
+                            }
+                            catch (Exception e)
+                            {
+                                taskCompletionSource.SetException(e);
+                            }
+                        })
+                        .GetAwaiter()
+                        .GetResult();
                     }
                     else
                     {
@@ -207,8 +213,7 @@ namespace ImagePipeline.Core
                 },
                 response =>
                 {
-                    Exception error = response.GetFailureCause();
-                    taskCompletionSource.SetException(error);
+                    taskCompletionSource.SetException(response.GetFailureCause());
                 });
 
             dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
@@ -276,7 +281,7 @@ namespace ImagePipeline.Core
         /// <param name="callerContext">The caller context for image request.</param>
         /// @return a IDataSource representing the pending encoded image(s).
         /// </summary>
-        public IDataSource<CloseableReference<IPooledByteBuffer>> FetchEncodedImage(
+        public IDataSource<CloseableReference<IRandomAccessStream>> FetchEncodedImage(
             ImageRequest imageRequest,
             object callerContext)
         {
@@ -284,7 +289,7 @@ namespace ImagePipeline.Core
 
             try
             {
-                IProducer<CloseableReference<IPooledByteBuffer>> producerSequence =
+                IProducer<CloseableReference<IRandomAccessStream>> producerSequence =
                     _producerSequenceFactory.GetEncodedImageProducerSequence(imageRequest);
 
                 // The resize options are used to determine whether images are going to be 
@@ -309,54 +314,57 @@ namespace ImagePipeline.Core
             }
             catch (Exception exception)
             {
-                return DataSources.ImmediateFailedDataSource<CloseableReference<IPooledByteBuffer>>(exception);
+                return DataSources.ImmediateFailedDataSource<CloseableReference<IRandomAccessStream>>(
+                    exception);
             }
         }
 
         /// <summary>
-        /// Submits a request for execution and returns a Task{BitmapImage}.
+        /// Fetches the encoded BitmapImage.
         /// <param name="uri">The image uri.</param>
-        /// @return a Task{BitmapImage}.
+        /// <returns>The encoded BitmapImage.</returns>
+        /// @throws IOException if the image uri can't be found.
         /// </summary>
-        public Task<BitmapImage> FetchXamlBitmapImage(Uri uri)
+        public Task<BitmapImage> FetchEncodedBitmapImage(Uri uri)
         {
-            var taskCompletionSource = new TaskCompletionSource<BitmapImage>();
             var imageRequest = ImageRequestBuilder
                 .NewBuilderWithSource(uri)
                 .SetProgressiveRenderingEnabled(false)
                 .Build();
 
-            var callerContext = new object();
-            var dataSource = FetchEncodedImage(imageRequest, callerContext);
-            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IPooledByteBuffer>>(
+            var taskCompletionSource = new TaskCompletionSource<BitmapImage>();
+            var dataSource = FetchEncodedImage(imageRequest, null);
+            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IRandomAccessStream>>(
                 response =>
                 {
-                    CloseableReference<IPooledByteBuffer> reference = response.GetResult();
+                    CloseableReference<IRandomAccessStream> reference = response.GetResult();
                     if (reference != null)
                     {
-                        try
+                        DispatcherHelpers.CallOnDispatcher(async () =>
                         {
-                            IPooledByteBuffer result = reference.Get();
-                            byte[] buffer = new byte[result.Size];
-                            result.Read(0, buffer, 0, result.Size);
-                            DispatcherHelpers.RunOnDispatcher(async () =>
+                            try
                             {
-                                using (var bufferStream = new MemoryStream(buffer))
-                                using (var imageStream = bufferStream.AsRandomAccessStream())
+                                using (var result = reference.Get())
                                 {
                                     var bitmapImage = new BitmapImage();
-                                    await bitmapImage.SetSourceAsync(imageStream)
+                                    await bitmapImage.SetSourceAsync(result)
                                         .AsTask()
                                         .ConfigureAwait(false);
 
                                     taskCompletionSource.SetResult(bitmapImage);
                                 }
-                            });
-                        }
-                        finally
-                        {
-                            CloseableReference<IPooledByteBuffer>.CloseSafely(reference);
-                        }
+                            }
+                            catch (Exception e)
+                            {
+                                taskCompletionSource.SetException(e);
+                            }
+                            finally
+                            {
+                                CloseableReference<IRandomAccessStream>.CloseSafely(reference);
+                            }
+                        })
+                        .GetAwaiter()
+                        .GetResult();
                     }
                     else
                     {
@@ -365,8 +373,7 @@ namespace ImagePipeline.Core
                 },
                 response =>
                 {
-                    Exception error = response.GetFailureCause();
-                    taskCompletionSource.SetException(error);
+                    taskCompletionSource.SetException(response.GetFailureCause());
                 });
 
             dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
@@ -374,32 +381,38 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Submits a request for execution and returns a Task{SoftwareBitmapSource}.
+        /// Fetches the decoded SoftwareBitmapSource.
         /// <param name="imageRequest">The image request.</param>
-        /// @return a Task{SoftwareBitmapSource}.
+        /// <returns>The decoded SoftwareBitmapSource.</returns>
+        /// @throws IOException if the image request isn't valid.
         /// </summary>
-        public Task<SoftwareBitmapSource> FetchDecodedXamlBitmapImage(ImageRequest imageRequest)
+        public Task<SoftwareBitmapSource> FetchDecodedImageSource(ImageRequest imageRequest)
         {
             var taskCompletionSource = new TaskCompletionSource<SoftwareBitmapSource>();
-            var callerContext = new object();
-            var dataSource = FetchDecodedImage(imageRequest, callerContext);
+            var dataSource = FetchDecodedImage(imageRequest, null);
             var dataSubscriber = new BaseBitmapDataSubscriberImpl(
                 bitmap =>
                 {
                     if (bitmap != null)
                     {
-                        // Creates a copy of bitmap to return since bitmap will be released as soon
-                        // as the OnNewResultImpl method has finished.
-                        var bitmapCopy = SoftwareBitmap.Copy(bitmap);
-                        DispatcherHelpers.RunOnDispatcher(async () =>
+                        DispatcherHelpers.CallOnDispatcher(async () =>
                         {
-                            var bitmapSource = new SoftwareBitmapSource();
-                            await bitmapSource.SetBitmapAsync(bitmapCopy)
-                                .AsTask()
-                                .ConfigureAwait(false);
+                            try
+                            {
+                                var bitmapSource = new SoftwareBitmapSource();
+                                await bitmapSource.SetBitmapAsync(bitmap)
+                                    .AsTask()
+                                    .ConfigureAwait(false);
 
-                            taskCompletionSource.SetResult(bitmapSource);
-                        });
+                                taskCompletionSource.SetResult(bitmapSource);
+                            }
+                            catch (Exception e)
+                            {
+                                taskCompletionSource.SetException(e);
+                            }
+                        })
+                        .GetAwaiter()
+                        .GetResult();
                     }
                     else
                     {
@@ -408,8 +421,7 @@ namespace ImagePipeline.Core
                 },
                 response =>
                 {
-                    Exception error = response.GetFailureCause();
-                    taskCompletionSource.SetException(error);
+                    taskCompletionSource.SetException(response.GetFailureCause());
                 });
 
             dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
@@ -462,8 +474,7 @@ namespace ImagePipeline.Core
                 .SetProgressiveRenderingEnabled(false)
                 .Build();
 
-            var callerContext = new object();
-            var dataSource = PrefetchToBitmapCache(imageRequest, callerContext);
+            var dataSource = PrefetchToBitmapCache(imageRequest, null);
             var dataSubscriber = new BaseDataSubscriberImpl<object>(
                 response =>
                 {
@@ -541,8 +552,7 @@ namespace ImagePipeline.Core
                 .SetProgressiveRenderingEnabled(false)
                 .Build();
 
-            var callerContext = new object();
-            var dataSource = PrefetchToDiskCache(imageRequest, callerContext);
+            var dataSource = PrefetchToDiskCache(imageRequest, null);
             var dataSubscriber = new BaseDataSubscriberImpl<object>(
                 response =>
                 {

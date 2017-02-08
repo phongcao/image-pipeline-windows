@@ -67,6 +67,7 @@ namespace ImagePipeline.Producers
                         listener.RequiresExtraMap(requestId) ? 
                         new ReadOnlyDictionary<string, string>(extraMap) : 
                         null);
+
                     consumer.OnProgressUpdate(1f);
                 }
 
@@ -91,6 +92,7 @@ namespace ImagePipeline.Producers
                     listener.RequiresExtraMap(requestId) ?
                     new ReadOnlyDictionary<string, string>(extraMap) : 
                     null);
+
                 consumer.OnNewResult(null, true);
                 return;
             }
@@ -102,12 +104,14 @@ namespace ImagePipeline.Producers
 
             IConsumer<CloseableReference<CloseableImage>> wrappedConsumer = 
                 WrapConsumer(consumer, cacheKey);
+
             listener.OnProducerFinishWithSuccess(
                 requestId,
                 ProducerName,
                 listener.RequiresExtraMap(requestId) ?
                 new ReadOnlyDictionary<string, string>(extraMap) : 
                 null);
+
             _inputProducer.ProduceResults(wrappedConsumer, producerContext);
         }
 

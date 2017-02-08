@@ -3,6 +3,7 @@ using FBCore.Common.Util;
 using ImagePipeline.Common;
 using ImagePipeline.Listener;
 using System;
+using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Request
 {
@@ -194,12 +195,24 @@ namespace ImagePipeline.Request
 
         /// <summary>
         /// Sets the postprocessor.
-        /// <param name="postprocessor">postprocessor to postprocess the output bitmap with.</param>
-        /// @return the modified builder instance
+        /// <param name="postprocessor">Postprocessor to postprocess the output bitmap with.</param>
+        /// @return the modified builder instance.
         /// </summary>
         public ImageRequestBuilder SetPostprocessor(IPostprocessor postprocessor)
         {
             Postprocessor = postprocessor;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the postprocessor.
+        /// <param name="postprocessor">Postprocessor to postprocess the output bitmap with.</param>
+        /// @return the modified builder instance
+        /// </summary>
+        public ImageRequestBuilder SetPostprocessor(
+            Action<byte[], int, int, BitmapPixelFormat, BitmapAlphaMode> postprocessor)
+        {
+            Postprocessor = new BasePostprocessorImpl(postprocessor);
             return this;
         }
 

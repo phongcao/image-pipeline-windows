@@ -40,6 +40,7 @@ namespace ImagePipeline.Memory
             DEFAULT_BUCKETS.Add(256 * ByteConstants.KB, LARGE_BUCKET_LENGTH);
             DEFAULT_BUCKETS.Add(512 * ByteConstants.KB, LARGE_BUCKET_LENGTH);
             DEFAULT_BUCKETS.Add(1024 * ByteConstants.KB, LARGE_BUCKET_LENGTH);
+
             return new PoolParams(
                 GetMaxSizeSoftCap(),
                 GetMaxSizeHardCap(),
@@ -47,9 +48,7 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// <see cref="NativeMemoryChunkPool"/> manages memory on the native heap, so we don't need as strict
-        /// caps as we would if we were on the Dalvik heap. However, since native memory OOMs are
-        /// significantly more problematic than Dalvik OOMs, we would like to stay conservative.
+        /// Gets the soft cap on max size of the pool.
         /// </summary>
         private static int GetMaxSizeSoftCap()
         {
@@ -64,13 +63,13 @@ namespace ImagePipeline.Memory
             }
             else
             {
-                return 12 * ByteConstants.MB;
+                // Phong Cao: Increases pool size for Windows devices
+                return 50 * ByteConstants.MB; // 12 * ByteConstants.MB
             }
         }
 
         /// <summary>
-        /// We need a smaller cap for devices with less then 16 MB so that we don't run the risk of
-        /// evicting other processes from the native heap.
+        /// Gets the hard cap on max size of the pool.
         /// </summary>
         private static int GetMaxSizeHardCap()
         {

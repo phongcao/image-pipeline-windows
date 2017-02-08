@@ -60,7 +60,9 @@ namespace ImagePipeline.Image
         /// </summary>
         public EncodedImage(CloseableReference<IPooledByteBuffer> pooledByteBufferRef)
         {
-            Preconditions.CheckArgument(CloseableReference<IPooledByteBuffer>.IsValid(pooledByteBufferRef));
+            Preconditions.CheckArgument(
+                CloseableReference<IPooledByteBuffer>.IsValid(pooledByteBufferRef));
+
             _pooledByteBufferRef = pooledByteBufferRef.Clone();
             _inputStreamSupplier = null;
         }
