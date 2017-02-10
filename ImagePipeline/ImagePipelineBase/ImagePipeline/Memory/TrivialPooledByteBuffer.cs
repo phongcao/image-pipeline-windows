@@ -86,9 +86,18 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Release all resources
+        /// Release all resources.
         /// </summary>
         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Release all resources.
+        /// </summary>
+        private void Dispose(bool disposing)
         {
             _buf = null;
         }

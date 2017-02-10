@@ -15,7 +15,7 @@ namespace ImagePipeline.Producers
     /// <para /> Apps requiring more sophisticated networking should implement their own
     /// <see cref="INetworkFetcher{FetchState}"/>.
     /// </summary>
-    public class HttpUrlConnectionNetworkFetcher : BaseNetworkFetcher<FetchState>, IDisposable
+    public sealed class HttpUrlConnectionNetworkFetcher : BaseNetworkFetcher<FetchState>, IDisposable
     {
         private const int NUM_NETWORK_THREADS = 5;
         private const int MAX_REDIRECTS = 5;
@@ -35,7 +35,7 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Cleanup resources.
         /// </summary>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {

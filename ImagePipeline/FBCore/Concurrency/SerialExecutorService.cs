@@ -275,7 +275,7 @@ namespace FBCore.Concurrency
         /// <b>false</b> if dispose was triggered by a finalizer, <b>true</b>
         /// otherwise.
         /// </param>
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             // Warning: will deadlock if disposed from own queue thread.
             lock (_gate)

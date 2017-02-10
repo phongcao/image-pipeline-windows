@@ -9,7 +9,7 @@ namespace ImagePipeline.Image
     /// <summary>
     /// CloseableImage that contains one SoftwareBitmap.
     /// </summary>
-    public class CloseableStaticBitmap : CloseableBitmap
+    public sealed class CloseableStaticBitmap : CloseableBitmap
     {
         private readonly object _bitmapGate = new object();
 

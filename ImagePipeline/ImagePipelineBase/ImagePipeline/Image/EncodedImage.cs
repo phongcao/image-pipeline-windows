@@ -138,6 +138,12 @@ namespace ImagePipeline.Image
         /// </summary>
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
             CloseableReference<IPooledByteBuffer>.CloseSafely(_pooledByteBufferRef);
         }
 

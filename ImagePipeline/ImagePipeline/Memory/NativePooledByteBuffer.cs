@@ -1,5 +1,6 @@
 ﻿using FBCore.Common.Internal;
 using FBCore.Common.References;
+using System;
 
 namespace ImagePipeline.Memory
 {
@@ -109,11 +110,19 @@ namespace ImagePipeline.Memory
 
         /// <summary>
         /// Closes this instance, and releases the underlying buffer to the pool.
-        /// Once the bytebuffer has been closed, subsequent operations (especially <code> getStream()</code> will
-        /// fail.
-        /// Note: It is not an error to close an already closed bytebuffer
+        /// Once the bytebuffer has been closed, subsequent operations will fail.
+        /// Note: It is not an error to close an already closed bytebuffer.
         /// </summary>
         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Cleanup resources.
+        /// </summary>
+        private void Dispose(bool disposing)
         {
             lock (_poolGate)
             {
@@ -123,10 +132,10 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Validates that the bytebuffer instance is valid (aka not closed). If it is closed, then we
-        /// raise a ClosedException
-        /// This doesn't really need to be synchronized, but lint won't shut up otherwise
-        /// @throws ClosedException
+        /// Validates that the bytebuffer instance is valid (aka not closed). If it is closed, 
+        /// then we raise a ClosedException.
+        /// This doesn't really need to be synchronized, but lint won't shut up otherwise.
+        /// @throws ClosedException.
         /// </summary>
         private void EnsureValid()
         {

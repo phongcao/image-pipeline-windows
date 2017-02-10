@@ -29,7 +29,7 @@ namespace ImagePipeline.Core
     ///
     /// <para />This should only be done once per process.
     /// </summary>
-    public class ImagePipelineConfig : IDisposable
+    public sealed class ImagePipelineConfig : IDisposable
     {
         // If a member here is marked @Nullable, it must be constructed by ImagePipelineFactory
         // on demand if needed.
@@ -115,7 +115,7 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Cleanup resources.
         /// </summary>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
