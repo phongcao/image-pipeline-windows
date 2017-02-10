@@ -1,7 +1,9 @@
 ﻿using FBCore.Common.References;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
+using System;
 using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Storage.Streams;
 
 namespace ImagePipeline.Producers
@@ -16,14 +18,17 @@ namespace ImagePipeline.Producers
         IProducer<CloseableReference<IRandomAccessStream>>
     {
         private readonly IProducer<EncodedImage> _inputProducer;
+        private readonly FlexByteArrayPool _flexByteArrayPool;
 
         /// <summary>
         /// Instantiates the <see cref="RemoveImageTransformMetaDataProducer"/>
         /// </summary>
         public RemoveImageTransformMetaDataProducer(
-            IProducer<EncodedImage> inputProducer)
+            IProducer<EncodedImage> inputProducer,
+            FlexByteArrayPool flexByteArrayPool)
         {
             _inputProducer = inputProducer;
+            _flexByteArrayPool = flexByteArrayPool;
         }
 
         /// <summary>
@@ -34,34 +39,65 @@ namespace ImagePipeline.Producers
             IConsumer<CloseableReference<IRandomAccessStream>> consumer, 
             IProducerContext context)
         {
-            _inputProducer.ProduceResults(new RemoveImageTransformMetaDataConsumer(consumer), context);
+            _inputProducer.ProduceResults(new RemoveImageTransformMetaDataConsumer(this, consumer), context);
         }
 
         private class RemoveImageTransformMetaDataConsumer : 
             DelegatingConsumer<EncodedImage, CloseableReference<IRandomAccessStream>>
         {
+            private RemoveImageTransformMetaDataProducer _parent;
+
             internal RemoveImageTransformMetaDataConsumer(
+                RemoveImageTransformMetaDataProducer parent,
                 IConsumer<CloseableReference<IRandomAccessStream>> consumer) : base(consumer)
             {
+                _parent = parent;
             }
 
             protected override void OnNewResultImpl(EncodedImage newResult, bool isLast)
             {
-                CloseableReference<IRandomAccessStream> ret = null;
+                CloseableReference<IRandomAccessStream> result = null;
+                CloseableReference<IPooledByteBuffer> byteBufferRef = null;
 
                 try
                 {
                     if (EncodedImage.IsValid(newResult))
                     {
-                        ret = CloseableReference<IRandomAccessStream>.of(
-                            newResult.GetInputStream().AsRandomAccessStream());
+                        byteBufferRef = newResult.GetByteBufferRef();
+                        IPooledByteBuffer byteBuffer = byteBufferRef.Get();
+
+                        // Allocate temp buffer for stream convert
+                        byte[] bytesArray = default(byte[]);
+                        CloseableReference<byte[]> bytesArrayRef = default(CloseableReference<byte[]>);
+
+                        try
+                        {
+                            bytesArrayRef = _parent._flexByteArrayPool.Get(byteBuffer.Size);
+                            bytesArray = bytesArrayRef.Get();
+                        }
+                        catch (Exception)
+                        {
+                            // Allocates the byte array since the pool couldn't provide one
+                            bytesArray = new byte[byteBuffer.Size];
+                        }
+                        finally
+                        {
+                            CloseableReference<byte[]>.CloseSafely(bytesArrayRef);
+                        }
+
+                        byteBuffer.Read(0, bytesArray, 0, byteBuffer.Size);
+                        var outStream = new InMemoryRandomAccessStream();
+                        outStream.AsStreamForWrite().Write(bytesArray, 0, byteBuffer.Size);
+                        outStream.Seek(0);
+                        result = CloseableReference<IRandomAccessStream>.of(outStream);
                     }
 
-                    Consumer.OnNewResult(ret, isLast);
+                    Consumer.OnNewResult(result, isLast);
                 }
                 finally
                 {
-                    CloseableReference<IRandomAccessStream>.CloseSafely(ret);
+                    CloseableReference<IPooledByteBuffer>.CloseSafely(byteBufferRef);
+                    CloseableReference<IRandomAccessStream>.CloseSafely(result);
                 }
             }
         }

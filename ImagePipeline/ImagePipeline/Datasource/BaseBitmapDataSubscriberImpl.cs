@@ -2,25 +2,24 @@
 using FBCore.DataSource;
 using ImagePipeline.Image;
 using System;
+using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Datasource
 {
     /// <summary>
-    /// Provides custom implementation for <see cref="BaseBitmapDataSubscriber"/>.
+    /// Provides the custom implementation for <see cref="BaseBitmapDataSubscriber"/>.
     /// </summary>
     public class BaseBitmapDataSubscriberImpl : BaseBitmapDataSubscriber
     {
-        private Action<SoftwareBitmap> _onNewResultImplFunc;
+        private Func<SoftwareBitmap, Task> _onNewResultImplFunc;
         private Action<IDataSource<CloseableReference<CloseableImage>>> _onFailureImplFunc;
 
         /// <summary>
-        /// Instantiates the <see cref="BaseBitmapDataSubscriberImpl"/>
+        /// Instantiates the <see cref="BaseBitmapDataSubscriberImpl"/>.
         /// </summary>
-        /// <param name="onNewResultImplFunc"></param>
-        /// <param name="onFailureImplFunc"></param>
         public BaseBitmapDataSubscriberImpl(
-            Action<SoftwareBitmap> onNewResultImplFunc,
+            Func<SoftwareBitmap, Task> onNewResultImplFunc,
             Action<IDataSource<CloseableReference<CloseableImage>>> onFailureImplFunc)
         {
             _onNewResultImplFunc = onNewResultImplFunc;
@@ -28,18 +27,16 @@ namespace ImagePipeline.Datasource
         }
 
         /// <summary>
-        /// Implementation for OnNewResult
+        /// Implementation for OnNewResult.
         /// </summary>
-        /// <param name="dataSource"></param>
-        public override void OnNewResultImpl(SoftwareBitmap dataSource)
+        public override Task OnNewResultImpl(SoftwareBitmap dataSource)
         {
-            _onNewResultImplFunc(dataSource);
+            return _onNewResultImplFunc(dataSource);
         }
 
         /// <summary>
-        /// Implementation for OnFailure
+        /// Implementation for OnFailure.
         /// </summary>
-        /// <param name="dataSource"></param>
         public override void OnFailureImpl(IDataSource<CloseableReference<CloseableImage>> dataSource)
         {
             _onFailureImplFunc(dataSource);

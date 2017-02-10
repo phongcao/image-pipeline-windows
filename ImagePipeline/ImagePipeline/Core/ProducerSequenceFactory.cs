@@ -26,6 +26,7 @@ namespace ImagePipeline.Core
         private readonly bool _downsampleEnabled;
         private readonly ThreadHandoffProducerQueue _threadHandoffProducerQueue;
         private readonly int _throttlingMaxSimultaneousRequests;
+        private readonly FlexByteArrayPool _flexByteArrayPool;
 
         // Saved sequences
         internal IProducer<CloseableReference<CloseableImage>> _networkFetchSequence;
@@ -42,6 +43,7 @@ namespace ImagePipeline.Core
         internal IDictionary<
             IProducer<CloseableReference<CloseableImage>>,
             IProducer<CloseableReference<CloseableImage>>> _postprocessorSequences;
+
         internal IDictionary<
             IProducer<CloseableReference<CloseableImage>>, 
             IProducer<object>> _closeableImagePrefetchSequences;
@@ -56,7 +58,8 @@ namespace ImagePipeline.Core
             bool downsampleEnabled,
             bool webpSupportEnabled,
             ThreadHandoffProducerQueue threadHandoffProducerQueue,
-            int throttlingMaxSimultaneousRequests)
+            int throttlingMaxSimultaneousRequests,
+            FlexByteArrayPool flexByteArrayPool)
         {
             _producerFactory = producerFactory;
             _networkFetcher = networkFetcher;
@@ -66,11 +69,14 @@ namespace ImagePipeline.Core
             _postprocessorSequences = new Dictionary<
                 IProducer<CloseableReference<CloseableImage>>,
                 IProducer<CloseableReference<CloseableImage>>>();
+
             _closeableImagePrefetchSequences = new Dictionary<
                 IProducer<CloseableReference<CloseableImage>>,
                 IProducer<object>>();
+
             _threadHandoffProducerQueue = threadHandoffProducerQueue;
             _throttlingMaxSimultaneousRequests = throttlingMaxSimultaneousRequests;
+            _flexByteArrayPool = flexByteArrayPool;
         }
 
         /// <summary>
@@ -88,7 +94,8 @@ namespace ImagePipeline.Core
                 if (_encodedImageProducerSequence == null)
                 {
                     _encodedImageProducerSequence = new RemoveImageTransformMetaDataProducer(
-                        GetBackgroundNetworkFetchToEncodedMemorySequence());
+                        GetBackgroundNetworkFetchToEncodedMemorySequence(),
+                        _flexByteArrayPool);
                 }
             }
 
@@ -221,8 +228,10 @@ namespace ImagePipeline.Core
                         NewEncodedCacheMultiplexToTranscodeSequence(
                             _producerFactory.NewNetworkFetchProducer(_networkFetcher));
 
-                    _commonNetworkFetchToEncodedMemorySequence =
-                        ProducerFactory.NewAddImageTransformMetaDataProducer(inputProducer);
+                    // Phong Cao: This is expensive, skip for now
+                    //_commonNetworkFetchToEncodedMemorySequence =
+                    //    ProducerFactory.NewAddImageTransformMetaDataProducer(inputProducer);
+                    _commonNetworkFetchToEncodedMemorySequence = inputProducer;
 
                     if (_resizeAndRotateEnabledForNetwork && !_downsampleEnabled)
                     {

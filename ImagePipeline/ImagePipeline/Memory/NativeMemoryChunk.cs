@@ -79,7 +79,11 @@ namespace ImagePipeline.Memory
             {
                 if (!_closed)
                 {
-                    Debug.WriteLine($"finalize: Chunk { GetHashCode().ToString("X4") } still active. Underlying address = { _nativePtr.ToString("X4") }");
+                    if (!disposing)
+                    {
+                        Debug.WriteLine($"finalize: Chunk { GetHashCode().ToString("X4") } still active. Underlying address = { _nativePtr.ToString("X4") }");
+                    }
+
                     _closed = true;
                     ImagePipelineNative.NativeMemoryChunk.NativeFree(_nativePtr);
                 }

@@ -191,6 +191,11 @@ namespace ImagePipeline.Cache
                     try
                     {
                         IPooledByteBuffer buffer = ReadFromDiskCache(key);
+                        if (buffer == null)
+                        {
+                            return Task.FromResult(default(EncodedImage));
+                        }
+
                         CloseableReference<IPooledByteBuffer> reference = 
                             CloseableReference<IPooledByteBuffer>.of(buffer);
 

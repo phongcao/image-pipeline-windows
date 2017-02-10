@@ -15,10 +15,8 @@ using ImagePipeline.Producers;
 using ImagePipeline.Request;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -178,7 +176,7 @@ namespace ImagePipeline.Core
         {
             var taskCompletionSource = new TaskCompletionSource<SoftwareBitmapSource>();
             var dataSource = FetchDecodedImage(
-                imageRequest, 
+                imageRequest,
                 null,
                 new RequestLevel(RequestLevel.BITMAP_MEMORY_CACHE));
 
@@ -187,7 +185,7 @@ namespace ImagePipeline.Core
                 {
                     if (bitmap != null)
                     {
-                        DispatcherHelpers.CallOnDispatcher(async () =>
+                        DispatcherHelpers.RunOnDispatcher(async () =>
                         {
                             try
                             {
@@ -202,14 +200,14 @@ namespace ImagePipeline.Core
                             {
                                 taskCompletionSource.SetException(e);
                             }
-                        })
-                        .GetAwaiter()
-                        .GetResult();
+                        });
                     }
                     else
                     {
                         taskCompletionSource.SetResult(null);
                     }
+
+                    return taskCompletionSource.Task;
                 },
                 response =>
                 {
@@ -340,7 +338,7 @@ namespace ImagePipeline.Core
                     CloseableReference<IRandomAccessStream> reference = response.GetResult();
                     if (reference != null)
                     {
-                        DispatcherHelpers.CallOnDispatcher(async () =>
+                        DispatcherHelpers.RunOnDispatcher(async () =>
                         {
                             try
                             {
@@ -362,14 +360,14 @@ namespace ImagePipeline.Core
                             {
                                 CloseableReference<IRandomAccessStream>.CloseSafely(reference);
                             }
-                        })
-                        .GetAwaiter()
-                        .GetResult();
+                        });
                     }
                     else
                     {
                         taskCompletionSource.SetResult(null);
                     }
+
+                    return taskCompletionSource.Task;
                 },
                 response =>
                 {
@@ -395,7 +393,7 @@ namespace ImagePipeline.Core
                 {
                     if (bitmap != null)
                     {
-                        DispatcherHelpers.CallOnDispatcher(async () =>
+                        DispatcherHelpers.RunOnDispatcher(async () =>
                         {
                             try
                             {
@@ -410,14 +408,14 @@ namespace ImagePipeline.Core
                             {
                                 taskCompletionSource.SetException(e);
                             }
-                        })
-                        .GetAwaiter()
-                        .GetResult();
+                        });
                     }
                     else
                     {
                         taskCompletionSource.SetResult(null);
                     }
+
+                    return taskCompletionSource.Task;
                 },
                 response =>
                 {
@@ -479,6 +477,7 @@ namespace ImagePipeline.Core
                 response =>
                 {
                     taskCompletionSource.SetResult(null);
+                    return Task.CompletedTask;
                 },
                 response =>
                 {
@@ -557,6 +556,7 @@ namespace ImagePipeline.Core
                 response =>
                 {
                     taskCompletionSource.SetResult(null);
+                    return Task.CompletedTask;
                 },
                 response =>
                 {

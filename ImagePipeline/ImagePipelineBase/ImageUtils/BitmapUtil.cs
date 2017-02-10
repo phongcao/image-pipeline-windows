@@ -95,6 +95,7 @@ namespace ImageUtils
         public static async Task<Tuple<int, int>> DecodeDimensionsAsync(Stream inputStream)
         {
             Preconditions.CheckNotNull(inputStream);
+
             try
             {
                 BitmapDecoder decoder = await BitmapDecoder

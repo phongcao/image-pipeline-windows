@@ -178,11 +178,13 @@ namespace ImagePipeline.Producers
         {
             CloseableReference<IPooledByteBuffer> result = 
                 CloseableReference<IPooledByteBuffer>.of(pooledOutputStream.ToByteBuffer());
+
             EncodedImage encodedImage = null;
+
             try
             {
                 encodedImage = new EncodedImage(result);
-                encodedImage.ParseMetaDataAsync().GetAwaiter().GetResult();
+                //encodedImage.ParseMetaDataAsync().Wait(); // Phong Cao: This is expensive, skip for now
                 consumer.OnNewResult(encodedImage, isFinal);
             }
             finally

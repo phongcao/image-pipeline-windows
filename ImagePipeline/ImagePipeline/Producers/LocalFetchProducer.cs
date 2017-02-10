@@ -63,7 +63,7 @@ namespace ImagePipeline.Producers
                             return null;
                         }
 
-                        encodedImage.ParseMetaDataAsync().GetAwaiter().GetResult();
+                        encodedImage.ParseMetaDataAsync().Wait();
                         return encodedImage;
                     });
 

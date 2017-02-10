@@ -1,6 +1,7 @@
 ﻿using FBCore.Common.References;
 using FBCore.DataSource;
 using ImagePipeline.Image;
+using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Datasource
@@ -30,17 +31,18 @@ namespace ImagePipeline.Datasource
     /// </code>
     /// 
     /// </summary>
-    public abstract class BaseBitmapDataSubscriber : BaseDataSubscriber<CloseableReference<CloseableImage>>
+    public abstract class BaseBitmapDataSubscriber : 
+        BaseDataSubscriber<CloseableReference<CloseableImage>>
     {
         /// <summary>
         /// Called whenever a new value is ready to be retrieved from the DataSource.
         /// </summary>
-        /// <param name="dataSource"></param>
-        public override void OnNewResultImpl(IDataSource<CloseableReference<CloseableImage>> dataSource)
+        public override Task OnNewResultImpl(
+            IDataSource<CloseableReference<CloseableImage>> dataSource)
         {
             if (!dataSource.IsFinished())
             {
-                return;
+                return Task.CompletedTask;
             }
 
             CloseableReference<CloseableImage> closeableImageRef = dataSource.GetResult();
@@ -54,7 +56,7 @@ namespace ImagePipeline.Datasource
 
             try
             {
-                OnNewResultImpl(bitmap);
+                return OnNewResultImpl(bitmap);
             }
             finally
             {
@@ -63,12 +65,11 @@ namespace ImagePipeline.Datasource
         }
 
         /// <summary>
-        /// The bitmap provided to this method is only guaranteed to be around for the lifespan of the
-        /// method.
+        /// The bitmap provided to this method is only guaranteed to be around for the lifespan 
+        /// of the method.
         ///
         /// <para />The framework will free the bitmap's memory after this method has completed.
-        /// <param name="bitmap"></param>
         /// </summary>
-        public abstract void OnNewResultImpl(SoftwareBitmap bitmap);
+        public abstract Task OnNewResultImpl(SoftwareBitmap bitmap);
     }
 }

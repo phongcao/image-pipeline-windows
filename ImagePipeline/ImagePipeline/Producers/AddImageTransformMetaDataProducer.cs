@@ -47,7 +47,7 @@ namespace ImagePipeline.Producers
 
                 if (!EncodedImage.IsMetaDataAvailable(newResult))
                 {
-                    newResult.ParseMetaDataAsync().GetAwaiter().GetResult();
+                    newResult.ParseMetaDataAsync().Wait();
                 }
 
                 Consumer.OnNewResult(newResult, isLast);

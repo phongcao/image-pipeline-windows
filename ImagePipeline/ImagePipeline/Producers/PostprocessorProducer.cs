@@ -23,10 +23,10 @@ namespace ImagePipeline.Producers
         internal const string NAME = "PostprocessorProducer";
         internal const string POSTPROCESSOR = "Postprocessor";
 
-        private IProducer<CloseableReference<CloseableImage>> _inputProducer;
-        private PlatformBitmapFactory _bitmapFactory;
-        private FlexByteArrayPool _flexByteArrayPool;
-        private IExecutorService _executor;
+        private readonly IProducer<CloseableReference<CloseableImage>> _inputProducer;
+        private readonly PlatformBitmapFactory _bitmapFactory;
+        private readonly FlexByteArrayPool _flexByteArrayPool;
+        private readonly IExecutorService _executor;
 
         /// <summary>
         /// Instantiates the <see cref="PostprocessorProducer"/>

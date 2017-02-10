@@ -3,6 +3,7 @@ using ImagePipeline.Image;
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
 
@@ -87,12 +88,7 @@ namespace ImagePipeline.Producers
             FetchState fetchState, 
             INetworkFetcherCallback callback)
         {
-            _tasks.Add(fetchState.Id, token =>
-                _executorService.Execute(
-                () =>
-                {
-                    FetchSync(fetchState, callback, token);
-                }));
+            _tasks.Add(fetchState.Id, token => FetchASync(fetchState, callback, token));
 
             fetchState.Context.AddCallbacks(
                 new BaseProducerContextCallbacks(
@@ -109,34 +105,33 @@ namespace ImagePipeline.Producers
                     () => { }));
         }
 
-        internal void FetchSync(
+        internal Task FetchASync(
             FetchState fetchState, 
             INetworkFetcherCallback callback,
             CancellationToken token)
         {
-            HttpResponseMessage response = default(HttpResponseMessage);
-
-            try
+            return _executorService.Execute(
+            async () =>
             {
-                response = DownloadFrom(fetchState.Uri, MAX_REDIRECTS, token);
-
-                if (response != null)
+                try
                 {
-                    using (var inputStream = response
-                        .Content
-                        .ReadAsInputStreamAsync()
-                        .AsTask()
-                        .GetAwaiter()
-                        .GetResult())
+                    using (var response = DownloadFrom(fetchState.Uri, MAX_REDIRECTS, token))
                     {
-                        callback.OnResponse(inputStream.AsStreamForRead(), -1);
+                        if (response != null)
+                        {
+                            using (var inputStream = await response.Content.ReadAsInputStreamAsync().AsTask().ConfigureAwait(false))
+                            using (var stream = inputStream.AsStreamForRead())
+                            {
+                                callback.OnResponse(stream, -1);
+                            }
+                        }
                     }
                 }
-            }
-            catch (IOException e)
-            {
-                callback.OnFailure(e);
-            }
+                catch (IOException e)
+                {
+                    callback.OnFailure(e);
+                }
+            });
         }
 
         private HttpResponseMessage DownloadFrom(Uri uri, int maxRedirects, CancellationToken token)
@@ -167,6 +162,7 @@ namespace ImagePipeline.Producers
                             string message = (maxRedirects == 0) ? 
                                 string.Format("URL {0} follows too many redirects", uri.ToString()) :
                                 string.Format("URL {0} returned {1} without a valid redirect", uri.ToString(), responseCode);
+
                             throw new IOException(message);
                         }
                     }

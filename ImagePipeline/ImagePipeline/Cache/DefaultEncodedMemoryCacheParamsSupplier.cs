@@ -42,7 +42,8 @@ namespace ImagePipeline.Cache
             }
             else
             {
-                return 4 * ByteConstants.MB;
+                // Phong Cao: Increases pool size for Windows devices
+                return 20 * ByteConstants.MB; // return 4 * ByteConstants.MB;
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿namespace FBCore.DataSource
 {
     /// <summary>
-    /// Subscribes to IDataSourc{T}.
+    /// Subscribes to IDataSource{T}.
     /// </summary>
     public interface IDataSubscriber<T>
     {

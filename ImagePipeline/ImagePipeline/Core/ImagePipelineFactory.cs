@@ -387,7 +387,8 @@ namespace ImagePipeline.Core
                         _config.IsDownsampleEnabled,
                         _config.Experiments.IsWebpSupportEnabled,
                         _threadHandoffProducerQueue,
-                        _config.Experiments.ThrottlingMaxSimultaneousRequests);
+                        _config.Experiments.ThrottlingMaxSimultaneousRequests,
+                        _config.PoolFactory.FlexByteArrayPool);
             }
 
             return _producerSequenceFactory;

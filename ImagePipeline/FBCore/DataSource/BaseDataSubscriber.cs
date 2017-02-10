@@ -1,4 +1,6 @@
-﻿namespace FBCore.DataSource
+﻿using System.Threading.Tasks;
+
+namespace FBCore.DataSource
 {
     /// <summary>
     /// Base implementation of <see cref="IDataSubscriber{T}"/> that ensures that 
@@ -35,7 +37,8 @@
         ///
         /// <para />To retrieve the new value, call <code> dataSource.GetResult()</code>.
         ///
-        /// <para />To determine if the new value is the last, use <code> dataSource.IsFinished</code>.
+        /// <para />To determine if the new value is the last, use 
+        /// <code> dataSource.IsFinished</code>.
         ///
         /// <param name="dataSource"></param>
         /// </summary>
@@ -44,11 +47,12 @@
             // IsFinished should be checked before calling OnNewResultImpl(), otherwise
             // there would be a race condition: the final data source result might be ready before
             // we call IsFinished here, which would lead to the loss of the final result
-            // (because of an early dataSource.Close() call).
+            // (because of an early dataSource.Dipose() call).
             bool shouldClose = dataSource.IsFinished();
+
             try
             {
-                OnNewResultImpl(dataSource);
+                OnNewResultImpl(dataSource).Wait();
             }
             finally
             {
@@ -82,8 +86,8 @@
         }
 
         /// <summary>
-        /// Called whenever the request is cancelled (a request being cancelled means that is was closed
-        /// before it finished).
+        /// Called whenever the request is cancelled (a request being cancelled means that is 
+        /// was closed before it finished).
         ///
         /// <para />No further results will be produced after this method is called.
         ///
@@ -106,7 +110,7 @@
         /// Implementation for OnNewResult
         /// </summary>
         /// <param name="dataSource"></param>
-        public abstract void OnNewResultImpl(IDataSource<T> dataSource);
+        public abstract Task OnNewResultImpl(IDataSource<T> dataSource);
 
         /// <summary>
         /// Implementation for OnFailure

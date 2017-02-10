@@ -2,13 +2,14 @@
 using FBCore.DataSource;
 using ImagePipeline.Image;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Datasource
 {
     /// <summary>
-    /// Implementation of <see cref="IDataSubscriber{T}"/> for cases where the client wants to access
-    /// a list of bitmaps.
+    /// Implementation of <see cref="IDataSubscriber{T}"/> for cases where the client wants to 
+    /// access a list of bitmaps.
     ///
     /// <para />
     /// Sample usage:
@@ -36,19 +37,18 @@ namespace ImagePipeline.Datasource
         /// <summary>
         /// Called whenever a new value is ready to be retrieved from the IDataSource.
         /// </summary>
-        /// <param name="dataSource"></param>
-        public override void OnNewResultImpl(IDataSource<IList<CloseableReference<CloseableImage>>> dataSource)
+        public override Task OnNewResultImpl(
+            IDataSource<IList<CloseableReference<CloseableImage>>> dataSource)
         {
             if (!dataSource.IsFinished())
             {
-                return;
+                return Task.CompletedTask;
             }
 
             IList<CloseableReference<CloseableImage>> imageRefList = dataSource.GetResult();
             if (imageRefList == null)
             {
-                OnNewResultListImpl(null);
-                return;
+                return OnNewResultListImpl(null);
             }
 
             try
@@ -68,7 +68,7 @@ namespace ImagePipeline.Datasource
                     }
                 }
 
-                OnNewResultListImpl(bitmapList);
+                return OnNewResultListImpl(bitmapList);
             }
             finally
             {
@@ -80,12 +80,12 @@ namespace ImagePipeline.Datasource
         }
 
         /// <summary>
-       /// The bitmap list provided to this method is only guaranteed to be around for the lifespan of the
-       /// method. This list can be null or the elements in it can be null.
+       /// The bitmap list provided to this method is only guaranteed to be around for the lifespan 
+       /// of the method. This list can be null or the elements in it can be null.
        ///
-       /// <para />The framework will free the bitmaps in the list from memory after this method has completed.
-       /// <param name="bitmapList"></param>
+       /// <para />The framework will free the bitmaps in the list from memory after this method 
+       /// has completed.
        /// </summary>
-        protected abstract void OnNewResultListImpl(IList<SoftwareBitmap> bitmapList);
+        protected abstract Task OnNewResultListImpl(IList<SoftwareBitmap> bitmapList);
     }
 }

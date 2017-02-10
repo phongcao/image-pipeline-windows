@@ -450,9 +450,11 @@ namespace ImagePipeline.Cache
                 int maxCount = Math.Min(
                     _memoryCacheParams.MaxEvictionQueueEntries,
                     _memoryCacheParams.MaxCacheEntries - InUseCount);
+
                 int maxSize = Math.Min(
                     _memoryCacheParams.MaxEvictionQueueSize,
                     _memoryCacheParams.MaxCacheSize - InUseSizeInBytes);
+
                 oldEntries = TrimExclusivelyOwnedEntries(maxCount, maxSize);
                 MakeOrphans(oldEntries);
             }
@@ -465,8 +467,8 @@ namespace ImagePipeline.Cache
         /// Removes the exclusively owned items until there is at most <code>count</code> of them
         /// and they occupy no more than <code>size</code> bytes.
         ///
-        /// <para /> This method returns the removed items instead of actually closing them, so it is safe to
-        /// be called while holding the <code>this</code> lock.
+        /// <para /> This method returns the removed items instead of actually closing them, so it 
+        /// is safe to be called while holding the <code>this</code> lock.
         /// </summary>
         private IList<Entry> TrimExclusivelyOwnedEntries(int count, int size)
         {
@@ -474,6 +476,7 @@ namespace ImagePipeline.Cache
             {
                 count = Math.Max(count, 0);
                 size = Math.Max(size, 0);
+
                 // fast path without array allocation if no eviction is necessary
                 if (_exclusiveEntries.Count <= count && _exclusiveEntries.SizeInBytes <= size)
                 {

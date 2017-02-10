@@ -15,12 +15,14 @@ namespace ImagePipeline.Memory
         /// Length of 'small' sized buckets. Bucket lengths for these buckets are larger because
         /// they're smaller in size
         /// </summary>
-        private const int SMALL_BUCKET_LENGTH = 5;
+        // Phong Cao: Increases bucket length for Windows devices
+        private const int SMALL_BUCKET_LENGTH = 20; // 5;
 
         /// <summary>
         /// Bucket lengths for 'large' (> 256KB) buckets
         /// </summary>
-        private const int LARGE_BUCKET_LENGTH = 2;
+        // Phong Cao: Increases bucket length for Windows devices
+        private const int LARGE_BUCKET_LENGTH = 10; // 2;
 
         /// <summary>
         /// Gets the default pool params

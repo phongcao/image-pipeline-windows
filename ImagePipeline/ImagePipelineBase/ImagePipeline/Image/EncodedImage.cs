@@ -50,8 +50,8 @@ namespace ImagePipeline.Image
 
         private readonly object _imageGate = new object();
 
-        // Only one of this will be set. The EncodedImage can either be backed by a ByteBuffer or a
-        // Supplier of InputStream, but not both.
+        // Only one of this will be set. The EncodedImage can either be backed by 
+        // a ByteBuffer or a ISupplier of Stream, but not both.
         private readonly CloseableReference<IPooledByteBuffer> _pooledByteBufferRef;
         private readonly ISupplier<FileStream> _inputStreamSupplier;
 
@@ -113,11 +113,14 @@ namespace ImagePipeline.Image
                         CloseableReference<IPooledByteBuffer>.CloneOrNull(_pooledByteBufferRef);
                 try
                 {
-                    encodedImage = (pooledByteBufferRef == null) ? null : new EncodedImage(pooledByteBufferRef);
+                    encodedImage = (pooledByteBufferRef == null) ? 
+                        null : 
+                        new EncodedImage(pooledByteBufferRef);
                 }
                 finally
                 {
-                    // Close the recently created reference since it will be cloned again in the constructor.
+                    // Close the recently created reference since it will be cloned again in 
+                    // the constructor.
                     CloseableReference<IPooledByteBuffer>.CloseSafely(pooledByteBufferRef);
                 }
             }
@@ -139,7 +142,7 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Returns true if the internal buffer reference is valid or the InputStream Supplier is not null,
+        /// Returns true if the internal buffer reference is valid or the stream supplier is not null,
         /// false otherwise.
         /// </summary>
         public bool Valid
@@ -165,10 +168,10 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Returns an InputStream from the internal InputStream Supplier if it's not null. Otherwise
-        /// returns an InputStream for the internal buffer reference if valid and null otherwise.
+        /// Returns a stream from the internal stream supplier if it's not null. Otherwise
+        /// returns an stream for the internal buffer reference if valid and null otherwise.
         ///
-        /// <para />The caller has to close the InputStream after using it.
+        /// <para />The caller has to close the stream after using it.
         /// </summary>
         public Stream GetInputStream()
         {
@@ -253,8 +256,8 @@ namespace ImagePipeline.Image
         /// <summary>
         /// Returns the size of the backing structure.
         ///
-        /// <para /> If it's a PooledByteBuffer returns its size if its not null, -1 otherwise. If it's an
-        /// InputStream, return the size if it was set, -1 otherwise.
+        /// <para /> If it's a PooledByteBuffer returns its size if its not null, -1 otherwise. 
+        /// If it's a stream, return the size if it was set, -1 otherwise.
         /// </summary>
         public int Size
         {
@@ -276,11 +279,12 @@ namespace ImagePipeline.Image
         {
             ImageFormat format = ImageFormatChecker.GetImageFormat_WrapIOException(
                 GetInputStream());
+
             Format = format;
 
-            // Dimensions decoding is not yet supported for WebP since BitmapUtil.decodeDimensions has a
-            // bug where it will return 100x100 for some WebPs even though those are not its actual
-            // dimensions
+            // Dimensions decoding is not yet supported for WebP since BitmapUtil.DecodeDimensions 
+            // has a bug where it will return 100x100 for some WebPs even though those are not its 
+            // actual dimensions.
             if (!ImageFormatHelper.IsWebpFormat(Format))
             {
                 Tuple<int, int> dimensions = 

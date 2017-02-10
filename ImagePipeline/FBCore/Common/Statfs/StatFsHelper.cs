@@ -251,6 +251,7 @@ namespace FBCore.Common.Statfs
             {
                 IDictionary<string, object> retrievedProperties = dir.Properties.RetrievePropertiesAsync(
                     new string[] { "System.FreeSpace" }).GetAwaiter().GetResult();
+
                 return (ulong)retrievedProperties["System.FreeSpace"];
             }
             catch (Exception e)
