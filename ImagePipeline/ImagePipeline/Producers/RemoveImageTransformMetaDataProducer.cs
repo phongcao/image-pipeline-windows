@@ -1,4 +1,5 @@
 ﻿using FBCore.Common.References;
+using FBCore.Common.Util;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
 using System;
@@ -66,19 +67,25 @@ namespace ImagePipeline.Producers
                         byteBufferRef = newResult.GetByteBufferRef();
                         IPooledByteBuffer byteBuffer = byteBufferRef.Get();
 
+                        //----------------------------------------------------------------------
+                        // Phong Cao: InMemoryRandomAccessStream can't write anything < 16KB.
+                        // http://stackoverflow.com/questions/25928408/inmemoryrandomaccessstream-incorrect-behavior
+                        //----------------------------------------------------------------------
+                        int supportedSize = Math.Max(16 * ByteConstants.KB, byteBuffer.Size);
+
                         // Allocate temp buffer for stream convert
                         byte[] bytesArray = default(byte[]);
                         CloseableReference<byte[]> bytesArrayRef = default(CloseableReference<byte[]>);
 
                         try
                         {
-                            bytesArrayRef = _parent._flexByteArrayPool.Get(byteBuffer.Size);
+                            bytesArrayRef = _parent._flexByteArrayPool.Get(supportedSize);
                             bytesArray = bytesArrayRef.Get();
                         }
                         catch (Exception)
                         {
                             // Allocates the byte array since the pool couldn't provide one
-                            bytesArray = new byte[byteBuffer.Size];
+                            bytesArray = new byte[supportedSize];
                         }
                         finally
                         {
@@ -87,7 +94,7 @@ namespace ImagePipeline.Producers
 
                         byteBuffer.Read(0, bytesArray, 0, byteBuffer.Size);
                         var outStream = new InMemoryRandomAccessStream();
-                        outStream.AsStreamForWrite().Write(bytesArray, 0, byteBuffer.Size);
+                        outStream.AsStreamForWrite().Write(bytesArray, 0, supportedSize);
                         outStream.Seek(0);
                         result = CloseableReference<IRandomAccessStream>.of(outStream);
                     }

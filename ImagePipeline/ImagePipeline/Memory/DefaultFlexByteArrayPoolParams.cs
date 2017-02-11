@@ -18,7 +18,7 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// The min buffer size we'll use
         /// </summary>
-        private const int DEFAULT_MIN_BYTE_ARRAY_SIZE = 128 * ByteConstants.KB;
+        private const int DEFAULT_MIN_BYTE_ARRAY_SIZE = 16 * ByteConstants.KB;
 
         /// <summary>
         /// The maximum number of threads permitted to touch this pool
