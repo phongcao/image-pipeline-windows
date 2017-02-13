@@ -15,6 +15,7 @@ using ImagePipeline.Producers;
 using ImagePipeline.Request;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
@@ -36,6 +37,7 @@ namespace ImagePipeline.Core
         private readonly BufferedDiskCache _smallImageBufferedDiskCache;
         private readonly ICacheKeyFactory _cacheKeyFactory;
         private readonly ThreadHandoffProducerQueue _threadHandoffProducerQueue;
+        private readonly FlexByteArrayPool _flexByteArrayPool;
         private long _idCounter;
 
         /// <summary>
@@ -50,6 +52,7 @@ namespace ImagePipeline.Core
         /// <param name="smallImageBufferedDiskCache">The buffered disk cache used for small images.</param>
         /// <param name="cacheKeyFactory">The factory that creates cache keys for the pipeline.</param>
         /// <param name="threadHandoffProducerQueue">Move further computation to different thread.</param>
+        /// <param name="flexByteArrayPool">The memory pool use for BitmapImage conversion.</param>
         public ImagePipelineCore(
             ProducerSequenceFactory producerSequenceFactory,
             HashSet<IRequestListener> requestListeners,
@@ -59,7 +62,8 @@ namespace ImagePipeline.Core
             BufferedDiskCache mainBufferedDiskCache,
             BufferedDiskCache smallImageBufferedDiskCache,
             ICacheKeyFactory cacheKeyFactory,
-            ThreadHandoffProducerQueue threadHandoffProducerQueue)
+            ThreadHandoffProducerQueue threadHandoffProducerQueue,
+            FlexByteArrayPool flexByteArrayPool)
         {
             _idCounter = 0;
             _producerSequenceFactory = producerSequenceFactory;
@@ -71,6 +75,7 @@ namespace ImagePipeline.Core
             _smallImageBufferedDiskCache = smallImageBufferedDiskCache;
             _cacheKeyFactory = cacheKeyFactory;
             _threadHandoffProducerQueue = threadHandoffProducerQueue;
+            _flexByteArrayPool = flexByteArrayPool;
         }
 
         /// <summary>
@@ -133,12 +138,12 @@ namespace ImagePipeline.Core
         /// <param name="callerContext">The caller context of the caller of data source supplier.</param>
         /// @return a IDataSource representing pending results and completion of the request.
         /// </summary>
-        public ISupplier<IDataSource<CloseableReference<IRandomAccessStream>>> 
+        public ISupplier<IDataSource<CloseableReference<IPooledByteBuffer>>> 
             GetEncodedImageDataSourceSupplier(
                 ImageRequest imageRequest,
                 object callerContext)
         {
-            return new SupplierImpl<IDataSource<CloseableReference<IRandomAccessStream>>>(
+            return new SupplierImpl<IDataSource<CloseableReference<IPooledByteBuffer>>>(
                 () =>
                 {
                     return FetchEncodedImage(imageRequest, callerContext);
@@ -206,8 +211,6 @@ namespace ImagePipeline.Core
                     {
                         taskCompletionSource.SetResult(null);
                     }
-
-                    return taskCompletionSource.Task;
                 },
                 response =>
                 {
@@ -279,7 +282,7 @@ namespace ImagePipeline.Core
         /// <param name="callerContext">The caller context for image request.</param>
         /// @return a IDataSource representing the pending encoded image(s).
         /// </summary>
-        public IDataSource<CloseableReference<IRandomAccessStream>> FetchEncodedImage(
+        public IDataSource<CloseableReference<IPooledByteBuffer>> FetchEncodedImage(
             ImageRequest imageRequest,
             object callerContext)
         {
@@ -287,7 +290,7 @@ namespace ImagePipeline.Core
 
             try
             {
-                IProducer<CloseableReference<IRandomAccessStream>> producerSequence =
+                IProducer<CloseableReference<IPooledByteBuffer>> producerSequence =
                     _producerSequenceFactory.GetEncodedImageProducerSequence(imageRequest);
 
                 // The resize options are used to determine whether images are going to be 
@@ -312,7 +315,7 @@ namespace ImagePipeline.Core
             }
             catch (Exception exception)
             {
-                return DataSources.ImmediateFailedDataSource<CloseableReference<IRandomAccessStream>>(
+                return DataSources.ImmediateFailedDataSource<CloseableReference<IPooledByteBuffer>>(
                     exception);
             }
         }
@@ -332,42 +335,65 @@ namespace ImagePipeline.Core
 
             var taskCompletionSource = new TaskCompletionSource<BitmapImage>();
             var dataSource = FetchEncodedImage(imageRequest, null);
-            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IRandomAccessStream>>(
+            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IPooledByteBuffer>>(
                 response =>
                 {
-                    CloseableReference<IRandomAccessStream> reference = response.GetResult();
+                    CloseableReference<IPooledByteBuffer> reference = response.GetResult();
                     if (reference != null)
                     {
-                        DispatcherHelpers.RunOnDispatcher(async () =>
-                        {
-                            try
-                            {
-                                using (var result = reference.Get())
-                                {
-                                    var bitmapImage = new BitmapImage();
-                                    await bitmapImage.SetSourceAsync(result)
-                                        .AsTask()
-                                        .ConfigureAwait(false);
+                        //----------------------------------------------------------------------
+                        // Phong Cao: InMemoryRandomAccessStream can't write anything < 16KB.
+                        // http://stackoverflow.com/questions/25928408/inmemoryrandomaccessstream-incorrect-behavior
+                        //----------------------------------------------------------------------
+                        IPooledByteBuffer inputStream = reference.Get();
+                        int supportedSize = Math.Max(16 * ByteConstants.KB, inputStream.Size);
 
+                        // Allocate temp buffer for stream convert
+                        byte[] bytesArray = default(byte[]);
+                        CloseableReference<byte[]> bytesArrayRef = default(CloseableReference<byte[]>);
+
+                        try
+                        {
+                            bytesArrayRef = _flexByteArrayPool.Get(supportedSize);
+                            bytesArray = bytesArrayRef.Get();
+                        }
+                        catch (Exception)
+                        {
+                            // Allocates the byte array since the pool couldn't provide one
+                            bytesArray = new byte[supportedSize];
+                        }
+
+                        try
+                        {
+                            inputStream.Read(0, bytesArray, 0, inputStream.Size);
+                            DispatcherHelpers.RunOnDispatcherAsync(async () =>
+                            {
+                                using (var outStream = new InMemoryRandomAccessStream())
+                                using (var writeStream = outStream.AsStreamForWrite())
+                                {
+                                    await writeStream.WriteAsync(bytesArray, 0, supportedSize).ConfigureAwait(false);
+                                    outStream.Seek(0);
+                                    BitmapImage bitmapImage = new BitmapImage();
+                                    await bitmapImage.SetSourceAsync(outStream).AsTask().ConfigureAwait(false);
                                     taskCompletionSource.SetResult(bitmapImage);
                                 }
-                            }
-                            catch (Exception e)
-                            {
-                                taskCompletionSource.SetException(e);
-                            }
-                            finally
-                            {
-                                CloseableReference<IRandomAccessStream>.CloseSafely(reference);
-                            }
-                        });
+                            })
+                            .Wait();
+                        }
+                        catch (Exception e)
+                        {
+                            taskCompletionSource.SetException(e);
+                        }
+                        finally
+                        {
+                            CloseableReference<IPooledByteBuffer>.CloseSafely(reference);
+                            CloseableReference<byte[]>.CloseSafely(bytesArrayRef);
+                        }
                     }
                     else
                     {
                         taskCompletionSource.SetResult(null);
                     }
-
-                    return taskCompletionSource.Task;
                 },
                 response =>
                 {
@@ -384,25 +410,22 @@ namespace ImagePipeline.Core
         /// <returns>The decoded SoftwareBitmapSource.</returns>
         /// @throws IOException if the image request isn't valid.
         /// </summary>
-        public Task<SoftwareBitmapSource> FetchDecodedImageSource(ImageRequest imageRequest)
+        public Task<WriteableBitmap> FetchDecodedBitmapImage(ImageRequest imageRequest)
         {
-            var taskCompletionSource = new TaskCompletionSource<SoftwareBitmapSource>();
+            var taskCompletionSource = new TaskCompletionSource<WriteableBitmap>();
             var dataSource = FetchDecodedImage(imageRequest, null);
             var dataSubscriber = new BaseBitmapDataSubscriberImpl(
                 bitmap =>
                 {
                     if (bitmap != null)
                     {
-                        DispatcherHelpers.RunOnDispatcher(async () =>
+                        DispatcherHelpers.RunOnDispatcher(() =>
                         {
                             try
                             {
-                                var bitmapSource = new SoftwareBitmapSource();
-                                await bitmapSource.SetBitmapAsync(bitmap)
-                                    .AsTask()
-                                    .ConfigureAwait(false);
-
-                                taskCompletionSource.SetResult(bitmapSource);
+                                var writeableBitmap = new WriteableBitmap(bitmap.PixelWidth, bitmap.PixelHeight);
+                                bitmap.CopyToBuffer(writeableBitmap.PixelBuffer);
+                                taskCompletionSource.SetResult(writeableBitmap);
                             }
                             catch (Exception e)
                             {
@@ -414,8 +437,6 @@ namespace ImagePipeline.Core
                     {
                         taskCompletionSource.SetResult(null);
                     }
-
-                    return taskCompletionSource.Task;
                 },
                 response =>
                 {
@@ -477,7 +498,6 @@ namespace ImagePipeline.Core
                 response =>
                 {
                     taskCompletionSource.SetResult(null);
-                    return Task.CompletedTask;
                 },
                 response =>
                 {
@@ -556,7 +576,6 @@ namespace ImagePipeline.Core
                 response =>
                 {
                     taskCompletionSource.SetResult(null);
-                    return Task.CompletedTask;
                 },
                 response =>
                 {

@@ -295,7 +295,8 @@ namespace ImagePipeline.Core
                         GetMainBufferedDiskCache(),
                         GetSmallImageBufferedDiskCache(),
                         _config.CacheKeyFactory,
-                        _threadHandoffProducerQueue);
+                        _threadHandoffProducerQueue,
+                        _config.PoolFactory.FlexByteArrayPool);
             }
 
             return _imagePipeline;

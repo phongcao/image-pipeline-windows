@@ -2,7 +2,6 @@
 using FBCore.DataSource;
 using ImagePipeline.Image;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Datasource
@@ -37,18 +36,19 @@ namespace ImagePipeline.Datasource
         /// <summary>
         /// Called whenever a new value is ready to be retrieved from the IDataSource.
         /// </summary>
-        public override Task OnNewResultImpl(
+        public override void OnNewResultImpl(
             IDataSource<IList<CloseableReference<CloseableImage>>> dataSource)
         {
             if (!dataSource.IsFinished())
             {
-                return Task.CompletedTask;
+                return;
             }
 
             IList<CloseableReference<CloseableImage>> imageRefList = dataSource.GetResult();
             if (imageRefList == null)
             {
-                return OnNewResultListImpl(null);
+                OnNewResultListImpl(null);
+                return;
             }
 
             try
@@ -68,7 +68,7 @@ namespace ImagePipeline.Datasource
                     }
                 }
 
-                return OnNewResultListImpl(bitmapList);
+                OnNewResultListImpl(bitmapList);
             }
             finally
             {
@@ -86,6 +86,6 @@ namespace ImagePipeline.Datasource
        /// <para />The framework will free the bitmaps in the list from memory after this method 
        /// has completed.
        /// </summary>
-        protected abstract Task OnNewResultListImpl(IList<SoftwareBitmap> bitmapList);
+        protected abstract void OnNewResultListImpl(IList<SoftwareBitmap> bitmapList);
     }
 }

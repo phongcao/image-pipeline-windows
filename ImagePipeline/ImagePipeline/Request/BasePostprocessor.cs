@@ -115,17 +115,20 @@ namespace ImagePipeline.Request
                     // Allocates the byte array since the pool couldn't provide one
                     desData = new byte[capacity];
                 }
+
+                try
+                {
+                    // Process output data
+                    Marshal.Copy((IntPtr)srcData, desData, 0, (int)capacity);
+                    Process(desData, destBitmap.PixelWidth, destBitmap.PixelHeight,
+                        destBitmap.BitmapPixelFormat, destBitmap.BitmapAlphaMode);
+
+                    Marshal.Copy(desData, 0, (IntPtr)srcData, (int)capacity);
+                }
                 finally
                 {
                     CloseableReference<byte[]>.CloseSafely(bytesArrayRef);
                 }
-
-                // Process output data
-                Marshal.Copy((IntPtr)srcData, desData, 0, (int)capacity);
-                Process(desData, destBitmap.PixelWidth, destBitmap.PixelHeight,
-                    destBitmap.BitmapPixelFormat, destBitmap.BitmapAlphaMode);
-
-                Marshal.Copy(desData, 0, (IntPtr)srcData, (int)capacity);
             }
         }
 

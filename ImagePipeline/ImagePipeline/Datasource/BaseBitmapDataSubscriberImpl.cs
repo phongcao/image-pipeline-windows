@@ -2,7 +2,6 @@
 using FBCore.DataSource;
 using ImagePipeline.Image;
 using System;
-using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Datasource
@@ -12,14 +11,14 @@ namespace ImagePipeline.Datasource
     /// </summary>
     public class BaseBitmapDataSubscriberImpl : BaseBitmapDataSubscriber
     {
-        private Func<SoftwareBitmap, Task> _onNewResultImplFunc;
+        private Action<SoftwareBitmap> _onNewResultImplFunc;
         private Action<IDataSource<CloseableReference<CloseableImage>>> _onFailureImplFunc;
 
         /// <summary>
         /// Instantiates the <see cref="BaseBitmapDataSubscriberImpl"/>.
         /// </summary>
         public BaseBitmapDataSubscriberImpl(
-            Func<SoftwareBitmap, Task> onNewResultImplFunc,
+            Action<SoftwareBitmap> onNewResultImplFunc,
             Action<IDataSource<CloseableReference<CloseableImage>>> onFailureImplFunc)
         {
             _onNewResultImplFunc = onNewResultImplFunc;
@@ -29,9 +28,9 @@ namespace ImagePipeline.Datasource
         /// <summary>
         /// Implementation for OnNewResult.
         /// </summary>
-        public override Task OnNewResultImpl(SoftwareBitmap dataSource)
+        public override void OnNewResultImpl(SoftwareBitmap dataSource)
         {
-            return _onNewResultImplFunc(dataSource);
+            _onNewResultImplFunc(dataSource);
         }
 
         /// <summary>

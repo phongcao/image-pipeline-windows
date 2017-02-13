@@ -1,7 +1,6 @@
 ﻿using FBCore.Common.References;
 using FBCore.DataSource;
 using ImagePipeline.Image;
-using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Datasource
@@ -37,12 +36,12 @@ namespace ImagePipeline.Datasource
         /// <summary>
         /// Called whenever a new value is ready to be retrieved from the DataSource.
         /// </summary>
-        public override Task OnNewResultImpl(
+        public override void OnNewResultImpl(
             IDataSource<CloseableReference<CloseableImage>> dataSource)
         {
             if (!dataSource.IsFinished())
             {
-                return Task.CompletedTask;
+                return;
             }
 
             CloseableReference<CloseableImage> closeableImageRef = dataSource.GetResult();
@@ -56,7 +55,8 @@ namespace ImagePipeline.Datasource
 
             try
             {
-                return OnNewResultImpl(bitmap);
+                OnNewResultImpl(bitmap);
+                return;
             }
             finally
             {
@@ -70,6 +70,6 @@ namespace ImagePipeline.Datasource
         ///
         /// <para />The framework will free the bitmap's memory after this method has completed.
         /// </summary>
-        public abstract Task OnNewResultImpl(SoftwareBitmap bitmap);
+        public abstract void OnNewResultImpl(SoftwareBitmap bitmap);
     }
 }

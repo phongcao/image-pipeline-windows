@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace FBCore.DataSource
+﻿namespace FBCore.DataSource
 {
     /// <summary>
     /// Base implementation of <see cref="IDataSubscriber{T}"/> that ensures that 
@@ -52,7 +50,7 @@ namespace FBCore.DataSource
 
             try
             {
-                OnNewResultImpl(dataSource).Wait();
+                OnNewResultImpl(dataSource);
             }
             finally
             {
@@ -110,7 +108,7 @@ namespace FBCore.DataSource
         /// Implementation for OnNewResult
         /// </summary>
         /// <param name="dataSource"></param>
-        public abstract Task OnNewResultImpl(IDataSource<T> dataSource);
+        public abstract void OnNewResultImpl(IDataSource<T> dataSource);
 
         /// <summary>
         /// Implementation for OnFailure

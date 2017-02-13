@@ -42,7 +42,8 @@ namespace ImagePipeline.Cache
             }
             else
             {
-                return maxMemory / 4;
+                // Phong Cao: Limits bitmap memory cache for Windows devices
+                return 100 * ByteConstants.MB; // maxMemory / 4;
             }
         }
     }
