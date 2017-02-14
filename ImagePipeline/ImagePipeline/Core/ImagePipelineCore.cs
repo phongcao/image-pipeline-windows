@@ -175,11 +175,11 @@ namespace ImagePipeline.Core
         /// Submits a request for bitmap cache lookup.
         ///
         /// <param name="imageRequest">The request to submit.</param>
-        /// @return a Task{SoftwareBitmapSource} representing the image.
+        /// @return a Task{WriteableBitmap} representing the image.
         /// </summary>
-        public Task<SoftwareBitmapSource> FetchImageFromBitmapCache(ImageRequest imageRequest)
+        public Task<WriteableBitmap> FetchImageFromBitmapCache(ImageRequest imageRequest)
         {
-            var taskCompletionSource = new TaskCompletionSource<SoftwareBitmapSource>();
+            var taskCompletionSource = new TaskCompletionSource<WriteableBitmap>();
             var dataSource = FetchDecodedImage(
                 imageRequest,
                 null,
@@ -190,22 +190,20 @@ namespace ImagePipeline.Core
                 {
                     if (bitmap != null)
                     {
-                        DispatcherHelpers.RunOnDispatcher(async () =>
+                        DispatcherHelpers.RunOnDispatcherAsync(() =>
                         {
                             try
                             {
-                                var bitmapSource = new SoftwareBitmapSource();
-                                await bitmapSource.SetBitmapAsync(bitmap)
-                                    .AsTask()
-                                    .ConfigureAwait(false);
-
-                                taskCompletionSource.SetResult(bitmapSource);
+                                var writeableBitmap = new WriteableBitmap(bitmap.PixelWidth, bitmap.PixelHeight);
+                                bitmap.CopyToBuffer(writeableBitmap.PixelBuffer);
+                                taskCompletionSource.SetResult(writeableBitmap);
                             }
                             catch (Exception e)
                             {
                                 taskCompletionSource.SetException(e);
                             }
-                        });
+                        })
+                        .Wait();
                     }
                     else
                     {
@@ -419,7 +417,7 @@ namespace ImagePipeline.Core
                 {
                     if (bitmap != null)
                     {
-                        DispatcherHelpers.RunOnDispatcher(() =>
+                        DispatcherHelpers.RunOnDispatcherAsync(() =>
                         {
                             try
                             {
@@ -431,7 +429,8 @@ namespace ImagePipeline.Core
                             {
                                 taskCompletionSource.SetException(e);
                             }
-                        });
+                        })
+                        .Wait();
                     }
                     else
                     {
