@@ -6,8 +6,37 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Button Style="{StaticResource SplitViewTogglePaneButtonStyle}"
+                Click="ShowSliptView"/>
+        <TextBlock Text="Image Pipeline Samples" 
+                       VerticalAlignment="Center"
+                       Style="{ThemeResource TitleTextBlockStyle}" 
+                       Grid.Column="1"/>
+        <StackPanel Orientation="Vertical" Grid.ColumnSpan="2" Grid.Row="1">
+            <RichTextBlock FontSize="14" Padding="32" >
+                <Paragraph>This app demonstrates the usage of Image Pipeline in basic scenarios.
+                </Paragraph>
+                <Paragraph>
+                    <LineBreak/> 1. Fetch Images Sample: Fetching encoded and decoded images from network, prefetching them to disk and bitmap cache.
+                </Paragraph>
+                <Paragraph>
+                    <LineBreak/> 2. Postprocess Sample: Applying custom postprocessors to a decoded image.
+                </Paragraph>
+                <Paragraph>
+                    <LineBreak/> 3. Progressive Rendering Sample: Enabling progressive rendering for JPEG files.
+                </Paragraph>
+            </RichTextBlock>
+        </StackPanel>
 
+        <local:SamplesPane x:Name="MySamplesPane" Grid.ColumnSpan="2" Grid.RowSpan="2" />
     </Grid>
 </Page>

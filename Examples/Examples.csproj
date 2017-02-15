@@ -99,6 +99,16 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SamplesPane.xaml.cs" />
+    <Compile Include="Samples\FetchImagesSample\FetchImagesSample.xaml.cs">
+      <DependentUpon>FetchImagesSample.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Samples\PostprocessorSample\PostprocessorSample.xaml.cs">
+      <DependentUpon>PostprocessorSample.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Samples\ProgressiveRenderingSample\ProgressiveRenderingSample.xaml.cs">
+      <DependentUpon>ProgressiveRenderingSample.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -125,6 +135,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="SamplesPane.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Samples\FetchImagesSample\FetchImagesSample.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Samples\PostprocessorSample\PostprocessorSample.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Samples\ProgressiveRenderingSample\ProgressiveRenderingSample.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImagePipeline\FBCore\FBCore.csproj">
@@ -140,6 +166,7 @@
       <Name>ImagePipeline</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
