@@ -330,13 +330,8 @@ namespace ImagePipeline.Core
         /// </summary>
         public Task<BitmapImage> FetchEncodedBitmapImage(Uri uri)
         {
-            var imageRequest = ImageRequestBuilder
-                .NewBuilderWithSource(uri)
-                .SetProgressiveRenderingEnabled(false)
-                .Build();
-
             var taskCompletionSource = new TaskCompletionSource<BitmapImage>();
-            var dataSource = FetchEncodedImage(imageRequest, null);
+            var dataSource = FetchEncodedImage(ImageRequest.FromUri(uri), null);
             var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IPooledByteBuffer>>(
                 async response =>
                 {
@@ -491,12 +486,7 @@ namespace ImagePipeline.Core
         public Task PrefetchToBitmapCache(Uri uri)
         {
             var taskCompletionSource = new TaskCompletionSource<object>();
-            var imageRequest = ImageRequestBuilder
-                .NewBuilderWithSource(uri)
-                .SetProgressiveRenderingEnabled(false)
-                .Build();
-
-            var dataSource = PrefetchToBitmapCache(imageRequest, null);
+            var dataSource = PrefetchToBitmapCache(ImageRequest.FromUri(uri), null);
             var dataSubscriber = new BaseDataSubscriberImpl<object>(
                 response =>
                 {
@@ -570,12 +560,7 @@ namespace ImagePipeline.Core
         public Task PrefetchToDiskCache(Uri uri)
         {
             var taskCompletionSource = new TaskCompletionSource<object>();
-            var imageRequest = ImageRequestBuilder
-                .NewBuilderWithSource(uri)
-                .SetProgressiveRenderingEnabled(false)
-                .Build();
-
-            var dataSource = PrefetchToDiskCache(imageRequest, null);
+            var dataSource = PrefetchToDiskCache(ImageRequest.FromUri(uri), null);
             var dataSubscriber = new BaseDataSubscriberImpl<object>(
                 response =>
                 {
@@ -610,9 +595,9 @@ namespace ImagePipeline.Core
         /// use EvictFromDiskCache(ImageRequest).
         /// <param name="uri">The uri of the image to evict.</param>
         /// </summary>
-        public void EvictFromDiskCache(Uri uri)
+        public Task EvictFromDiskCache(Uri uri)
         {
-            EvictFromDiskCache(ImageRequest.FromUri(uri));
+            return EvictFromDiskCache(ImageRequest.FromUri(uri));
         }
 
         /// <summary>
@@ -620,11 +605,11 @@ namespace ImagePipeline.Core
         ///
         /// <param name="imageRequest">The imageRequest for the image to evict from disk cache.</param>
         /// </summary>
-        public void EvictFromDiskCache(ImageRequest imageRequest)
+        public async Task EvictFromDiskCache(ImageRequest imageRequest)
         {
             ICacheKey cacheKey = _cacheKeyFactory.GetEncodedCacheKey(imageRequest, null);
-            _mainBufferedDiskCache.Remove(cacheKey);
-            _smallImageBufferedDiskCache.Remove(cacheKey);
+            await _mainBufferedDiskCache.Remove(cacheKey).ConfigureAwait(false);
+            await _smallImageBufferedDiskCache.Remove(cacheKey).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -634,10 +619,10 @@ namespace ImagePipeline.Core
         /// and EvictFromDiskCache(ImageRequest) separately.
         /// <param name="uri">The uri of the image to evict.</param>
         /// </summary>
-        public void EvictFromCache(Uri uri)
+        public async Task EvictFromCache(Uri uri)
         {
             EvictFromMemoryCache(uri);
-            EvictFromDiskCache(uri);
+            await EvictFromDiskCache(uri).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -653,19 +638,19 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Clear disk caches.
         /// </summary>
-        public void ClearDiskCaches()
+        public async Task ClearDiskCachesAsync()
         {
-            _mainBufferedDiskCache.ClearAll();
-            _smallImageBufferedDiskCache.ClearAll();
+            await _mainBufferedDiskCache.ClearAll().ConfigureAwait(false);
+            await _smallImageBufferedDiskCache.ClearAll().ConfigureAwait(false);
         }
 
         /// <summary>
         /// Clear all the caches (memory and disk).
         /// </summary>
-        public void ClearCaches()
+        public async Task ClearCachesAsync()
         {
             ClearMemoryCaches();
-            ClearDiskCaches();
+            await ClearDiskCachesAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -825,6 +810,35 @@ namespace ImagePipeline.Core
                 TaskContinuationOptions.ExecuteSynchronously);
 
             return dataSource;
+        }
+
+        /// <summary>
+        /// Returns whether the image is stored in the disk cache.
+        ///
+        /// <param name="imageRequest">The imageRequest for the image to be looked up.</param>
+        /// @return true if the image was found in the disk cache, false otherwise.
+        /// </summary>
+        public async Task<bool> IsInDiskCacheAsync(ImageRequest imageRequest)
+        {
+            ICacheKey cacheKey = _cacheKeyFactory.GetEncodedCacheKey(imageRequest, null);
+            bool found = await _mainBufferedDiskCache.Contains(cacheKey).ConfigureAwait(false);
+            if (!found)
+            {
+                return await _smallImageBufferedDiskCache.Contains(cacheKey).ConfigureAwait(false);
+            }
+
+            return found;
+        }
+
+        /// <summary>
+        /// Returns whether the image is stored in the disk cache.
+        ///
+        /// <param name="uri">The uri for the image to be looked up.</param>
+        /// @return true if the image was found in the disk cache, false otherwise.
+        /// </summary>
+        public Task<bool> IsInDiskCacheAsync(Uri uri)
+        {
+            return IsInDiskCacheAsync(ImageRequest.FromUri(uri));
         }
 
         private IDataSource<CloseableReference<T>> SubmitFetchRequest<T>(

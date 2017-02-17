@@ -141,6 +141,7 @@ namespace ImagePipeline.Tests.Producers
                 .NewBuilderWithSource(FAILURE_URL)
                 .SetProgressiveRenderingEnabled(true)
                 .Build();
+
             _producerContext = new SettableProducerContext(
                 _imageRequest,
                 _imageRequest.SourceUri.ToString(),
@@ -150,6 +151,7 @@ namespace ImagePipeline.Tests.Producers
                 false,
                 true,
                 Priority.MEDIUM);
+
             _networkFetchProducer.ProduceResults(_consumer, _producerContext);
 
             // Wait for callback
@@ -172,6 +174,7 @@ namespace ImagePipeline.Tests.Producers
                 .NewBuilderWithSource(IMAGE_URL)
                 .SetProgressiveRenderingEnabled(false)
                 .Build();
+
             _producerContext = new SettableProducerContext(
                 _imageRequest,
                 $"{ _imageRequest.SourceUri.ToString() }1",
@@ -181,6 +184,7 @@ namespace ImagePipeline.Tests.Producers
                 false,
                 true,
                 Priority.MEDIUM);
+
             _networkFetchProducer.ProduceResults(_consumer, _producerContext);
 
             // Wait for callback
@@ -200,6 +204,7 @@ namespace ImagePipeline.Tests.Producers
                 .NewBuilderWithSource(IMAGE_URL)
                 .SetProgressiveRenderingEnabled(true)
                 .Build();
+
             _producerContext = new SettableProducerContext(
                 _imageRequest,
                 $"{ _imageRequest.SourceUri.ToString() }2",
@@ -209,6 +214,7 @@ namespace ImagePipeline.Tests.Producers
                 false,
                 true,
                 Priority.MEDIUM);
+
             _networkFetchProducer.ProduceResults(_consumer, _producerContext);
 
             // Wait for callback

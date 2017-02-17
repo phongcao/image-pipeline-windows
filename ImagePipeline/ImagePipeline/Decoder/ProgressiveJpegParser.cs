@@ -3,7 +3,7 @@ using FBCore.Common.Util;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
 using ImageUtils;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 
 namespace ImagePipeline.Decoder
@@ -77,7 +77,7 @@ namespace ImagePipeline.Decoder
         private int _bestScanNumber;
 
         private readonly IByteArrayPool _byteArrayPool;
-        private readonly IDictionary<int, int> _bestScanEndOffsetList;
+        private readonly ConcurrentDictionary<int, int> _bestScanEndOffsetList;
 
         /// <summary>
         /// Instantiates the <see cref="ProgressiveJpegParser"/>.
@@ -91,7 +91,7 @@ namespace ImagePipeline.Decoder
             _nextFullScanNumber = 0;
             _bestScanNumber = 0;
             _parserState = READ_FIRST_JPEG_BYTE;
-            _bestScanEndOffsetList = new Dictionary<int, int>();
+            _bestScanEndOffsetList = new ConcurrentDictionary<int, int>();
         }
 
         /// <summary>

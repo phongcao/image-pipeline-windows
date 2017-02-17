@@ -30,7 +30,7 @@ namespace Examples
         private async void FetchButton_Click(object sender, RoutedEventArgs e)
         {
             ImageGrid.Items.Clear();
-            _imagePipeline.ClearCaches();
+            await _imagePipeline.ClearCachesAsync();
             FetchButton.IsEnabled = false;
             ImageCounter.Visibility = Visibility.Visible;
             for (int i = 0; i < MainPage.NUM_IMAGES; i++)

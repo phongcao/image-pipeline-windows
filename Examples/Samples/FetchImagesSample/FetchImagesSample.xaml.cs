@@ -64,11 +64,9 @@ namespace Examples
                 try
                 {
                     Uri uri = MainPage.GenerateImageUri();
-                    ImageRequest request = ImageRequestBuilder
-                        .NewBuilderWithSource(uri)
-                        .Build();
+                    WriteableBitmap bitmap = await _imagePipeline.FetchDecodedBitmapImage(
+                        ImageRequest.FromUri(uri));
 
-                    WriteableBitmap bitmap = await _imagePipeline.FetchDecodedBitmapImage(request);
                     var image = new Image();
                     image.Width = image.Height = MainPage.VIEW_DIMENSION;
                     image.Source = bitmap;
@@ -119,7 +117,7 @@ namespace Examples
             EnableAllButtons(true);
         }
 
-        private void EnableAllButtons(bool enable)
+        private async void EnableAllButtons(bool enable)
         {
             FetchEncodedButton.IsEnabled = enable;
             FetchDecodedButton.IsEnabled = enable;
@@ -127,7 +125,7 @@ namespace Examples
             ImageCounter.Visibility = enable ? Visibility.Collapsed : Visibility.Visible;
             if (!enable)
             {
-                _imagePipeline.ClearCaches();
+                await _imagePipeline.ClearCachesAsync();
             }
         }
 

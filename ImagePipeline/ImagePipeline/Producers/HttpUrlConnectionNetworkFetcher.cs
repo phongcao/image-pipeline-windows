@@ -131,7 +131,8 @@ namespace ImagePipeline.Producers
                 {
                     callback.OnFailure(e);
                 }
-            });
+            })
+            .Result;
         }
 
         private async Task<HttpResponseMessage> DownloadFrom(Uri uri, int maxRedirects, CancellationToken token)

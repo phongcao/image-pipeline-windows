@@ -31,10 +31,10 @@ namespace Examples
             _imagePipeline = ImagePipelineFactory.Instance.GetImagePipeline();
         }
 
-        private void Fetch_Click(object sender, RoutedEventArgs e)
+        private async void Fetch_Click(object sender, RoutedEventArgs e)
         {
             var imageId = _rnd.Next(1, 100);
-            _imagePipeline.ClearCaches();
+            await _imagePipeline.ClearCachesAsync();
             UpdateImage(Image1, new Uri($"https://unsplash.it/800/600?image={ imageId }"));
             UpdateImage(Image2, new Uri($"https://unsplash.it/800/600?image={ imageId + 1}"));
             UpdateImage(Image3, new Uri($"https://unsplash.it/800/600?image={ imageId + 2 }"));
