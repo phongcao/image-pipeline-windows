@@ -1,4 +1,6 @@
-﻿namespace FBCore.DataSource
+﻿using System.Threading.Tasks;
+
+namespace FBCore.DataSource
 {
     /// <summary>
     /// Base implementation of <see cref="IDataSubscriber{T}"/> that ensures that 
@@ -40,7 +42,7 @@
         ///
         /// <param name="dataSource"></param>
         /// </summary>
-        public void OnNewResult(IDataSource<T> dataSource)
+        public async void OnNewResult(IDataSource<T> dataSource)
         {
             // IsFinished should be checked before calling OnNewResultImpl(), otherwise
             // there would be a race condition: the final data source result might be ready before
@@ -50,7 +52,7 @@
 
             try
             {
-                OnNewResultImpl(dataSource);
+                await OnNewResultImpl(dataSource).ConfigureAwait(false);
             }
             finally
             {
@@ -108,7 +110,7 @@
         /// Implementation for OnNewResult
         /// </summary>
         /// <param name="dataSource"></param>
-        public abstract void OnNewResultImpl(IDataSource<T> dataSource);
+        public abstract Task OnNewResultImpl(IDataSource<T> dataSource);
 
         /// <summary>
         /// Implementation for OnFailure

@@ -7,10 +7,11 @@ using System.IO;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// InputStream that wraps another input stream and buffers all reads.
+    /// Stream that wraps another input stream and buffers all reads.
     ///
-    /// <para /> For purpose of buffering a byte array is used. It is provided during construction time
-    /// together with ResourceReleaser responsible for releasing it when the stream is closed.
+    /// <para /> For purpose of buffering a byte array is used. It is provided during 
+    /// construction time together with ResourceReleaser responsible for releasing it 
+    /// when the stream is closed.
     /// </summary>
     public class PooledByteArrayBufferedInputStream : Stream
     {
@@ -133,7 +134,7 @@ namespace ImagePipeline.Memory
             {
                 Preconditions.CheckState(_bufferOffset <= _bufferedSize);
                 EnsureNotClosed();
-                return _bufferedSize - _bufferOffset + _inputStream.Length;
+                return _inputStream.Length;
             }
         }
 

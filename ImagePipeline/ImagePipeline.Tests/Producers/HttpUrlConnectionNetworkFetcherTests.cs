@@ -161,6 +161,7 @@ namespace ImagePipeline.Tests.Producers
                 false,
                 true,
                 Priority.MEDIUM);
+
             _fetchState = new FetchState(_consumer, _producerContext);
             _fetcher.Fetch(
                 _fetchState,

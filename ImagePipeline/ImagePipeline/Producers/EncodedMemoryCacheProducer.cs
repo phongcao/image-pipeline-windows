@@ -173,6 +173,7 @@ namespace ImagePipeline.Producers
                         {
                             CloseableReference<IPooledByteBuffer>.CloseSafely(cachedResult);
                         }
+
                         try
                         {
                             Consumer.OnProgressUpdate(1f);

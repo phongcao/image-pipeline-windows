@@ -10,6 +10,7 @@ using ImagePipeline.Request;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Producers
@@ -122,7 +123,7 @@ namespace ImagePipeline.Producers
                 _producerListener = producerContext.Listener;
                 _imageDecodeOptions = producerContext.ImageRequest.ImageDecodeOptions;
                 _isFinished = false;
-                Action<EncodedImage, bool> job = (encodedImage, isLast) =>
+                Func<EncodedImage, bool, Task> job = (encodedImage, isLast) =>
                 {
                     if (encodedImage != null)
                     {
@@ -137,8 +138,10 @@ namespace ImagePipeline.Producers
                             }
                         }
 
-                        DoDecode(encodedImage, isLast);
+                        return DoDecode(encodedImage, isLast);
                     }
+
+                    return Task.CompletedTask;
                 };
 
                 _jobScheduler = new JobScheduler(
@@ -225,7 +228,7 @@ namespace ImagePipeline.Producers
             /// <summary>
             /// Performs the decode synchronously.
             /// </summary>
-            private void DoDecode(EncodedImage encodedImage, bool isLast)
+            private async Task DoDecode(EncodedImage encodedImage, bool isLast)
             {
                 if (IsFinished() || !EncodedImage.IsValid(encodedImage))
                 {
@@ -238,6 +241,11 @@ namespace ImagePipeline.Producers
                     int length = isLast ?
                         encodedImage.Size : GetIntermediateImageEndOffset(encodedImage);
 
+                    if (length == 0)
+                    {
+                        return;
+                    }
+
                     IQualityInfo quality = isLast ? ImmutableQualityInfo.FULL_QUALITY : GetQualityInfo();
 
                     _producerListener.OnProducerStart(_producerContext.Id, PRODUCER_NAME);
@@ -245,10 +253,8 @@ namespace ImagePipeline.Producers
 
                     try
                     {
-                        image = _parent._imageDecoder
-                            .DecodeImageAsync(encodedImage, length, quality, _imageDecodeOptions)
-                            .GetAwaiter()
-                            .GetResult();
+                        image = await _parent._imageDecoder
+                            .DecodeImageAsync(encodedImage, length, quality, _imageDecodeOptions).ConfigureAwait(false);
                     }
                     catch (Exception e)
                     {
@@ -484,7 +490,7 @@ namespace ImagePipeline.Producers
 
             protected override int GetIntermediateImageEndOffset(EncodedImage encodedImage)
             {
-                return _progressiveJpegParser.BestScanEndOffset;
+                return _progressiveJpegParser.GetBestScanEndOffset(encodedImage);
             }
 
             protected override IQualityInfo GetQualityInfo()

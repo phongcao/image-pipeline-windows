@@ -74,7 +74,10 @@ namespace ImagePipeline.Image
                 return;
             }
 
-            Debug.WriteLine($"Finalize: { GetType().Name } { GetHashCode() } still open.");
+            if (!disposing)
+            {
+                Debug.WriteLine($"Finalize: { GetType().Name } { GetHashCode() } still open.");
+            }
         }
     }
 }

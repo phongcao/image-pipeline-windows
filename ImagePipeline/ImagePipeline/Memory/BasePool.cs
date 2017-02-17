@@ -213,7 +213,9 @@ namespace ImagePipeline.Memory
                         _freeCounter.Decrement(sizeInBytes);
                         _poolStatsTracker.OnValueReuse(sizeInBytes);
                         LogStats();
+#if DEBUG_MEMORY_POOL
                         Debug.WriteLine($"get (reuse) (object, size) = ({ val.GetHashCode() }, { bucketedSize })");
+#endif // DEBUG_MEMORY_POOL
                         return val;
                     }
                     // Fall through
@@ -279,7 +281,9 @@ namespace ImagePipeline.Memory
 
                 _poolStatsTracker.OnAlloc(sizeInBytes);
                 LogStats();
+#if DEBUG_MEMORY_POOL
                 Debug.WriteLine($"get (alloc) (object, size) = ({ value.GetHashCode() }, { bucketedSize })");
+#endif // DEBUG_MEMORY_POOL
             }
 
             return value;
@@ -308,7 +312,9 @@ namespace ImagePipeline.Memory
                 {
                     // This value was not 'known' to the pool (i.e.) allocated via the pool.
                     // Something is going wrong, so let's free the value and report soft error.
+#if DEBUG_MEMORY_POOL
                     Debug.WriteLine($"release (free, value unrecognized) (object, size) = ({ value.GetHashCode() }, { bucketedSize })");
+#endif // DEBUG_MEMORY_POOL
                     Free(value);
                     _poolStatsTracker.OnFree(sizeInBytes);
                 }
@@ -334,7 +340,9 @@ namespace ImagePipeline.Memory
                             bucket.DecrementInUseCount();
                         }
 
+#if DEBUG_MEMORY_POOL
                         Debug.WriteLine($"release (free) (object, size) = ({ value.GetHashCode() }, { bucketedSize })");
+#endif // DEBUG_MEMORY_POOL
                         Free(value);
                         _usedCounter.Decrement(sizeInBytes);
                         _poolStatsTracker.OnFree(sizeInBytes);
@@ -345,7 +353,9 @@ namespace ImagePipeline.Memory
                         _freeCounter.Increment(sizeInBytes);
                         _usedCounter.Decrement(sizeInBytes);
                         _poolStatsTracker.OnValueRelease(sizeInBytes);
+#if DEBUG_MEMORY_POOL
                         Debug.WriteLine($"release (reuse) (object, size) = ({ value.GetHashCode() }, { bucketedSize })");
+#endif // DEBUG_MEMORY_POOL
                     }
                 }
 
@@ -581,7 +591,9 @@ namespace ImagePipeline.Memory
                     return;
                 }
 
+#if DEBUG_MEMORY_POOL
                 Debug.WriteLine($"trimToSize: TargetSize = { targetSize }; Initial Size = { _usedCounter.NumBytes + _freeCounter.NumBytes }; Bytes to free = { bytesToFree }");
+#endif // DEBUG_MEMORY_POOL
                 LogStats();
 
                 // Now walk through the buckets from the smallest to the largest. 
@@ -609,7 +621,9 @@ namespace ImagePipeline.Memory
 
                 // Dump stats at the end
                 LogStats();
+#if DEBUG_MEMORY_POOL
                 Debug.WriteLine($"trimToSize: TargetSize = { targetSize }; Final Size = { _usedCounter.NumBytes + _freeCounter.NumBytes }");
+#endif // DEBUG_MEMORY_POOL
             }
         }
 
@@ -631,7 +645,9 @@ namespace ImagePipeline.Memory
                 }
 
                 // Create a new bucket
+#if DEBUG_MEMORY_POOL
                 Debug.WriteLine($"Creating new bucket { bucketedSize }");
+#endif // DEBUG_MEMORY_POOL
                 Bucket<T> newBucket = NewBucket(bucketedSize);
                 Buckets.Add(bucketedSize, newBucket);
                 return newBucket;
@@ -747,7 +763,9 @@ namespace ImagePipeline.Memory
        /// </summary>
         private void LogStats()
         {
+#if DEBUG_MEMORY_POOL
             Debug.WriteLine($"Used = ({ _usedCounter.Count }, { _usedCounter.NumBytes }); Free = ({ _freeCounter.Count }, { _freeCounter.NumBytes })");
+#endif // DEBUG_MEMORY_POOL
         }
     }
 }

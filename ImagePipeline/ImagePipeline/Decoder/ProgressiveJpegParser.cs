@@ -3,6 +3,7 @@ using FBCore.Common.Util;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
 using ImageUtils;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ImagePipeline.Decoder
@@ -74,9 +75,9 @@ namespace ImagePipeline.Decoder
         private int _nextFullScanNumber;
 
         private int _bestScanNumber;
-        private int _bestScanEndOffset;
 
         private readonly IByteArrayPool _byteArrayPool;
+        private readonly IDictionary<int, int> _bestScanEndOffsetList;
 
         /// <summary>
         /// Instantiates the <see cref="ProgressiveJpegParser"/>.
@@ -88,9 +89,9 @@ namespace ImagePipeline.Decoder
             _bytesParsed = 0;
             _lastByteRead = 0;
             _nextFullScanNumber = 0;
-            _bestScanEndOffset = 0;
             _bestScanNumber = 0;
             _parserState = READ_FIRST_JPEG_BYTE;
+            _bestScanEndOffsetList = new Dictionary<int, int>();
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace ImagePipeline.Decoder
             try
             {
                 StreamUtil.Skip(bufferedDataStream, _bytesParsed);
-                return DoParseMoreData(bufferedDataStream);
+                return DoParseMoreData(encodedImage, bufferedDataStream);
             }
             catch (IOException)
             {
@@ -145,9 +146,10 @@ namespace ImagePipeline.Decoder
         /// <summary>
         /// Parses more data from inputStream.
         ///
-        /// <param name="inputStream">instance of buffered pooled byte buffer input stream.</param>
+        /// <param name="encodedImage">The encoded image.</param>
+        /// <param name="inputStream">Instance of buffered pooled byte buffer input stream.</param>
         /// </summary>
-        private bool DoParseMoreData(Stream inputStream)
+        private bool DoParseMoreData(EncodedImage encodedImage, Stream inputStream)
         {
             int oldBestScanNumber = _bestScanNumber;
 
@@ -204,7 +206,7 @@ namespace ImagePipeline.Decoder
                             {
                                 if (nextByte == JfifUtil.MARKER_SOS || nextByte == JfifUtil.MARKER_EOI)
                                 {
-                                    NewScanOrImageEndFound(_bytesParsed - 2);
+                                    NewScanOrImageEndFound(encodedImage, _bytesParsed - 2);
                                 }
 
                                 if (DoesMarkerStartSegment(nextByte))
@@ -273,11 +275,11 @@ namespace ImagePipeline.Decoder
             return markerSecondByte != JfifUtil.MARKER_EOI && markerSecondByte != JfifUtil.MARKER_SOI;
         }
 
-        private void NewScanOrImageEndFound(int offset)
+        private void NewScanOrImageEndFound(EncodedImage encodedImage, int offset)
         {
             if (_nextFullScanNumber > 0)
             {
-                _bestScanEndOffset = offset;
+                _bestScanEndOffsetList[encodedImage.Size] = offset;
             }
 
             _bestScanNumber = _nextFullScanNumber++;
@@ -297,12 +299,11 @@ namespace ImagePipeline.Decoder
         /// <summary>
         /// @return offset at which parsed data should be cut to decode best available partial result.
         /// </summary>
-        public int BestScanEndOffset
+        public int GetBestScanEndOffset(EncodedImage encodedImage)
         {
-            get
-            {
-                return _bestScanEndOffset;
-            }
+            int bestScanEndOffset = 0;
+            _bestScanEndOffsetList.TryGetValue(encodedImage.Size, out bestScanEndOffset);
+            return bestScanEndOffset;
         }
 
         /// <summary>

@@ -115,7 +115,7 @@ namespace ImagePipeline.Producers
             {
                 try
                 {
-                    using (var response = DownloadFrom(fetchState.Uri, MAX_REDIRECTS, token))
+                    using (var response = await DownloadFrom(fetchState.Uri, MAX_REDIRECTS, token).ConfigureAwait(false))
                     {
                         if (response != null)
                         {
@@ -127,14 +127,14 @@ namespace ImagePipeline.Producers
                         }
                     }
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
                     callback.OnFailure(e);
                 }
             });
         }
 
-        private HttpResponseMessage DownloadFrom(Uri uri, int maxRedirects, CancellationToken token)
+        private async Task<HttpResponseMessage> DownloadFrom(Uri uri, int maxRedirects, CancellationToken token)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
             var asyncInfo = _client.SendRequestAsync(request);
@@ -142,7 +142,7 @@ namespace ImagePipeline.Producers
             {
                 try
                 {
-                    HttpResponseMessage response = asyncInfo.AsTask().Result;
+                    HttpResponseMessage response = await asyncInfo.AsTask().ConfigureAwait(false);
                     HttpStatusCode responseCode = response.StatusCode;
                     if (IsHttpSuccess(responseCode))
                     {
@@ -155,7 +155,7 @@ namespace ImagePipeline.Producers
 
                         if (maxRedirects > 0 && nextUri != null && !nextUri.Scheme.Equals(originalScheme))
                         {
-                            return DownloadFrom(nextUri, maxRedirects - 1, token);
+                            return await DownloadFrom(nextUri, maxRedirects - 1, token).ConfigureAwait(false);
                         }
                         else
                         {
@@ -175,7 +175,7 @@ namespace ImagePipeline.Producers
                                 responseCode));
                     }
                 }
-                catch (OperationCanceledException)
+                catch (Exception)
                 {
                     token.ThrowIfCancellationRequested();
                     throw;

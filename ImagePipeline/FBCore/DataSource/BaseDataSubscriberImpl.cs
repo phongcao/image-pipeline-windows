@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace FBCore.DataSource
 {
@@ -7,14 +8,14 @@ namespace FBCore.DataSource
     /// </summary>
     public class BaseDataSubscriberImpl<T> : BaseDataSubscriber<T>
     {
-        private Action<IDataSource<T>> _onNewResultImplFunc;
+        private Func<IDataSource<T>, Task> _onNewResultImplFunc;
         private Action<IDataSource<T>> _onFailureImplFunc;
 
         /// <summary>
         /// Instantiates the <see cref="BaseDataSubscriberImpl{T}"/>.
         /// </summary>
         public BaseDataSubscriberImpl(
-            Action<IDataSource<T>> onNewResultImplFunc,
+            Func<IDataSource<T>, Task> onNewResultImplFunc,
             Action<IDataSource<T>> onFailureImplFunc)
         {
             _onNewResultImplFunc = onNewResultImplFunc;
@@ -24,9 +25,9 @@ namespace FBCore.DataSource
         /// <summary>
         /// Implementation for OnNewResult.
         /// </summary>
-        public override void OnNewResultImpl(IDataSource<T> dataSource)
+        public override Task OnNewResultImpl(IDataSource<T> dataSource)
         {
-            _onNewResultImplFunc(dataSource);
+            return _onNewResultImplFunc(dataSource);
         }
 
         /// <summary>

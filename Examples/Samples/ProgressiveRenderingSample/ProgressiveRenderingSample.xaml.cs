@@ -50,7 +50,7 @@ namespace Examples
 
             var dataSource = _imagePipeline.FetchDecodedImage(request, null);
             var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<CloseableImage>>(
-                bitmapDataSource =>
+                async bitmapDataSource =>
                 {
                     if (bitmapDataSource != null)
                     {
@@ -58,16 +58,15 @@ namespace Examples
 
                         try
                         {
-                            SoftwareBitmap bitmap = SoftwareBitmap.Copy(
-                                ((CloseableBitmap)reference.Get()).UnderlyingBitmap);
+                            SoftwareBitmap bitmap = ((CloseableBitmap)reference.Get()).UnderlyingBitmap;
 
-                            DispatcherHelpers.RunOnDispatcher(() =>
+                            await DispatcherHelpers.RunOnDispatcherAsync(() =>
                             {
                                 var writeableBitmap = new WriteableBitmap(bitmap.PixelWidth, bitmap.PixelHeight);
                                 bitmap.CopyToBuffer(writeableBitmap.PixelBuffer);
                                 image.Source = writeableBitmap;
-                                bitmap.Dispose();
-                            });
+                            })
+                            .ConfigureAwait(false);
                         }
                         finally
                         {
@@ -75,7 +74,7 @@ namespace Examples
                         }
                     }
                 },
-                _ => {});
+                _ => { });
 
             dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
         }

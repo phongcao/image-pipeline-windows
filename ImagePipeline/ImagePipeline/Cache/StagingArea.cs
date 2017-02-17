@@ -80,7 +80,9 @@ namespace ImagePipeline.Cache
 
                 _map.Add(key, EncodedImage.CloneOrNull(encodedImage));
                 EncodedImage.CloseSafely(oldEntry);
+#if DEBUG_STAGING_AREA
                 LogStats();
+#endif // DEBUG_STAGING_AREA
             }
         }
 
@@ -179,7 +181,9 @@ namespace ImagePipeline.Cache
                     EncodedImage.CloseSafely(oldValue);
                 }
 
+#if DEBUG_STAGING_AREA
                 LogStats();
+#endif // DEBUG_STAGING_AREA
                 return true;
             }
         }

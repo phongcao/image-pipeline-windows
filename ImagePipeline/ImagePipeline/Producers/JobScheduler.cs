@@ -2,6 +2,7 @@
 using FBCore.Concurrency;
 using ImagePipeline.Image;
 using System;
+using System.Threading.Tasks;
 
 namespace ImagePipeline.Producers
 {
@@ -24,9 +25,7 @@ namespace ImagePipeline.Producers
         private readonly object _gate = new object();
 
         private readonly IExecutorService _executor;
-        private readonly Action<EncodedImage, bool> _jobRunnable;
-        private readonly Action _doJobRunnable;
-        private readonly Action _submitJobRunnable;
+        private readonly Func<EncodedImage, bool, Task> _jobRunnable;
         private readonly int _minimumJobIntervalMs;
 
         /// <summary>
@@ -46,23 +45,13 @@ namespace ImagePipeline.Producers
         /// Instantiates the <see cref="JobScheduler"/>
         /// </summary>
         public JobScheduler(
-            IExecutorService executor, 
-            Action<EncodedImage, bool> jobRunnable, 
+            IExecutorService executor,
+            Func<EncodedImage, bool, Task> jobRunnable, 
             int minimumJobIntervalMs)
         {
             _executor = executor;
             _jobRunnable = jobRunnable;
             _minimumJobIntervalMs = minimumJobIntervalMs;
-            _doJobRunnable = () => 
-            {
-                DoJob();
-            };
-
-            _submitJobRunnable = () =>
-            {
-                SubmitJob();
-            };
-
             _encodedImage = null;
             _isLast = false;
             _jobState = JobState.IDLE;
@@ -173,25 +162,17 @@ namespace ImagePipeline.Producers
 
         private void EnqueueJob(long delay)
         {
-            // If we make _executor be a IEecutorService, we could just have
-            // `_executor.Schedule(_doJobRunnable, delay)` and avoid _submitJobRunnable and
-            // JobStartExecutorSupplier altogether. That would require some refactoring though.
             if (delay > 0)
             {
-                JobStartExecutorSupplier.Get().Schedule(_submitJobRunnable, delay);
+                JobStartExecutorSupplier.Get().Schedule(DoJob, delay);
             }
             else
             {
-                _submitJobRunnable.Invoke();
+                _executor.Execute(DoJob);
             }
         }
 
-        private void SubmitJob()
-        {
-            _executor.Execute(_doJobRunnable);
-        }
-
-        private void DoJob()
+        private async void DoJob()
         {
             long now = SystemClock.UptimeMillis;
             EncodedImage input;
@@ -211,7 +192,7 @@ namespace ImagePipeline.Producers
                 // we need to do a check in case the job got cleared in the meantime
                 if (ShouldProcess(input, isLast))
                 {
-                    _jobRunnable.Invoke(input, isLast);
+                    await _jobRunnable.Invoke(input, isLast).ConfigureAwait(false);
                 }
             }
             finally

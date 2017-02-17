@@ -28,6 +28,6 @@
         <Image x:Name="Image2" Grid.Row="2" Grid.Column="2" Stretch="Fill"></Image>
         <Image x:Name="Image3" Grid.Row="3" Grid.Column="1" Stretch="Fill"></Image>
         <Image x:Name="Image4" Grid.Row="3" Grid.Column="2" Stretch="Fill"></Image>
-        <local:SamplesPane x:Name="MySamplesPane" Grid.ColumnSpan="2" Grid.RowSpan="2" />
+        <local:SamplesPane x:Name="MySamplesPane" Grid.ColumnSpan="2" Grid.RowSpan="4" />
     </Grid>
 </Page>

@@ -28,6 +28,8 @@ namespace ImagePipeline.Core
     /// </summary>
     public class ImagePipelineCore
     {
+        private const int MAX_DATA_SOURCE_SUBSCRIBERS = 10;
+
         private readonly ProducerSequenceFactory _producerSequenceFactory;
         private readonly IRequestListener _requestListener;
         private readonly ISupplier<bool> _isPrefetchEnabledSupplier;
@@ -38,6 +40,7 @@ namespace ImagePipeline.Core
         private readonly ICacheKeyFactory _cacheKeyFactory;
         private readonly ThreadHandoffProducerQueue _threadHandoffProducerQueue;
         private readonly FlexByteArrayPool _flexByteArrayPool;
+        private readonly IExecutorService _handleResultExecutor;
         private long _idCounter;
 
         /// <summary>
@@ -76,6 +79,7 @@ namespace ImagePipeline.Core
             _cacheKeyFactory = cacheKeyFactory;
             _threadHandoffProducerQueue = threadHandoffProducerQueue;
             _flexByteArrayPool = flexByteArrayPool;
+            _handleResultExecutor = Executors.NewFixedThreadPool(MAX_DATA_SOURCE_SUBSCRIBERS);
         }
 
         /// <summary>
@@ -186,11 +190,11 @@ namespace ImagePipeline.Core
                 new RequestLevel(RequestLevel.BITMAP_MEMORY_CACHE));
 
             var dataSubscriber = new BaseBitmapDataSubscriberImpl(
-                bitmap =>
+                async bitmap =>
                 {
                     if (bitmap != null)
                     {
-                        DispatcherHelpers.RunOnDispatcherAsync(() =>
+                        await DispatcherHelpers.RunOnDispatcherAsync(() =>
                         {
                             try
                             {
@@ -203,7 +207,7 @@ namespace ImagePipeline.Core
                                 taskCompletionSource.SetException(e);
                             }
                         })
-                        .Wait();
+                        .ConfigureAwait(false);
                     }
                     else
                     {
@@ -215,7 +219,7 @@ namespace ImagePipeline.Core
                     taskCompletionSource.SetException(response.GetFailureCause());
                 });
 
-            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            dataSource.Subscribe(dataSubscriber, _handleResultExecutor);
             return taskCompletionSource.Task;
         }
 
@@ -334,7 +338,7 @@ namespace ImagePipeline.Core
             var taskCompletionSource = new TaskCompletionSource<BitmapImage>();
             var dataSource = FetchEncodedImage(imageRequest, null);
             var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IPooledByteBuffer>>(
-                response =>
+                async response =>
                 {
                     CloseableReference<IPooledByteBuffer> reference = response.GetResult();
                     if (reference != null)
@@ -364,7 +368,7 @@ namespace ImagePipeline.Core
                         try
                         {
                             inputStream.Read(0, bytesArray, 0, inputStream.Size);
-                            DispatcherHelpers.RunOnDispatcherAsync(async () =>
+                            await DispatcherHelpers.RunOnDispatcherAsync(async () =>
                             {
                                 using (var outStream = new InMemoryRandomAccessStream())
                                 using (var writeStream = outStream.AsStreamForWrite())
@@ -376,7 +380,7 @@ namespace ImagePipeline.Core
                                     taskCompletionSource.SetResult(bitmapImage);
                                 }
                             })
-                            .Wait();
+                            .ConfigureAwait(false);
                         }
                         catch (Exception e)
                         {
@@ -398,7 +402,7 @@ namespace ImagePipeline.Core
                     taskCompletionSource.SetException(response.GetFailureCause());
                 });
 
-            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            dataSource.Subscribe(dataSubscriber, _handleResultExecutor);
             return taskCompletionSource.Task;
         }
 
@@ -413,11 +417,11 @@ namespace ImagePipeline.Core
             var taskCompletionSource = new TaskCompletionSource<WriteableBitmap>();
             var dataSource = FetchDecodedImage(imageRequest, null);
             var dataSubscriber = new BaseBitmapDataSubscriberImpl(
-                bitmap =>
+                async bitmap =>
                 {
                     if (bitmap != null)
                     {
-                        DispatcherHelpers.RunOnDispatcherAsync(() =>
+                        await DispatcherHelpers.RunOnDispatcherAsync(() =>
                         {
                             try
                             {
@@ -430,7 +434,7 @@ namespace ImagePipeline.Core
                                 taskCompletionSource.SetException(e);
                             }
                         })
-                        .Wait();
+                        .ConfigureAwait(false);
                     }
                     else
                     {
@@ -442,7 +446,7 @@ namespace ImagePipeline.Core
                     taskCompletionSource.SetException(response.GetFailureCause());
                 });
 
-            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            dataSource.Subscribe(dataSubscriber, _handleResultExecutor);
             return taskCompletionSource.Task;
         }
 
@@ -497,6 +501,7 @@ namespace ImagePipeline.Core
                 response =>
                 {
                     taskCompletionSource.SetResult(null);
+                    return Task.CompletedTask;
                 },
                 response =>
                 {
@@ -504,7 +509,7 @@ namespace ImagePipeline.Core
                     taskCompletionSource.SetException(error);
                 });
 
-            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            dataSource.Subscribe(dataSubscriber, _handleResultExecutor);
             return taskCompletionSource.Task;
         }
 
@@ -575,6 +580,7 @@ namespace ImagePipeline.Core
                 response =>
                 {
                     taskCompletionSource.SetResult(null);
+                    return Task.CompletedTask;
                 },
                 response =>
                 {
@@ -582,7 +588,7 @@ namespace ImagePipeline.Core
                     taskCompletionSource.SetException(error);
                 });
 
-            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            dataSource.Subscribe(dataSubscriber, _handleResultExecutor);
             return taskCompletionSource.Task;
         }
 
