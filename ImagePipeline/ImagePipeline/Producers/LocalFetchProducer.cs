@@ -5,6 +5,7 @@ using ImagePipeline.Image;
 using ImagePipeline.Memory;
 using ImagePipeline.Request;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ImagePipeline.Producers
 {
@@ -55,15 +56,15 @@ namespace ImagePipeline.Producers
                     {
                         EncodedImage.CloseSafely(result);
                     },
-                    () =>
+                    async () =>
                     {
-                        EncodedImage encodedImage = GetEncodedImage(imageRequest);
+                        EncodedImage encodedImage = await GetEncodedImage(imageRequest).ConfigureAwait(false);
                         if (encodedImage == null)
                         {
                             return null;
                         }
 
-                        encodedImage.ParseMetaDataAsync().Wait();
+                        await encodedImage.ParseMetaDataAsync().ConfigureAwait(false);
                         return encodedImage;
                     });
 
@@ -144,7 +145,7 @@ namespace ImagePipeline.Producers
         /// is being accessed</param>
         /// @throws IOException
         /// </summary>
-        protected abstract EncodedImage GetEncodedImage(ImageRequest imageRequest);
+        protected abstract Task<EncodedImage> GetEncodedImage(ImageRequest imageRequest);
 
         /// <summary>
         /// The name of the Producer

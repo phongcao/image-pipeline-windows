@@ -3,6 +3,7 @@ using ImagePipeline.Producers;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Tests.Producers
@@ -154,7 +155,7 @@ namespace ImagePipeline.Tests.Producers
                 },
                 () =>
                 {
-                    return _resultSupplier.Get();
+                    return Task.FromResult(_resultSupplier.Get());
                 });
 
             _throwExceptionInResultSupplierGet = false;

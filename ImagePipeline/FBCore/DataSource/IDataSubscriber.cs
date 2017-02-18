@@ -1,4 +1,6 @@
-﻿namespace FBCore.DataSource
+﻿using System.Threading.Tasks;
+
+namespace FBCore.DataSource
 {
     /// <summary>
     /// Subscribes to IDataSource{T}.
@@ -14,7 +16,7 @@
         ///
         /// <param name="dataSource"></param>
         /// </summary>
-        void OnNewResult(IDataSource<T> dataSource);
+        Task OnNewResult(IDataSource<T> dataSource);
 
         /// <summary>
         /// Called whenever an error occurs inside of the pipeline.

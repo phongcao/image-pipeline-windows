@@ -1,4 +1,6 @@
-﻿namespace FBCore.DataSource
+﻿using System.Threading.Tasks;
+
+namespace FBCore.DataSource
 {
     /// <summary>
     /// Base implementation of <see cref="IDataSubscriber{T}"/> that ensures 
@@ -29,11 +31,11 @@
         ///
         /// <param name="dataSource"></param>
         /// </summary>
-        public void OnNewResult(IDataSource<bool> dataSource)
+        public async Task OnNewResult(IDataSource<bool> dataSource)
         {
             try
             {
-                OnNewResultImpl(dataSource.GetResult());
+                await OnNewResultImpl(dataSource.GetResult()).ConfigureAwait(false);
             }
             finally
             {
@@ -88,7 +90,7 @@
         /// Implementation for OnNewResult
         /// </summary>
         /// <param name="isFoundInDisk"></param>
-        public abstract void OnNewResultImpl(bool isFoundInDisk);
+        public abstract Task OnNewResultImpl(bool isFoundInDisk);
 
         /// <summary>
         /// Implementation for OnFailure

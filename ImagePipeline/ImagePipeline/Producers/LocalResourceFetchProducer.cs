@@ -3,6 +3,7 @@ using ImagePipeline.Image;
 using ImagePipeline.Memory;
 using ImagePipeline.Request;
 using System;
+using System.Threading.Tasks;
 
 namespace ImagePipeline.Producers
 {
@@ -27,7 +28,7 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Gets the encoded image.
         /// </summary>
-        protected override EncodedImage GetEncodedImage(ImageRequest imageRequest)
+        protected override Task<EncodedImage> GetEncodedImage(ImageRequest imageRequest)
         {
             throw new NotImplementedException();
         }

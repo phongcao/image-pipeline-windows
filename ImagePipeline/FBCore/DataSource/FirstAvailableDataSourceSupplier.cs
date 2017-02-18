@@ -3,6 +3,7 @@ using FBCore.Concurrency;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FBCore.DataSource
 {
@@ -300,7 +301,7 @@ namespace FBCore.DataSource
                 {
                 }
 
-                public void OnNewResult(IDataSource<T> dataSource)
+                public Task OnNewResult(IDataSource<T> dataSource)
                 {
                     if (dataSource.HasResult())
                     {
@@ -310,6 +311,8 @@ namespace FBCore.DataSource
                     {
                         _parent.OnDataSourceFailed(dataSource);
                     }
+
+                    return Task.CompletedTask;
                 }
 
                 public void OnProgressUpdate(IDataSource<T> dataSource)

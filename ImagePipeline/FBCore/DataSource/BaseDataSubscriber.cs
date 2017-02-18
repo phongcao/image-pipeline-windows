@@ -42,7 +42,7 @@ namespace FBCore.DataSource
         ///
         /// <param name="dataSource"></param>
         /// </summary>
-        public async void OnNewResult(IDataSource<T> dataSource)
+        public async Task OnNewResult(IDataSource<T> dataSource)
         {
             // IsFinished should be checked before calling OnNewResultImpl(), otherwise
             // there would be a race condition: the final data source result might be ready before

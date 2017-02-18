@@ -73,7 +73,7 @@ namespace FBCore.Common.Util
                     .EncodeToBase64String(sha1HashBuffer)
                     .TrimEnd(PADDING)
                     .Replace('+', '-')
-                    .Replace('/', '_'); ;
+                    .Replace('/', '_');
             }
             catch (ArgumentNullException)
             {

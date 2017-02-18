@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ImagePipeline.Producers
 {
@@ -41,10 +42,10 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Gets the encoded image.
         /// </summary>
-        protected override EncodedImage GetEncodedImage(ImageRequest imageRequest)
+        protected override Task<EncodedImage> GetEncodedImage(ImageRequest imageRequest)
         {
             byte[] data = GetData(imageRequest.SourceUri.ToString());
-            return GetByteBufferBackedEncodedImage(new MemoryStream(data), data.Length);
+            return Task.FromResult(GetByteBufferBackedEncodedImage(new MemoryStream(data), data.Length));
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace ImagePipeline.Producers
             Preconditions.CheckArgument(uri.Substring(0, 5).Equals("data:"));
             int commaPos = uri.IndexOf(',');
 
-            string dataStr = uri.Substring(commaPos + 1, uri.Length);
+            string dataStr = uri.Substring(commaPos + 1, uri.Length - commaPos - 1);
             if (IsBase64(uri.Substring(0, commaPos)))
             {
                 return Convert.FromBase64String(dataStr);

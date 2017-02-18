@@ -172,7 +172,7 @@ namespace ImagePipeline.Producers
             }
         }
 
-        private async void DoJob()
+        private async Task DoJob()
         {
             long now = SystemClock.UptimeMillis;
             EncodedImage input;

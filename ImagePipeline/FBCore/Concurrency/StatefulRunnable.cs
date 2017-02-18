@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FBCore.Concurrency
 {
     /// <summary>
     /// Abstraction for computation.
     ///
-    /// <para /> Computation expressed as StatefulRunnable can be cancelled, but only if it has not
-    /// started yet.
+    /// <para /> Computation expressed as StatefulRunnable can be cancelled, but only if it 
+    /// has not started yet.
     ///
-    /// <para /> For better decoupling of the code computing the result and the code that handles it, 4
-    /// separate methods are provided: GetResult, OnSuccess, OnFailure and OnCancellation.
+    /// <para /> For better decoupling of the code computing the result and the code that 
+    /// handles it, 4 separate methods are provided: GetResult, OnSuccess, OnFailure and 
+    /// OnCancellation.
     ///
-    /// <para /> This runnable can be run only once. Subsequent calls to run method won't have any effect.
+    /// <para /> This runnable can be run only once. Subsequent calls to run method won't 
+    /// have any effect.
     /// </summary>
     public abstract class StatefulRunnable<T>
     {
@@ -49,12 +52,12 @@ namespace FBCore.Concurrency
         /// <summary>
         /// Runnable
         /// </summary>
-        private Action _runnable;
+        private Func<Task> _runnable;
 
         /// <summary>
-        /// Returns the runnable
+        /// Returns the runnable.
         /// </summary>
-        public Action Runnable
+        public Func<Task> Runnable
         {
             get
             {
@@ -67,7 +70,7 @@ namespace FBCore.Concurrency
         /// </summary>
         public StatefulRunnable()
         {
-            _runnable = () =>
+            _runnable = async () =>
             {
                 if (Interlocked.CompareExchange(
                     ref _state, STATE_STARTED, STATE_CREATED) != STATE_CREATED)
@@ -78,7 +81,7 @@ namespace FBCore.Concurrency
                 T result;
                 try
                 {
-                    result = GetResult();
+                    result = await GetResult().ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {
@@ -137,8 +140,8 @@ namespace FBCore.Concurrency
         protected internal virtual void DisposeResult(T result) { }
 
         /// <summary>
-        /// Gets the result of the runnable
+        /// Gets the result of the runnable.
         /// </summary>
-        protected internal abstract T GetResult();
+        protected internal abstract Task<T> GetResult();
     }
 }

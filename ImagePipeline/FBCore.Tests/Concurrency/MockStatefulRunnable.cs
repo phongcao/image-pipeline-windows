@@ -1,6 +1,7 @@
 ﻿using FBCore.Concurrency;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FBCore.Tests.Concurrency
 {
@@ -59,7 +60,7 @@ namespace FBCore.Tests.Concurrency
         /// <summary>
         /// Gets the result of the runnable
         /// </summary>
-        protected internal override T GetResult()
+        protected internal override Task<T> GetResult()
         {
             Interlocked.Increment(ref _getResultCallCount);
 
@@ -68,7 +69,7 @@ namespace FBCore.Tests.Concurrency
                 throw _exceptionGetResult;
             }
 
-            return _result;
+            return Task.FromResult(_result);
         }
 
         internal int OnSuccessCallCount

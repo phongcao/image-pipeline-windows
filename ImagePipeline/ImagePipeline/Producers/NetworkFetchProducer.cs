@@ -184,7 +184,7 @@ namespace ImagePipeline.Producers
             try
             {
                 encodedImage = new EncodedImage(result);
-                //encodedImage.ParseMetaDataAsync().Wait(); // Phong Cao: This is expensive, skip for now
+                encodedImage.ParseMetaDataAsync().Wait();
                 consumer.OnNewResult(encodedImage, isFinal);
             }
             finally

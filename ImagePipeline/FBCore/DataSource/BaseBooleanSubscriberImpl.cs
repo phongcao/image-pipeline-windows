@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace FBCore.DataSource
 {
@@ -7,7 +8,7 @@ namespace FBCore.DataSource
     /// </summary>
     public class BaseBooleanSubscriberImpl : BaseBooleanSubscriber
     {
-        private Action<bool> _onNewResultImplFunc;
+        private Func<bool, Task> _onNewResultImplFunc;
         private Action<IDataSource<bool>> _onFailureImplFunc;
 
         /// <summary>
@@ -16,7 +17,7 @@ namespace FBCore.DataSource
         /// <param name="onNewResultImplFunc"></param>
         /// <param name="onFailureImplFunc"></param>
         private BaseBooleanSubscriberImpl(
-            Action<bool> onNewResultImplFunc,
+            Func<bool, Task> onNewResultImplFunc,
             Action<IDataSource<bool>> onFailureImplFunc)
         {
             _onNewResultImplFunc = onNewResultImplFunc;
@@ -27,7 +28,7 @@ namespace FBCore.DataSource
         /// Instantiates the <see cref="BaseBooleanSubscriberImpl"/>
         /// </summary>
         /// <param name="onNewResultImplFunc"></param>
-        public BaseBooleanSubscriberImpl(Action<bool> onNewResultImplFunc) : this(
+        public BaseBooleanSubscriberImpl(Func<bool, Task> onNewResultImplFunc) : this(
             onNewResultImplFunc,
             (_) => { })
         {
@@ -37,9 +38,9 @@ namespace FBCore.DataSource
         /// Implementation for OnNewResult
         /// </summary>
         /// <param name="isFoundInDisk"></param>
-        public override void OnNewResultImpl(bool isFoundInDisk)
+        public override Task OnNewResultImpl(bool isFoundInDisk)
         {
-            _onNewResultImplFunc(isFoundInDisk);
+            return _onNewResultImplFunc(isFoundInDisk);
         }
 
         /// <summary>

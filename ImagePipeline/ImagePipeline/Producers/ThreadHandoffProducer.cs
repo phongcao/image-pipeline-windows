@@ -1,5 +1,6 @@
 ﻿using FBCore.Common.Internal;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ImagePipeline.Producers
 {
@@ -60,7 +61,7 @@ namespace ImagePipeline.Producers
                 null,
                 () => 
                 {
-                    return default(T);
+                    return Task.FromResult(default(T));
                 });
 
             context.AddCallbacks(

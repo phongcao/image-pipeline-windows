@@ -2,6 +2,7 @@
 using FBCore.Concurrency;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ImagePipeline.Producers
 {
@@ -13,7 +14,7 @@ namespace ImagePipeline.Producers
         private readonly object _gate = new object();
 
         private bool _queueing;
-        private readonly LinkedList<Action> _runnableList;
+        private readonly LinkedList<Func<Task>> _runnableList;
         private readonly IExecutorService _executor;
 
         /// <summary>
@@ -24,13 +25,13 @@ namespace ImagePipeline.Producers
         {
             _queueing = false;
             _executor = Preconditions.CheckNotNull(executor);
-            _runnableList = new LinkedList<Action>();
+            _runnableList = new LinkedList<Func<Task>>();
         }
 
         /// <summary>
         /// Adds the action to the end of the queue
         /// </summary>
-        public void AddToQueueOrExecute(Action runnable)
+        public void AddToQueueOrExecute(Func<Task> runnable)
         {
             lock (_gate)
             {
@@ -82,7 +83,7 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Removes the action
         /// </summary>
-        public void Remove(Action runnable)
+        public void Remove(Func<Task> runnable)
         {
             lock (_gate)
             {

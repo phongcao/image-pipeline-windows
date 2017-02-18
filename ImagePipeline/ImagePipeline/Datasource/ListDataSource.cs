@@ -4,6 +4,7 @@ using FBCore.Concurrency;
 using FBCore.DataSource;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ImagePipeline.Datasource
 {
@@ -180,12 +181,14 @@ namespace ImagePipeline.Datasource
                 _parent.OnDataSourceCancelled();
             }
 
-            public void OnNewResult(IDataSource<CloseableReference<T>> dataSource)
+            public Task OnNewResult(IDataSource<CloseableReference<T>> dataSource)
             {
                 if (dataSource.IsFinished() && TryFinish())
                 {
                     _parent.OnDataSourceFinished();
                 }
+
+                return Task.CompletedTask;
             }
 
             public void OnProgressUpdate(IDataSource<CloseableReference<T>> dataSource)

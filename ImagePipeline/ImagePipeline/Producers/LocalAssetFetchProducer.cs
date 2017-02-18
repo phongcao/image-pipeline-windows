@@ -34,20 +34,16 @@ namespace ImagePipeline.Producers
         /// is being accessed</param>
         /// @throws IOException
         /// </summary>
-        protected override EncodedImage GetEncodedImage(ImageRequest imageRequest)
+        protected override async Task<EncodedImage> GetEncodedImage(ImageRequest imageRequest)
         {
-            var readFileTask = StorageFile.GetFileFromApplicationUriAsync(imageRequest.SourceUri)
-                .AsTask()
-                .ContinueWith(
-                file =>
-                {
-                    return file.Result.OpenReadAsync().AsTask();
-                },
-                TaskContinuationOptions.ExecuteSynchronously)
-                .Unwrap();
+            var file = await StorageFile.GetFileFromApplicationUriAsync(imageRequest.SourceUri)
+                .AsTask().ConfigureAwait(false);
 
-            var fileStream = readFileTask.GetAwaiter().GetResult().AsStream();
-            return GetEncodedImage(fileStream, (int)fileStream.Length);
+            using (var fileStream = await file.OpenReadAsync().AsTask().ConfigureAwait(false))
+            using (var readStream = fileStream.AsStreamForRead())
+            {
+                return GetEncodedImage(readStream, (int)readStream.Length);
+            }
         }
 
         /// <summary>

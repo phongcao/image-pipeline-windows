@@ -1,4 +1,5 @@
 ﻿using FBCore.DataSource;
+using System.Threading.Tasks;
 
 namespace FBCore.Tests.DataSource
 {
@@ -10,10 +11,11 @@ namespace FBCore.Tests.DataSource
         private int _onProgressUpdateCallCount;
         private IDataSource<T> _dataSource;
 
-        public void OnNewResult(IDataSource<T> dataSource)
+        public Task OnNewResult(IDataSource<T> dataSource)
         {
             ++_onNewResultCallCount;
             _dataSource = dataSource;
+            return Task.CompletedTask;
         }
 
         public void OnFailure(IDataSource<T> dataSource)

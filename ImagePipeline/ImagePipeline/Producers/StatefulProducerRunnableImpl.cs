@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ImagePipeline.Producers
 {
@@ -15,7 +16,7 @@ namespace ImagePipeline.Producers
         private Func<Exception, IDictionary<string, string>> _getExtraMapOnFailureFunc;
         private Func<IDictionary<string, string>> _getExtraMapOnCancellationFunc;
         private Action<T> _disposeResultFunc;
-        private Func<T> _getResultFunc;
+        private Func<Task<T>> _getResultFunc;
 
         /// <summary>
         /// Instantiates the <see cref="StatefulProducerRunnableImpl{T}"/>
@@ -32,7 +33,7 @@ namespace ImagePipeline.Producers
             Func<Exception, IDictionary<string, string>> getExtraMapOnFailureFunc,
             Func<IDictionary<string, string>> getExtraMapOnCancellationFunc,
             Action<T> disposeResultFunc,
-            Func<T> getResultFunc) : base(
+            Func<Task<T>> getResultFunc) : base(
                 consumer,
                 producerListener,
                 producerName,
@@ -152,7 +153,7 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Gets the result of the runnable
         /// </summary>
-        protected override T GetResult()
+        protected override Task<T> GetResult()
         {
             return _getResultFunc();
         }

@@ -226,10 +226,8 @@ namespace ImagePipeline.Core
                         NewEncodedCacheMultiplexToTranscodeSequence(
                             _producerFactory.NewNetworkFetchProducer(_networkFetcher));
 
-                    // Phong Cao: This is expensive, skip for now
-                    //_commonNetworkFetchToEncodedMemorySequence =
-                    //    ProducerFactory.NewAddImageTransformMetaDataProducer(inputProducer);
-                    _commonNetworkFetchToEncodedMemorySequence = inputProducer;
+                    _commonNetworkFetchToEncodedMemorySequence =
+                        ProducerFactory.NewAddImageTransformMetaDataProducer(inputProducer);
 
                     if (_resizeAndRotateEnabledForNetwork && !_downsampleEnabled)
                     {
@@ -395,7 +393,8 @@ namespace ImagePipeline.Core
             IProducer<EncodedImage> inputProducer)
         {
             IThumbnailProducer<EncodedImage>[] defaultThumbnailProducers = 
-                new BaseThumbnailProducer<EncodedImage>[1];
+                new IThumbnailProducer<EncodedImage>[1];
+
             defaultThumbnailProducers[0] = _producerFactory.NewLocalExifThumbnailProducer();
             return NewBitmapCacheGetToLocalTransformSequence(inputProducer, defaultThumbnailProducers);
         }
