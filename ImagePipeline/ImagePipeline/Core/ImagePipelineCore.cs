@@ -179,9 +179,12 @@ namespace ImagePipeline.Core
         /// Submits a request for bitmap cache lookup.
         ///
         /// <param name="imageRequest">The request to submit.</param>
+        /// <param name="token">The cancellation token.</param>
         /// @return a Task{WriteableBitmap} representing the image.
         /// </summary>
-        public Task<WriteableBitmap> FetchImageFromBitmapCache(ImageRequest imageRequest)
+        public Task<WriteableBitmap> FetchImageFromBitmapCache(
+            ImageRequest imageRequest,
+            CancellationToken token = default(CancellationToken))
         {
             var taskCompletionSource = new TaskCompletionSource<WriteableBitmap>();
             var dataSource = FetchDecodedImage(
@@ -220,6 +223,12 @@ namespace ImagePipeline.Core
                 });
 
             dataSource.Subscribe(dataSubscriber, _handleResultExecutor);
+            token.Register(() =>
+            {
+                dataSource.Close();
+                taskCompletionSource.TrySetCanceled();
+            });
+
             return taskCompletionSource.Task;
         }
 
@@ -325,10 +334,13 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Fetches the encoded BitmapImage.
         /// <param name="uri">The image uri.</param>
+        /// <param name="token">The cancellation token.</param>
         /// <returns>The encoded BitmapImage.</returns>
         /// @throws IOException if the image uri can't be found.
         /// </summary>
-        public Task<BitmapImage> FetchEncodedBitmapImage(Uri uri)
+        public Task<BitmapImage> FetchEncodedBitmapImage(
+            Uri uri, 
+            CancellationToken token = default(CancellationToken))
         {
             var taskCompletionSource = new TaskCompletionSource<BitmapImage>();
             var dataSource = FetchEncodedImage(ImageRequest.FromUri(uri), null);
@@ -398,16 +410,25 @@ namespace ImagePipeline.Core
                 });
 
             dataSource.Subscribe(dataSubscriber, _handleResultExecutor);
+            token.Register(() =>
+            {
+                dataSource.Close();
+                taskCompletionSource.TrySetCanceled();
+            });
+
             return taskCompletionSource.Task;
         }
 
         /// <summary>
         /// Fetches the decoded SoftwareBitmapSource.
         /// <param name="imageRequest">The image request.</param>
+        /// <param name="token">The cancellation token.</param>
         /// <returns>The decoded SoftwareBitmapSource.</returns>
         /// @throws IOException if the image request isn't valid.
         /// </summary>
-        public Task<WriteableBitmap> FetchDecodedBitmapImage(ImageRequest imageRequest)
+        public Task<WriteableBitmap> FetchDecodedBitmapImage(
+            ImageRequest imageRequest,
+            CancellationToken token = default(CancellationToken))
         {
             var taskCompletionSource = new TaskCompletionSource<WriteableBitmap>();
             var dataSource = FetchDecodedImage(imageRequest, null);
@@ -442,6 +463,12 @@ namespace ImagePipeline.Core
                 });
 
             dataSource.Subscribe(dataSubscriber, _handleResultExecutor);
+            token.Register(() =>
+            {
+                dataSource.Close();
+                taskCompletionSource.TrySetCanceled();
+            });
+
             return taskCompletionSource.Task;
         }
 
@@ -481,9 +508,12 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Submits a request for prefetching to the bitmap cache.
         /// <param name="uri">The image uri.</param>
+        /// <param name="token">The cancellation token.</param>
         /// @return a DataSource that can safely be ignored.
         /// </summary>
-        public Task PrefetchToBitmapCache(Uri uri)
+        public Task PrefetchToBitmapCache(
+            Uri uri, 
+            CancellationToken token = default(CancellationToken))
         {
             var taskCompletionSource = new TaskCompletionSource<object>();
             var dataSource = PrefetchToBitmapCache(ImageRequest.FromUri(uri), null);
@@ -500,6 +530,12 @@ namespace ImagePipeline.Core
                 });
 
             dataSource.Subscribe(dataSubscriber, _handleResultExecutor);
+            token.Register(() =>
+            {
+                dataSource.Close();
+                taskCompletionSource.TrySetCanceled();
+            });
+
             return taskCompletionSource.Task;
         }
 
@@ -555,9 +591,12 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Submits a request for prefetching to the disk cache.
         /// <param name="uri">The image uri.</param>
+        /// <param name="token">The cancellation token.</param>
         /// @return a DataSource that can safely be ignored.
         /// </summary>
-        public Task PrefetchToDiskCache(Uri uri)
+        public Task PrefetchToDiskCache(
+            Uri uri, 
+            CancellationToken token = default(CancellationToken))
         {
             var taskCompletionSource = new TaskCompletionSource<object>();
             var dataSource = PrefetchToDiskCache(ImageRequest.FromUri(uri), null);
@@ -574,6 +613,12 @@ namespace ImagePipeline.Core
                 });
 
             dataSource.Subscribe(dataSubscriber, _handleResultExecutor);
+            token.Register(() =>
+            {
+                dataSource.Close();
+                taskCompletionSource.TrySetCanceled();
+            });
+
             return taskCompletionSource.Task;
         }
 
