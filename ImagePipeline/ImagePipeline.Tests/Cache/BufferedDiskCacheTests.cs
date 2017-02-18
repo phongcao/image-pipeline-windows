@@ -190,7 +190,7 @@ namespace ImagePipeline.Tests.Cache
                 await _bufferedDiskCache.Get(_cacheKey, _isCancelled);
                 Assert.Fail();
             }
-            catch (Exception)
+            catch (OperationCanceledException)
             {
                 // This is expected
             }

@@ -109,14 +109,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
             CollectionAssert.AreEqual(key1Contents, Files.ToByteArray(underlyingFile));
 
             // Remove the file now - get should fail again
-            try
-            {
-                underlyingFile.Delete();
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
+            underlyingFile.Delete();
 
             resource1 = storage.GetResource(resourceId1, null);
             Assert.IsNull(resource1);
@@ -466,15 +459,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
                 Path.Combine(_directory.FullName, "something-arbitrary"));
             Assert.IsTrue(somethingArbitrary.CreateEmpty());
             long lastModified = (_directory.LastWriteTime.Ticks / TimeSpan.TicksPerMillisecond) - 1000;
-
-            try
-            {
-                _directory.LastWriteTime = new DateTime(lastModified * TimeSpan.TicksPerMillisecond);
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
+            _directory.LastWriteTime = new DateTime(lastModified * TimeSpan.TicksPerMillisecond);
 
             // Check it was changed
             Assert.AreEqual(lastModified * TimeSpan.TicksPerMillisecond, _directory.LastWriteTime.Ticks);
@@ -511,15 +496,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
 
             // Assign some previous date to the "now" used for file creation
             long lastModified = _directory.LastWriteTime.Ticks / TimeSpan.TicksPerMillisecond - 1000;
-
-            try
-            {
-                _directory.LastWriteTime = new DateTime(lastModified * TimeSpan.TicksPerMillisecond);
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
+            _directory.LastWriteTime = new DateTime(lastModified * TimeSpan.TicksPerMillisecond);
 
             // Check it was changed
             Assert.AreEqual(lastModified * TimeSpan.TicksPerMillisecond, _directory.LastWriteTime.Ticks);

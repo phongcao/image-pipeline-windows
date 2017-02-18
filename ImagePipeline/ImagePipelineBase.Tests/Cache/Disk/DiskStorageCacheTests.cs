@@ -179,15 +179,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
 
             // Touch the non-cache, non-lru file, and assert that it succeeds.
             _clock.SetDateTime(DateTime.Now.AddHours(1));
-
-            try
-            {
-                unexpected1.LastWriteTime = _clock.Now;
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
+            unexpected1.LastWriteTime = _clock.Now;
 
             // 1. Add first cache file
             ICacheKey key1 = new SimpleCacheKey("foo");
@@ -216,15 +208,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
 
             // Touch the non-cache, non-lru file, and assert that it succeeds.
             _clock.SetDateTime(DateTime.Now.AddHours(3));
-
-            try
-            {
-                unexpected2.LastWriteTime = _clock.Now;
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
+            unexpected2.LastWriteTime = _clock.Now;
 
             // 2. Add second cache file
             ICacheKey key2 = new SimpleCacheKey("bar");
@@ -540,14 +524,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         {
             return Task.Run(() =>
             {
-                try
-                {
-                    _cache.Insert(key, callback);
-                }
-                catch (IOException)
-                {
-                    Assert.Fail();
-                }
+                _cache.Insert(key, callback);
             });
         }
 

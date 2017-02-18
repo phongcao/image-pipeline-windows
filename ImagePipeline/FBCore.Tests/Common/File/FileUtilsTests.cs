@@ -22,14 +22,7 @@ namespace FBCore.Tests.Common.File
             DirectoryInfo temp = Directory.CreateDirectory(
                 $"{ ApplicationData.Current.LocalFolder.Path }/temp");
 
-            try
-            {
-                FileUtils.Mkdirs(new DirectoryInfo($"{ ApplicationData.Current.LocalFolder.Path }/temp"));
-            }
-            catch (CreateDirectoryException)
-            {
-                Assert.Fail();
-            }
+            FileUtils.Mkdirs(new DirectoryInfo($"{ ApplicationData.Current.LocalFolder.Path }/temp"));
 
             // Cleanup
             temp.Delete();
@@ -42,15 +35,7 @@ namespace FBCore.Tests.Common.File
         public void TestMkDirsSuccessfulCreate()
         {
             DirectoryInfo temp = new DirectoryInfo($"{ ApplicationData.Current.LocalFolder.Path }/temp");
-
-            try
-            {
-                FileUtils.Mkdirs(temp);
-            }
-            catch (CreateDirectoryException)
-            {
-                Assert.Fail();
-            }
+            FileUtils.Mkdirs(temp);
 
             // Cleanup
             temp.Delete();
@@ -96,15 +81,7 @@ namespace FBCore.Tests.Common.File
             DirectoryInfo targetDir = new DirectoryInfo(
                 $"{ ApplicationData.Current.LocalFolder.Path }/target");
 
-            try
-            {
-                FileUtils.Rename(sourceDir, targetDir);
-            }
-            catch (RenameException)
-            {
-                Assert.Fail();
-            }
-
+            FileUtils.Rename(sourceDir, targetDir);
             Assert.IsTrue(targetDir.Exists);
 
             // Cleanup

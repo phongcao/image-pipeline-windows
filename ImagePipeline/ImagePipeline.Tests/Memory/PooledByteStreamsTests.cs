@@ -107,6 +107,7 @@ namespace ImagePipeline.Tests.Memory
                         throw new IOException();
                     }), 
                     3);
+
                 Assert.Fail();
             }
             catch (IOException ioe)

@@ -190,7 +190,7 @@ namespace ImagePipeline.Tests.Memory
                 os1.ToByteBuffer();
                 Assert.Fail();
             }
-            catch (Exception)
+            catch (InvalidStreamException)
             {
                 // This is expected
             }

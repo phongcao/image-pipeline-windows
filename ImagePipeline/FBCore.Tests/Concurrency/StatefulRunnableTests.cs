@@ -1,6 +1,7 @@
 ﻿using FBCore.Concurrency;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
+using System.Threading.Tasks;
 
 namespace FBCore.Tests.Concurrency
 {
@@ -12,7 +13,7 @@ namespace FBCore.Tests.Concurrency
     {
         private MockStatefulRunnable<object> _statefulRunnable;
         private object _result;
-        private Exception _exception;
+        private InvalidOperationException _exception;
 
         /// <summary>
         /// Initialize
@@ -21,7 +22,7 @@ namespace FBCore.Tests.Concurrency
         public void Initialize()
         {
             _result = new object();
-            _exception = new Exception();
+            _exception = new InvalidOperationException();
             _statefulRunnable = new MockStatefulRunnable<object>();
         }
 
@@ -29,9 +30,9 @@ namespace FBCore.Tests.Concurrency
         /// Tests running successfully
         /// </summary>
         [TestMethod]
-        public void TestSuccess()
+        public async Task TestSuccess()
         {
-            RunSuccess();
+            await RunSuccess().ConfigureAwait(false);
             Assert.IsTrue(_statefulRunnable.OnSuccessCallCount == 1);
             Assert.IsTrue(_statefulRunnable.DisposeResultCallCount == 1);
         }
@@ -40,18 +41,18 @@ namespace FBCore.Tests.Concurrency
         /// Tests closing after running successfully
         /// </summary>
         [TestMethod]
-        public void TestClosesResultWhenOnSuccessThrows()
+        public async Task TestClosesResultWhenOnSuccessThrows()
         {
             _statefulRunnable.ThrowExceptionOnSuccess(_exception);
 
             try
             {
-                RunSuccess();
+                await RunSuccess().ConfigureAwait(false);
                 Assert.Fail();
             }
-            catch (Exception)
+            catch (InvalidOperationException)
             {
-                // expected
+                // This is expected
             }
 
             Assert.IsTrue(_statefulRunnable.DisposeResultCallCount == 1);
@@ -72,10 +73,10 @@ namespace FBCore.Tests.Concurrency
         /// Tests running again
         /// </summary>
         [TestMethod]
-        public void TestDoesNotRunAgainAfterStarted()
+        public async Task TestDoesNotRunAgainAfterStarted()
         {
             _statefulRunnable.SetInternalState(StatefulRunnable<object>.STATE_STARTED);
-            RunSuccess();
+            await RunSuccess().ConfigureAwait(false);
             Assert.IsTrue(_statefulRunnable.GetResultCallCount == 0);
         }
 
@@ -93,10 +94,10 @@ namespace FBCore.Tests.Concurrency
         /// Tests running after being cancelled
         /// </summary>
         [TestMethod]
-        public void TestDoesNotRunAfterCancellation()
+        public async Task TestDoesNotRunAfterCancellation()
         {
             _statefulRunnable.Cancel();
-            RunSuccess();
+            await RunSuccess().ConfigureAwait(false);
             Assert.IsTrue(_statefulRunnable.GetResultCallCount == 0);
         }
 
@@ -122,10 +123,10 @@ namespace FBCore.Tests.Concurrency
             Assert.IsTrue(_statefulRunnable.OnCancellationCallCount == 0);
         }
 
-        private void RunSuccess()
+        private async Task RunSuccess()
         {
             _statefulRunnable.SetResult(_result);
-            _statefulRunnable.Runnable();
+            await _statefulRunnable.Runnable().ConfigureAwait(false);
         }
 
         private void RunFailure()
