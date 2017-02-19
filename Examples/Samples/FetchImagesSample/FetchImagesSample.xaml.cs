@@ -1,7 +1,6 @@
 ﻿using ImagePipeline.Core;
 using ImagePipeline.Request;
 using System;
-using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
@@ -23,110 +22,95 @@ namespace Examples
 
             // Initializes ImagePipeline
             _imagePipeline = ImagePipelineFactory.Instance.GetImagePipeline();
-
-            EnableAllButtons(true);
         }
 
-        private async void FetchEncodedButton_Click(object sender, RoutedEventArgs e)
+        private async void FetchEncodedImage()
         {
-            EnableAllButtons(false);
-            ImageGrid.Items.Clear();
-
-            for (int i = 0; i < MainPage.NUM_IMAGES; i++)
+            try
             {
-                try
-                {
-                    Uri uri = MainPage.GenerateImageUri();
-                    BitmapImage bitmap = await _imagePipeline.FetchEncodedBitmapImage(uri);
-                    var image = new Image();
-                    image.Width = image.Height = MainPage.VIEW_DIMENSION;
-                    image.Source = bitmap;
-                    ImageGrid.Items.Add(image);
-                    ImageCounter.Text = string.Format("{0}/{1}", i + 1, MainPage.NUM_IMAGES);
-                }
-                catch (Exception)
-                {
-                    // Image not found, try another uri
-                    --i;
-                }
-            }
-
-            EnableAllButtons(true);
-        }
-
-        private async void FetchDecodedButton_Click(object sender, RoutedEventArgs e)
-        {
-            EnableAllButtons(false);
-            ImageGrid.Items.Clear();
-
-            for (int i = 0; i < MainPage.NUM_IMAGES; i++)
-            {
-                try
-                {
-                    Uri uri = MainPage.GenerateImageUri();
-                    WriteableBitmap bitmap = await _imagePipeline.FetchDecodedBitmapImage(
-                        ImageRequest.FromUri(uri));
-
-                    var image = new Image();
-                    image.Width = image.Height = MainPage.VIEW_DIMENSION;
-                    image.Source = bitmap;
-                    ImageGrid.Items.Add(image);
-                    ImageCounter.Text = string.Format("{0}/{1}", i + 1, MainPage.NUM_IMAGES);
-                }
-                catch (Exception)
-                {
-                    // Image not found, try another uri
-                    --i;
-                }
-            }
-
-            EnableAllButtons(true);
-        }
-
-        private async void PrefetchButton_Click(object sender, RoutedEventArgs e)
-        {
-            EnableAllButtons(false);
-            ImageGrid.Items.Clear();
-            List<Uri> uris = new List<Uri>(MainPage.NUM_IMAGES);
-
-            for (int i = 0; i < MainPage.NUM_IMAGES; i++)
-            {
-                try
-                {
-                    Uri uri = MainPage.GenerateImageUri();
-                    await _imagePipeline.PrefetchToDiskCache(uri);
-                    ImageCounter.Text = string.Format("{0}/{1}", i + 1, MainPage.NUM_IMAGES);
-                    uris.Add(uri);
-                }
-                catch (Exception)
-                {
-                    // Image not found, try another uri
-                    --i;
-                }
-            }
-
-            foreach (var uri in uris)
-            {
+                Uri uri = MainPage.GenerateImageUri();
                 BitmapImage bitmap = await _imagePipeline.FetchEncodedBitmapImage(uri);
-                var image = new Image();
-                image.Width = image.Height = MainPage.VIEW_DIMENSION;
-                image.Source = bitmap;
-                ImageGrid.Items.Add(image);
+                UpdateImageGrid(bitmap);
             }
-
-            EnableAllButtons(true);
+            catch (Exception)
+            {
+                // Invalid uri, try again
+                FetchEncodedImage();
+            }
         }
 
-        private async void EnableAllButtons(bool enable)
+        private async void FetchDecodedImage()
         {
-            FetchEncodedButton.IsEnabled = enable;
-            FetchDecodedButton.IsEnabled = enable;
-            PrefetchButton.IsEnabled = enable;
-            ImageCounter.Visibility = enable ? Visibility.Collapsed : Visibility.Visible;
-            if (!enable)
+            try
             {
-                await _imagePipeline.ClearCachesAsync();
+                Uri uri = MainPage.GenerateImageUri();
+                WriteableBitmap bitmap = await _imagePipeline.FetchDecodedBitmapImage(
+                    ImageRequest.FromUri(uri));
+
+                UpdateImageGrid(bitmap);
             }
+            catch (Exception)
+            {
+                // Invalid uri, try again
+                FetchDecodedImage();
+            }
+        }
+
+        private async void PrefetchImage()
+        {
+            try
+            {
+                Uri uri = MainPage.GenerateImageUri();
+                await _imagePipeline.PrefetchToDiskCache(uri);
+            }
+            catch (Exception)
+            {
+                // Invalid uri, try again
+                PrefetchImage();
+            }
+        }
+
+        private void UpdateImageGrid(BitmapSource source)
+        {
+            var image = new Image();
+            image.Width = image.Height = MainPage.VIEW_DIMENSION;
+            image.Source = source;
+            ImageGrid.Items.Add(image);
+        }
+
+        private void FetchEncodedButton_Click(object sender, RoutedEventArgs e)
+        {
+            ImageGrid.Items.Clear();
+
+            for (int i = 0; i < MainPage.NUM_IMAGES; i++)
+            {
+                FetchEncodedImage();
+            }
+        }
+
+        private void FetchDecodedButton_Click(object sender, RoutedEventArgs e)
+        {
+            ImageGrid.Items.Clear();
+
+            for (int i = 0; i < MainPage.NUM_IMAGES; i++)
+            {
+                FetchDecodedImage();
+            }
+        }
+
+        private void PrefetchButton_Click(object sender, RoutedEventArgs e)
+        {
+            ImageGrid.Items.Clear();
+
+            for (int i = 0; i < MainPage.NUM_IMAGES; i++)
+            {
+                PrefetchImage();
+            }
+        }
+
+        private async void ClearCachesButton_Click(object sender, RoutedEventArgs e)
+        {
+            await _imagePipeline.ClearCachesAsync().ConfigureAwait(false);
         }
 
         private void ShowSliptView(object sender, RoutedEventArgs e)

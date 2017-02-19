@@ -22,10 +22,12 @@
         </Grid.ColumnDefinitions>
 
         <Button Style="{StaticResource SplitViewTogglePaneButtonStyle}" VerticalAlignment="Center" Click="ShowSliptView"/>
-        <Button x:Name="FetchEncodedButton" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Click="FetchEncodedButton_Click">Fetch encoded images</Button>
-        <Button x:Name="FetchDecodedButton" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Click="FetchDecodedButton_Click">Fetch decoded images</Button>
-        <Button x:Name="PrefetchButton" Grid.Row="1" Grid.Column="3" VerticalAlignment="Top" Click="PrefetchButton_Click">Prefetch</Button>
-        <TextBlock x:Name="ImageCounter" Grid.Row="1" Grid.Column="4" VerticalAlignment="Top" FontSize="20" Visibility="Collapsed"></TextBlock>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top">
+            <Button x:Name="FetchEncodedButton" Margin="5" Click="FetchEncodedButton_Click">Fetch encoded</Button>
+            <Button x:Name="FetchDecodedButton" Margin="5" Click="FetchDecodedButton_Click">Fetch decoded</Button>
+            <Button x:Name="PrefetchButton" Margin="5" Click="PrefetchButton_Click">Prefetch</Button>
+            <Button x:Name="ClearCachesButton" Margin="5" Click="ClearCachesButton_Click">Clear caches</Button>
+        </StackPanel>
         <GridView x:Name="ImageGrid" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" VerticalAlignment="Top"></GridView>
         <local:SamplesPane x:Name="MySamplesPane" Grid.ColumnSpan="2" Grid.RowSpan="3"/>
     </Grid>

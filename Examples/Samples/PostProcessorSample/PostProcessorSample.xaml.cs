@@ -23,48 +23,45 @@ namespace Examples
 
             // Initializes ImagePipeline
             _imagePipeline = ImagePipelineFactory.Instance.GetImagePipeline();
+        }
 
-            FetchButton.IsEnabled = true;
+        private async void FetchDecodedImage()
+        {
+            try
+            {
+                Uri uri = MainPage.GenerateImageUri();
+                ImageRequestBuilder builder = ImageRequestBuilder.NewBuilderWithSource(uri);
+                if (GrayscaleRadioButton.IsChecked.Value)
+                {
+                    builder.SetPostprocessor(GrayscalePostprocessor);
+                }
+                else if (InvertRadioButton.IsChecked.Value)
+                {
+                    builder.SetPostprocessor(InvertPostprocessor);
+                }
+
+                ImageRequest request = builder.Build();
+                WriteableBitmap bitmap = await _imagePipeline.FetchDecodedBitmapImage(request);
+                var image = new Image();
+                image.Width = image.Height = MainPage.VIEW_DIMENSION;
+                image.Source = bitmap;
+                ImageGrid.Items.Add(image);
+            }
+            catch (Exception)
+            {
+                // Invalid uri, try again
+                FetchDecodedImage();
+            }
         }
 
         private async void FetchButton_Click(object sender, RoutedEventArgs e)
         {
-            ImageGrid.Items.Clear();
             await _imagePipeline.ClearCachesAsync();
-            FetchButton.IsEnabled = false;
-            ImageCounter.Visibility = Visibility.Visible;
+            ImageGrid.Items.Clear();
             for (int i = 0; i < MainPage.NUM_IMAGES; i++)
             {
-                try
-                {
-                    Uri uri = MainPage.GenerateImageUri();
-                    ImageRequestBuilder builder = ImageRequestBuilder.NewBuilderWithSource(uri);
-                    if (GrayscaleRadioButton.IsChecked.Value)
-                    {
-                        builder.SetPostprocessor(GrayscalePostprocessor);
-                    }
-                    else if (InvertRadioButton.IsChecked.Value)
-                    {
-                        builder.SetPostprocessor(InvertPostprocessor);
-                    }
-
-                    ImageRequest request = builder.Build();
-                    WriteableBitmap bitmap = await _imagePipeline.FetchDecodedBitmapImage(request);
-                    var image = new Image();
-                    image.Width = image.Height = MainPage.VIEW_DIMENSION;
-                    image.Source = bitmap;
-                    ImageGrid.Items.Add(image);
-                    ImageCounter.Text = string.Format("{0}/{1}", i + 1, MainPage.NUM_IMAGES);
-                }
-                catch (Exception)
-                {
-                    // Image not found, try another uri
-                    --i;
-                }
+                FetchDecodedImage();
             }
-
-            FetchButton.IsEnabled = true;
-            ImageCounter.Visibility = Visibility.Collapsed;
         }
 
         private void ShowSliptView(object sender, RoutedEventArgs e)

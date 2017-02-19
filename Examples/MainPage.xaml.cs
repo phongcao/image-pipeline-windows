@@ -11,7 +11,7 @@ namespace Examples
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public const int NUM_IMAGES = 30;
+        public const int NUM_IMAGES = 20;
         public const int MAX_DIMENSION = 600;
         public const int MIN_DIMENSION = 400;
         public const int VIEW_DIMENSION = 200;
