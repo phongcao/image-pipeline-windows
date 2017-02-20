@@ -29,7 +29,7 @@ namespace Examples
             try
             {
                 Uri uri = MainPage.GenerateImageUri();
-                BitmapImage bitmap = await _imagePipeline.FetchEncodedBitmapImage(uri);
+                BitmapImage bitmap = await _imagePipeline.FetchEncodedBitmapImageAsync(uri);
                 UpdateImageGrid(bitmap);
             }
             catch (Exception)
@@ -44,7 +44,7 @@ namespace Examples
             try
             {
                 Uri uri = MainPage.GenerateImageUri();
-                WriteableBitmap bitmap = await _imagePipeline.FetchDecodedBitmapImage(
+                WriteableBitmap bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
                     ImageRequest.FromUri(uri));
 
                 UpdateImageGrid(bitmap);
@@ -61,7 +61,7 @@ namespace Examples
             try
             {
                 Uri uri = MainPage.GenerateImageUri();
-                await _imagePipeline.PrefetchToDiskCache(uri);
+                await _imagePipeline.PrefetchToDiskCacheAsync(uri);
             }
             catch (Exception)
             {

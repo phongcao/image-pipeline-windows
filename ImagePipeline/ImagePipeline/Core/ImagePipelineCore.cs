@@ -182,7 +182,7 @@ namespace ImagePipeline.Core
         /// <param name="token">The cancellation token.</param>
         /// @return a Task{WriteableBitmap} representing the image.
         /// </summary>
-        public Task<WriteableBitmap> FetchImageFromBitmapCache(
+        public Task<WriteableBitmap> FetchImageFromBitmapCacheAsync(
             ImageRequest imageRequest,
             CancellationToken token = default(CancellationToken))
         {
@@ -338,7 +338,7 @@ namespace ImagePipeline.Core
         /// <returns>The encoded BitmapImage.</returns>
         /// @throws IOException if the image uri can't be found.
         /// </summary>
-        public Task<BitmapImage> FetchEncodedBitmapImage(
+        public Task<BitmapImage> FetchEncodedBitmapImageAsync(
             Uri uri, 
             CancellationToken token = default(CancellationToken))
         {
@@ -426,7 +426,7 @@ namespace ImagePipeline.Core
         /// <returns>The decoded SoftwareBitmapSource.</returns>
         /// @throws IOException if the image request isn't valid.
         /// </summary>
-        public Task<WriteableBitmap> FetchDecodedBitmapImage(
+        public Task<WriteableBitmap> FetchDecodedBitmapImageAsync(
             ImageRequest imageRequest,
             CancellationToken token = default(CancellationToken))
         {
@@ -511,7 +511,7 @@ namespace ImagePipeline.Core
         /// <param name="token">The cancellation token.</param>
         /// @return a DataSource that can safely be ignored.
         /// </summary>
-        public Task PrefetchToBitmapCache(
+        public Task PrefetchToBitmapCacheAsync(
             Uri uri, 
             CancellationToken token = default(CancellationToken))
         {
@@ -594,7 +594,7 @@ namespace ImagePipeline.Core
         /// <param name="token">The cancellation token.</param>
         /// @return a DataSource that can safely be ignored.
         /// </summary>
-        public Task PrefetchToDiskCache(
+        public Task PrefetchToDiskCacheAsync(
             Uri uri, 
             CancellationToken token = default(CancellationToken))
         {
@@ -640,9 +640,9 @@ namespace ImagePipeline.Core
         /// use EvictFromDiskCache(ImageRequest).
         /// <param name="uri">The uri of the image to evict.</param>
         /// </summary>
-        public Task EvictFromDiskCache(Uri uri)
+        public Task EvictFromDiskCacheAsync(Uri uri)
         {
-            return EvictFromDiskCache(ImageRequest.FromUri(uri));
+            return EvictFromDiskCacheAsync(ImageRequest.FromUri(uri));
         }
 
         /// <summary>
@@ -650,7 +650,7 @@ namespace ImagePipeline.Core
         ///
         /// <param name="imageRequest">The imageRequest for the image to evict from disk cache.</param>
         /// </summary>
-        public async Task EvictFromDiskCache(ImageRequest imageRequest)
+        public async Task EvictFromDiskCacheAsync(ImageRequest imageRequest)
         {
             ICacheKey cacheKey = _cacheKeyFactory.GetEncodedCacheKey(imageRequest, null);
             await _mainBufferedDiskCache.Remove(cacheKey).ConfigureAwait(false);
@@ -664,10 +664,10 @@ namespace ImagePipeline.Core
         /// and EvictFromDiskCache(ImageRequest) separately.
         /// <param name="uri">The uri of the image to evict.</param>
         /// </summary>
-        public async Task EvictFromCache(Uri uri)
+        public async Task EvictFromCacheAsync(Uri uri)
         {
             EvictFromMemoryCache(uri);
-            await EvictFromDiskCache(uri).ConfigureAwait(false);
+            await EvictFromDiskCacheAsync(uri).ConfigureAwait(false);
         }
 
         /// <summary>

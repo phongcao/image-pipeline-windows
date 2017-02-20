@@ -41,7 +41,7 @@ namespace Examples
                 }
 
                 ImageRequest request = builder.Build();
-                WriteableBitmap bitmap = await _imagePipeline.FetchDecodedBitmapImage(request);
+                WriteableBitmap bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(request);
                 var image = new Image();
                 image.Width = image.Height = MainPage.VIEW_DIMENSION;
                 image.Source = bitmap;
