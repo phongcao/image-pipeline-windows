@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace ImagePipeline.Tests.Core
@@ -27,8 +28,17 @@ namespace ImagePipeline.Tests.Core
         private readonly Uri IMAGE5_URL = new Uri("https://unsplash.it/800/600?image=5");
         private readonly Uri FAILURE_URL = new Uri("https://httpbin.org/image_not_found.png");
 
-        private ImagePipelineCore _imagePipeline;
+        private static ImagePipelineCore _imagePipeline;
         private ImageRequestBuilder _requestBuilder;
+
+        /// <summary>
+        /// Global Initialize
+        /// </summary>
+        [ClassInitialize]
+        public static void GlobalInitialize(TestContext testContext)
+        {
+            _imagePipeline = ImagePipelineFactory.Instance.GetImagePipeline();
+        }
 
         /// <summary>
         /// Initialize
@@ -36,7 +46,6 @@ namespace ImagePipeline.Tests.Core
         [TestInitialize]
         public void Initialize()
         {
-            _imagePipeline = ImagePipelineFactory.Instance.GetImagePipeline();
             _requestBuilder = ImageRequestBuilder.NewBuilderWithSource(IMAGE_URL);
         }
 
@@ -60,61 +69,146 @@ namespace ImagePipeline.Tests.Core
         /// Tests out fetching an encoded image.
         /// </summary>
         [TestMethod, Timeout(5000)]
-        public async Task TestFetchEncodedImageSuccess()
+        public void TestFetchEncodedImageSuccess()
         {
-            var image = await _imagePipeline.FetchEncodedBitmapImageAsync(IMAGE_URL).ConfigureAwait(false);
-            Assert.IsTrue(image.GetType() == typeof(BitmapImage));
-            Assert.IsTrue(await _imagePipeline.IsInDiskCacheAsync(IMAGE_URL).ConfigureAwait(false));
+            var completion = new ManualResetEvent(false);
+            var dataSource = _imagePipeline.FetchEncodedImage(ImageRequest.FromUri(IMAGE_URL), null);
+            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IPooledByteBuffer>>(
+                async response =>
+                {
+                    CloseableReference<IPooledByteBuffer> reference = response.GetResult();
+                    if (reference != null)
+                    {
+                        IPooledByteBuffer inputStream = reference.Get();
+
+                        try
+                        {
+                            Assert.IsTrue(inputStream.Size != 0);
+                            Assert.IsTrue(await _imagePipeline.IsInDiskCacheAsync(IMAGE_URL).ConfigureAwait(false));
+                        }
+                        catch (Exception)
+                        {
+                            Assert.Fail();
+                        }
+                        finally
+                        {
+                            CloseableReference<IPooledByteBuffer>.CloseSafely(reference);
+                            completion.Set();
+                        }
+                    }
+                    else
+                    {
+                        Assert.Fail();
+                        completion.Set();
+                    }
+                },
+                response =>
+                {
+                    Assert.Fail();
+                    completion.Set();
+                });
+
+            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            completion.WaitOne();
         }
 
         /// <summary>
         /// Tests out fetching an encoded image with wrong uri.
         /// </summary>
         [TestMethod, Timeout(5000)]
-        public async Task TestFetchEncodedImageFail()
+        public void TestFetchEncodedImageFail()
         {
-            try
-            {
-                var image = await _imagePipeline.FetchEncodedBitmapImageAsync(FAILURE_URL).ConfigureAwait(false);
-                Assert.Fail();
-            }
-            catch (IOException)
-            {
-                // This is expected
-            }
+            var completion = new ManualResetEvent(false);
+            var dataSource = _imagePipeline.FetchEncodedImage(ImageRequest.FromUri(FAILURE_URL), null);
+            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IPooledByteBuffer>>(
+                response =>
+                {
+                    Assert.Fail();
+                    completion.Set();
+                    return Task.CompletedTask;
+                },
+                response =>
+                {
+                    Assert.IsTrue(response.GetFailureCause().GetType() == typeof(IOException));
+                    completion.Set();
+                });
+
+            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            completion.WaitOne();
         }
 
         /// <summary>
         /// Tests out fetching a decoded image.
         /// </summary>
         [TestMethod, Timeout(5000)]
-        public async Task TestFetchDecodedImageSuccess()
+        public void TestFetchDecodedImageSuccess()
         {
-            var request = ImageRequest.FromUri(IMAGE_URL);
-            var image = await _imagePipeline.FetchDecodedBitmapImageAsync(request).ConfigureAwait(false);
+            var completion = new ManualResetEvent(false);
+            var dataSource = _imagePipeline.FetchDecodedImage(ImageRequest.FromUri(IMAGE_URL), null);
+            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<CloseableImage>>(
+                async response =>
+                {
+                    CloseableReference<CloseableImage> reference = response.GetResult();
+                    if (reference != null)
+                    {
+                        SoftwareBitmap bitmap = ((CloseableBitmap)reference.Get()).UnderlyingBitmap;
 
-            Assert.IsTrue(image.GetType() == typeof(WriteableBitmap));
-            Assert.IsTrue(_imagePipeline.IsInBitmapMemoryCache(request));
-            Assert.IsTrue(await _imagePipeline.IsInDiskCacheAsync(request).ConfigureAwait(false));
+                        try
+                        {
+                            Assert.IsTrue(bitmap.PixelWidth != 0);
+                            Assert.IsTrue(bitmap.PixelHeight != 0);
+                            Assert.IsTrue(_imagePipeline.IsInBitmapMemoryCache(ImageRequest.FromUri(IMAGE_URL)));
+                            Assert.IsTrue(await _imagePipeline.IsInDiskCacheAsync(IMAGE_URL).ConfigureAwait(false));
+                        }
+                        catch (Exception)
+                        {
+                            Assert.Fail();
+                        }
+                        finally
+                        {
+                            CloseableReference<CloseableImage>.CloseSafely(reference);
+                            completion.Set();
+                        }
+                    }
+                    else
+                    {
+                        Assert.Fail();
+                        completion.Set();
+                    }
+                },
+                response =>
+                {
+                    Assert.Fail();
+                    completion.Set();
+                });
+
+            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            completion.WaitOne();
         }
 
         /// <summary>
         /// Tests out fetching a decoded image with wrong uri.
         /// </summary>
         [TestMethod, Timeout(5000)]
-        public async Task TestFetchDecodedImageFail()
+        public void TestFetchDecodedImageFail()
         {
-            try
-            {
-                var image = await _imagePipeline.FetchDecodedBitmapImageAsync(
-                    ImageRequest.FromUri(FAILURE_URL)).ConfigureAwait(false);
+            var completion = new ManualResetEvent(false);
+            var dataSource = _imagePipeline.FetchDecodedImage(ImageRequest.FromUri(FAILURE_URL), null);
+            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<CloseableImage>>(
+                response =>
+                {
+                    Assert.Fail();
+                    completion.Set();
+                    return Task.CompletedTask;
+                },
+                response =>
+                {
+                    Assert.IsTrue(response.GetFailureCause().GetType() == typeof(IOException));
+                    completion.Set();
+                });
 
-                Assert.Fail();
-            }
-            catch (IOException)
-            {
-                // This is expected
-            }
+            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            completion.WaitOne();
         }
 
         /// <summary>

@@ -5,6 +5,7 @@ using ImagePipeline.Request;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ImagePipeline.Tests.Producers
 {
@@ -35,7 +36,7 @@ namespace ImagePipeline.Tests.Producers
         private string _internalProducerName;
         private IDictionary<string, string> _internalExtraMap;
         private int _consumerOnCancellationCount;
-        private bool _finishRunning;
+        private ManualResetEvent _completion;
 
         /// <summary>
         /// Initialize
@@ -48,17 +49,19 @@ namespace ImagePipeline.Tests.Producers
             {
                 _internalConsumer = consumer;
                 _internalProducerContext = (SettableProducerContext)producerContext;
-                _finishRunning = true;
+                _completion.Set();
             });
+
             _consumer = new BaseConsumerImpl<object>(
                 (_, __) => { },
                 (_) => { },
                 () =>
                 {
                     ++_consumerOnCancellationCount;
-                    _finishRunning = true;
+                    _completion.Set();
                 },
                 (_) => { });
+
             _producerListener = new ProducerListenerImpl(
                 (requestId, producerName) =>
                 {
@@ -80,7 +83,7 @@ namespace ImagePipeline.Tests.Producers
                 (_, __, ___, ____) => 
                 {
                     ++_onProducerFinishWithFailureCount;
-                    _finishRunning = true;
+                    _completion.Set();
                 },
                 (requestId, producerName, extraMap) =>
                 {
@@ -109,7 +112,8 @@ namespace ImagePipeline.Tests.Producers
             _threadHandoffProducer = new ThreadHandoffProducer<object>(
                 _inputProducer,
                 new ThreadHandoffProducerQueue(_testExecutorService));
-            _finishRunning = false;
+
+            _completion = new ManualResetEvent(false);
         }
 
         /// <summary>
@@ -129,7 +133,7 @@ namespace ImagePipeline.Tests.Producers
             _threadHandoffProducer.ProduceResults(_consumer, _producerContext);
 
             // Wait until finish
-            while (!_finishRunning);
+            _completion.WaitOne();
 
             Assert.AreSame(_internalConsumer, _consumer);
             Assert.AreSame(_internalProducerContext, _producerContext);
@@ -154,7 +158,7 @@ namespace ImagePipeline.Tests.Producers
             _producerContext.Cancel();
 
             // Wait until finish
-            while (!_finishRunning);
+            _completion.WaitOne();
 
             Assert.IsNull(_internalConsumer);
             Assert.IsNull(_internalProducerContext);

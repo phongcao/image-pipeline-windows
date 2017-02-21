@@ -84,7 +84,10 @@ namespace Cache.Disk
             Preconditions.CheckNotNull(rootDirectory);
 
             _rootDirectory = rootDirectory;
-            _isExternal = CheckExternal(rootDirectory, cacheErrorLogger);
+
+            // Phong Cao: Checking external storage requires 'Removable devices' permission in the
+            // app manifest, skip it for now
+            _isExternal = false; // CheckExternal(rootDirectory, cacheErrorLogger);
 
             // _versionDirectory's name identifies:
             // - the cache structure's version (sharded)
