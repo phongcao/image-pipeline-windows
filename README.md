@@ -1,6 +1,9 @@
 # Image Pipeline for Universal Windows Platform (UWP)
 [Fresco’s](http://frescolib.org/) image pipeline will load images from the network, local storage, or local resources. To save data and CPU, it has three levels of cache; two in memory and another in internal storage.
 
+## Installation
+[![NuGet](https://img.shields.io/nuget/v/fresco.imagepipeline.svg)](https://www.nuget.org/packages/fresco.imagepipeline/)
+
 ## Features
 * Has a memory management system that uses the native heap to minimize the impact of garbage collection.
 * Easy to apply custom postprocessors.
