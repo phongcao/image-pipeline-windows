@@ -112,19 +112,10 @@ namespace FBCore.Common.Statfs
                     {
                         _internalPath = ApplicationData.Current.LocalFolder;
 
-                        try
-                        {
-                            if (!KnownFolders.RemovableDevices.Path.Equals(string.Empty))
-                            {
-                                _externalPath = KnownFolders.RemovableDevices.GetFoldersAsync().GetAwaiter().GetResult().FirstOrDefault();
-                            }
-                        }
-                        catch (UnauthorizedAccessException)
-                        {
-                            // No permission, 'Removable Storage' may not be checked in the app manifest
-                            _externalPath = null;
-                        }
-                            
+                        // Phong Cao: Checking external storage requires 'Removable devices' permission in the
+                        // app manifest, skip it for now
+                        _externalPath = null;
+
                         UpdateStats();
                         _initialized = true;
                     }

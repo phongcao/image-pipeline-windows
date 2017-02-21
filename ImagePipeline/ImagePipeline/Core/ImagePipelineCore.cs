@@ -380,7 +380,7 @@ namespace ImagePipeline.Core
                                 using (var outStream = new InMemoryRandomAccessStream())
                                 using (var writeStream = outStream.AsStreamForWrite())
                                 {
-                                    await writeStream.WriteAsync(bytesArray, 0, supportedSize).ConfigureAwait(false);
+                                    await writeStream.WriteAsync(bytesArray, 0, supportedSize);
                                     outStream.Seek(0);
                                     BitmapImage bitmapImage = new BitmapImage();
                                     await bitmapImage.SetSourceAsync(outStream).AsTask().ConfigureAwait(false);
