@@ -70,7 +70,7 @@ namespace FBCore.Tests.Common.Statfs
         /// Tests the statFs creation
         /// </summary>
         [TestMethod]
-        public void TestShouldCreateStatFsForInternalAndExternalStorage()
+        public void TestShouldCreateStatFsForInternalStorage()
         {
             ExpectInternalSetup();
             ExpectExternalSetup();
@@ -79,9 +79,6 @@ namespace FBCore.Tests.Common.Statfs
 
             ulong freeBytes = statFsHelper.GetAvailableStorageSpace(StatFsHelper.StorageType.INTERNAL);
             Assert.IsTrue(INTERNAL_FREE_BYTES == freeBytes);
-
-            freeBytes = statFsHelper.GetAvailableStorageSpace(StatFsHelper.StorageType.EXTERNAL);
-            Assert.IsTrue(EXTERNAL_FREE_BYTES == freeBytes);
         }
 
         /// <summary>
