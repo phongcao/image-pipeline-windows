@@ -12,7 +12,7 @@ namespace ImagePipeline.Decoder
         private readonly IDynamicValueConfig _dynamicValueConfig;
 
         /// <summary>
-        /// Instantiates the <see cref="SimpleProgressiveJpegConfig"/>
+        /// Instantiates the <see cref="SimpleProgressiveJpegConfig"/>.
         /// </summary>
         public SimpleProgressiveJpegConfig() : 
             this(new DefaultDynamicValueConfig())
@@ -20,16 +20,16 @@ namespace ImagePipeline.Decoder
         }
 
         /// <summary>
-        /// Instantiates the <see cref="SimpleProgressiveJpegConfig"/>
+        /// Instantiates the <see cref="SimpleProgressiveJpegConfig"/>.
         /// </summary>
-        /// <param name="dynamicValueConfig"></param>
         public SimpleProgressiveJpegConfig(IDynamicValueConfig dynamicValueConfig)
         {
             _dynamicValueConfig = Preconditions.CheckNotNull(dynamicValueConfig);
         }
 
         /// <summary>
-        /// Gets the next scan-number that should be decoded after the given scan-number.
+        /// Gets the next scan-number that should be decoded after the given
+        /// scan-number.
         /// </summary>
         public int GetNextScanNumberToDecode(int scanNumber)
         {
@@ -71,13 +71,11 @@ namespace ImagePipeline.Decoder
             /// <summary>
             /// Gets scans to decode.
             /// </summary>
-            /// <returns></returns>
             IList<int> GetScansToDecode();
 
             /// <summary>
             /// Gets good enough scan number.
             /// </summary>
-            /// <returns></returns>
             int GoodEnoughScanNumber { get; }
         }
 

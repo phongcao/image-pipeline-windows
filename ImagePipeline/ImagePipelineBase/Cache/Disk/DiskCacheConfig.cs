@@ -69,8 +69,8 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// This is the maximum size of the cache that is used when 
-        /// the device is low on disk space.
+        /// This is the maximum size of the cache that is used when the
+        /// device is low on disk space.
         /// </summary>
         public long LowDiskSpaceSizeLimit
         {
@@ -94,7 +94,7 @@ namespace Cache.Disk
 
         /// <summary>
         /// Provides the logic to determine the eviction order based on 
-        /// entry's access time and size
+        /// entry's access time and size.
         /// </summary>
         public IEntryEvictionComparatorSupplier EntryEvictionComparatorSupplier
         {
@@ -139,7 +139,7 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// IndexPopulateAtStartupEnabled
+        /// IndexPopulateAtStartupEnabled.
         /// </summary>
         public bool IndexPopulateAtStartupEnabled
         {
@@ -166,9 +166,9 @@ namespace Cache.Disk
 
         /// <summary>
         /// Create a new builder.
-        ///   <see cref="Builder.SetBaseDirectoryPath"/> or
-        ///   <see cref="Builder.SetBaseDirectoryPathSupplier"/>
-        ///   or the config won't know where to physically locate the cache.
+        /// <see cref="Builder.SetBaseDirectoryPath"/> or
+        /// <see cref="Builder.SetBaseDirectoryPathSupplier"/>
+        /// or the config won't know where to physically locate the cache.
         /// </summary>
         public static Builder NewBuilder()
         {
@@ -176,7 +176,7 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Builder class for <see cref="DiskCacheConfig"/>
+        /// Builder class for <see cref="DiskCacheConfig"/>.
         /// </summary>
         public class Builder
         {
@@ -224,8 +224,9 @@ namespace Cache.Disk
             /// <summary>
             /// Sets the path to the base directory.
             ///
-            /// <para />A directory with the given base directory name (see <code> setBaseDirectoryName</code>) will be
-            /// appended to this path.
+            /// <para />A directory with the given base directory name
+            /// (see <code>SetBaseDirectoryName</code>) will be appended
+            /// to this path.
             /// </summary>
             public Builder SetBaseDirectoryPath(FileSystemInfo baseDirectoryPath)
             {
@@ -252,7 +253,8 @@ namespace Cache.Disk
             }
 
             /// <summary>
-            /// This is the maximum size of the cache that is used when the device is low on disk space.
+            /// This is the maximum size of the cache that is used when the device
+            /// is low on disk space.
             ///
             /// See <see cref="IDiskTrimmable.TrimToMinimum"/>.
             /// </summary>
@@ -263,7 +265,8 @@ namespace Cache.Disk
             }
 
             /// <summary>
-            /// This is the maximum size of the cache when the device is extremely low on disk space.
+            /// This is the maximum size of the cache when the device is extremely
+            /// low on disk space.
             ///
             /// See <see cref="IDiskTrimmable.TrimToNothing"/>.
             /// </summary>
@@ -274,7 +277,8 @@ namespace Cache.Disk
             }
 
             /// <summary>
-            /// Provides the logic to determine the eviction order based on entry's access time and size
+            /// Provides the logic to determine the eviction order based on entry's
+            /// access time and size.
             /// </summary>
             public Builder SetEntryEvictionComparatorSupplier(IEntryEvictionComparatorSupplier supplier)
             {
@@ -301,7 +305,8 @@ namespace Cache.Disk
             }
 
             /// <summary>
-            /// The class that will contain a registry of caches to be trimmed in low disk space conditions.
+            /// The class that will contain a registry of caches to be trimmed in
+            /// low disk space conditions.
             ///
             /// <para />See <see cref="IDiskTrimmableRegistry"/>.
             /// </summary>
@@ -312,10 +317,8 @@ namespace Cache.Disk
             }
 
             /// <summary>
-            /// Sets IndexPopulateAtStartupEnabled
+            /// Sets IndexPopulateAtStartupEnabled.
             /// </summary>
-            /// <param name="indexEnabled"></param>
-            /// <returns></returns>
             public Builder SetIndexPopulateAtStartupEnabled(bool indexEnabled)
             {
                 _indexPopulateAtStartupEnabled = indexEnabled;
@@ -323,7 +326,7 @@ namespace Cache.Disk
             }
 
             /// <summary>
-            /// Builds the <see cref="DiskCacheConfig"/>
+            /// Builds the <see cref="DiskCacheConfig"/>.
             /// </summary>
             public DiskCacheConfig Build()
             {

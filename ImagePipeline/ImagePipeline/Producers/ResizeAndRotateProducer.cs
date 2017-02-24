@@ -1,15 +1,14 @@
-﻿using System;
+﻿using FBCore.Common.Internal;
 using FBCore.Concurrency;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
-using FBCore.Common.Internal;
 
 namespace ImagePipeline.Producers
 {
     /// <summary>
     /// Resizes and rotates JPEG image according to the EXIF orientation data.
     ///
-    /// <para /> If the image is not JPEG, no transformation is applied.
+    /// <para />If the image is not JPEG, no transformation is applied.
     /// <para />Should not be used if downsampling is in use.
     /// </summary>
     public class ResizeAndRotateProducer : IProducer<EncodedImage>
@@ -30,7 +29,7 @@ namespace ImagePipeline.Producers
         private readonly IProducer<EncodedImage> _inputProducer;
 
         /// <summary>
-        /// Instantiates the <see cref="ResizeAndRotateProducer"/>
+        /// Instantiates the <see cref="ResizeAndRotateProducer"/>.
         /// </summary>
         public ResizeAndRotateProducer(
             IExecutorService executor,
@@ -43,8 +42,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Start producing results for given context. Provided consumer is notified whenever 
-        /// progress is made (new value is ready or error occurs).
+        /// Start producing results for given context.
+        /// Provided consumer is notified whenever progress is made
+        /// (new value is ready or error occurs).
         /// </summary>
         public void ProduceResults(IConsumer<EncodedImage> consumer, IProducerContext context)
         {

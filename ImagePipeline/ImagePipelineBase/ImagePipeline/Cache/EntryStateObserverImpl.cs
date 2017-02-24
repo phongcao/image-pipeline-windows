@@ -3,7 +3,7 @@
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// Provides custom implementation for <see cref="IEntryStateObserver{T}"/>
+    /// Provides custom implementation for <see cref="IEntryStateObserver{T}"/>.
     /// </summary>
     public class EntryStateObserverImpl<T> : IEntryStateObserver<T>
     {
@@ -12,14 +12,14 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Instantiates the <see cref="EntryStateObserverImpl{T}"/>.
         /// </summary>
-        /// <param name="func">Delegate function</param>
+        /// <param name="func">Delegate function.</param>
         public EntryStateObserverImpl(Action<T, bool> func)
         {
             _func = func;
         }
 
         /// <summary>
-        /// Invokes the OnExclusivityChanged method
+        /// Invokes the OnExclusivityChanged method.
         /// </summary>
         public void OnExclusivityChanged(T key, bool isExclusive)
         {

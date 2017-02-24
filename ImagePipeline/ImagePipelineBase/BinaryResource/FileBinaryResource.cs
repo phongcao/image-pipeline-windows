@@ -4,7 +4,8 @@ using System.IO;
 namespace BinaryResource
 {
     /// <summary>
-    /// Implementation of IBinaryResource based on a real file. @see BinaryResource for more details.
+    /// Implementation of IBinaryResource based on a real file.
+    /// See <see cref="IBinaryResource"/> for more details.
     /// </summary>
     public class FileBinaryResource : IBinaryResource
     {
@@ -16,7 +17,7 @@ namespace BinaryResource
         }
 
         /// <summary>
-        /// Gets file
+        /// Gets file.
         /// </summary>
         public FileInfo File
         {
@@ -27,16 +28,15 @@ namespace BinaryResource
         }
 
         /// <summary>
-        /// Opens file stream
+        /// Opens file stream.
         /// </summary>
-        /// <returns></returns>
         public Stream OpenStream()
         {
             return _file.OpenRead();
         }
 
         /// <summary>
-        /// Returns file size
+        /// Returns file size.
         /// </summary>
         /// <returns></returns>
         public long GetSize()
@@ -45,19 +45,16 @@ namespace BinaryResource
         }
 
         /// <summary>
-        /// Reads byte array from file and returns
+        /// Reads byte array from file and returns.
         /// </summary>
-        /// <returns></returns>
         public byte[] Read()
         {
             return Files.ToByteArray(_file);
         }
 
         /// <summary>
-        /// Compares files
+        /// Compares files.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj == null || !(obj.GetType() == typeof(FileBinaryResource)))
@@ -70,17 +67,17 @@ namespace BinaryResource
         }
 
         /// <summary>
-        /// Gets hash code of the file
+        /// Gets hash code of the file.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return _file.GetHashCode();
         }
 
         /// <summary>
-        /// Factory method to create a wrapping BinaryResource without explicitly taking care of null.
-        /// If the supplied file is null, instead of BinaryResource, null is returned.
+        /// Factory method to create a wrapping IBinaryResource without
+        /// explicitly taking care of null. If the supplied file is null,
+        /// instead of IBinaryResource, null is returned.
         /// </summary>
         public static FileBinaryResource CreateOrNull(FileInfo file)
         {

@@ -14,8 +14,8 @@ using System.Threading.Tasks;
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// BufferedDiskCache provides get and put operations to take care of scheduling 
-    /// disk-cache read/writes.
+    /// BufferedDiskCache provides get and put operations to take care of
+    /// scheduling disk-cache read/writes.
     /// </summary>
     public class BufferedDiskCache
     {
@@ -28,14 +28,8 @@ namespace ImagePipeline.Cache
         private readonly IImageCacheStatsTracker _imageCacheStatsTracker;
 
         /// <summary>
-        /// Instantiates the <see cref="BufferedDiskCache"/>
+        /// Instantiates the <see cref="BufferedDiskCache"/>.
         /// </summary>
-        /// <param name="fileCache"></param>
-        /// <param name="pooledByteBufferFactory"></param>
-        /// <param name="pooledByteStreams"></param>
-        /// <param name="readExecutor"></param>
-        /// <param name="writeExecutor"></param>
-        /// <param name="imageCacheStatsTracker"></param>
         public BufferedDiskCache(
             IFileCache fileCache,
             IPooledByteBufferFactory pooledByteBufferFactory,
@@ -56,8 +50,9 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Returns true if the key is in the in-memory key index.
         ///
-        /// Not guaranteed to be correct. The cache may yet have this key even if 
-        /// this returns false. But if it returns true, it definitely has it.
+        /// Not guaranteed to be correct. The cache may yet have this
+        /// key even if  this returns false. But if it returns true,
+        /// it definitely has it.
         ///
         /// Avoids a disk read.
         /// </summary>
@@ -67,14 +62,16 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Performs a key-value look up in the disk cache. If no value is found in 
-        /// the staging area, then disk cache checks are scheduled on a background 
-        /// thread. Any error manifests itself as a cache miss, i.e. the returned 
-        /// Task resolves to false.
-        /// <param name="key">The cache key.</param>
-        /// @return Task that resolves to true if an element is found, or false 
-        /// otherwise.
+        /// Performs a key-value look up in the disk cache. If no value
+        /// is found in  the staging area, then disk cache checks are
+        /// scheduled on a background thread. Any error manifests itself
+        /// as a cache miss, i.e. the returned Task resolves to false.
         /// </summary>
+        /// <param name="key">The cache key.</param>
+        /// <returns>
+        /// Task that resolves to true if an element is found, or false
+        /// otherwise.
+        /// </returns>
         public Task<bool> Contains(ICacheKey key)
         {
             if (ContainsSync(key))
@@ -102,9 +99,10 @@ namespace ImagePipeline.Cache
 
         /// <summary>
         /// Performs disk cache check synchronously.
-        /// <param name="key"></param>
-        /// @return true if the key is found in disk cache else false
         /// </summary>
+        /// <returns>
+        /// true if the key is found in disk cache else false.
+        /// </returns>
         public bool DiskCheckSync(ICacheKey key)
         {
             if (ContainsSync(key))
@@ -116,15 +114,18 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Performs key-value look up in disk cache. If value is not found in disk 
-        /// cache staging area then disk cache read is scheduled on background thread. 
-        /// Any error manifests itself as cache miss, i.e. the returned task resolves 
-        /// to null.
+        /// Performs key-value look up in disk cache. If value is not
+        /// found in disk  cache staging area then disk cache read is
+        /// scheduled on background thread. 
+        /// Any error manifests itself as cache miss, i.e. the returned
+        /// task resolves to null.
+        /// </summary>
         /// <param name="key">The cache key.</param>
         /// <param name="isCancelled">The cancellation flag.</param>
-        /// @return Task that resolves to cached element or null if one cannot be 
-        /// retrieved; returned task never rethrows any exception.
-        /// </summary>
+        /// <returns>
+        /// Task that resolves to cached element or null if one cannot
+        /// be retrieved; returned task never rethrows any exception.
+        /// </returns>
         public Task<EncodedImage> Get(ICacheKey key, AtomicBoolean isCancelled)
         {
             EncodedImage pinnedImage = _stagingArea.Get(key);
@@ -139,10 +140,12 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Performs key-value loop up in staging area and file cache.
         /// Any error manifests itself as a miss, i.e. returns false.
-        /// <param name="key">The cache key.</param>
-        /// @return true if the image is found in staging area or File cache, 
-        /// false if not found.
         /// </summary>
+        /// <param name="key">The cache key.</param>
+        /// <returns>
+        /// true if the image is found in staging area or File cache,
+        /// false if not found.
+        /// </returns>
         private bool CheckInStagingAreaAndFileCache(ICacheKey key)
         {
             EncodedImage result = _stagingArea.Get(key);
@@ -226,8 +229,9 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Associates encodedImage with given key in disk cache. Disk write is performed on background
-        /// thread, so the caller of this method is not blocked
+        /// Associates encodedImage with given key in disk cache.
+        /// Disk write is performed on background thread, so the
+        /// caller of this method is not blocked.
         /// </summary>
         public Task Put(ICacheKey key, EncodedImage encodedImage)
         {
@@ -237,9 +241,9 @@ namespace ImagePipeline.Cache
             // Store encodedImage in staging area
             _stagingArea.Put(key, encodedImage);
 
-            // Write to disk cache. This will be executed on background thread, so increment the ref count.
-            // When this write completes (with success/failure), then we will bump down the ref count
-            // again.
+            // Write to disk cache. This will be executed on background thread,
+            // so increment the ref count. When this write completes
+            // (with success/failure), then we will bump down the ref count again.
             EncodedImage finalEncodedImage = EncodedImage.CloneOrNull(encodedImage);
             try
             {
@@ -365,7 +369,7 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Writes to disk cache
+        /// Writes to disk cache.
         /// </summary>
         private void WriteToDiskCache(ICacheKey key, EncodedImage encodedImage)
         {

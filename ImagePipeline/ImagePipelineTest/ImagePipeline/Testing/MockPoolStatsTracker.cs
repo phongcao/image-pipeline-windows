@@ -4,7 +4,7 @@ using System.Threading;
 namespace ImagePipeline.Testing
 {
     /// <summary>
-    /// Mock pool stats tracker for unit tests
+    /// Mock pool stats tracker for unit tests.
     /// </summary>
     class MockPoolStatsTracker : PoolStatsTracker
     {
@@ -14,7 +14,7 @@ namespace ImagePipeline.Testing
         private int _reuseCallCount = 0;
 
         /// <summary>
-        /// Returns how many times the Alloc method is invoked
+        /// Returns how many times the Alloc method is invoked.
         /// </summary>
         public int AllocCallCount
         {
@@ -25,7 +25,7 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Returns how many times the Alloc method is invoked
+        /// Returns how many times the Alloc method is invoked.
         /// </summary>
         public int FreeCallCount
         {
@@ -36,7 +36,7 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Returns how many times the Alloc method is invoked
+        /// Returns how many times the Alloc method is invoked.
         /// </summary>
         public int ReleaseCallCount
         {
@@ -47,7 +47,7 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Returns how many times the Alloc method is invoked
+        /// Returns how many times the Alloc method is invoked.
         /// </summary>
         public int ReuseCallCount
         {
@@ -58,7 +58,7 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Mock OnAlloc
+        /// Mock OnAlloc.
         /// </summary>
         public override void OnAlloc(int size)
         {
@@ -66,7 +66,7 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Mock OnFree
+        /// Mock OnFree.
         /// </summary>
         public override void OnFree(int sizeInBytes)
         {
@@ -74,21 +74,21 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Mock OnHardCapReached
+        /// Mock OnHardCapReached.
         /// </summary>
         public override void OnHardCapReached()
         {
         }
 
         /// <summary>
-        /// Mock OnSoftCapReached
+        /// Mock OnSoftCapReached.
         /// </summary>
         public override void OnSoftCapReached()
         {
         }
 
         /// <summary>
-        /// Mock OnValueRelease
+        /// Mock OnValueRelease.
         /// </summary>
         public override void OnValueRelease(int sizeInBytes)
         {
@@ -96,7 +96,7 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Mock OnValueReuse
+        /// Mock OnValueReuse.
         /// </summary>
         public override void OnValueReuse(int bucketedSize)
         {
@@ -104,7 +104,7 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Mock SetBasePool
+        /// Mock SetBasePool.
         /// </summary>
         public override void SetBasePool<T>(BasePool<T> basePool)
         {

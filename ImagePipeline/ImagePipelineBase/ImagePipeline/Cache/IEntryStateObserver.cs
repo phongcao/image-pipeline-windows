@@ -8,7 +8,7 @@
         /// <summary>
         /// Called when the exclusivity status of the entry changes.
         ///
-        /// <para /> The item can be reused if it is exclusively owned by the cache.
+        /// <para />The item can be reused if it is exclusively owned by the cache.
         /// </summary>
         void OnExclusivityChanged(T key, bool isExclusive);
     }

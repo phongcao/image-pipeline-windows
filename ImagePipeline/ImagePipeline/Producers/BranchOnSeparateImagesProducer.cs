@@ -7,8 +7,9 @@ namespace ImagePipeline.Producers
     /// <summary>
     /// Producer that coordinates fetching two separate images.
     ///
-    /// <para />The first producer is kicked off, and once it has returned all its 
-    /// results, the second producer is kicked off if necessary.
+    /// <para />The first producer is kicked off, and once it has
+    /// returned all its results, the second producer is kicked
+    /// off if necessary.
     /// </summary>
     public class BranchOnSeparateImagesProducer : IProducer<EncodedImage>
     {
@@ -27,8 +28,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Start producing results for given context. Provided consumer is notified whenever 
-        /// progress is made (new value is ready or error occurs).
+        /// Start producing results for given context.
+        /// Provided consumer is notified whenever progress is made
+        /// (new value is ready or error occurs).
         /// </summary>
         public void ProduceResults(
             IConsumer<EncodedImage> consumer,
@@ -45,7 +47,7 @@ namespace ImagePipeline.Producers
             private IProducerContext _producerContext;
 
             /// <summary>
-            /// Instantiates the <see cref="OnFirstImageConsumer"/>
+            /// Instantiates the <see cref="OnFirstImageConsumer"/>.
             /// </summary>
             internal OnFirstImageConsumer(
                 IProducer<EncodedImage> inputProducer2,

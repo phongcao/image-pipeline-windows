@@ -122,7 +122,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         /// <summary>
         /// Test that a file is stored in a new file,
         /// and the bytes are stored plainly in the file.
-        /// @throws Exception
+        /// <exception cref="Exception"></exception>
         /// </summary>
         [TestMethod]
         public void TestStoreFile()
@@ -148,7 +148,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         /// Check what files are there.
         /// Uses an iterator to remove the one in the middle.
         /// Check that later.
-        /// @throws Exception
+        /// <exception cref="Exception"></exception>
         /// </summary>
         [TestMethod]
         public void TestRemoveWithIterator()
@@ -381,7 +381,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         /// <summary>
         /// Test that purgeUnexpectedResources deletes all files/directories outside the version directory
         /// but leaves untouched the version directory and the content files.
-        /// @throws Exception
+        /// <exception cref="Exception"></exception>
         /// </summary>
         [TestMethod]
         public void TestPurgeUnexpectedFiles()
@@ -447,7 +447,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         /// <summary>
         /// Tests that an existing directory is nuked when it's not current version (doens't have
         /// the version directory used for the structure)
-        /// @throws Exception
+        /// <exception cref="Exception"></exception>
         /// </summary>
         [TestMethod]
         public void TestDirectoryIsNuked()
@@ -477,7 +477,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         /// <summary>
         /// Tests that an existing directory is not nuked if the version directory used for the structure
         /// exists (so it's current version and doesn't suffer Samsung RFS problem)
-        /// @throws Exception
+        /// <exception cref="Exception"></exception>
         /// </summary>
         [TestMethod]
         public void TestDirectoryIsNotNuked()
@@ -515,7 +515,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         /// <summary>
         /// Test the iterator returned is ok and deletion through the iterator is ok too.
         /// This is the required functionality that eviction needs.
-        /// @throws Exception
+        /// <exception cref="Exception"></exception>
         /// </summary>
         [TestMethod]
         public void TestIterationAndRemoval()

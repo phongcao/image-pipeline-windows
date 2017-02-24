@@ -7,7 +7,8 @@ using System;
 namespace ImagePipeline.Producers
 {
     /// <summary>
-    /// Multiplex producer that uses the bitmap memory cache key to combine requests.
+    /// Multiplex producer that uses the bitmap memory cache key
+    /// to combine requests.
     /// </summary>
     public class BitmapMemoryCacheKeyMultiplexProducer :
         MultiplexProducer<Tuple<ICacheKey, int>, CloseableReference<CloseableImage>>
@@ -15,7 +16,7 @@ namespace ImagePipeline.Producers
         private readonly ICacheKeyFactory _cacheKeyFactory;
 
         /// <summary>
-        /// Instantiates the <see cref="BitmapMemoryCacheKeyMultiplexProducer"/>
+        /// Instantiates the <see cref="BitmapMemoryCacheKeyMultiplexProducer"/>.
         /// </summary>
         public BitmapMemoryCacheKeyMultiplexProducer(
             ICacheKeyFactory cacheKeyFactory,

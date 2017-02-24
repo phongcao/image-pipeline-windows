@@ -8,7 +8,7 @@ namespace ImagePipeline.Producers
     public class SettableProducerContext : BaseProducerContext
     {
         /// <summary>
-        /// Instantiates the <see cref="SettableProducerContext"/>
+        /// Instantiates the <see cref="SettableProducerContext"/>.
         /// </summary>
         public SettableProducerContext(
             ImageRequest imageRequest,
@@ -32,7 +32,6 @@ namespace ImagePipeline.Producers
 
         /// <summary>
         /// Set whether the request is a prefetch request or not.
-        /// <param name="isPrefetch"></param>
         /// </summary>
         public void SetIsPrefetch(bool isPrefetch)
         {
@@ -40,8 +39,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Set whether intermediate result is expected or not
-        /// <param name="isIntermediateResultExpected"></param>
+        /// Set whether intermediate result is expected or not.
         /// </summary>
         public void SetIsIntermediateResultExpected(bool isIntermediateResultExpected)
         {
@@ -50,8 +48,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Set the priority of the request
-        /// <param name="priority"></param>
+        /// Set the priority of the request.
         /// </summary>
         public void SetPriority(int priority)
         {

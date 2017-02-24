@@ -3,10 +3,10 @@
 namespace ImagePipeline.Memory
 {
     /// <summary>
-   /// A simple 'counter' that keeps track of the number of items (Count) as well as the byte
-   /// mCount for the number of items
-   /// WARNING: this class is not synchronized - the caller must ensure the appropriate
-   /// synchronization
+   /// A simple 'counter' that keeps track of the number of items (Count)
+   /// as well as the byte _count for the number of items.
+   /// WARNING: this class is not synchronized - the caller must ensure
+   /// the appropriate synchronization.
    /// </summary>
     class Counter
     {
@@ -15,9 +15,11 @@ namespace ImagePipeline.Memory
         public int NumBytes { get; set; }
 
         /// <summary>
-        /// Add a new item to the counter
-        /// <param name="numBytes">Size of the item in bytes</param>
+        /// Add a new item to the counter.
         /// </summary>
+        /// <param name="numBytes">
+        /// Size of the item in bytes.
+        /// </param>
         public void Increment(int numBytes)
         {
             Count++;
@@ -25,9 +27,11 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// 'Decrement' an item from the counter
-        /// <param name="numBytes">Size of the item in bytes</param>
+        /// 'Decrement' an item from the counter.
         /// </summary>
+        /// <param name="numBytes">
+        /// Size of the item in bytes.
+        /// </param>
         public void Decrement(int numBytes)
         {
             if (NumBytes >= numBytes && Count > 0)
@@ -42,7 +46,7 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Reset the counter
+        /// Reset the counter.
         /// </summary>
         public void Reset()
         {

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 namespace FBCore.Concurrency
 {
     /// <summary>
-    /// An executor service that runs each task in the thread that 
-    /// invokes <code> execute/submit</code>.
+    /// An executor service that runs each task in the thread that invokes
+    /// <code>Execute/Submit</code>.
     /// </summary>
     public class CallerThreadExecutor : IExecutorService
     {
@@ -18,7 +18,7 @@ namespace FBCore.Concurrency
         }
 
         /// <summary>
-        /// Singleton
+        /// Singleton.
         /// </summary>
         /// <returns></returns>
         public static CallerThreadExecutor Instance
@@ -38,7 +38,7 @@ namespace FBCore.Concurrency
         }
 
         /// <summary>
-        /// Runs the given action on this thread. 
+        /// Runs the given action on this thread.
         /// </summary>
         /// <remarks>
         /// The action will be submitted to the end of the event queue

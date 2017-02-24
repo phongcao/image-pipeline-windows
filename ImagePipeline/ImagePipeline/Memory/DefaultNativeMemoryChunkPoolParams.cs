@@ -6,28 +6,28 @@ using Windows.System;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// Provides pool parameters (<see cref="PoolParams"/>) for <see cref="NativeMemoryChunkPool"/>
-    ///
+    /// Provides pool parameters (<see cref="PoolParams"/>) for
+    /// <see cref="NativeMemoryChunkPool"/>.
     /// </summary>
     public static class DefaultNativeMemoryChunkPoolParams
     {
         /// <summary>
-        /// Length of 'small' sized buckets. Bucket lengths for these buckets are larger because
-        /// they're smaller in size
+        /// Length of 'small' sized buckets. Bucket lengths for
+        /// these buckets are larger because they're smaller in size.
         /// </summary>
         // Phong Cao: Increases bucket length for Windows devices
         private const int SMALL_BUCKET_LENGTH = 20; // 5;
 
         /// <summary>
-        /// Bucket lengths for 'large' (> 256KB) buckets
+        /// Bucket lengths for 'large' (> 256KB) buckets.
         /// </summary>
         // Phong Cao: Increases bucket length for Windows devices
         private const int LARGE_BUCKET_LENGTH = 10; // 2;
 
         /// <summary>
-        /// Gets the default pool params
+        /// Gets the default pool params.
         /// </summary>
-        /// <returns>The default pool params</returns>
+        /// <returns>The default pool params.</returns>
         public static PoolParams Get()
         {
             Dictionary<int, int> DEFAULT_BUCKETS = new Dictionary<int, int>();

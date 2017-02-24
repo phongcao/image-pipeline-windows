@@ -8,8 +8,8 @@ using Windows.Graphics.Imaging;
 namespace ImagePipeline.Datasource
 {
     /// <summary>
-    /// Implementation of <see cref="IDataSubscriber{T}"/> for cases where the client wants to 
-    /// access a list of bitmaps.
+    /// Implementation of <see cref="IDataSubscriber{T}"/> for cases where
+    /// the client wants to access a list of bitmaps.
     ///
     /// <para />
     /// Sample usage:
@@ -35,7 +35,8 @@ namespace ImagePipeline.Datasource
         BaseDataSubscriber<IList<CloseableReference<CloseableImage>>>
     {
         /// <summary>
-        /// Called whenever a new value is ready to be retrieved from the IDataSource.
+        /// Called whenever a new value is ready to be retrieved from
+        /// the IDataSource.
         /// </summary>
         public override async Task OnNewResultImpl(
             IDataSource<IList<CloseableReference<CloseableImage>>> dataSource)
@@ -81,11 +82,12 @@ namespace ImagePipeline.Datasource
         }
 
         /// <summary>
-       /// The bitmap list provided to this method is only guaranteed to be around for the lifespan 
-       /// of the method. This list can be null or the elements in it can be null.
+       /// The bitmap list provided to this method is only guaranteed to be
+       /// around for the lifespan of the method. This list can be null or
+       /// the elements in it can be null.
        ///
-       /// <para />The framework will free the bitmaps in the list from memory after this method 
-       /// has completed.
+       /// <para />The framework will free the bitmaps in the list from
+       /// memory after this method has completed.
        /// </summary>
         protected abstract Task OnNewResultListImpl(IList<SoftwareBitmap> bitmapList);
     }

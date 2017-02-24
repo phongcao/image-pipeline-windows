@@ -10,48 +10,50 @@ using System.Threading.Tasks;
 namespace ImagePipeline.Image
 {
     /// <summary>
-    /// Class that contains all the information for an encoded image, both the image bytes (held on
-    /// a byte buffer or a supplier of input streams) and the extracted meta data that is useful for
+    /// Class that contains all the information for an encoded image, both the
+    /// image bytes (held on a byte buffer or a supplier of input streams) and
+    /// the extracted meta data that is useful for
     /// image transforms.
     ///
-    /// <para />Only one of the input stream supplier or the byte buffer can be set. If using an 
-    /// input stream supplier, the methods that return a byte buffer will simply return null. However, 
-    /// GetInputStream will always be supported, either from the supplier or an input stream created 
-    /// from the byte buffer held.
+    /// <para />Only one of the input stream supplier or the byte buffer can
+    /// be set. If using an  input stream supplier, the methods that return a
+    /// byte buffer will simply return null. However,  GetInputStream will
+    /// always be supported, either from the supplier or an input stream
+    /// created from the byte buffer held.
     ///
     /// <para />Currently the data is useful for rotation and resize.
     /// </summary>
     public sealed class EncodedImage : IDisposable
     {
         /// <summary>
-        /// Rotation angle default value
+        /// Rotation angle default value.
         /// </summary>
         public const int UNKNOWN_ROTATION_ANGLE = -1;
 
         /// <summary>
-        /// Width default value
+        /// Width default value.
         /// </summary>
         public const int UNKNOWN_WIDTH = -1;
 
         /// <summary>
-        /// Height default value
+        /// Height default value.
         /// </summary>
         public const int UNKNOWN_HEIGHT = -1;
 
         /// <summary>
-        /// Stream size default value
+        /// Stream size default value.
         /// </summary>
         public const int UNKNOWN_STREAM_SIZE = -1;
 
         /// <summary>
-        /// Sample size default value
+        /// Sample size default value.
         /// </summary>
         public const int DEFAULT_SAMPLE_SIZE = 1;
 
         private readonly object _imageGate = new object();
 
-        // Only one of this will be set. The EncodedImage can either be backed by 
-        // a ByteBuffer or a ISupplier of Stream, but not both.
+        // Only one of this will be set. The EncodedImage can either be backed
+        // by a ByteBuffer or a ISupplier of Stream, but not both.
         private readonly CloseableReference<IPooledByteBuffer> _pooledByteBufferRef;
         private readonly ISupplier<FileStream> _inputStreamSupplier;
 
@@ -68,7 +70,7 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Instantiates the <see cref="EncodedImage"/> with provided params
+        /// Instantiates the <see cref="EncodedImage"/> with provided params.
         /// </summary>
         public EncodedImage(ISupplier<FileStream> inputStreamSupplier)
         {
@@ -78,7 +80,7 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Instantiates the <see cref="EncodedImage"/> with provided params
+        /// Instantiates the <see cref="EncodedImage"/> with provided params.
         /// </summary>
         public EncodedImage(ISupplier<FileStream> inputStreamSupplier, int streamSize) : 
             this(inputStreamSupplier)
@@ -87,18 +89,19 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-         /// Returns the cloned encoded image if the parameter received is not null, null otherwise.
-         ///
-         /// <param name="encodedImage">the EncodedImage to clone</param>
-         /// </summary>
+        /// Returns the cloned encoded image if the parameter received is
+        /// not null, null otherwise.
+        /// </summary>
+        /// <param name="encodedImage">The EncodedImage to clone.</param>
         public static EncodedImage CloneOrNull(EncodedImage encodedImage)
         {
             return encodedImage != null ? encodedImage.CloneOrNull() : null;
         }
 
         /// <summary>
-        /// Returns a new CloseableReference to the same underlying SharedReference 
-        /// or null if invalid. The SharedReference ref-count is incremented.
+        /// Returns a new CloseableReference to the same underlying
+        /// SharedReference or null if invalid. The SharedReference
+        /// ref-count is incremented.
         /// </summary>
         public EncodedImage CloneOrNull()
         {
@@ -119,8 +122,8 @@ namespace ImagePipeline.Image
                 }
                 finally
                 {
-                    // Close the recently created reference since it will be cloned again in 
-                    // the constructor.
+                    // Close the recently created reference since it will be
+                    // cloned again in the constructor.
                     CloseableReference<IPooledByteBuffer>.CloseSafely(pooledByteBufferRef);
                 }
             }
@@ -148,8 +151,8 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Returns true if the internal buffer reference is valid or the stream supplier is not null,
-        /// false otherwise.
+        /// Returns true if the internal buffer reference is valid or the
+        /// stream supplier is not null, false otherwise.
         /// </summary>
         public bool Valid
         {
@@ -166,7 +169,8 @@ namespace ImagePipeline.Image
         /// <summary>
         /// Returns a cloned reference to the stored encoded bytes.
         ///
-        /// <para />The caller has to close the reference once it has finished using it.
+        /// <para />The caller has to close the reference once it has finished
+        /// using it.
         /// </summary>
         public CloseableReference<IPooledByteBuffer> GetByteBufferRef()
         {
@@ -174,8 +178,9 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Returns a stream from the internal stream supplier if it's not null. Otherwise
-        /// returns an stream for the internal buffer reference if valid and null otherwise.
+        /// Returns a stream from the internal stream supplier if it's not null.
+        /// Otherwise returns an stream for the internal buffer reference if
+        /// valid and null otherwise.
         ///
         /// <para />The caller has to close the stream after using it.
         /// </summary>
@@ -205,38 +210,38 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Image format
+        /// Image format.
         /// </summary>
         public ImageFormat Format { get; set; } = ImageFormat.UNKNOWN;
 
         /// <summary>
-        /// Image height
+        /// Image height.
         /// </summary>
         public int Height { get; set; } = UNKNOWN_HEIGHT;
 
         /// <summary>
-        /// Image width
+        /// Image width.
         /// </summary>
         public int Width { get; set; } = UNKNOWN_WIDTH;
 
         /// <summary>
-        /// Rotation angle
+        /// Rotation angle.
         /// </summary>
         public int RotationAngle { get; set; } = UNKNOWN_ROTATION_ANGLE;
 
         /// <summary>
-        /// Sample size
+        /// Sample size.
         /// </summary>
         public int SampleSize { get; set; } = DEFAULT_SAMPLE_SIZE;
 
         /// <summary>
-        /// Stream size
+        /// Stream size.
         /// </summary>
         public int StreamSize { get; set; } = UNKNOWN_STREAM_SIZE;
 
         /// <summary>
-        /// Returns true if the image is a JPEG and its data is already complete at the 
-        /// specified length, false otherwise.
+        /// Returns true if the image is a JPEG and its data is already complete
+        /// at the specified length, false otherwise.
         /// </summary>
         public bool IsCompleteAt(int length)
         {
@@ -245,8 +250,8 @@ namespace ImagePipeline.Image
                 return true;
             }
 
-            // If the image is backed by FileStream return true since they will always be 
-            // complete.
+            // If the image is backed by FileStream return true since they will
+            // always be complete.
             if (_inputStreamSupplier != null)
             {
                 return true;
@@ -262,7 +267,8 @@ namespace ImagePipeline.Image
         /// <summary>
         /// Returns the size of the backing structure.
         ///
-        /// <para /> If it's a PooledByteBuffer returns its size if its not null, -1 otherwise. 
+        /// <para />If it's a PooledByteBuffer returns its size if its not null,
+        /// -1 otherwise. 
         /// If it's a stream, return the size if it was set, -1 otherwise.
         /// </summary>
         public int Size
@@ -288,9 +294,9 @@ namespace ImagePipeline.Image
 
             Format = format;
 
-            // Dimensions decoding is not yet supported for WebP since BitmapUtil.DecodeDimensions 
-            // has a bug where it will return 100x100 for some WebPs even though those are not its 
-            // actual dimensions.
+            // Dimensions decoding is not yet supported for WebP since
+            // BitmapUtil.DecodeDimensions has a bug where it will return 100x100 for
+            // some WebPs even though those are not its actual dimensions.
             if (!ImageFormatHelper.IsWebpFormat(Format))
             {
                 Tuple<int, int> dimensions = 
@@ -320,9 +326,10 @@ namespace ImagePipeline.Image
 
         /// <summary>
         /// Copy the meta data from another EncodedImage.
-        ///
-        /// <param name="encodedImage">the EncodedImage to copy the meta data from.</param>
         /// </summary>
+        /// <param name="encodedImage">
+        /// The EncodedImage to copy the meta data from.
+        /// </param>
         public void CopyMetaDataFrom(EncodedImage encodedImage)
         {
             Format = encodedImage.Format;
@@ -345,9 +352,10 @@ namespace ImagePipeline.Image
 
         /// <summary>
         /// Closes the encoded image handling null.
-        ///
-        /// <param name="encodedImage">the encoded image to close.</param>
         /// </summary>
+        /// <param name="encodedImage">
+        /// The encoded image to close.
+        /// </param>
         public static void CloseSafely(EncodedImage encodedImage)
         {
             if (encodedImage != null)
@@ -357,8 +365,9 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Checks if the encoded image is valid i.e. is not null, and is not closed.
-        /// @return true if the encoded image is valid
+        /// Checks if the encoded image is valid i.e. is not null, and
+        /// is not closed.
+        /// <returns>True if the encoded image is valid.</returns>
         /// </summary>
         public static bool IsValid(EncodedImage encodedImage)
         {

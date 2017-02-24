@@ -3,7 +3,7 @@
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// Provides the custom implemetation for <see cref="IMemoryCacheTracker"/>
+    /// Provides the custom implemetation for <see cref="IMemoryCacheTracker"/>.
     /// </summary>
     public class MemoryCacheTrackerImpl : IMemoryCacheTracker
     {
@@ -12,7 +12,7 @@ namespace ImagePipeline.Cache
         private Action _onCachePutFunc;
 
         /// <summary>
-        /// Instantiates the <see cref="MemoryCacheTrackerImpl"/>
+        /// Instantiates the <see cref="MemoryCacheTrackerImpl"/>.
         /// </summary>
         public MemoryCacheTrackerImpl(
             Action onCacheHitFunc,
@@ -25,7 +25,7 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        ///  On cache hit
+        /// On cache hit.
         /// </summary>
         public void OnCacheHit()
         {
@@ -33,7 +33,7 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// On cache miss
+        /// On cache miss.
         /// </summary>
         public void OnCacheMiss()
         {
@@ -41,7 +41,7 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        ///  On cache put
+        /// On cache put.
         /// </summary>
         public void OnCachePut()
         {

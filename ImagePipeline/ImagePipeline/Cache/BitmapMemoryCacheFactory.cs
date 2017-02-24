@@ -4,12 +4,12 @@ using ImagePipeline.Image;
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// Bitmap memory cache factory
+    /// Bitmap memory cache factory.
     /// </summary>
     public class BitmapMemoryCacheFactory
     {
         /// <summary>
-        /// Gets the instrumented memory cache
+        /// Gets the instrumented memory cache.
         /// </summary>
         public static IMemoryCache<ICacheKey, CloseableImage> Get(
             CountingMemoryCache<ICacheKey, CloseableImage> bitmapCountingMemoryCache,

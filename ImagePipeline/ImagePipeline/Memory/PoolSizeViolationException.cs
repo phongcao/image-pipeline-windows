@@ -3,8 +3,8 @@
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// Indicates that the pool size will exceed the hard cap if we allocated a value
-    /// of size 'allocSize'
+    /// Indicates that the pool size will exceed the hard cap if we
+    /// allocated a value of size 'allocSize'.
     /// </summary>
     class PoolSizeViolationException : Exception
     {

@@ -6,12 +6,12 @@ using System.IO;
 namespace FBCore.Common.References
 {
     /// <summary>
-    /// DefaultResourceReleaser for CloseableReference
+    /// DefaultResourceReleaser for CloseableReference{T}.
     /// </summary>
     public class DefaultResourceReleaser<T> : IResourceReleaser<T>
     {
         /// <summary>
-        /// Default release method
+        /// Default release method.
         /// </summary>
         public void Release(T value)
         {

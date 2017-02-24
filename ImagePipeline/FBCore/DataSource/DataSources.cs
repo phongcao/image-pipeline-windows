@@ -4,7 +4,8 @@ using System;
 namespace FBCore.DataSource
 {
     /// <summary>
-    /// Static utility methods pertaining to the <see cref="IDataSource{T}"/> interface.
+    /// Static utility methods pertaining to the <see cref="IDataSource{T}"/>
+    /// interface.
     /// </summary>
     public class DataSources
     {
@@ -13,7 +14,7 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Instantiates an immediate failed data source
+        /// Instantiates an immediate failed data source.
         /// </summary>
         public static IDataSource<T> ImmediateFailedDataSource<T>(Exception failure)
         {
@@ -23,7 +24,7 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Instantiates an immediate data source
+        /// Instantiates an immediate data source.
         /// </summary>
         public static IDataSource<T> ImmediateDataSource<T>(T result)
         {
@@ -33,7 +34,7 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Gets the failed data source supplier of the given failure
+        /// Gets the failed data source supplier of the given failure.
         /// </summary>
         public static ISupplier<IDataSource<T>> GetFailedDataSourceSupplier<T>(Exception failure)
         {

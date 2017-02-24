@@ -1,4 +1,5 @@
 ﻿using FBCore.Common.References;
+using System;
 using Windows.Graphics.Imaging;
 
 namespace ImagePipeline.Bitmaps
@@ -10,13 +11,17 @@ namespace ImagePipeline.Bitmaps
     {
         /// <summary>
         /// Creates a bitmap of the specified width and height.
+        /// </summary>
         /// <param name="width">The width of the bitmap.</param>
         /// <param name="height">The height of the bitmap.</param>
-        /// <param name="bitmapConfig">The <see cref="BitmapPixelFormat"/> used to create the 
-        /// decoded Bitmap.</param>
-        /// @return a reference to the bitmap
-        /// @exception OutOfMemoryError if the Bitmap cannot be allocated
-        /// </summary>
+        /// <param name="bitmapConfig">
+        /// The <see cref="BitmapPixelFormat"/> used to create the 
+        /// decoded Bitmap.
+        /// </param>
+        /// <returns>A reference to the bitmap.</returns>
+        /// <exception cref="OutOfMemoryException">
+        /// if the Bitmap cannot be allocated.
+        /// </exception>
         public override CloseableReference<SoftwareBitmap> CreateBitmapInternal(
             int width,
             int height,

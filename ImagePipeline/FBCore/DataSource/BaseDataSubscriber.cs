@@ -3,8 +3,9 @@
 namespace FBCore.DataSource
 {
     /// <summary>
-    /// Base implementation of <see cref="IDataSubscriber{T}"/> that ensures that 
-    /// the data source is closed when the subscriber has finished with it.
+    /// Base implementation of <see cref="IDataSubscriber{T}"/> that
+    /// ensures that the data source is closed when the subscriber
+    /// has finished with it.
     /// <para />
     /// Sample usage:
     /// 
@@ -33,21 +34,23 @@ namespace FBCore.DataSource
     public abstract class BaseDataSubscriber<T> : IDataSubscriber<T>
     {
         /// <summary>
-        /// Called whenever a new value is ready to be retrieved from the IDataSource.
+        /// Called whenever a new value is ready to be retrieved
+        /// from the IDataSource.
         ///
-        /// <para />To retrieve the new value, call <code> dataSource.GetResult()</code>.
+        /// <para />To retrieve the new value, call
+        /// <code>dataSource.GetResult()</code>.
         ///
         /// <para />To determine if the new value is the last, use 
-        /// <code> dataSource.IsFinished</code>.
-        ///
-        /// <param name="dataSource"></param>
+        /// <code>dataSource.IsFinished</code>.
         /// </summary>
+        /// <param name="dataSource">The data source.</param>
         public async Task OnNewResult(IDataSource<T> dataSource)
         {
-            // IsFinished should be checked before calling OnNewResultImpl(), otherwise
-            // there would be a race condition: the final data source result might be ready before
-            // we call IsFinished here, which would lead to the loss of the final result
-            // (because of an early dataSource.Dipose() call).
+            // IsFinished should be checked before calling OnNewResultImpl(),
+            // otherwise there would be a race condition: the final data
+            // source result might be ready before we call IsFinished here,
+            // which would lead to the loss of the final result (because of
+            // an early dataSource.Dispose() call).
             bool shouldClose = dataSource.IsFinished();
 
             try
@@ -66,10 +69,11 @@ namespace FBCore.DataSource
         /// <summary>
         /// Called whenever an error occurs inside of the pipeline.
         ///
-        /// <para />No further results will be produced after this method is called.
+        /// <para />No further results will be produced after this
+        /// method is called.
         ///
-        /// <para />The throwable resulting from the failure can be obtained using
-        /// <code> dataSource.GetFailureCause</code>.
+        /// <para />The throwable resulting from the failure can be
+        /// obtained using <code>dataSource.GetFailureCause</code>.
         ///
         /// <param name="dataSource"></param>
         /// </summary>
@@ -86,36 +90,35 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Called whenever the request is cancelled (a request being cancelled means that is 
-        /// was closed before it finished).
+        /// Called whenever the request is cancelled (a request being
+        /// cancelled means that is was closed before it finished).
         ///
-        /// <para />No further results will be produced after this method is called.
-        ///
-        /// <param name="dataSource"></param>
+        /// <para />No further results will be produced after this
+        /// method is called.
         /// </summary>
+        /// <param name="dataSource">The data source.</param>
         public void OnCancellation(IDataSource<T> dataSource)
         {
         }
 
         /// <summary>
         /// Called when the progress updates.
-        ///
-        /// <param name="dataSource"></param>
         /// </summary>
+        /// <param name="dataSource">The data source.</param>
         public void OnProgressUpdate(IDataSource<T> dataSource)
         {
         }
 
         /// <summary>
-        /// Implementation for OnNewResult
+        /// Implementation for OnNewResult.
         /// </summary>
-        /// <param name="dataSource"></param>
+        /// <param name="dataSource">The data source.</param>
         public abstract Task OnNewResultImpl(IDataSource<T> dataSource);
 
         /// <summary>
-        /// Implementation for OnFailure
+        /// Implementation for OnFailure.
         /// </summary>
-        /// <param name="dataSource"></param>
+        /// <param name="dataSource">The data source.</param>
         public abstract void OnFailureImpl(IDataSource<T> dataSource);
     }
 }

@@ -7,8 +7,8 @@ namespace ImagePipeline.Producers
     /// <summary>
     /// <see cref="StatefulRunnable{T}"/> intended to be used by producers.
     ///
-    /// <para /> Class implements common functionality related to handling producer instrumentation and
-    /// resource management.
+    /// <para />Class implements common functionality related to handling
+    /// producer instrumentation and resource management.
     /// </summary>
     public abstract class StatefulProducerRunnable<T> : StatefulRunnable<T>
     {
@@ -18,7 +18,7 @@ namespace ImagePipeline.Producers
         private readonly string _requestId;
 
         /// <summary>
-        /// Instantiates the <see cref="StatefulProducerRunnable{T}"/>
+        /// Instantiates the <see cref="StatefulProducerRunnable{T}"/>.
         /// </summary>
         public StatefulProducerRunnable(
             IConsumer<T> consumer,
@@ -36,7 +36,6 @@ namespace ImagePipeline.Producers
 
         /// <summary>
         /// Called after computing result successfully.
-        /// <param name="result"></param>
         /// </summary>
         protected override void OnSuccess(T result)
         {
@@ -49,7 +48,6 @@ namespace ImagePipeline.Producers
 
         /// <summary>
         /// Called if exception occurred during computation.
-        /// <param name="e"></param>
         /// </summary>
         protected override void OnFailure(Exception e)
         {
@@ -74,7 +72,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Create extra map for result
+        /// Create extra map for result.
         /// </summary>
         protected virtual IDictionary<string, string> GetExtraMapOnSuccess(T result)
         {
@@ -82,7 +80,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Create extra map for exception
+        /// Create extra map for exception.
         /// </summary>
         protected virtual IDictionary<string, string> GetExtraMapOnFailure(Exception exception)
         {
@@ -90,7 +88,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Create extra map for cancellation
+        /// Create extra map for cancellation.
         /// </summary>
         protected virtual IDictionary<string, string> GetExtraMapOnCancellation()
         {
@@ -98,8 +96,8 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called after OnSuccess callback completes in order to dispose the result.
-        /// <param name="result"></param>
+        /// Called after OnSuccess callback completes in order to
+        /// dispose the result.
         /// </summary>
         protected override abstract void DisposeResult(T result);
     }

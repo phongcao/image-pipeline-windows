@@ -21,7 +21,7 @@ namespace ImagePipeline.Producers
         private IProducer<CloseableReference<CloseableImage>> _inputProducer;
 
         /// <summary>
-        /// Instantiates the <see cref="PostprocessedBitmapMemoryCacheProducer"/>
+        /// Instantiates the <see cref="PostprocessedBitmapMemoryCacheProducer"/>.
         /// </summary>
         public PostprocessedBitmapMemoryCacheProducer(
             IMemoryCache<ICacheKey, CloseableImage> memoryCache,
@@ -34,8 +34,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Start producing results for given context. Provided consumer is notified whenever 
-        /// progress is made (new value is ready or error occurs).
+        /// Start producing results for given context.
+        /// Provided consumer is notified whenever progress is made
+        /// (new value is ready or error occurs).
         /// </summary>
         public void ProduceResults(
             IConsumer<CloseableReference<CloseableImage>> consumer, 
@@ -46,7 +47,8 @@ namespace ImagePipeline.Producers
             ImageRequest imageRequest = producerContext.ImageRequest;
             object callerContext = producerContext.CallerContext;
 
-            // If there's no postprocessor or the postprocessor doesn't require caching, forward results.
+            // If there's no postprocessor or the postprocessor doesn't
+            // require caching, forward results.
             IPostprocessor postprocessor = imageRequest.Postprocessor;
             if (postprocessor == null || postprocessor.PostprocessorCacheKey == null)
             {
@@ -126,7 +128,8 @@ namespace ImagePipeline.Producers
             protected override void OnNewResultImpl(
                 CloseableReference<CloseableImage> newResult, bool isLast)
             {
-                // ignore invalid intermediate results and forward the null result if last
+                // ignore invalid intermediate results and forward the null result
+                // if last
                 if (newResult == null)
                 {
                     if (isLast)

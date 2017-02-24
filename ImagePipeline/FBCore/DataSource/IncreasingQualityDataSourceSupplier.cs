@@ -14,30 +14,37 @@ namespace FBCore.DataSource
     /// <para />Data sources are obtained in order. The first data source 
     /// in array is considered to be of the highest quality. The first data 
     /// source to provide an result gets forwarded until one of the higher 
-    /// quality data sources provides its final image at which point that data 
-    /// source gets forwarded (and so on). That being said, only the first data 
-    /// source to provide an result is streamed.
+    /// quality data sources provides its final image at which point that
+    /// data source gets forwarded (and so on). That being said, only the
+    /// first data source to provide an result is streamed.
     ///
-    /// <para />Outcome (success/failure) of the data source provided by this 
-    /// supplier is determined by the outcome of the highest quality data 
-    /// source (the first data source in the array).
+    /// <para />Outcome (success/failure) of the data source provided by
+    /// this supplier is determined by the outcome of the highest quality
+    /// data source (the first data source in the array).
     /// </summary>
     public class IncreasingQualityDataSourceSupplier<T> : ISupplier<IDataSource<T>>
     {
         private readonly IList<ISupplier<IDataSource<T>>> _dataSourceSuppliers;
 
-        private IncreasingQualityDataSourceSupplier(IList<ISupplier<IDataSource<T>>> dataSourceSuppliers)
+        private IncreasingQualityDataSourceSupplier(
+            IList<ISupplier<IDataSource<T>>> dataSourceSuppliers)
         {
-            Preconditions.CheckArgument(dataSourceSuppliers.Count != 0, "List of suppliers is empty!");
+            Preconditions.CheckArgument(
+                dataSourceSuppliers.Count != 0, "List of suppliers is empty!");
+
             _dataSourceSuppliers = dataSourceSuppliers;
         }
 
         /// <summary>
-        /// Creates a new data source supplier with increasing-quality strategy.
-        /// <para />Note: for performance reasons the list doesn't get cloned, 
-        /// so the caller of this method should not modify the list once passed in here.
-        /// <param name="dataSourceSuppliers">list of underlying suppliers</param>
+        /// Creates a new data source supplier with increasing-quality
+        /// strategy.
+        /// <para />Note: for performance reasons the list doesn't get
+        /// cloned, so the caller of this method should not modify the
+        /// list once passed in here.
         /// </summary>
+        /// <param name="dataSourceSuppliers">
+        /// List of underlying suppliers.
+        /// </param>
         public static IncreasingQualityDataSourceSupplier<T> Create(
             IList<ISupplier<IDataSource<T>>> dataSourceSuppliers)
         {
@@ -45,27 +52,25 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Gets the increasing quality data source
+        /// Gets the increasing quality data source.
         /// </summary>
-        /// <returns></returns>
         public IDataSource<T> Get()
         {
             return new IncreasingQualityDataSource(_dataSourceSuppliers);
         }
 
         /// <summary>
-        /// Custom GetHashCode method
+        /// Custom GetHashCode method.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return _dataSourceSuppliers.GetHashCode();
         }
 
         /// <summary>
-        /// Compares with other IncreasingQualityDataSourceSupplier objects
+        /// Compares with other IncreasingQualityDataSourceSupplier
+        /// objects.
         /// </summary>
-        /// <param name="other"></param>
         public override bool Equals(object other)
         {
             if (other == this)
@@ -83,9 +88,8 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Custom ToString method
+        /// Custom ToString method.
         /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
             return $"{ base.ToString() }{{list={ _dataSourceSuppliers.ToString() }}}";
@@ -112,6 +116,7 @@ namespace FBCore.DataSource
                     dataSource.Subscribe(
                         new InternalDataSubscriber(this, i), 
                         CallerThreadExecutor.Instance);
+
                     // there's no point in creating data sources of lower quality
                     // if the data source of a higher quality has some result already
                     if (dataSource.HasResult())
@@ -181,9 +186,10 @@ namespace FBCore.DataSource
                 IList<IDataSource<T>> dataSources;
                 lock (_gate)
                 {
-                    // it's fine to call <code> base.Close()</code> within a 
-                    // synchronized block because we don't implement <see cref="CloseResult()"/>, 
-                    // but perform result closing ourselves.
+                    // it's fine to call <code>base.Close()</code> within a 
+                    // synchronized block because we don't implement
+                    // <see cref="CloseResult()"/>, but perform result closing
+                    // ourselves.
                     if (!base.Close())
                     {
                         return false;
@@ -208,8 +214,9 @@ namespace FBCore.DataSource
             {
                 MaybeSetIndexOfDataSourceWithResult(index, dataSource, dataSource.IsFinished());
 
-                // If the data source with the new result is our <code> mIndexOfDataSourceWithResult</code>,
-                // we have to notify our subscribers about the new result.
+                // If the data source with the new result is our
+                // <code>_indexOfDataSourceWithResult</code>, we have to notify
+                // our subscribers about the new result.
                 if (dataSource == GetDataSourceWithResult())
                 {
                     SetResult(default(T), (index == 0) && dataSource.IsFinished());
@@ -241,11 +248,13 @@ namespace FBCore.DataSource
                         return;
                     }
 
-                    // If we didn't have any result so far, we got one now, so we'll set
-                    // <code> _indexOfDataSourceWithResult</code> to point to the data source with result.
+                    // If we didn't have any result so far, we got one now,
+                    // so we'll set <code>_indexOfDataSourceWithResult</code>
+                    // to point to the data source with result.
                     // If we did have a result which came from another data source,
-                    // we'll only set <code> _indexOfDataSourceWithResult</code> to point to the current data source
-                    // if it has finished (i.e. the new result is final), and is of higher quality.
+                    // we'll only set <code>_indexOfDataSourceWithResult</code> to
+                    // point to the current data source if it has finished
+                    // (i.e. the new result is final), and is of higher quality.
                     if (GetDataSourceWithResult() == default(IDataSource<T>) ||
                         (isFinished && index < _indexOfDataSourceWithResult))
                     {

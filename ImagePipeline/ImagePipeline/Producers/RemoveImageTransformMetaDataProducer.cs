@@ -7,8 +7,9 @@ namespace ImagePipeline.Producers
     /// <summary>
     /// Remove image transform meta data producer.
     ///
-    /// <para />Remove the ImageTransformMetaData object from the results passed down from 
-    /// the next producer, and adds it to the result that it returns to the consumer.
+    /// <para />Remove the ImageTransformMetaData object from the results
+    /// passed down from the next producer, and adds it to the result that
+    /// it returns to the consumer.
     /// </summary>
     public class RemoveImageTransformMetaDataProducer :
         IProducer<CloseableReference<IPooledByteBuffer>>
@@ -16,7 +17,7 @@ namespace ImagePipeline.Producers
         private readonly IProducer<EncodedImage> _inputProducer;
 
         /// <summary>
-        /// Instantiates the <see cref="RemoveImageTransformMetaDataProducer"/>
+        /// Instantiates the <see cref="RemoveImageTransformMetaDataProducer"/>.
         /// </summary>
         public RemoveImageTransformMetaDataProducer(IProducer<EncodedImage> inputProducer)
         {
@@ -24,8 +25,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Start producing results for given context. Provided consumer is notified whenever 
-        /// progress is made (new value is ready or error occurs).
+        /// Start producing results for given context.
+        /// Provided consumer is notified whenever progress is made
+        /// (new value is ready or error occurs).
         /// </summary>
         public void ProduceResults(
             IConsumer<CloseableReference<IPooledByteBuffer>> consumer, 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ImagePipeline.Producers
 {
     /// <summary>
-    /// <see cref="ThreadHandoffProducer{T}"/> queue
+    /// <see cref="ThreadHandoffProducer{T}"/> queue.
     /// </summary>
     public class ThreadHandoffProducerQueue
     {
@@ -18,9 +18,8 @@ namespace ImagePipeline.Producers
         private readonly IExecutorService _executor;
 
         /// <summary>
-        /// Instantiates the <see cref="ThreadHandoffProducerQueue"/>
+        /// Instantiates the <see cref="ThreadHandoffProducerQueue"/>.
         /// </summary>
-        /// <param name="executor"></param>
         public ThreadHandoffProducerQueue(IExecutorService executor)
         {
             _queueing = false;
@@ -29,7 +28,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Adds the action to the end of the queue
+        /// Adds the action to the end of the queue.
         /// </summary>
         public void AddToQueueOrExecute(Func<Task> runnable)
         {
@@ -47,7 +46,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Starts queueing
+        /// Starts queueing.
         /// </summary>
         public void StartQueueing()
         {
@@ -58,7 +57,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Stops queueing
+        /// Stops queueing.
         /// </summary>
         public void StopQueuing()
         {
@@ -81,7 +80,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Removes the action
+        /// Removes the action.
         /// </summary>
         public void Remove(Func<Task> runnable)
         {
@@ -92,7 +91,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Checks if it's queueing
+        /// Checks if it's queueing.
         /// </summary>
         public bool IsQueueing()
         {

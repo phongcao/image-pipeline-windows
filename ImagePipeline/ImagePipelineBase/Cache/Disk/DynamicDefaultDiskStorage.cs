@@ -41,13 +41,8 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Instantiates the <see cref="DynamicDefaultDiskStorage"/>
+        /// Instantiates the <see cref="DynamicDefaultDiskStorage"/>.
         /// </summary>
-        /// <param name="version"></param>
-        /// <param name="baseDirectoryPathSupplier"></param>
-        /// <param name="baseDirectoryName"></param>
-        /// <param name="cacheErrorLogger"></param>
-        /// <param name="clock"></param>
         public DynamicDefaultDiskStorage(
             int version,
             ISupplier<FileSystemInfo> baseDirectoryPathSupplier,
@@ -65,8 +60,8 @@ namespace Cache.Disk
 
         /// <summary>
         /// Is this storage enabled?
-        /// @return true, if enabled
         /// </summary>
+        /// <returns>true, if enabled.</returns>
         public bool IsEnabled
         {
             get
@@ -84,8 +79,8 @@ namespace Cache.Disk
 
         /// <summary>
         /// Is this storage external?
-        /// @return true, if external
         /// </summary>
+        /// <returns>true, if external.</returns>
         public bool IsExternal
         {
             get
@@ -102,9 +97,9 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Get the storage's name, which should be unique
-        /// @return name of the this storage
+        /// Get the storage's name, which should be unique.
         /// </summary>
+        /// <returns>Name of the this storage.</returns>
         public string StorageName
         {
             get
@@ -121,12 +116,16 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Get the resource with the specified name
-        /// <param name="resourceId">id of the resource</param>
-        /// <param name="debugInfo">helper object for debugging</param>
-        /// @return the resource with the specified name. NULL if not found
-        /// @throws IOException for unexpected behavior.
+        /// Get the resource with the specified name.
         /// </summary>
+        /// <param name="resourceId">Id of the resource.</param>
+        /// <param name="debugInfo">Helper object for debugging.</param>
+        /// <returns>
+        /// The resource with the specified name. NULL if not found.
+        /// </returns>
+        /// <exception cref="IOException">
+        /// For unexpected behavior.
+        /// </exception>
         public virtual IBinaryResource GetResource(string resourceId, object debugInfo)
         {
             return Get().GetResource(resourceId, debugInfo);
@@ -134,31 +133,33 @@ namespace Cache.Disk
 
         /// <summary>
         /// Does a resource with this name exist?
-        /// <param name="resourceId">id of the resource</param>
-        /// <param name="debugInfo">helper object for debugging</param>
-        /// @return true, if the resource is present in the storage, false otherwise
-        /// @throws IOException
         /// </summary>
+        /// <param name="resourceId">Id of the resource.</param>
+        /// <param name="debugInfo">Helper object for debugging.</param>
+        /// <returns>
+        /// true, if the resource is present in the storage, false otherwise.
+        /// </returns>
         public bool Contains(string resourceId, object debugInfo)
         {
             return Get().Contains(resourceId, debugInfo);
         }
 
         /// <summary>
-        /// Does a resource with this name exist? If so, update the last-accessed time for the
-        /// resource
-        /// <param name="resourceId">id of the resource</param>
-        /// <param name="debugInfo">helper object for debugging</param>
-        /// @return true, if the resource is present in the storage, false otherwise
-        /// @throws IOException
+        /// Does a resource with this name exist? If so, update the last-accessed
+        /// time for the resource.
         /// </summary>
+        /// <param name="resourceId">Id of the resource.</param>
+        /// <param name="debugInfo">Helper object for debugging.</param>
+        /// <returns>
+        /// true, if the resource is present in the storage, false otherwise.
+        /// </returns>
         public virtual bool Touch(string resourceId, object debugInfo)
         {
             return Get().Touch(resourceId, debugInfo);
         }
 
         /// <summary>
-        /// Purge unexpected resources
+        /// Purge unexpected resources.
         /// </summary>
         public void PurgeUnexpectedResources()
         {
@@ -175,57 +176,60 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Creates a temporary resource for writing content. Split from commit()
+        /// Creates a temporary resource for writing content. Split from Commit()
         /// in order to allow concurrent writing of cache entries.
-        /// This entry will not be available to cache clients until
-        /// commit() is called passing in the resource returned
-        /// from this method.
-        /// <param name="resourceId">id of the resource</param>
-        /// <param name="debugInfo">helper object for debugging</param>
-        /// @return the Inserter object with methods to write data, commit or cancel the insertion
-        /// @exception IOException on errors during this operation
+        /// This entry will not be available to cache clients until Commit() is
+        /// called passing in the resource returned from this method.
         /// </summary>
+        /// <param name="resourceId">Id of the resource.</param>
+        /// <param name="debugInfo">Helper object for debugging.</param>
+        /// <returns>
+        /// The Inserter object with methods to write data, commit or cancel
+        /// the insertion.
+        /// </returns>
+        /// <exception cref="IOException">
+        /// On errors during this operation.
+        /// </exception>
         public IInserter Insert(string resourceId, object debugInfo)
         {
             return Get().Insert(resourceId, debugInfo);
         }
 
         /// <summary>
-        /// Get all entries currently in the storage
-        /// @return a collection of entries in storage
-        /// @throws IOException
+        /// Get all entries currently in the storage.
         /// </summary>
+        /// <returns>A collection of entries in storage.</returns>
         public ICollection<IEntry> GetEntries()
         {
             return Get().GetEntries();
         }
 
         /// <summary>
-        /// Remove the resource represented by the entry
-        /// <param name="entry">entry of the resource to delete</param>
-        /// @return size of deleted file if successfully deleted, -1 otherwise
-        /// @throws IOException
+        /// Remove the resource represented by the entry.
         /// </summary>
+        /// <param name="entry">Entry of the resource to delete.</param>
+        /// <returns>
+        /// Size of deleted file if successfully deleted, -1 otherwise.
+        /// </returns>
         public long Remove(IEntry entry)
         {
             return Get().Remove(entry);
         }
 
         /// <summary>
-        /// Remove the resource with specified id
-        /// <param name="resourceId"></param>
-        /// @return size of deleted file if successfully deleted, -1 otherwise
-        /// @throws IOException
+        /// Remove the resource with specified id.
         /// </summary>
+        /// <param name="resourceId">Resource Id.</param>
+        /// <returns>
+        /// Size of deleted file if successfully deleted, -1 otherwise.
+        /// </returns>
         public long Remove(string resourceId)
         {
             return Get().Remove(resourceId);
         }
 
         /// <summary>
-        /// Clear all contents of the storage
-        /// @exception IOException
-        /// @throws IOException
+        /// Clear all contents of the storage.
         /// </summary>
         public void ClearAll()
         {
@@ -233,7 +237,7 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Gets the disk dump info
+        /// Gets the disk dump info.
         /// </summary>
         public DiskDumpInfo GetDumpInfo()
         {
@@ -241,11 +245,12 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Gets a concrete disk-storage instance. If nothing has changed since the last call, then
-        /// the last state is returned
-        /// @return an instance of the appropriate DiskStorage class
-        /// @throws IOException
+        /// Gets a concrete disk-storage instance. If nothing has changed since
+        /// the last call, then the last state is returned.
         /// </summary>
+        /// <returns>
+        /// An instance of the appropriate IDiskStorage class.
+        /// </returns>
         internal IDiskStorage Get()
         {
             lock (_diskInstanceGate)
@@ -290,8 +295,11 @@ namespace Cache.Disk
         {
             DirectoryInfo rootDirectory = new DirectoryInfo(
                 Path.Combine(_baseDirectoryPathSupplier.Get().FullName, _baseDirectoryName));
+
             CreateRootDirectoryIfNecessary(rootDirectory);
-            IDiskStorage storage = new DefaultDiskStorage(rootDirectory, _version, _cacheErrorLogger, _clock);
+            IDiskStorage storage = new DefaultDiskStorage(
+                rootDirectory, _version, _cacheErrorLogger, _clock);
+
             _currentState = new State(rootDirectory, storage);
         }
 

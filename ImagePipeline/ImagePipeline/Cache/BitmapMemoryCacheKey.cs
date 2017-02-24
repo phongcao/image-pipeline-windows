@@ -8,7 +8,7 @@ using System;
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// Cache key for BitmapMemoryCache
+    /// Cache key for BitmapMemoryCache.
     /// </summary>
     public class BitmapMemoryCacheKey : ICacheKey
     {
@@ -23,7 +23,7 @@ namespace ImagePipeline.Cache
         private readonly long _cacheTime;
 
         /// <summary>
-        ///  Instantites the <see cref="BitmapMemoryCacheKey"/>
+        ///  Instantites the <see cref="BitmapMemoryCacheKey"/>.
         /// </summary>
         public BitmapMemoryCacheKey(
             string sourceString,
@@ -52,7 +52,7 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Returns the source uri
+        /// Returns the source uri.
         /// </summary>
         public string SourceUriString
         {
@@ -63,7 +63,7 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Gets the post processor name
+        /// Gets the post processor name.
         /// </summary>
         public string PostprocessorName
         {
@@ -74,7 +74,7 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Gets the caller context
+        /// Gets the caller context.
         /// </summary>
         public object CallerContext
         {
@@ -85,7 +85,7 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Gets the cache time
+        /// Gets the cache time.
         /// </summary>
         public long InBitmapCacheSince
         {
@@ -96,7 +96,8 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Provides the custom Equals method to compare with other BitmapMemoryCacheKey objects
+        /// Provides the custom Equals method to compare with other
+        /// BitmapMemoryCacheKey objects.
         /// </summary>
         public override bool Equals(object o)
         {
@@ -116,18 +117,16 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Calculates the hash code basing on properties
+        /// Calculates the hash code basing on properties.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return _hash;
         }
 
         /// <summary>
-        /// Provides the custom ToString method
+        /// Provides the custom ToString method.
         /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
             return string.Format(
@@ -142,8 +141,9 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Returns true if this key was constructed from this <see cref="Uri"/>.
-        ///
+        /// Returns true if this key was constructed from this
+        /// <see cref="Uri"/>.
+        /// 
         /// Used for cases like deleting all keys for a given uri.
         /// </summary>
         public bool ContainsUri(Uri uri)

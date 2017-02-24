@@ -14,7 +14,7 @@ namespace ImagePipeline.Producers
         private readonly ICacheKeyFactory _cacheKeyFactory;
 
         /// <summary>
-        /// Instantiates the <see cref="EncodedCacheKeyMultiplexProducer"/>
+        /// Instantiates the <see cref="EncodedCacheKeyMultiplexProducer"/>.
         /// </summary>
         public EncodedCacheKeyMultiplexProducer(
             ICacheKeyFactory cacheKeyFactory,

@@ -7,12 +7,12 @@ using ImagePipeline.Memory;
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// Factory for the encoded <see cref="CountingMemoryCache{K, V}"/>
+    /// Factory for the encoded <see cref="CountingMemoryCache{K, V}"/>.
     /// </summary>
     public class EncodedCountingMemoryCacheFactory
     {
         /// <summary>
-        /// Returns the encoded <see cref="CountingMemoryCache{K, V}"/>
+        /// Returns the encoded <see cref="CountingMemoryCache{K, V}"/>.
         /// </summary>
         public static CountingMemoryCache<ICacheKey, IPooledByteBuffer> Get(
             ISupplier<MemoryCacheParams> encodedMemoryCacheParamsSupplier,

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace ImagePipeline.Producers
 {
     /// <summary>
-    /// Manages jobs so that only one can be executed at a time and no more often than once in
-    /// <code>_minimumJobIntervalMs</code> milliseconds.
+    /// Manages jobs so that only one can be executed at a time and no more
+    /// often than once in <code>_minimumJobIntervalMs</code> milliseconds.
     /// </summary>
     public class JobScheduler
     {
@@ -29,20 +29,20 @@ namespace ImagePipeline.Producers
         private readonly int _minimumJobIntervalMs;
 
         /// <summary>
-        /// Job data
+        /// Job data.
         /// </summary>
         internal EncodedImage _encodedImage;
         internal bool _isLast;
 
         /// <summary>
-        /// Job state
+        /// Job state.
         /// </summary>
         internal JobState _jobState;
         internal long _jobSubmitTime;
         internal long _jobStartTime;
 
         /// <summary>
-        /// Instantiates the <see cref="JobScheduler"/>
+        /// Instantiates the <see cref="JobScheduler"/>.
         /// </summary>
         public JobScheduler(
             IExecutorService executor,
@@ -62,8 +62,8 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Clears the currently set job.
         ///
-        /// <para /> In case the currently set job has been scheduled but not started yet, the 
-        /// job won't be executed.
+        /// <para /> In case the currently set job has been scheduled but
+        /// not started yet, the job won't be executed.
         /// </summary>
         public void ClearJob()
         {
@@ -81,12 +81,14 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Updates the job.
         ///
-        /// <para /> This just updates the job, but it doesn't schedule it. In order to be executed, 
-        /// the job has to be scheduled after being set. In case there was a previous job scheduled 
-        /// that has not yet started, this new job will be executed instead.
-        ///
-        /// @return whether the job was successfully updated.
+        /// <para />This just updates the job, but it doesn't schedule it.
+        /// In order to be executed, the job has to be scheduled after
+        /// being set. In case there was a previous job scheduled that has
+        /// not yet started, this new job will be executed instead.
         /// </summary>
+        /// <returns>
+        /// Whether the job was successfully updated.
+        /// </returns>
         public bool UpdateJob(EncodedImage encodedImage, bool isLast)
         {
             if (!ShouldProcess(encodedImage, isLast))
@@ -109,14 +111,18 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Schedules the currently set job (if any).
         ///
-        /// <para /> This method can be called multiple times. It is guaranteed that each job 
-        /// set will be executed no more than once. It is guaranteed that the last job set will 
-        /// be executed, unless the job was cleared first.
-        /// <para /> The job will be scheduled no sooner than <code>minimumJobIntervalMs</code> 
-        /// milliseconds since the last job started.
-        ///
-        /// @return true if the job was scheduled, false if there was no valid job to be scheduled.
+        /// <para /> This method can be called multiple times. It is
+        /// guaranteed that each job set will be executed no more than
+        /// once. It is guaranteed that the last job set will be executed,
+        /// unless the job was cleared first.
+        /// <para />The job will be scheduled no sooner than
+        /// <code>minimumJobIntervalMs</code> milliseconds since the last
+        /// job started.
         /// </summary>
+        /// <returns>
+        /// true if the job was scheduled, false if there was no valid job
+        /// to be scheduled.
+        /// </returns>
         public bool ScheduleJob()
         {
             long now = SystemClock.UptimeMillis;

@@ -12,32 +12,34 @@ namespace ImagePipeline.Producers
     /// <summary>
     /// A producer to actually fetch images from the network.
     ///
-    /// <para /> Downloaded bytes may be passed to the consumer as they are downloaded, 
-    /// but not more often than <see cref="TIME_BETWEEN_PARTIAL_RESULTS_MS"/>.
+    /// <para />Downloaded bytes may be passed to the consumer as they are
+    /// downloaded, but not more often than
+    /// <see cref="TIME_BETWEEN_PARTIAL_RESULTS_MS"/>.
     /// <para />
-    /// Clients should provide an instance of <see cref="INetworkFetcher{FetchState}"/> 
-    /// to make use of their networking stack. Use <see cref="HttpUrlConnectionNetworkFetcher"/> 
-    /// as a model.
+    /// Clients should provide an instance of <see cref="INetworkFetcher{FetchState}"/>
+    /// to make use of their networking stack.
+    /// Use <see cref="HttpUrlConnectionNetworkFetcher"/> as a model.
     /// </summary>
     public class NetworkFetchProducer : IProducer<EncodedImage>
     {
         /// <summary>
-        /// Producer name
+        /// Producer name.
         /// </summary>
         internal const string PRODUCER_NAME = "NetworkFetchProducer";
 
         /// <summary>
-        /// Intermediate result producer event
+        /// Intermediate result producer event.
         /// </summary>
         public const string INTERMEDIATE_RESULT_PRODUCER_EVENT = "intermediate_result";
 
         /// <summary>
-        /// Read size
+        /// Read size.
         /// </summary>
         private const int READ_SIZE = 16 * ByteConstants.KB;
 
         /// <summary>
-        /// Time between two consecutive partial results are propagated upstream
+        /// Time between two consecutive partial results are propagated
+        /// upstream.
         ///
         /// TODO 5399646: make this configurable
         /// </summary>
@@ -48,11 +50,8 @@ namespace ImagePipeline.Producers
         private readonly INetworkFetcher<FetchState> _networkFetcher;
 
         /// <summary>
-        /// Instantiates the <see cref="NetworkFetchProducer"/>
+        /// Instantiates the <see cref="NetworkFetchProducer"/>.
         /// </summary>
-        /// <param name="pooledByteBufferFactory"></param>
-        /// <param name="byteArrayPool"></param>
-        /// <param name="networkFetcher"></param>
         public NetworkFetchProducer(
             IPooledByteBufferFactory pooledByteBufferFactory,
             IByteArrayPool byteArrayPool,
@@ -64,8 +63,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Start producing results for given context. Provided consumer is notified whenever 
-        /// progress is made (new value is ready or error occurs).
+        /// Start producing results for given context.
+        /// Provided consumer is notified whenever progress is made
+        /// (new value is ready or error occurs).
         /// </summary>
         public void ProduceResults(IConsumer<EncodedImage> consumer, IProducerContext context)
         {
@@ -132,8 +132,9 @@ namespace ImagePipeline.Producers
             }
             else
             {
-                // If we don't know the total number of bytes, we approximate the progress by an exponential
-                // that approaches 1. Here are some values of the progress, given the number of bytes:
+                // If we don't know the total number of bytes, we approximate
+                // the progress by an exponential that approaches 1. Here are
+                // some values of the progress, given the number of bytes:
                 // 0.5 kB ~  1%
                 // 2.5 kB ~  5%
                 //   5 kB ~ 10%

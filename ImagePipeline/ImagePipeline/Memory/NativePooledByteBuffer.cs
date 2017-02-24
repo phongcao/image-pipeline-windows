@@ -5,8 +5,8 @@ using System;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// An implementation of <see cref="IPooledByteBuffer"/> that uses native memory
-    /// (<see cref="NativeMemoryChunk"/>) to store data
+    /// An implementation of <see cref="IPooledByteBuffer"/> that uses
+    /// native memory (<see cref="NativeMemoryChunk"/>) to store data.
     /// </summary>
     public sealed class NativePooledByteBuffer : IPooledByteBuffer
     {
@@ -18,8 +18,6 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Instantiates the <see cref="NativePooledByteBuffer"/>.
         /// </summary>
-        /// <param name="bufRef"></param>
-        /// <param name="size"></param>
         public NativePooledByteBuffer(CloseableReference<NativeMemoryChunk> bufRef, int size)
         {
             Preconditions.CheckNotNull(bufRef);
@@ -29,10 +27,12 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Gets the size of the bytebuffer if it is valid. Otherwise, an exception is raised
-        /// @return the size of the bytebuffer if it is not closed.
-        /// @throws <see cref="ClosedException"/>
+        /// Gets the size of the bytebuffer if it is valid. Otherwise,
+        /// an exception is raised.
         /// </summary>
+        /// <returns>
+        /// The size of the bytebuffer if it is not closed.
+        /// </returns>
         public int Size
         {
             get
@@ -46,10 +46,8 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Read one byte 
+        /// Reads one byte.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <returns></returns>
         public byte Read(int offset)
         {
             lock (_poolGate)
@@ -62,28 +60,26 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Read a byte buffer
+        /// Reads a byte buffer.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="buffer"></param>
-        /// <param name="bufferOffset"></param>
-        /// <param name="length"></param>
         public void Read(int offset, byte[] buffer, int bufferOffset, int length)
         {
             lock (_poolGate)
             {
                 EnsureValid();
-                // We need to make sure that PooledByteBuffer's length is preserved.
-                // Al the other bounds checks will be performed by NativeMemoryChunk.read method.
+
+                // We need to make sure that IPooledByteBuffer's length
+                // is preserved.
+                // Al the other bounds checks will be performed by 
+                // NativeMemoryChunk.Read method.
                 Preconditions.CheckArgument(offset + length <= _size);
                 _bufRef.Get().Read(offset, buffer, bufferOffset, length);
             }
         }
 
         /// <summary>
-        /// Get the native pointer
+        /// Get the native pointer.
         /// </summary>
-        /// <returns></returns>
         public long GetNativePtr()
         {
             lock (_poolGate)
@@ -94,9 +90,9 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Check if this bytebuffer is already closed
-        /// @return true if this bytebuffer is closed.
+        /// Check if this bytebuffer is already closed.
         /// </summary>
+        /// <returns>true if this bytebuffer is closed.</returns>
         public bool IsClosed
         {
             get
@@ -109,8 +105,9 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Closes this instance, and releases the underlying buffer to the pool.
-        /// Once the bytebuffer has been closed, subsequent operations will fail.
+        /// Closes this instance, and releases the underlying buffer
+        /// to the pool. Once the bytebuffer has been closed, subsequent
+        /// operations will fail.
         /// Note: It is not an error to close an already closed bytebuffer.
         /// </summary>
         public void Dispose()
@@ -132,10 +129,11 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Validates that the bytebuffer instance is valid (aka not closed). If it is closed, 
-        /// then we raise a ClosedException.
-        /// This doesn't really need to be synchronized, but lint won't shut up otherwise.
-        /// @throws ClosedException.
+        /// Validates that the bytebuffer instance is valid
+        /// (aka not closed).
+        /// If it is closed, then we raise a ClosedException.
+        /// This doesn't really need to be synchronized, but
+        /// lint won't shut up otherwise.
         /// </summary>
         private void EnsureValid()
         {

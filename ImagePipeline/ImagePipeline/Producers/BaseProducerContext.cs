@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace ImagePipeline.Producers
 {
     /// <summary>
-    /// ProducerContext that can be cancelled. Exposes low level API to manipulate state of the
-    /// ProducerContext.
+    /// IProducerContext that can be cancelled.
+    /// Exposes low level API to manipulate state of the IProducerContext.
     /// </summary>
     public class BaseProducerContext : IProducerContext
     {
@@ -51,8 +51,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// @return image request that is being executed
+        /// Gets the image request.
         /// </summary>
+        /// <returns>Image request that is being executed.</returns>
         public ImageRequest ImageRequest
         {
             get
@@ -62,8 +63,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// @return id of this request
+        /// Gets the request id.
         /// </summary>
+        /// <returns>Id of this request.</returns>
         public string Id
         {
             get
@@ -73,8 +75,11 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// @return IProducerListener for producer's events
+        /// Gets the producer listener.
         /// </summary>
+        /// <returns>
+        /// IProducerListener for producer's events.
+        /// </returns>
         public IProducerListener Listener
         {
             get
@@ -84,8 +89,11 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// @return the <see cref="object"/> that indicates the caller's context
+        /// Gets the caller context.
         /// </summary>
+        /// <returns>
+        /// The <see cref="object"/> that indicates the caller's context.
+        /// </returns>
         public object CallerContext
         {
             get
@@ -95,8 +103,11 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// @return the lowest permitted <see cref="RequestLevel"/>
+        /// Gets the lowest permitted request level.
         /// </summary>
+        /// <returns>
+        /// The lowest permitted <see cref="RequestLevel"/>.
+        /// </returns>
         public int LowestPermittedRequestLevel
         {
             get
@@ -106,8 +117,11 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// @return true if the request is a prefetch, false otherwise.
+        /// Checks if the request is a prefetch.
         /// </summary>
+        /// <returns>
+        /// true if the request is a prefetch, false otherwise.
+        /// </returns>
         public bool IsPrefetch
         {
             get
@@ -120,8 +134,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// @return priority of the request.
+        /// Gets the priority of the request.
         /// </summary>
+        /// <returns>Priority of the request.</returns>
         public int Priority
         {
             get
@@ -134,8 +149,11 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// @return true if request's owner expects intermediate results
+        /// Checks if request's owner expects intermediate results.
         /// </summary>
+        /// <returns>
+        /// true if request's owner expects intermediate results.
+        /// </returns>
         public bool IsIntermediateResultExpected
         {
             get
@@ -148,8 +166,11 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// @return true if the request is cancelled, false otherwise.
+        /// Checks if the request is cancelled.
         /// </summary>
+        /// <returns>
+        /// true if the request is cancelled, false otherwise.
+        /// </returns>
         public bool IsCancelled
         {
             get
@@ -162,10 +183,10 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Adds callbacks to the set of callbacks that are executed at various points during the
-        /// processing of a request.
-        /// <param name="callbacks">callbacks to be executed</param>
+        /// Adds callbacks to the set of callbacks that are executed at
+        /// various points during the processing of a request.
         /// </summary>
+        /// <param name="callbacks">Callbacks to be executed.</param>
         public void AddCallbacks(IProducerContextCallbacks callbacks)
         {
             bool cancelImmediately = false;
@@ -195,12 +216,15 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Changes isPrefetch property.
         ///
-        /// <para /> This method does not call any callbacks. Instead, caller of this method is responsible for
-        /// iterating over returned list and calling appropriate method on each callback object.
-        /// {@see CallOnIsPrefetchChanged}
-        ///
-        /// @return list of callbacks if the value actually changes, null otherwise
+        /// <para />This method does not call any callbacks. Instead,
+        /// caller of this method is responsible for iterating over
+        /// returned list and calling appropriate method on each
+        /// callback object. See <see cref="CallOnIsPrefetchChanged"/>.
         /// </summary>
+        /// <returns>
+        /// List of callbacks if the value actually changes,
+        /// null otherwise.
+        /// </returns>
         public IList<IProducerContextCallbacks> SetIsPrefetchNoCallbacks(bool isPrefetch)
         {
             lock (_gate)
@@ -218,12 +242,15 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Changes priority.
         ///
-        /// <para /> This method does not call any callbacks. Instead, caller of this method is responsible for
-        /// iterating over returned list and calling appropriate method on each callback object.
-        /// {@see CallOnPriorityChanged}
-        ///
-        /// @return list of callbacks if the value actually changes, null otherwise
+        /// <para />This method does not call any callbacks. Instead,
+        /// caller of this method is responsible for iterating over
+        /// returned list and calling appropriate method on each
+        /// callback object. See <see cref="CallOnPriorityChanged"/>.
         /// </summary>
+        /// <returns>
+        /// List of callbacks if the value actually changes,
+        /// null otherwise.
+        /// </returns>
         public IList<IProducerContextCallbacks> SetPriorityNoCallbacks(int priority)
         {
             lock (_gate)
@@ -241,12 +268,15 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Changes IsIntermediateResultExpected property.
         ///
-        /// <para /> This method does not call any callbacks. Instead, caller of this method is responsible for
-        /// iterating over returned list and calling appropriate method on each callback object.
-        /// {@see CallOnIntermediateResultChanged}
-        ///
-        /// @return list of callbacks if the value actually changes, null otherwise
+        /// <para />This method does not call any callbacks. Instead,
+        /// caller of this method is responsible for iterating over
+        /// returned list and calling appropriate method on each
+        /// callback object.
         /// </summary>
+        /// <returns>
+        /// List of callbacks if the value actually changes,
+        /// null otherwise.
+        /// </returns>
         public IList<IProducerContextCallbacks> SetIsIntermediateResultExpectedNoCallbacks(
             bool isIntermediateResultExpected)
         {
@@ -263,14 +293,17 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Marks this ProducerContext as cancelled.
+        /// Marks this IProducerContext as cancelled.
         ///
-        /// <para /> This method does not call any callbacks. Instead, caller of this method is responsible for
-        /// iterating over returned list and calling appropriate method on each callback object.
-        /// {@see CallOnCancellationRequested}
-        ///
-        /// @return list of callbacks if the value actually changes, null otherwise
+        /// <para />This method does not call any callbacks. Instead,
+        /// caller of this method is responsible for iterating over
+        /// returned list and calling appropriate method on each
+        /// callback object. See <see cref="CallOnCancellationRequested"/>.
         /// </summary>
+        /// <returns>
+        /// List of callbacks if the value actually changes,
+        /// null otherwise.
+        /// </returns>
         public IList<IProducerContextCallbacks> CancelNoCallbacks()
         {
             lock (_gate)
@@ -286,7 +319,8 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Calls <code> OnCancellationRequested</code> on each element of the list. Does nothing if list == null
+        /// Calls <code>OnCancellationRequested</code> on each element
+        /// of the list. Does nothing if list == null.
         /// </summary>
         public static void CallOnCancellationRequested(
             IList<IProducerContextCallbacks> callbacks)
@@ -303,7 +337,8 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Calls <code> OnIsPrefetchChanged</code> on each element of the list. Does nothing if list == null
+        /// Calls <code>OnIsPrefetchChanged</code> on each element
+        /// of the list. Does nothing if list == null.
         /// </summary>
         public static void CallOnIsPrefetchChanged(
             IList<IProducerContextCallbacks> callbacks)
@@ -320,8 +355,8 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Calls <code> OnIsIntermediateResultExpected</code> on each element of the list. Does nothing if
-        /// list == null
+        /// Calls <code>OnIsIntermediateResultExpected</code> on
+        /// each element of the list. Does nothing if list == null
         /// </summary>
         public static void CallOnIsIntermediateResultExpectedChanged(
             IList<IProducerContextCallbacks> callbacks)
@@ -338,7 +373,8 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Calls <code> OnPriorityChanged</code> on each element of the list. Does nothing if list == null
+        /// Calls <code>OnPriorityChanged</code> on each element
+        /// of the list. Does nothing if list == null.
         /// </summary>
         public static void CallOnPriorityChanged(IList<IProducerContextCallbacks> callbacks)
         {

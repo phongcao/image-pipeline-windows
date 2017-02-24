@@ -121,6 +121,7 @@ namespace ImagePipeline.Tests.Producers
         /// </summary>
         public void Dispose()
         {
+            _completion.Dispose();
             ((MockSerialExecutorService)_testExecutorService).Dispose();
         }
 

@@ -1,9 +1,8 @@
-﻿using ImagePipeline.Memory;
-
-namespace ImagePipeline.Memory
+﻿namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// Empty implementation of PoolStatsTracker that does not perform any tracking.
+    /// Empty implementation of PoolStatsTracker that does not
+    /// perform any tracking.
     /// </summary>
     public class NoOpPoolStatsTracker : PoolStatsTracker
     {
@@ -16,9 +15,8 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Singleton
+        /// Singleton.
         /// </summary>
-        /// <returns></returns>
         public static NoOpPoolStatsTracker Instance
         {
             get
@@ -36,56 +34,50 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Ignore tracking
+        /// Ignore tracking.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="basePool"></param>
         public override void SetBasePool<T>(BasePool<T> basePool)
         {
         }
 
         /// <summary>
-        /// Ignore tracking
+        /// Ignore tracking.
         /// </summary>
-        /// <param name="bucketedSize"></param>
         public override void OnValueReuse(int bucketedSize)
         {
         }
 
         /// <summary>
-        /// Ignore tracking
+        /// Ignore tracking.
         /// </summary>
         public override void OnSoftCapReached()
         {
         }
 
         /// <summary>
-        /// Ignore tracking
+        /// Ignore tracking.
         /// </summary>
         public override void OnHardCapReached()
         {
         }
 
         /// <summary>
-        /// Ignore tracking
+        /// Ignore tracking.
         /// </summary>
-        /// <param name="size"></param>
         public override void OnAlloc(int size)
         {
         }
 
         /// <summary>
-        /// Ignore tracking
+        /// Ignore tracking.
         /// </summary>
-        /// <param name="sizeInBytes"></param>
         public override void OnFree(int sizeInBytes)
         {
         }
 
         /// <summary>
-        /// Ignore tracking
+        /// Ignore tracking.
         /// </summary>
-        /// <param name="sizeInBytes"></param>
         public override void OnValueRelease(int sizeInBytes)
         {
         }   

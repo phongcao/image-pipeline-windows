@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -159,7 +160,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         /// files (which are not in the format expected by the cache) do not count
         /// towards the cache size, and are also evicted during both evictions (LRU and Old).
         ///
-        /// @throws Exception
+        /// <exception cref="Exception"></exception>
         /// </summary>
         [TestMethod]
         public void TestCacheFile()
@@ -436,7 +437,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         /// Test to make sure that the same item stored with two different versions
         /// of the cache will be stored with two different file names.
         ///
-        /// @throws UnsupportedEncodingException
+        /// <exception cref="EncoderFallbackException"></exception>
         /// </summary>
         [TestMethod]
         public void TestVersioning()

@@ -4,11 +4,8 @@ using System.Diagnostics;
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// CountingMemoryCache eviction strategy appropriate for caches that store resources off the Dalvik
-    /// heap.
-    ///
-    /// <para />In case of OnCloseToDalvikHeapLimit nothing will be done. In case of other trim types
-    /// eviction queue of the cache will be cleared.
+    /// CountingMemoryCache eviction strategy appropriate for caches that store
+    /// resources off the native heap.
     /// </summary>
     public class NativeMemoryCacheTrimStrategy : ICacheTrimStrategy
     {

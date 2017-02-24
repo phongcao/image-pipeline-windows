@@ -11,7 +11,8 @@ namespace ImageFormatUtils
         private const int FRAME_HEADER_SIZE = 10;
 
         /// <summary>
-        /// Every GIF frame header starts with a 4 byte static sequence consisting of the following bytes
+        /// Every GIF frame header starts with a 4 byte static sequence consisting
+        /// of the following bytes.
         /// </summary>
         private static readonly byte[] FRAME_HEADER_START = new byte[] 
         {
@@ -19,8 +20,8 @@ namespace ImageFormatUtils
         };
 
         /// <summary>
-        /// Every GIF frame header ends with a 2 byte static sequence consisting of one of
-        /// the following two sequences of bytes
+        /// Every GIF frame header ends with a 2 byte static sequence consisting of
+        /// one of the following two sequences of bytes.
         /// </summary>
         private static readonly byte[] FRAME_HEADER_END_1 = new byte[]
         {
@@ -35,11 +36,12 @@ namespace ImageFormatUtils
         private GifFormatChecker() { }
 
         /// <summary>
-        /// Checks if source contains more than one frame header in it in order to decide whether a GIF
-        /// image is animated or not.
-        ///
-        /// @return true if source contains more than one frame header in its bytes
+        /// Checks if source contains more than one frame header in it in order
+        /// to decide whether a GIF image is animated or not.
         /// </summary>
+        /// <returns>
+        /// true if source contains more than one frame header in its bytes.
+        /// </returns>
         public static bool IsAnimated(Stream source)
         {
             byte[] buffer = new byte[FRAME_HEADER_SIZE];
@@ -51,12 +53,14 @@ namespace ImageFormatUtils
                 int offset = 0;
                 int frameHeaders = 0;
 
-                // Read bytes into a circular buffer and check if it matches one of the frame header
-                // sequences. First byte can be ignored as it will be part of the GIF static header.
+                // Read bytes into a circular buffer and check if it matches one of the
+                // frame header sequences. First byte can be ignored as it will be part
+                // of the GIF static header.
                 while (source.Read(buffer, offset, 1) > 0)
                 {
-                    // This sequence of bytes might be found in the data section of the file, worst case
-                    // scenario this method will return true meaning that a static gif is animated.
+                    // This sequence of bytes might be found in the data section of the
+                    // file, worst case scenario this method will return true meaning
+                    // that a static gif is animated.
                     if (CircularBufferMatchesBytePattern(buffer, offset + 1, FRAME_HEADER_START) && 
                         (CircularBufferMatchesBytePattern(buffer, offset + 9, FRAME_HEADER_END_1) || 
                          CircularBufferMatchesBytePattern(buffer, offset + 9, FRAME_HEADER_END_2)))
@@ -82,11 +86,12 @@ namespace ImageFormatUtils
         /// <summary>
         /// Checks if the byte array matches a pattern.
         ///
-        /// <para />Instead of doing a normal scan, we treat the array as a circular buffer, with 'offset'
-        /// determining the start point.
-        ///
-        /// @return true if match succeeds, false otherwise
+        /// <para />Instead of doing a normal scan, we treat the array as a
+        /// circular buffer, with 'offset' determining the start point.
         /// </summary>
+        /// <returns>
+        /// true if match succeeds, false otherwise.
+        /// </returns>
         internal static bool CircularBufferMatchesBytePattern(
           byte[] byteArray, int offset, byte[] pattern)
         {

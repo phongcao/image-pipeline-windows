@@ -6,9 +6,8 @@
     public interface IAnimatedFactory
     {
         /// <summary>
-        /// Gets the animated image factory
+        /// Gets the animated image factory.
         /// </summary>
-        /// <returns></returns>
         IAnimatedImageFactory GetAnimatedImageFactory();
     }
 }

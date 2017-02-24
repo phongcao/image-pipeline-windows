@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Cache.Disk
 {
@@ -12,10 +11,8 @@ namespace Cache.Disk
         private readonly float _sizeWeight;
 
         /// <summary>
-        /// Instantiates the <see cref="ScoreBasedEvictionComparatorSupplier"/>
+        /// Instantiates the <see cref="ScoreBasedEvictionComparatorSupplier"/>.
         /// </summary>
-        /// <param name="ageWeight"></param>
-        /// <param name="sizeWeight"></param>
         public ScoreBasedEvictionComparatorSupplier(float ageWeight, float sizeWeight)
         {
             _ageWeight = ageWeight;
@@ -23,9 +20,8 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Returns the <see cref="IEntryEvictionComparator"/>
+        /// Returns the <see cref="IEntryEvictionComparator"/>.
         /// </summary>
-        /// <returns></returns>
         public IEntryEvictionComparator Get()
         {
             return new EntryEvictionComparatorImpl((lhs, rhs) =>

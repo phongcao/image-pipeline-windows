@@ -4,7 +4,7 @@ using Windows.Graphics.Imaging;
 namespace ImagePipeline.Bitmaps
 {
     /// <summary>
-    /// Provides custom implementation for <see cref="IBitmapCreationObserver" />
+    /// Provides custom implementation for <see cref="IBitmapCreationObserver" />.
     /// </summary>
     public class BitmapCreationObserverImpl : IBitmapCreationObserver
     {
@@ -13,17 +13,15 @@ namespace ImagePipeline.Bitmaps
         /// <summary>
         /// Instantiates the <see cref="BitmapCreationObserverImpl"/>.
         /// </summary>
-        /// <param name="func">Delegate function</param>
+        /// <param name="func">Delegate function.</param>
         public BitmapCreationObserverImpl(Action<SoftwareBitmap, object> func)
         {
             _func = func;
         }
 
         /// <summary>
-        /// Invokes the OnBitmapCreated method
+        /// Invokes the OnBitmapCreated method.
         /// </summary>
-        /// <param name="bitmap"></param>
-        /// <param name="callerContext"></param>
         public void OnBitmapCreated(SoftwareBitmap bitmap, object callerContext)
         {
             _func(bitmap, callerContext);

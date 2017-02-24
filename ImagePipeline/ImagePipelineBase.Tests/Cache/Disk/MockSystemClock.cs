@@ -37,7 +37,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         /// <summary>
         /// Gets the current time in milliseconds.
         ///
-        /// @return the current time in milliseconds.
+        /// <returns>the current time in milliseconds.</returns>
         /// </summary>
         public override long CurrentTimeMillis
         {
@@ -50,7 +50,7 @@ namespace ImagePipelineBase.Tests.Cache.Disk
         /// <summary>
         /// Gets the current time in milliseconds.
         ///
-        /// @return the current time in milliseconds.
+        /// <returns>the current time in milliseconds.</returns>
         /// </summary>
         public override DateTime Now
         {

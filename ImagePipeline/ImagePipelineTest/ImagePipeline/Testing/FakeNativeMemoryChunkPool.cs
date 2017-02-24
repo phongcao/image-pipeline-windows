@@ -5,7 +5,7 @@ using System.Threading;
 namespace ImagePipeline.Testing
 {
     /// <summary>
-    /// A 'fake' <see cref="NativeMemoryChunkPool"/> instance as a test helper
+    /// A 'fake' <see cref="NativeMemoryChunkPool"/> instance as a test helper.
     /// </summary>
     public class FakeNativeMemoryChunkPool : NativeMemoryChunkPool
     {
@@ -27,19 +27,16 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Fake Alloc method
+        /// Fake Alloc method.
         /// </summary>
-        /// <param name="bucketedSize"></param>
-        /// <returns></returns>
         protected override NativeMemoryChunk Alloc(int bucketedSize)
         {
             return new FakeNativeMemoryChunk(bucketedSize);
         }
 
         /// <summary>
-        /// Fake GetBucketSizes method
+        /// Fake GetBucketSizes method.
         /// </summary>
-        /// <returns></returns>
         private static Dictionary<int, int> GetBucketSizes()
         {
             Dictionary<int, int> bucketSizes = new Dictionary<int, int>();

@@ -43,6 +43,13 @@ for file in files:
         # @param
         content = re.sub(r"(@param )([^ \n]+) (.+)\n", r'<param name="\2">\3</param>\n', content)
         content = re.sub(r"(@param )([^ \n]+)\n", r'<param name="\2"></param>\n', content)
+		
+		# @return
+        content = re.sub(r"(@return )([^ \n]+) (.+)\n", r'<returns>\2 \3</returns>\n', content)
+		
+		# @throws
+        content = re.sub(r"(@throws )([^ \n]+) (.+)\n", r'<exception cref="\2">\3</exception>\n', content)
+        content = re.sub(r"(@throws )([^ \n]+)\n", r'<exception cref="\2"></exception>\n', content)
 
         # Write file
         fout.write(content)

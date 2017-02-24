@@ -7,22 +7,20 @@ namespace ImagePipeline.Memory
     /// <summary>
     /// Wrapper around chunk of native memory.
     ///
-    /// <para /> This class uses JNI to obtain pointer to native memory and read/write data from/to it.
-    ///
-    /// <para /> Native code used by this class is shipped as part of libimagepipeline.so
-    ///
+    /// <para />This class uses Windows Runtime to obtain pointer to
+    /// native memory and read/write data from/to it.
     /// </summary>
     public class NativeMemoryChunk : IDisposable
     {
         private readonly object _memoryChunkGate = new object();
 
         /// <summary>
-        /// Address of memory chunk wrapped by this NativeMemoryChunk
+        /// Address of memory chunk wrapped by this NativeMemoryChunk.
         /// </summary>
         private readonly long _nativePtr;
 
         /// <summary>
-        /// Size of the memory region
+        /// Size of the memory region.
         /// </summary>
         public virtual int Size
         {
@@ -33,7 +31,7 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Flag indicating if this object was closed
+        /// Flag indicating if this object was closed.
         /// </summary>
         private bool _closed;
 
@@ -42,7 +40,7 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Instantiates the <see cref="NativeMemoryChunk"/>.
         /// </summary>
-        /// <param name="size"></param>
+        /// <param name="size">The size of the chunk.</param>
         public NativeMemoryChunk(int size)
         {
             Preconditions.CheckArgument(size > 0);
@@ -62,7 +60,8 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// This has to be called before we get rid of this object in order to release underlying memory
+        /// This has to be called before we get rid of this object
+        /// in order to release underlying memory.
         /// </summary>
         public void Dispose()
         {
@@ -71,7 +70,8 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// This has to be called before we get rid of this object in order to release underlying memory
+        /// This has to be called before we get rid of this object
+        /// in order to release underlying memory.
         /// </summary>
         protected virtual void Dispose(bool disposing)
         {
@@ -91,9 +91,11 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Is this chunk already closed (aka freed) ?
-        /// @return true, if this chunk has already been closed
+        /// Is this chunk already closed (aka freed)?
         /// </summary>
+        /// <returns>
+        /// true, if this chunk has already been closed.
+        /// </returns>
         public virtual bool Closed
         {
             get
@@ -107,12 +109,20 @@ namespace ImagePipeline.Memory
 
         /// <summary>
         /// Copy bytes from byte array to native memory.
-        /// <param name="nativeMemoryOffset">number of first byte to be written by copy operation</param>
-        /// <param name="byteArray">byte array to copy from</param>
-        /// <param name="byteArrayOffset">number of first byte in byteArray to copy</param>
-        /// <param name="count">number of bytes to copy</param>
-        /// @return number of bytes written
         /// </summary>
+        /// <param name="nativeMemoryOffset">
+        /// Number of first byte to be written by copy operation.
+        /// </param>
+        /// <param name="byteArray">
+        /// Byte array to copy from.
+        /// </param>
+        /// <param name="byteArrayOffset">
+        /// Number of first byte in byteArray to copy.
+        /// </param>
+        /// <param name="count">
+        /// Number of bytes to copy.
+        /// </param>
+        /// <returns>Number of bytes written.</returns>
         public virtual int Write(
             int nativeMemoryOffset,
             byte[] byteArray,
@@ -136,12 +146,20 @@ namespace ImagePipeline.Memory
 
         /// <summary>
         /// Copy bytes from native memory to byte array.
-        /// <param name="nativeMemoryOffset">number of first byte to copy</param>
-        /// <param name="byteArray">byte array to copy to</param>
-        /// <param name="byteArrayOffset">number of first byte in byte array to be written</param>
-        /// <param name="count">number of bytes to copy</param>
-        /// @return number of bytes read
         /// </summary>
+        /// <param name="nativeMemoryOffset">
+        /// Number of first byte to copy.
+        /// </param>
+        /// <param name="byteArray">
+        /// Byte array to copy to.
+        /// </param>
+        /// <param name="byteArrayOffset">
+        /// Number of first byte in byte array to be written.
+        /// </param>
+        /// <param name="count">
+        /// Number of bytes to copy.
+        /// </param>
+        /// <returns>Number of bytes read.</returns>
         public virtual int Read(
             int nativeMemoryOffset,
             byte[] byteArray,
@@ -162,9 +180,9 @@ namespace ImagePipeline.Memory
 
         /// <summary>
         /// Read byte at given offset.
-        /// <param name="offset"></param>
-        /// @return byte at given offset
         /// </summary>
+        /// <param name="offset">The offset.</param>
+        /// <returns>Byte at given offset.</returns>
         public virtual byte Read(int offset)
         {
             lock (_memoryChunkGate)
@@ -177,13 +195,20 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Copy bytes from native memory wrapped by this NativeMemoryChunk instance to
-        /// native memory wrapped by other NativeMemoryChunk
-        /// <param name="offset">number of first byte to copy</param>
-        /// <param name="other">other NativeMemoryChunk to copy to</param>
-        /// <param name="otherOffset">number of first byte to write to</param>
-        /// <param name="count">number of bytes to copy</param>
+        /// Copy bytes from native memory wrapped by this
+        /// NativeMemoryChunk instance to native memory wrapped
+        /// by other NativeMemoryChunk.
         /// </summary>
+        /// <param name="offset">
+        /// Number of first byte to copy.
+        /// </param>
+        /// <param name="other">
+        /// Other NativeMemoryChunk to copy to.
+        /// </param>
+        /// <param name="otherOffset">
+        /// Number of first byte to write to.
+        /// </param>
+        /// <param name="count">Number of bytes to copy.</param>
         public virtual void Copy(
             int offset,
             NativeMemoryChunk other,
@@ -192,10 +217,12 @@ namespace ImagePipeline.Memory
         {
             Preconditions.CheckNotNull(other);
 
-            // This implementation acquires locks on this and other objects and then delegates to
-            // doCopy which does actual copy. In order to avoid deadlocks we have to establish some linear
-            // order on all NativeMemoryChunks and acquire locks according to this order. Fortunately
-            // we can use mNativePtr for that purpose. So we have to address 3 cases:
+            // This implementation acquires locks on this and other objects
+            // and then delegates to DoCopy which does actual copy. In order
+            // to avoid deadlocks we have to establish some linear order on
+            // all NativeMemoryChunks and acquire locks according to this
+            // order. Fortunately we can use _nativePtr for that purpose.
+            // So we have to address 3 cases:
 
             // Case 1: other memory chunk == this memory chunk
             if (other._nativePtr == _nativePtr)
@@ -225,17 +252,17 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Gets the native pointer
+        /// Gets the native pointer.
         /// </summary>
-        /// <returns>The native pointer</returns>
+        /// <returns>The native pointer.</returns>
         public long GetNativePtr()
         {
             return _nativePtr;
         }
 
         /// <summary>
-        /// This does actual copy. It should be called only when we hold locks on both this and
-        /// other objects
+        /// This does actual copy. It should be called only when we
+        /// hold locks on both this and other objects.
         /// </summary>
         private void DoCopy(
             int offset,
@@ -251,8 +278,8 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Computes number of bytes that can be safely read/written starting at given offset, but no more
-        /// than count.
+        /// Computes number of bytes that can be safely read/written
+        /// starting at given offset, but no more than count.
         /// </summary>
         private int AdjustByteCount(int offset, int count)
         {
@@ -261,7 +288,8 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Check that copy/read/write operation won't access memory it should not
+        /// Check that copy/read/write operation won't access memory
+        /// it should not.
         /// </summary>
         private void CheckBounds(
             int myOffset,

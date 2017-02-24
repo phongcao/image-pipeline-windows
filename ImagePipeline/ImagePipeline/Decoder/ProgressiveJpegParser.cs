@@ -9,47 +9,54 @@ using System.IO;
 namespace ImagePipeline.Decoder
 {
     /// <summary>
-    /// Progressively scans jpeg data and instructs caller when enough data is available to decode
-    /// a partial image.
+    /// Progressively scans jpeg data and instructs caller when enough data is
+    /// available to decode a partial image.
     ///
-    /// <para /> This class treats any sequence of bytes starting with 0xFFD8 as a valid jpeg image.
+    /// <para />This class treats any sequence of bytes starting with 0xFFD8
+    /// as a valid jpeg image.
     ///
-    /// <para /> Users should call parseMoreData method each time new chunk of data is received. 
-    /// The buffer passed as a parameter should include entire image data received so far.
+    /// <para />Users should call ParseMoreData method each time new chunk of
+    /// data is received. The buffer passed as a parameter should include entire
+    /// image data received so far.
     /// </summary>
     public class ProgressiveJpegParser
     {
         /// <summary>
-        /// Initial state of the parser. Next byte read by the parser should be 0xFF.
+        /// Initial state of the parser. Next byte read by the parser
+        /// should be 0xFF.
         /// </summary>
         private const int READ_FIRST_JPEG_BYTE = 0;
 
         /// <summary>
-        /// Parser saw only one byte so far (0xFF). Next byte should be second byte of SOI marker
+        /// Parser saw only one byte so far (0xFF). Next byte should
+        /// be second byte of SOI marker.
         /// </summary>
         private const int READ_SECOND_JPEG_BYTE = 1;
 
         /// <summary>
-        /// Next byte is either entropy coded data or first byte of a marker. First byte of marker
-        /// cannot appear in entropy coded data, unless it is followed by 0x00 escape byte.
+        /// Next byte is either entropy coded data or first byte of
+        /// a marker. First byte of marker cannot appear in entropy
+        /// coded data, unless it is followed by 0x00 escape byte.
         /// </summary>
         private const int READ_MARKER_FIRST_BYTE_OR_ENTROPY_DATA = 2;
 
         /// <summary>
-        /// Last read byte is 0xFF, possible start of marker (possible, because next byte might be
-        /// "escape byte" or 0xFF again)
+        /// Last read byte is 0xFF, possible start of marker (possible,
+        /// because next byte might be "escape byte" or 0xFF again).
         /// </summary>
         private const int READ_MARKER_SECOND_BYTE = 3;
 
         /// <summary>
-        /// Last two bytes constitute a marker that indicates start of a segment, the following two bytes
-        /// denote 16bit size of the segment
+        /// Last two bytes constitute a marker that indicates start
+        /// of a segment, the following two bytes denote 16-bit size
+        /// of the segment.
         /// </summary>
         private const int READ_SIZE_FIRST_BYTE = 4;
 
         /// <summary>
-        /// Last three bytes are marker and first byte of segment size, after reading next byte, bytes
-        /// constituting remaining part of segment will be skipped
+        /// Last three bytes are marker and first byte of segment size,
+        /// after reading next byte, bytes constituting remaining part
+        /// of segment will be skipped.
         /// </summary>
         private const int READ_SIZE_SECOND_BYTE = 5;
 
@@ -58,7 +65,9 @@ namespace ImagePipeline.Decoder
         /// </summary>
         private const int NOT_A_JPEG = 6;
 
-        ///  The buffer size in bytes to use. 
+        /// <summary>
+        /// The buffer size in bytes to use.
+        /// </summary> 
         private const int BUFFER_SIZE = 16 * ByteConstants.KB;
 
         private int _parserState;
@@ -70,7 +79,8 @@ namespace ImagePipeline.Decoder
         private int _bytesParsed;
 
         /// <summary>
-        /// Number of next fully parsed scan after reaching next SOS or EOI markers.
+        /// Number of next fully parsed scan after reaching next SOS
+        /// or EOI markers.
         /// </summary>
         private int _nextFullScanNumber;
 
@@ -95,16 +105,20 @@ namespace ImagePipeline.Decoder
         }
 
         /// <summary>
-        /// If this is the first time calling this method, the buffer will be checked to make sure it
-        /// starts with SOI marker (0xffd8). If the image has been identified as a non-JPEG, data will 
-        /// be ignored and false will be returned immediately on all subsequent calls.
+        /// If this is the first time calling this method, the buffer will
+        /// be checked to make sure it starts with SOI marker (0xffd8).
+        /// If the image has been identified as a non-JPEG, data will be
+        /// ignored and false will be returned immediately on all
+        /// subsequent calls.
         ///
-        /// This object maintains state of the position of the last read byte. On repeated calls to 
-        /// this method, it will continue from where it left off.
-        ///
-        /// <param name="encodedImage">Next set of bytes received by the caller.</param>
-        /// @return true if a new full scan has been found.
+        /// This object maintains state of the position of the last read
+        /// byte. On repeated calls to this method, it will continue from
+        /// where it left off.
         /// </summary>
+        /// <param name="encodedImage">
+        /// Next set of bytes received by the caller.
+        /// </param>
+        /// <returns>true if a new full scan has been found.</returns>
         public bool ParseMoreData(EncodedImage encodedImage)
         {
             if (_parserState == NOT_A_JPEG)
@@ -115,8 +129,9 @@ namespace ImagePipeline.Decoder
             int dataBufferSize = encodedImage.Size;
 
             // Is there any new data to parse?
-            // _bytesParsed might be greater than size of dataBuffer - that happens when
-            // we skip more data than is available to read inside DoParseMoreData method
+            // _bytesParsed might be greater than size of dataBuffer - that
+            // happens when we skip more data than is available to read
+            // inside DoParseMoreData method.
             if (dataBufferSize <= _bytesParsed)
             {
                 return false;
@@ -134,7 +149,8 @@ namespace ImagePipeline.Decoder
             }
             catch (IOException)
             {
-                // Does not happen - streams returned by PooledByteBuffers do not throw IOExceptions
+                // Does not happen - streams returned by IPooledByteBuffers
+                // do not throw IOExceptions.
                 throw;
             }
             finally
@@ -145,10 +161,11 @@ namespace ImagePipeline.Decoder
 
         /// <summary>
         /// Parses more data from inputStream.
-        ///
-        /// <param name="encodedImage">The encoded image.</param>
-        /// <param name="inputStream">Instance of buffered pooled byte buffer input stream.</param>
         /// </summary>
+        /// <param name="encodedImage">The encoded image.</param>
+        /// <param name="inputStream">
+        /// Instance of buffered pooled byte buffer input stream.
+        /// </param>
         private bool DoParseMoreData(EncodedImage encodedImage, Stream inputStream)
         {
             int oldBestScanNumber = _bestScanNumber;
@@ -228,10 +245,12 @@ namespace ImagePipeline.Decoder
                         case READ_SIZE_SECOND_BYTE:
                             int size = (_lastByteRead << 8) + nextByte;
 
-                            // We need to jump after the end of the segment - skip size-2 next bytes.
-                            // We might want to skip more data than is available to read, in which case we will
-                            // consume entire data in inputStream and exit this function before entering another
-                            // iteration of the loop.
+                            // We need to jump after the end of the segment - skip size-2
+                            // next bytes.
+                            // We might want to skip more data than is available to read,
+                            // in which case we will consume entire data in inputStream
+                            // and exit this function before entering another iteration
+                            // of the loop.
                             int bytesToSkip = size - 2;
                             StreamUtil.Skip(inputStream, bytesToSkip);
                             _bytesParsed += bytesToSkip;
@@ -250,7 +269,7 @@ namespace ImagePipeline.Decoder
             catch (IOException)
             {
                 // does not happen, input stream returned by pooled byte buffer does not 
-                // throw IOExceptions
+                // throw IOExceptions.
                 throw;
             }
 
@@ -297,8 +316,12 @@ namespace ImagePipeline.Decoder
         }
 
         /// <summary>
-        /// @return offset at which parsed data should be cut to decode best available partial result.
+        /// Gets the best scan end offset.
         /// </summary>
+        /// <returns>
+        /// Offset at which parsed data should be cut to decode best available
+        /// partial result.
+        /// </returns>
         public int GetBestScanEndOffset(EncodedImage encodedImage)
         {
             int bestScanEndOffset = 0;
@@ -307,8 +330,11 @@ namespace ImagePipeline.Decoder
         }
 
         /// <summary>
-        /// @return number of the best scan found so far.
+        /// Gets the current best scan number.
         /// </summary>
+        /// <returns>
+        /// Number of the best scan found so far.
+        /// </returns>
         public int BestScanNumber
         {
             get

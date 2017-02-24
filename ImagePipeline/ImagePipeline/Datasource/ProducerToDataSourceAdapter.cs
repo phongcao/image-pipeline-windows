@@ -5,17 +5,13 @@ using ImagePipeline.Producers;
 namespace ImagePipeline.Datasource
 {
     /// <summary>
-    /// DataSource{T} backed by a Producer{T}
+    /// IDataSource{T} backed by a IProducer{T}.
     /// </summary>
     public class ProducerToDataSourceAdapter<T> : AbstractProducerToDataSourceAdapter<T>
     {
         /// <summary>
-        /// ProducerToDataSourceAdapter factory method
+        /// ProducerToDataSourceAdapter factory method.
         /// </summary>
-        /// <param name="producer"></param>
-        /// <param name="settableProducerContext"></param>
-        /// <param name="listener"></param>
-        /// <returns></returns>
         public static IDataSource<T> Create(
             IProducer<T> producer,
             SettableProducerContext settableProducerContext,

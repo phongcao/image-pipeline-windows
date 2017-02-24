@@ -9,10 +9,11 @@ namespace ImagePipeline.Image
     {
         /// <summary>
         /// Gets the underlying bitmap.
-        /// Note: care must be taken because subclasses might be more sophisticated than that. For example,
-        /// animated bitmap may have many frames and this method will only return the first one.
-        /// @return the underlying bitmap
+        /// Note: care must be taken because subclasses might be more sophisticated
+        /// than that. For example, animated bitmap may have many frames and this
+        /// method will only return the first one.
         /// </summary>
+        /// <returns>The underlying bitmap.</returns>
         public abstract SoftwareBitmap UnderlyingBitmap { get; }
     }
 }

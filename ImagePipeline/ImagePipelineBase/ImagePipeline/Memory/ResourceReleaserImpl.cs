@@ -4,7 +4,7 @@ using System;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// Provides custom implementation for <see cref="IResourceReleaser{T}"/>
+    /// Provides custom implementation for <see cref="IResourceReleaser{T}"/>.
     /// </summary>
     public class ResourceReleaserImpl<T> : IResourceReleaser<T>
     {
@@ -13,16 +13,16 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Instantiates the <see cref="ResourceReleaserImpl{T}"/>.
         /// </summary>
-        /// <param name="func">Delegate function</param>
+        /// <param name="func">Delegate function.</param>
         public ResourceReleaserImpl(Action<T> func)
         {
             _func = func;
         }
 
         /// <summary>
-        /// Invokes the Release method of the pool
+        /// Invokes the Release method of the pool.
         /// </summary>
-        /// <param name="value">T</param>
+        /// <param name="value">T.</param>
         public void Release(T value)
         {
             _func(value);

@@ -6,33 +6,36 @@ using System.Diagnostics;
 namespace FBCore.Common.References
 {
     /// <summary>
-    /// A smart pointer-like class for Java.
+    /// A smart pointer-like class for C#.
     ///
-    /// <para />This class allows reference-counting semantics in a Java-friendlier way. A single object
-    /// can have any number of CloseableReferences pointing to it. When all of these have been closed,
-    /// the object either has its <see cref="IDisposable.Dispose"/> method called, if it implements
+    /// <para />This class allows reference-counting semantics in a C#-friendlier way.
+    /// A single object can have any number of CloseableReferences pointing to it.
+    /// When all of these have been closed, the object either has its 
+    /// <see cref="IDisposable.Dispose"/>method called, if it implements
     /// <see cref="IDisposable"/>, or its designated <see cref="IResourceReleaser{T}.Release"/>,
     /// if it does not.
     ///
-    /// <para />Callers can construct a CloseableReference wrapping a <see cref="IDisposable"/> with:
+    /// <para />Callers can construct a CloseableReference wrapping a
+    /// <see cref="IDisposable"/> with:
     /// 
-    /// Closeable foo;
-    /// CloseableReference c = CloseableReference.of(foo);
+    /// IDisposable foo;
+    /// CloseableReference{T} c = CloseableReference{T}.of(foo);
     /// 
-    /// <para />Objects that do not implement Closeable can still use this class, but must supply a
-    /// <see cref="IResourceReleaser{T}"/>:
+    /// <para />Objects that do not implement IDisposable can still use this class,
+    /// but must supply a <see cref="IResourceReleaser{T}"/>:
     /// 
     /// <code>
     ///   <![CDATA[ 
-    ///         Object foo;
-    ///         ResourceReleaser<object> fooReleaser;
-    ///         CloseableReference c = CloseableReference.of(foo, fooReleaser);
+    ///         object foo;
+    ///         IResourceReleaser<object> fooReleaser;
+    ///         CloseableReference<IResourceReleaser<object>> c = 
+    ///             CloseableReference<IResourceReleaser<object>>.of(foo, fooReleaser);
     ///   ]]>  
     /// </code>
     /// 
     /// <para />When making a logical copy, callers should call <see cref="Clone"/>:
     /// 
-    /// CloseableReference copy = c.Clone();
+    /// CloseableReference{T} copy = c.Clone();
     /// 
     /// <para />
     /// When each copy of CloseableReference is no longer needed, close should be called:
@@ -41,24 +44,27 @@ namespace FBCore.Common.References
     /// c.Dispose();
     /// 
     ///
-    /// <para />As with any Closeable, try-finally semantics may be needed to ensure that close is called.
-    /// <para />Do not rely upon the finalizer; the purpose of this class is for expensive resources to
-    /// be released without waiting for the garbage collector. The finalizer will log an error if
-    /// the close method has not bee called.
+    /// <para />As with any IDisposable, try-finally semantics may be needed to ensure
+    /// that close is called.
+    /// <para />Do not rely upon the finalizer; the purpose of this class is for
+    /// expensive resources to be released without waiting for the garbage collector.
+    /// The finalizer will log an error if the Dispose method has not been called.
     /// </summary>
     public sealed class CloseableReference<T> : IDisposable
     {
         private readonly object _referenceGate = new object();
 
-        private static readonly DefaultResourceReleaser<T> DEFAULT_CLOSEABLE_RELEASER = new DefaultResourceReleaser<T>();
+        private static readonly DefaultResourceReleaser<T> DEFAULT_CLOSEABLE_RELEASER = 
+            new DefaultResourceReleaser<T>();
 
         private bool _isClosed = false;
 
         private readonly SharedReference<T> _sharedReference;
 
         /// <summary>
-        /// The caller should guarantee that reference count of sharedReference is not decreased to zero,
-        /// so that the reference is valid during execution of this method.
+        /// The caller should guarantee that reference count of sharedReference is
+        /// not decreased to zero, so that the reference is valid during execution
+        /// of this method.
         /// </summary>
         private CloseableReference(SharedReference<T> sharedReference)
         {
@@ -73,8 +79,8 @@ namespace FBCore.Common.References
         }
 
         /// <summary>
-        /// Constructs a CloseableReference. The argument must derive from IDisposable so that
-        /// it can re-use the default closable releaser.
+        /// Constructs a CloseableReference{T}. The argument must derive from
+        /// IDisposable so that it can re-use the default IDisposable releaser.
         /// 
         /// <para />Returns null if the parameter is null.
         /// </summary>
@@ -96,8 +102,8 @@ namespace FBCore.Common.References
         }
 
         /// <summary>
-        /// Constructs a CloseableReference (wrapping a SharedReference) of T with provided
-        /// <![CDATA[ ResourceReleaser<T>. If t is null, this will just return null. ]]>
+        /// Constructs a CloseableReference (wrapping a SharedReference) of T with
+        /// provided IResourceReleaser{T}. If t is null, this will just return null.
         /// </summary>
         public static CloseableReference<T> of(T t, IResourceReleaser<T> resourceReleaser)
         {
@@ -114,10 +120,11 @@ namespace FBCore.Common.References
         /// <summary>
         /// Closes this CloseableReference.
         ///
-        /// <para />Decrements the reference count of the underlying object. If it is zero, the object
-        /// will be released.
+        /// <para />Decrements the reference count of the underlying object.
+        /// If it is zero, the object will be released.
         ///
-        /// <para />This method is idempotent. Calling it multiple times on the same instance has no effect.
+        /// <para />This method is idempotent. Calling it multiple times on
+        /// the same instance has no effect.
         /// </summary>
         public void Dispose()
         {
@@ -126,13 +133,14 @@ namespace FBCore.Common.References
         }
 
         /// <summary>
-        /// Perform cleanup operations on unmanaged resources held by the current object before 
-        /// the object is destroyed
+        /// Perform cleanup operations on unmanaged resources held by the current object
+        /// before the object is destroyed.
         /// </summary>
         private void Dispose(bool disposing)
         {
-            // We put synchronized here so that lint doesn't warn about accessing _isClosed, which is
-            // guarded by this. Lint isn't aware of finalize semantics.
+            // We put synchronized here so that lint doesn't warn about accessing
+            // _isClosed, which is guarded by this.
+            // Lint isn't aware of finalize semantics.
             lock (_referenceGate)
             {
                 if (_isClosed)
@@ -152,7 +160,7 @@ namespace FBCore.Common.References
 
         /// <summary>
         /// Returns the underlying Closeable if this reference is not closed yet.
-        /// Otherwise IllegalStateException is thrown.
+        /// Otherwise InvalidOperationException is thrown.
         /// </summary>
         public T Get()
         {
@@ -164,8 +172,8 @@ namespace FBCore.Common.References
         }
 
         /// <summary>
-        /// Returns a new CloseableReference to the same underlying SharedReference. The SharedReference
-        /// ref-count is incremented.
+        /// Returns a new CloseableReference to the same underlying SharedReference.
+        /// The SharedReference ref-count is incremented.
         /// </summary>
         public CloseableReference<T> Clone()
         {
@@ -177,8 +185,8 @@ namespace FBCore.Common.References
         }
 
         /// <summary>
-        /// Returns a new CloseableReference to the same underlying SharedReference or null if invalid. The 
-        /// SharedReference ref-count is incremented.
+        /// Returns a new CloseableReference to the same underlying SharedReference
+        /// or null if invalid. The SharedReference ref-count is incremented.
         /// </summary>
         public CloseableReference<T> CloneOrNull()
         {
@@ -190,8 +198,8 @@ namespace FBCore.Common.References
 
         /// <summary>
         /// Checks if this closable-reference is valid i.e. is not closed.
-        /// @return true if the closeable reference is valid
         /// </summary>
+        /// <returns>true if the closeable reference is valid.</returns>
         public bool Valid
         {
             get
@@ -229,9 +237,10 @@ namespace FBCore.Common.References
         }
 
         /// <summary>
-        /// Checks if the closable-reference is valid i.e. is not null, and is not closed.
-        /// @return true if the closeable reference is valid
+        /// Checks if the closable-reference is valid i.e. is not null,
+        /// and is not closed.
         /// </summary>
+        /// <returns>true if the closeable reference is valid.</returns>
         public static bool IsValid(CloseableReference<T> reference)
         {
             return reference != null && reference.Valid;
@@ -239,22 +248,22 @@ namespace FBCore.Common.References
 
         /// <summary>
         /// Returns the cloned reference if valid, null otherwise.
-        ///
-        /// <param name="reference">The reference to clone</param>
         /// </summary>
+        /// <param name="reference">The reference to clone.</param>
         public static CloseableReference<T> CloneOrNull(CloseableReference<T> reference)
         {
             return (reference != null) ? reference.CloneOrNull() : null;
         }
 
         /// <summary>
-        /// Clones a collection of references and returns a list. Returns null if the list is null. If
-        /// the list is non-null, clones each reference. If a reference cannot be cloned due to already
-        /// being closed, the list will contain a null value in its place.
-        ///
-        /// <param name="refs">The references to clone</param>
-        /// @return the list of cloned references or null
+        /// Clones a collection of references and returns a list.
+        /// Returns null if the list is null.
+        /// If the list is non-null, clones each reference.
+        /// If a reference cannot be cloned due to already being closed,
+        /// the list will contain a null value in its place.
         /// </summary>
+        /// <param name="refs">The references to clone.</param>
+        /// <returns>The list of cloned references or null.</returns>
         public static List<CloseableReference<T>> CloneOrNull(IList<CloseableReference<T>> refs)
         {
             if (refs == null)
@@ -273,9 +282,8 @@ namespace FBCore.Common.References
 
         /// <summary>
         /// Closes the reference handling null.
-        ///
-        /// <param name="reference">The reference to close</param>
         /// </summary>
+        /// <param name="reference">The reference to close.</param>
         public static void CloseSafely(CloseableReference<T> reference)
         {
             if (reference != null)
@@ -286,9 +294,8 @@ namespace FBCore.Common.References
 
         /// <summary>
         /// Closes the references in the iterable handling null.
-        ///
-        /// <param name="references">The reference to close</param>
         /// </summary>
+        /// <param name="references">The reference to close.</param>
         public static void CloseSafely(IEnumerable<CloseableReference<T>> references)
         {
             if (references != null)

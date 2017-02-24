@@ -19,14 +19,13 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Instantiates the <see cref="PoolFactory"/>.
         /// </summary>
-        /// <param name="config"></param>
         public PoolFactory(PoolConfig config)
         {
             _config = Preconditions.CheckNotNull(config);
         }
 
         /// <summary>
-        /// Creates the <see cref="BitmapPool"/> using config
+        /// Creates the <see cref="BitmapPool"/> using config.
         /// </summary>
         public BitmapPool BitmapPool
         {
@@ -45,7 +44,7 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Creates the <see cref="FlexByteArrayPool"/> using config
+        /// Creates the <see cref="FlexByteArrayPool"/> using config.
         /// </summary>
         public FlexByteArrayPool FlexByteArrayPool
         {
@@ -63,7 +62,7 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Gets the maximum threads
+        /// Gets the maximum threads.
         /// </summary>
         public int FlexByteArrayPoolMaxNumThreads
         {
@@ -74,7 +73,7 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Creates the <see cref="NativeMemoryChunkPool"/> using config
+        /// Creates the <see cref="NativeMemoryChunkPool"/> using config.
         /// </summary>
         public NativeMemoryChunkPool NativeMemoryChunkPool
         {
@@ -93,7 +92,7 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Creates the <see cref="PooledByteBufferFactory"/>
+        /// Creates the <see cref="PooledByteBufferFactory"/>.
         /// </summary>
         public IPooledByteBufferFactory PooledByteBufferFactory
         {
@@ -111,7 +110,7 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Creates the <see cref="PooledByteStreams"/>
+        /// Creates the <see cref="PooledByteStreams"/>.
         /// </summary>
         public PooledByteStreams PooledByteStreams
         {
@@ -127,7 +126,7 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Creates the <see cref="SharedByteArray"/> using config
+        /// Creates the <see cref="SharedByteArray"/> using config.
         /// </summary>
         public SharedByteArray SharedByteArray
         {
@@ -145,7 +144,7 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Creates the <see cref="SmallByteArrayPool"/> using config
+        /// Creates the <see cref="SmallByteArrayPool"/> using config.
         /// </summary>
         public IByteArrayPool SmallByteArrayPool
         {

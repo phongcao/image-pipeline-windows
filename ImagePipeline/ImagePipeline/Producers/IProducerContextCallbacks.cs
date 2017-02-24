@@ -1,7 +1,8 @@
 ﻿namespace ImagePipeline.Producers
 {
     /// <summary>
-    /// Callbacks that are called when something changes in a request sequence.
+    /// Callbacks that are called when something changes in a
+    /// request sequence.
     /// </summary>
     public interface IProducerContextCallbacks
     {
@@ -11,12 +12,14 @@
         void OnCancellationRequested();
 
         /// <summary>
-        /// Method that is called when a request is no longer a prefetch, or vice versa.
+        /// Method that is called when a request is no longer a prefetch,
+        /// or vice versa.
         /// </summary>
         void OnIsPrefetchChanged();
 
         /// <summary>
-        /// Method that is called when intermediate results start or stop being expected.
+        /// Method that is called when intermediate results start or stop
+        /// being expected.
         /// </summary>
         void OnIsIntermediateResultExpectedChanged();
 

@@ -6,26 +6,24 @@ namespace ImagePipeline.Common
     /// <summary>
     /// Options for resizing.
     ///
-    /// <para /> Describes the target bounds for the image (width, height) in pixels, as well as the
-    /// downscaling policy to employ.
+    /// <para />Describes the target bounds for the image (width, height)
+    /// in pixels, as well as the downscaling policy to employ.
     /// </summary>
     public class ResizeOptions
     {
         /// <summary>
-        /// Target width (in pixels)
+        /// Target width (in pixels).
         /// </summary>
         public int Width { get; }
 
         /// <summary>
-        /// Target height (in pixels)
+        /// Target height (in pixels).
         /// </summary>
         public int Height { get; }
 
         /// <summary>
-        /// Instantiates the <see cref="ResizeOptions"/>
+        /// Instantiates the <see cref="ResizeOptions"/>.
         /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
         public ResizeOptions(
             int width,
             int height)
@@ -37,16 +35,15 @@ namespace ImagePipeline.Common
         }
 
         /// <summary>
-        /// Calculates the hash code basing on width and height
+        /// Calculates the hash code basing on width and height.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return HashCodeUtil.HashCode(Width, Height);
         }
 
         /// <summary>
-        /// Compares with other ResizeOptions objects
+        /// Compares with other ResizeOptions objects.
         /// </summary>
         public override bool Equals(object other)
         {
@@ -65,7 +62,7 @@ namespace ImagePipeline.Common
         }
 
         /// <summary>
-        /// Provides the custom ToString method
+        /// Provides the custom ToString method.
         /// </summary>
         public override string ToString()
         {

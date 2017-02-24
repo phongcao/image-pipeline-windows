@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Cache.Disk
 {
     /// <summary>
-    /// Sorts entries by date of the last access, evicting old ones first
+    /// Sorts entries by date of the last access, evicting old ones first.
     /// </summary>
     public class DefaultEntryEvictionComparatorSupplier : IEntryEvictionComparatorSupplier
     {

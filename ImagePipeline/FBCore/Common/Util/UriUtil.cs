@@ -3,27 +3,27 @@
 namespace FBCore.Common.Util
 {
     /// <summary>
-    /// Schemes for URIs
+    /// Schemes for URIs.
     /// </summary>
     public class UriUtil
     {
         /// <summary>
-        /// http scheme for URIs
+        /// http scheme for URIs.
         /// </summary>
         public const string HTTP_SCHEME = "http";
 
         /// <summary>
-        /// https scheme for URIs
+        /// https scheme for URIs.
         /// </summary>
         public const string HTTPS_SCHEME = "https";
 
         /// <summary>
-        /// App package scheme for URIs
+        /// App package scheme for URIs.
         /// </summary>
         public const string APP_PACKAGE_SCHEME = "ms-appx";
 
         /// <summary>
-        /// App package web scheme for URIs
+        /// App package web scheme for URIs.
         /// </summary>
         public const string APP_PACKAGE_WEB_SCHEME = "ms-appx-web";
 
@@ -33,18 +33,20 @@ namespace FBCore.Common.Util
         public static string APP_DATA_SCHEME = "ms-appdata";
 
         /// <summary>
-        /// Resource scheme for URIs
+        /// Resource scheme for URIs.
         /// </summary>
         public const string APP_RESOURCE_SCHEME = "ms-resource";
 
-        ///  Data scheme for URIs 
+        /// <summary>
+        /// Data scheme for URIs.
+        /// </summary>
         public const string DATA_SCHEME = "data";
 
         /// <summary>
-        /// Check if uri represents network resource
+        /// Check if uri represents network resource.
         ///
-        /// <param name="uri">uri to check</param>
-        /// @return true if uri's scheme is equal to "http" or "https"
+        /// <param name="uri">uri to check.</param>
+        /// <returns>true if uri's scheme is equal to "http" or "https".</returns>
         /// </summary>
         public static bool IsNetworkUri(Uri uri)
         {
@@ -53,11 +55,10 @@ namespace FBCore.Common.Util
         }
 
         /// <summary>
-        /// Check if uri represents app package
-        ///
-        /// <param name="uri">uri to check</param>
-        /// @return true if uri's scheme is equal to "file"
+        /// Check if uri represents app package.
         /// </summary>
+        /// <param name="uri">uri to check.</param>
+        /// <returns>true if uri's scheme is equal to "file".</returns>
         public static bool IsAppPackageUri(Uri uri)
         {
             string scheme = GetSchemeOrNull(uri);
@@ -65,11 +66,10 @@ namespace FBCore.Common.Util
         }
 
         /// <summary>
-        /// Check if uri represents app data
-        ///
-        /// <param name="uri">uri to check</param>
-        /// @return true if uri's scheme is equal to "content"
+        /// Check if uri represents app data.
         /// </summary>
+        /// <param name="uri">uri to check.</param>
+        /// <returns>true if uri's scheme is equal to "content".</returns>
         public static bool IsAppDataUri(Uri uri)
         {
             string scheme = GetSchemeOrNull(uri);
@@ -77,11 +77,10 @@ namespace FBCore.Common.Util
         }
 
         /// <summary>
-        /// Check if uri represents app resource
-        ///
-        /// <param name="uri">uri to check</param>
-        /// @return true if uri's scheme is equal to "asset"
+        /// Check if uri represents app resource.
         /// </summary>
+        /// <param name="uri">uri to check.</param>
+        /// <returns>true if uri's scheme is equal to "asset".</returns>
         public static bool IsAppResourceUri(Uri uri)
         {
             string scheme = GetSchemeOrNull(uri);
@@ -89,19 +88,19 @@ namespace FBCore.Common.Util
         }
 
         /// <summary>
-        /// Check if the uri is a data uri
+        /// Check if the uri is a data uri.
         /// </summary>
-        /// <param name="uri"></param>
-        /// <returns></returns>
+        /// <param name="uri">uri to check.</param>
         public static bool IsDataUri(Uri uri)
         {
             return DATA_SCHEME.Equals(GetSchemeOrNull(uri));
         }
 
         /// <summary>
-        /// <param name="uri">uri to extract scheme from, possibly null</param>
-        /// @return null if uri is null, result of uri.Scheme otherwise
+        /// Gets uri scheme.
         /// </summary>
+        /// <param name="uri">uri to extract scheme from, possibly null.</param>
+        /// <returns>null if uri is null, result of uri.Scheme otherwise.</returns>
         public static string GetSchemeOrNull(Uri uri)
         {
             return uri == null ? null : uri.Scheme;
@@ -109,10 +108,9 @@ namespace FBCore.Common.Util
 
         /// <summary>
         /// A wrapper around Uri.TryCreate that returns null if the input is null.
-        ///
-        /// <param name="uriAsString">the uri as a string</param>
-        /// @return the parsed Uri or null if the input was null
         /// </summary>
+        /// <param name="uriAsString">The uri as a string.</param>
+        /// <returns>The parsed Uri or null if the input was null.</returns>
         public static Uri ParseUriOrNull(string uriAsString)
         {
             Uri uri = null;

@@ -17,19 +17,21 @@ namespace Cache.Disk
     /// </summary>
     public class DiskStorageCache : IFileCache, IDiskTrimmable
     {
-        /// Any subclass that uses MediaCache/DiskCache's versioning system should use this
-        /// constant as the very first entry in their list of versions. When all
-        /// subclasses of MediaCache have moved on to subsequent versions and are
-        /// no longer using this constant, it can be removed.
+        /// Any subclass that uses MediaCache/DiskCache's versioning system should
+        /// use this constant as the very first entry in their list of versions.
+        /// When all subclasses of MediaCache have moved on to subsequent versions
+        /// and are no longer using this constant, it can be removed.
         public const int START_OF_VERSIONING = 1;
 
         private static readonly long FUTURE_TIMESTAMP_THRESHOLD_MS = 
             (long)TimeSpan.FromHours(2).TotalMilliseconds;
 
         /// <summary>
-        /// Force recalculation of the ground truth for filecache size at this interval
+        /// Force recalculation of the ground truth for filecache size at this
+        /// interval.
         /// </summary>
-        private static readonly long FILECACHE_SIZE_UPDATE_PERIOD_MS = (long)TimeSpan.FromMinutes(30).TotalMilliseconds;
+        private static readonly long FILECACHE_SIZE_UPDATE_PERIOD_MS = 
+            (long)TimeSpan.FromMinutes(30).TotalMilliseconds;
 
         /// <summary>
         /// Used for indexPopulateAtStartupEnabled.
@@ -72,8 +74,8 @@ namespace Cache.Disk
         private readonly object _lock = new object();
 
         /// <summary>
-        /// Stats about the cache - currently size of the cache (in bytes) and number of items in
-        /// the cache
+        /// Stats about the cache - currently size of the cache (in bytes) and
+        /// number of items in the cache.
         /// </summary>
         internal class CacheStats
         {
@@ -85,12 +87,12 @@ namespace Cache.Disk
             private bool _initialized = false;
 
             /// <summary>
-            /// Size of the cache (in bytes)
+            /// Size of the cache (in bytes).
             /// </summary>
             private long _size = UNINITIALIZED;
 
             /// <summary>
-            /// Number of items in the cache
+            /// Number of items in the cache.
             /// </summary>
             private long _count = UNINITIALIZED;
 
@@ -161,7 +163,7 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Instantiates the <see cref="DiskStorageCache"/>
+        /// Instantiates the <see cref="DiskStorageCache"/>.
         /// </summary>
         public DiskStorageCache(
             IDiskStorage diskStorage,
@@ -227,7 +229,7 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Gets the disk dump info
+        /// Gets the disk dump info.
         /// </summary>
         public DiskDumpInfo GetDumpInfo()
         {
@@ -236,8 +238,8 @@ namespace Cache.Disk
 
         /// <summary>
         /// Is this storage enabled?
-        /// @return true, if enabled
         /// </summary>
+        /// <returns>true, if enabled.</returns>
         public bool IsEnabled
         {
             get
@@ -247,8 +249,8 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Blocks current thread until having finished initialization in Memory Index. 
-        /// Call only when you need memory index in cold start.
+        /// Blocks current thread until having finished initialization in
+        /// Memory Index. Call only when you need memory index in cold start.
         /// </summary>
         protected internal void AwaitIndex()
         {
@@ -256,15 +258,16 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Retrieves the file corresponding to the key, if it is in the cache. Also
-        /// touches the item, thus changing its LRU timestamp. If the file is not
-        /// present in the file cache, returns null.
+        /// Retrieves the file corresponding to the key, if it is in the cache.
+        /// Also touches the item, thus changing its LRU timestamp. If the file
+        /// is not present in the file cache, returns null.
         /// <para />
         /// This should NOT be called on the UI thread.
-        ///
-        /// <param name="key">the mKey to check</param>
-        /// @return The resource if present in cache, otherwise null
         /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>
+        /// The resource if present in cache, otherwise null.
+        /// </returns>
         public IBinaryResource GetResource(ICacheKey key)
         {
             SettableCacheEvent cacheEvent = SettableCacheEvent
@@ -320,16 +323,15 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Probes whether the object corresponding to the mKey is in the cache.
+        /// Probes whether the object corresponding to the key is in the cache.
         /// Note that the act of probing touches the item (if present in cache),
         /// thus changing its LRU timestamp.
         /// <para />
         /// This will be faster than retrieving the object, but it still has
         /// file system accesses and should NOT be called on the UI thread.
-        ///
-        /// <param name="key">the key to check</param>
-        /// @return whether the keyed mValue is in the cache
         /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>Whether the keyed mValue is in the cache.</returns>
         public bool Probe(ICacheKey key)
         {
             string resourceId = null;
@@ -365,7 +367,7 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Creates a temp file for writing outside the session lock
+        /// Creates a temp file for writing outside the session lock.
         /// </summary>
         private IInserter StartInsert(
             string resourceId,
@@ -394,22 +396,24 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Inserts resource into file with key
-        /// <param name="key">cache key</param>
-        /// <param name="callback">Callback that writes to an output stream</param>
-        /// @return a sequence of bytes
-        /// @throws IOException
+        /// Inserts resource into file with key.
         /// </summary>
+        /// <param name="key">Cache key.</param>
+        /// <param name="callback">
+        /// Callback that writes to an output stream.
+        /// </param>
+        /// <returns>A sequence of bytes.</returns>
         public IBinaryResource Insert(ICacheKey key, IWriterCallback callback)
         {
-            // Write to a temp file, then move it into place. This allows more parallelism
-            // when writing files.
+            // Write to a temp file, then move it into place.
+            // This allows more parallelism when writing files.
             SettableCacheEvent cacheEvent = SettableCacheEvent.Obtain().SetCacheKey(key);
             _cacheEventListener.OnWriteAttempt(cacheEvent);
             string resourceId;
             lock (_lock)
             {
-                // For multiple resource ids associated with the same image, we only write one file
+                // For multiple resource ids associated with the same image,
+                // we only write one file
                 resourceId = CacheKeyUtil.GetFirstResourceId(key);
             }
 
@@ -428,6 +432,7 @@ namespace Cache.Disk
                     IBinaryResource resource = EndInsert(inserter, key, resourceId);
                     cacheEvent.SetItemSize(resource.GetSize())
                         .SetCacheSize(_cacheStats.Size);
+
                     _cacheEventListener.OnWriteSuccess(cacheEvent);
                     return resource;
                 }
@@ -454,8 +459,8 @@ namespace Cache.Disk
 
         /// <summary>
         /// Removes a resource by key from cache.
-        /// <param name="key">cache key</param>
         /// </summary>
+        /// <param name="key">Cache key.</param>
         public void Remove(ICacheKey key)
         {
             lock (_lock)
@@ -481,9 +486,13 @@ namespace Cache.Disk
 
         /// <summary>
         /// Deletes old cache files.
-        /// <param name="cacheExpirationMs">files older than this will be deleted.</param>
-        /// @return the age in ms of the oldest file remaining in the cache.
         /// </summary>
+        /// <param name="cacheExpirationMs">
+        /// Files older than this will be deleted.
+        /// </param>
+        /// <returns>
+        /// The age in ms of the oldest file remaining in the cache.
+        /// </returns>
         public long ClearOldEntries(long cacheExpirationMs)
         {
             long oldestRemainingEntryAgeMs = 0L;
@@ -544,10 +553,10 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Test if the cache size has exceeded its limits, and if so, evict some files.
-        /// It also calls maybeUpdateFileCacheSize
+        /// Test if the cache size has exceeded its limits, and if so,
+        /// evict some files. It also calls MaybeUpdateFileCacheSize
         ///
-        /// This method uses mLock for synchronization purposes.
+        /// This method uses _lock for synchronization purposes.
         /// </summary>
         private void MaybeEvictFilesInCacheDir()
         {
@@ -631,12 +640,14 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// If any file timestamp is in the future (beyond now + FUTURE_TIMESTAMP_THRESHOLD_MS), we will
-        /// set its effective timestamp to 0 (the beginning of unix time), thus sending it to the head of
-        /// the queue for eviction (entries with the lowest timestamps are evicted first). This is a
-        /// safety check in case we get files that are written with a future timestamp.
-        /// We are adding a small delta (this constant) to account for network time changes, timezone
-        /// changes, etc.
+        /// If any file timestamp is in the future
+        /// (beyond now + FUTURE_TIMESTAMP_THRESHOLD_MS), we will set its
+        /// effective timestamp to 0 (the beginning of unix time), thus
+        /// sending it to the head of the queue for eviction (entries with
+        /// the lowest timestamps are evicted first). This is a safety check
+        /// in case we get files that are written with a future timestamp.
+        /// We are adding a small delta (this constant) to account for
+        /// network time changes, timezone changes, etc.
         /// </summary>
         private ICollection<IEntry> GetSortedEntries(ICollection<IEntry> allEntries)
         {
@@ -661,8 +672,9 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Helper method that sets the cache size limit to be either a high, or a low limit.
-        /// If there is not enough free space to satisfy the high limit, it is set to the low limit.
+        /// Helper method that sets the cache size limit to be either a high,
+        /// or a low limit. If there is not enough free space to satisfy the
+        /// high limit, it is set to the low limit.
         /// </summary>
         private void UpdateFileCacheSizeLimit()
         {
@@ -687,7 +699,7 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Returns the size of the cache (in bytes) in the cache
+        /// Returns the size of the cache (in bytes) in the cache.
         /// </summary>
         public long Size
         {
@@ -698,7 +710,7 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Returns the number of items in the cache
+        /// Returns the number of items in the cache.
         /// </summary>
         public long Count
         {
@@ -709,7 +721,7 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Clears all items in the cache
+        /// Clears all items in the cache.
         /// </summary>
         public void ClearAll()
         {
@@ -736,8 +748,9 @@ namespace Cache.Disk
         /// <summary>
         /// Returns true if the key is in the in-memory key index.
         ///
-        /// Not guaranteed to be correct. The cache may yet have this key even if this returns false.
-        /// But if it returns true, it definitely has it.
+        /// Not guaranteed to be correct. The cache may yet have this key
+        /// even if this returns false. But if it returns true, it definitely
+        /// has it.
         ///
         /// Avoids a disk read.
         /// </summary>
@@ -761,8 +774,6 @@ namespace Cache.Disk
         /// <summary>
         /// Returns true if the key is in the in-memory key index.
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
         public bool HasKey(ICacheKey key)
         {
             lock (_lock)
@@ -816,7 +827,8 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Called when there is almost no disk space left and the app is likely to crash soon
+        /// Called when there is almost no disk space left and the app is
+        /// likely to crash soon.
         /// </summary>
         public void TrimToNothing()
         {
@@ -848,9 +860,12 @@ namespace Cache.Disk
 
         /// <summary>
         /// If file cache size is not calculated or if it was calculated
-        /// a long time ago (FILECACHE_SIZE_UPDATE_PERIOD_MS) recalculated from file listing.
-        /// @return true if it was recalculated, false otherwise.
+        /// a long time ago (FILECACHE_SIZE_UPDATE_PERIOD_MS) recalculated
+        /// from file listing.
         /// </summary>
+        /// <returns>
+        /// true if it was recalculated, false otherwise.
+        /// </returns>
         private bool MaybeUpdateFileCacheSize()
         {
             bool result = false;

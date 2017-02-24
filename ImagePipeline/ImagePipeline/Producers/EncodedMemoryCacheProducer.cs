@@ -22,7 +22,7 @@ namespace ImagePipeline.Producers
         private readonly IProducer<EncodedImage> _inputProducer;
 
         /// <summary>
-        /// Instantiates the <see cref="EncodedMemoryCacheProducer"/>
+        /// Instantiates the <see cref="EncodedMemoryCacheProducer"/>.
         /// </summary>
         public EncodedMemoryCacheProducer(
             IMemoryCache<ICacheKey, IPooledByteBuffer> memoryCache,
@@ -35,8 +35,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Start producing results for given context. Provided consumer is notified whenever 
-        /// progress is made (new value is ready or error occurs).
+        /// Start producing results for given context.
+        /// Provided consumer is notified whenever progress is made
+        /// (new value is ready or error occurs).
         /// </summary>
         public void ProduceResults(
             IConsumer<EncodedImage> consumer,

@@ -8,7 +8,7 @@ namespace ImagePipeline.Core
     public class DynamicDefaultDiskStorageFactory : IDiskStorageFactory
     {
         /// <summary>
-        /// Returns the <see cref="IDiskStorage"/> from the <see cref="DiskCacheConfig"/>
+        /// Returns the <see cref="IDiskStorage"/> from the <see cref="DiskCacheConfig"/>.
         /// </summary>
         public IDiskStorage Get(DiskCacheConfig diskCacheConfig)
         {

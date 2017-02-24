@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 namespace FBCore.Concurrency
 {
     /// <summary>
-    /// An <see cref="IExecutorService"/> that can schedule commands to run after a given 
-    /// delay, or to execute periodically.
+    /// An <see cref="IExecutorService"/> that can schedule commands to run after
+    /// a given delay, or to execute periodically.
     /// </summary>
     public interface IScheduledExecutorService : IExecutorService
     {
         /// <summary>
-        /// Creates and executes a one-shot action that becomes enabled after the given delay.
+        /// Creates and executes a one-shot action that becomes enabled after the
+        /// given delay.
         /// </summary>
         /// <remarks>
         /// The action will be submitted to the end of the event queue
@@ -22,7 +23,8 @@ namespace FBCore.Concurrency
         Task Schedule(Action action, long delay);
 
         /// <summary>
-        /// Creates and executes a one-shot action that becomes enabled after the given delay.
+        /// Creates and executes a one-shot action that becomes enabled after
+        /// the given delay.
         /// </summary>
         /// <remarks>
         /// The action will be submitted to the end of the event queue
@@ -34,7 +36,8 @@ namespace FBCore.Concurrency
         Task Schedule(Action action, long delay, CancellationToken token);
 
         /// <summary>
-        /// Creates and executes a one-shot function that becomes enabled after the given delay.
+        /// Creates and executes a one-shot function that becomes enabled after
+        /// the given delay.
         /// </summary>
         /// <remarks>
         /// The function will be submitted to the end of the event queue
@@ -46,7 +49,8 @@ namespace FBCore.Concurrency
         Task<T> Schedule<T>(Func<T> func, long delay);
 
         /// <summary>
-        /// Creates and executes a one-shot function that becomes enabled after the given delay.
+        /// Creates and executes a one-shot function that becomes enabled after
+        /// the given delay.
         /// </summary>
         /// <remarks>
         /// The function will be submitted to the end of the event queue

@@ -16,7 +16,7 @@ namespace ImagePipeline.Cache
         private const int MAX_CACHE_ENTRY_SIZE = int.MaxValue;
 
         /// <summary>
-        /// Gets the memory cache params
+        /// Gets the memory cache params.
         /// </summary>
         public MemoryCacheParams Get()
         {

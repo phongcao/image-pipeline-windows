@@ -8,32 +8,32 @@ namespace Cache.Common
     /// <summary>
     /// A cache key that wraps multiple cache keys.
     ///
-    /// Note: <code>Equals</code> and <code>GetHashcode</code> are implemented in a way 
-    /// that two MultiCacheKeys are equal if and only if the underlying list of cache keys 
-    /// is equal. That implies AllOf semantics. Unfortunately, it is not possible to implement 
-    /// AnyOf semantics for <code>Equals</code> because the transitivity requirement wouldn't 
-    /// be satisfied. I.e. we would have:
+    /// Note: <code>Equals</code> and <code>GetHashcode</code> are implemented
+    /// in a way that two MultiCacheKeys are equal if and only if the underlying
+    /// list of cache keys is equal. That implies AllOf semantics. Unfortunately,
+    /// it is not possible to implement AnyOf semantics for <code>Equals</code>
+    /// because the transitivity requirement wouldn't be satisfied.
+    /// I.e. we would have:
     /// {A} = {A, B}, {A, B} = {B}, but {A} != {B}.
     ///
-    /// It is fine to use this key with AnyOf semantics, but one should be aware of 
-    /// <code>Equals</code> and <code>GetHashcode</code> behavior, and should implement AnyOf 
-    /// logic manually.
+    /// It is fine to use this key with AnyOf semantics, but one should be aware
+    /// of <code>Equals</code> and <code>GetHashcode</code> behavior, and should
+    /// implement AnyOf logic manually.
     /// </summary>
     public class MultiCacheKey : ICacheKey
     {
         internal readonly IList<ICacheKey> _cacheKeys;
 
         /// <summary>
-        /// Instantiates the <see cref="MultiCacheKey"/>
+        /// Instantiates the <see cref="MultiCacheKey"/>.
         /// </summary>
-        /// <param name="cacheKeys"></param>
         public MultiCacheKey(IList<ICacheKey> cacheKeys)
         {
             _cacheKeys = Preconditions.CheckNotNull(cacheKeys);
         }
 
         /// <summary>
-        /// Gets the cache keys
+        /// Gets the cache keys.
         /// </summary>
         public IList<ICacheKey> CacheKeys
         {
@@ -46,17 +46,14 @@ namespace Cache.Common
         /// <summary>
         /// This is useful for instrumentation and debugging purposes. 
         /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
             return "MultiCacheKey:" + _cacheKeys.ToString();
         }
 
         /// <summary>
-        /// Compares objects _cacheKeys
+        /// Compares objects _cacheKeys.
         /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
         public override bool Equals(object o)
         {
             if (o == this)
@@ -74,9 +71,8 @@ namespace Cache.Common
         }
 
         /// <summary>
-        /// Gets the hash code
+        /// Gets the hash code.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return _cacheKeys.GetHashCode();

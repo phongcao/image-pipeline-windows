@@ -11,7 +11,7 @@
         void TrimToMinimum();
 
         /// <summary>
-        /// Called when there is almost no disk space left and the app is likely to crash soon
+        /// Called when there is almost no disk space left and the app is likely to crash soon.
         /// </summary>
         void TrimToNothing();
     }

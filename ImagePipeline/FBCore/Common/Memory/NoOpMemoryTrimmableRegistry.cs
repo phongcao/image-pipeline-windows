@@ -16,9 +16,8 @@
         }
 
         /// <summary>
-        /// Singleton
+        /// Singleton.
         /// </summary>
-        /// <returns></returns>
         public static NoOpMemoryTrimmableRegistry Instance
         {
             get
@@ -38,7 +37,6 @@
         /// <summary>
         /// Register an object.
         /// </summary>
-        /// <param name="trimmable"></param>
         public void RegisterMemoryTrimmable(IMemoryTrimmable trimmable)
         {
         }
@@ -46,7 +44,6 @@
         /// <summary>
         /// Unregister an object.
         /// </summary>
-        /// <param name="trimmable"></param>
         public void UnregisterMemoryTrimmable(IMemoryTrimmable trimmable)
         {
         }

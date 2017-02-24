@@ -4,7 +4,7 @@ using System.IO;
 namespace FBCore.Common.Internal
 {
     /// <summary>
-    /// Byte stream helper class
+    /// Byte stream helper class.
     /// </summary>
     public sealed class ByteStreams
     {
@@ -15,14 +15,13 @@ namespace FBCore.Common.Internal
         }
 
         /// <summary>
-        /// Copies all bytes from the input stream to the output stream. Does not close or flush either
-        /// stream.
-        ///
-        /// <param name="from">the input stream to read from</param>
-        /// <param name="to">the output stream to write to</param>
-        /// @return the number of bytes copied
-        /// @throws IOException if an I/O error occurs
+        /// Copies all bytes from the input stream to the output stream. 
+        /// Does not close or flush either stream.
         /// </summary>
+        /// <param name="from">The input stream to read from.</param>
+        /// <param name="to">The output stream to write to.</param>
+        /// <returns>The number of bytes copied.</returns>
+        /// <exception cref="IOException">If an I/O error occurs.</exception>
         public static long Copy(Stream from, Stream to)
         {
             Preconditions.CheckNotNull(from);
@@ -46,28 +45,28 @@ namespace FBCore.Common.Internal
 
         /// <summary>
         /// Reads some bytes from an input stream and stores them into the buffer array
-        /// <code> b</code>. This method blocks until <code> len</code> bytes of input data have
-        /// been read into the array, or end of file is detected. The number of bytes
+        /// <code>b</code>. This method blocks until <code>len</code> bytes of input data 
+        /// have been read into the array, or end of file is detected. The number of bytes
         /// read is returned, possibly zero. Does not close the stream.
         ///
         /// <para />A caller can detect EOF if the number of bytes read is less than
-        /// <code> len</code>. All subsequent calls on the same stream will return zero.
+        /// <code>len</code>. All subsequent calls on the same stream will return zero.
         ///
-        /// <para />If <code> b</code> is null, a <code> NullPointerException</code> is thrown. If
-        /// <code> off</code> is negative, or <code> len</code> is negative, or <code> off+len</code> is
-        /// greater than the length of the array <code> b</code>, then an
-        /// <code> ArgumentOutOfRangeException</code> is thrown. If <code> len</code> is zero, then
-        /// no bytes are read. Otherwise, the first byte read is stored into element
-        /// <code> b[off]</code>, the next one into <code> b[off+1]</code>, and so on. The number
-        /// of bytes read is, at most, equal to <code> len</code>.
-        ///
-        /// <param name="inputStream">the input stream to read from</param>
-        /// <param name="b">the buffer into which the data is read</param>
-        /// <param name="off">an int specifying the offset into the data</param>
-        /// <param name="len">an int specifying the number of bytes to read</param>
-        /// @return the number of bytes read
-        /// @throws IOException if an I/O error occurs
+        /// <para />If <code>b</code> is null, a <code>NullReferenceException</code> is thrown.
+        /// If <code>off</code> is negative, or <code>len</code> is negative, or 
+        /// <code>off+len</code> is greater than the length of the array <code>b</code>, 
+        /// then an <code>ArgumentOutOfRangeException</code> is thrown. 
+        /// If <code>len</code> is zero, then no bytes are read. 
+        /// Otherwise, the first byte read is stored into element <code> b[off]</code>, 
+        /// the next one into <code>b[off+1]</code>, and so on. The number of bytes read is, 
+        /// at most, equal to <code>len</code>.
         /// </summary>
+        /// <param name="inputStream">The input stream to read from.</param>
+        /// <param name="b">The buffer into which the data is read.</param>
+        /// <param name="off">An int specifying the offset into the data.</param>
+        /// <param name="len">An int specifying the number of bytes to read.</param>
+        /// <returns>The number of bytes read.</returns>
+        /// <exception cref="IOException">If an I/O error occurs.</exception>
         public static int Read(Stream inputStream, byte[] b, int off, int len)
         {
             Preconditions.CheckNotNull(inputStream);
@@ -95,11 +94,10 @@ namespace FBCore.Common.Internal
         /// <summary>
         /// Reads all bytes from an input stream into a byte array.
         /// Does not close the stream.
-        ///
-        /// <param name="inputStream">the input stream to read from</param>
-        /// @return a byte array containing all the bytes from the stream
-        /// @throws IOException if an I/O error occurs
         /// </summary>
+        /// <param name="inputStream">The input stream to read from.</param>
+        /// <returns>A byte array containing all the bytes from the stream.</returns>
+        /// <exception cref="IOException">If an I/O error occurs.</exception>
         public static byte[] ToByteArray(Stream inputStream)
         {
             using (MemoryStream outputStream = new MemoryStream())
@@ -157,8 +155,8 @@ namespace FBCore.Common.Internal
         }
 
         /// <summary>
-       /// BAOS that provides limited access to its internal byte array.
-       /// </summary>
+        /// ByteArrayOutputStream that provides limited access to its internal byte array.
+        /// </summary>
         private sealed class FastByteArrayOutputStream : MemoryStream
         {
             /// <summary>
@@ -173,18 +171,18 @@ namespace FBCore.Common.Internal
         }
 
         /// <summary>
-        /// Attempts to read <code> len</code> bytes from the stream into the given array
-        /// starting at <code> off</code>, with the same behavior as
+        /// Attempts to read <code>len</code> bytes from the stream into the given array
+        /// starting at <code>off</code>, with the same behavior as Stream.Read.
         /// Does not close the stream.
-        ///
-        /// <param name="inputStream">the input stream to read from.</param>
-        /// <param name="b">the buffer into which the data is read.</param>
-        /// <param name="off">an int specifying the offset into the data.</param>
-        /// <param name="len">an int specifying the number of bytes to read.</param>
-        /// @throws EOFException if this stream reaches the end before reading all
-        ///     the bytes.
-        /// @throws IOException if an I/O error occurs.
         /// </summary>
+        /// <param name="inputStream">The input stream to read from.</param>
+        /// <param name="b">The buffer into which the data is read.</param>
+        /// <param name="off">An int specifying the offset into the data.</param>
+        /// <param name="len">An int specifying the number of bytes to read.</param>
+        /// <exception cref="EndOfStreamException">
+        /// If this stream reaches the end before reading all the bytes.
+        /// </exception>
+        /// <exception cref="IOException">If an I/O error occurs.</exception>
         public static void ReadFully(Stream inputStream, byte[] b, int off, int len)
         {
             int read = Read(inputStream, b, off, len);

@@ -4,7 +4,7 @@ using System.Threading;
 namespace ImagePipelineTest.ImagePipeline.Testing
 {
     /// <summary>
-    /// Mock ByteArrayPool
+    /// Mock ByteArrayPool.
     /// </summary>
     class MockByteArrayPool : IByteArrayPool
     {
@@ -15,7 +15,6 @@ namespace ImagePipelineTest.ImagePipeline.Testing
         /// <summary>
         /// Instantiates the <see cref="MockByteArrayPool"/>.
         /// </summary>
-        /// <param name="value"></param>
         public MockByteArrayPool(byte[] value)
         {
             _getCallCount = 0;
@@ -24,10 +23,8 @@ namespace ImagePipelineTest.ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Mock Get method
+        /// Mock Get method.
         /// </summary>
-        /// <param name="size"></param>
-        /// <returns></returns>
         public byte[] Get(int size)
         {
             Interlocked.Increment(ref _getCallCount);
@@ -35,25 +32,22 @@ namespace ImagePipelineTest.ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Mock Release method
+        /// Mock Release method.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
         public void Release(byte[] value)
         {
             Interlocked.Increment(ref _releaseCallCount);
         }
 
         /// <summary>
-        /// Mock Trim method
+        /// Mock Trim method.
         /// </summary>
-        /// <param name="trimType"></param>
         public void Trim(double trimType)
         {
         }
 
         /// <summary>
-        /// Mock method
+        /// Mock method.
         /// </summary>
         public int CallCount
         {
@@ -64,7 +58,7 @@ namespace ImagePipelineTest.ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Mock method
+        /// Mock method.
         /// </summary>
         public int ReleaseCallCount
         {

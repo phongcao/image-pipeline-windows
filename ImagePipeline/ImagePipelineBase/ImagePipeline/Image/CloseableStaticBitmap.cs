@@ -18,7 +18,7 @@ namespace ImagePipeline.Image
         private volatile SoftwareBitmap _bitmap;
 
         /// <summary>
-        /// Quality info
+        /// Quality info.
         /// </summary>
         private readonly IQualityInfo _qualityInfo;
 
@@ -42,8 +42,9 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Creates a new instance of a CloseableStaticBitmap from an existing CloseableReference. The
-        /// CloseableStaticBitmap will hold a reference to the Bitmap until it's closed.
+        /// Creates a new instance of a CloseableStaticBitmap from an existing
+        /// CloseableReference. The CloseableStaticBitmap will hold a reference
+        /// to the bitmap until it's closed.
         /// </summary>
         public CloseableStaticBitmap(
             CloseableReference<SoftwareBitmap> bitmapReference,
@@ -57,7 +58,8 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// This has to be called before we get rid of this object in order to release underlying memory
+        /// This has to be called before we get rid of this object in order to
+        /// release underlying memory.
         /// </summary>
         protected override void Dispose(bool disposing)
         {
@@ -81,12 +83,16 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Convert this object to a CloseableReference{Bitmap}.
-        /// <para />You cannot call this method on an object that has already been closed.
-        /// <para />The reference count of the bitmap is preserved. After calling this method, this object
-        /// can no longer be used and no longer points to the bitmap.
-        /// @throws IllegalArgumentException if this object has already been closed.
+        /// Convert this object to a CloseableReference{SoftwareBitmap}.
+        /// <para />You cannot call this method on an object that has
+        /// already been closed.
+        /// <para />The reference count of the bitmap is preserved.
+        /// After calling this method, this object can no longer be used
+        /// and no longer points to the bitmap.
         /// </summary>
+        /// <exception cref="ArgumentException">
+        /// If this object has already been closed.
+        /// </exception>
         public CloseableReference<SoftwareBitmap> ConvertToBitmapReference()
         {
             lock (_bitmapGate)
@@ -112,9 +118,8 @@ namespace ImagePipeline.Image
 
         /// <summary>
         /// Gets the underlying bitmap.
-        ///
-        /// @return the underlying bitmap
         /// </summary>
+        /// <returns>The underlying bitmap.</returns>
         public override SoftwareBitmap UnderlyingBitmap
         {
             get
@@ -124,7 +129,7 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Returns size in bytes of the underlying bitmap
+        /// Returns size in bytes of the underlying bitmap.
         /// </summary>
         public override int SizeInBytes
         {
@@ -135,7 +140,7 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Returns width of the image
+        /// Returns width of the image.
         /// </summary>
         public override int Width
         {
@@ -147,7 +152,7 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Returns width of the image
+        /// Returns width of the image.
         /// </summary>
         public override int Height
         {
@@ -159,7 +164,7 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// Returns the rotation angle of the image
+        /// Returns the rotation angle of the image.
         /// </summary>
         public int RotationAngle
         {

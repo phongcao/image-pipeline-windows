@@ -14,16 +14,14 @@ namespace FBCore.Common.Time
 
         /// <summary>
         /// Gets the current time in milliseconds.
-        ///
-        /// @return the current time in milliseconds.
         /// </summary>
+        /// <returns>The current time in milliseconds.</returns>
         public abstract long CurrentTimeMillis { get; }
 
         /// <summary>
         /// Gets the current time.
-        ///
-        /// @return the current time in milliseconds.
         /// </summary>
+        /// <returns>The current time in milliseconds.</returns>
         public abstract DateTime Now { get; }
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ImagePipeline.Producers
 {
     /// <summary>
-    /// Provides custom implementation for <see cref="IProducerListener"/>
+    /// Provides custom implementation for <see cref="IProducerListener"/>.
     /// </summary>
     public class ProducerListenerImpl : IProducerListener
     {
@@ -12,11 +12,14 @@ namespace ImagePipeline.Producers
 
         internal Action<string, string, string> OnProducerEventFunc { get; }
 
-        internal Action<string, string, IDictionary<string, string>> OnProducerFinishWithSuccessFunc { get; }
+        internal Action<string, string, IDictionary<string, string>>
+            OnProducerFinishWithSuccessFunc { get; }
 
-        internal Action<string, string, Exception, IDictionary<string, string>> OnProducerFinishWithFailureFunc { get; }
+        internal Action<string, string, Exception, IDictionary<string, string>>
+            OnProducerFinishWithFailureFunc { get; }
 
-        internal Action<string, string, IDictionary<string, string>> OnProducerFinishWithCancellationFunc { get; }
+        internal Action<string, string, IDictionary<string, string>>
+            OnProducerFinishWithCancellationFunc { get; }
 
         internal Func<string, bool> RequiresExtraMapFunc { get; }
 
@@ -40,8 +43,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called whenever a producer starts processing unit of work. This method might 
-        /// be called multiple times, but between any two consecutive calls to OnProducerStart 
+        /// Called whenever a producer starts processing unit of work.
+        /// This method might be called multiple times, but between any
+        /// two consecutive calls to OnProducerStart and 
         /// OnProducerFinishWithSuccess will be called exactly once.
         /// </summary>
         public void OnProducerStart(string requestId, string producerName)
@@ -50,9 +54,10 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called whenever an important producer-specific event occurs. This may only be called 
-        /// if OnProducerStart has been called, but corresponding OnProducerFinishWith method has 
-        /// not been called yet.
+        /// Called whenever an important producer-specific event occurs.
+        /// This may only be called if OnProducerStart has been called,
+        /// but corresponding OnProducerFinishWith method has not been
+        /// called yet.
         /// </summary>
         public void OnProducerEvent(string requestId, string producerName, string eventName)
         {
@@ -60,13 +65,15 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called when a producer successfully finishes processing current unit of work.
-        ///
-        /// <param name="requestId">Request id</param>
-        /// <param name="producerName">Producer name</param>
-        /// <param name="extraMap">Additional parameters about the producer. This map is immutable 
-        /// and will throw an exception if attempts are made to modify it.</param>
+        /// Called when a producer successfully finishes processing current
+        /// unit of work.
         /// </summary>
+        /// <param name="requestId">Request id.</param>
+        /// <param name="producerName">Producer name.</param>
+        /// <param name="extraMap">
+        /// Additional parameters about the producer. This map is immutable
+        /// and will throw an exception if attempts are made to modify it.
+        /// </param>
         public void OnProducerFinishWithSuccess(
             string requestId,
             string producerName,
@@ -76,14 +83,16 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called when producer finishes processing current unit of work due to an error.
-        ///
-        /// <param name="requestId">Request id</param>
-        /// <param name="producerName">Producer name</param>
-        /// <param name="error">Error</param>
-        /// <param name="extraMap">Additional parameters about the producer. This map is immutable 
-        /// and will throw an exception if attempts are made to modify it.</param>
+        /// Called when producer finishes processing current unit of
+        /// work due to an error.
         /// </summary>
+        /// <param name="requestId">Request id.</param>
+        /// <param name="producerName">Producer name.</param>
+        /// <param name="extraMap">
+        /// Additional parameters about the producer. This map is immutable
+        /// and will throw an exception if attempts are made to modify it.
+        /// </param>
+        /// <param name="error">Error.</param>
         public void OnProducerFinishWithFailure(
             string requestId,
             string producerName,
@@ -95,12 +104,13 @@ namespace ImagePipeline.Producers
 
         /// <summary>
         /// Called once when producer finishes due to cancellation.
-        ///
-        /// <param name="requestId">Request id</param>
-        /// <param name="producerName">Producer name</param>
-        /// <param name="extraMap">Additional parameters about the producer. This map is immutable 
-        /// and will throw an exception if attempts are made to modify it.</param>
         /// </summary>
+        /// <param name="requestId">Request id.</param>
+        /// <param name="producerName">Producer name.</param>
+        /// <param name="extraMap">
+        /// Additional parameters about the producer. This map is immutable
+        /// and will throw an exception if attempts are made to modify it.
+        /// </param>
         public void OnProducerFinishWithCancellation(
             string requestId,
             string producerName,
@@ -110,9 +120,11 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// @return true if listener makes use of extra map
-        /// <param name="requestId"></param>
+        /// Checks if this listener makes use of extra map.
         /// </summary>
+        /// <returns>
+        /// true if listener makes use of extra map.
+        /// </returns>
         public bool RequiresExtraMap(string requestId)
         {
             return RequiresExtraMapFunc(requestId);

@@ -18,7 +18,7 @@ namespace ImagePipeline.Producers
     /// <summary>
     /// Decodes images.
     ///
-    /// <p/> Progressive JPEGs are decoded progressively as new data arrives.
+    /// <p/>Progressive JPEGs are decoded progressively as new data arrives.
     /// </summary>
     public class DecodeProducer : IProducer<CloseableReference<CloseableImage>>
     {
@@ -44,7 +44,7 @@ namespace ImagePipeline.Producers
         private readonly bool _downsampleEnabledForNetwork;
 
         /// <summary>
-        /// Instantiates the <see cref="DecodeProducer"/>
+        /// Instantiates the <see cref="DecodeProducer"/>.
         /// </summary>
         public DecodeProducer(
             IByteArrayPool byteArrayPool,
@@ -65,8 +65,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Start producing results for given context. Provided consumer is notified whenever 
-        /// progress is made (new value is ready or error occurs).
+        /// Start producing results for given context.
+        /// Provided consumer is notified whenever progress is made
+        /// (new value is ready or error occurs).
         /// </summary>
         public void ProduceResults(
             IConsumer<CloseableReference<CloseableImage>> consumer,
@@ -162,18 +163,21 @@ namespace ImagePipeline.Producers
             }
 
             /// <summary>
-            /// Called by a producer whenever new data is produced. This method should not 
-            /// throw an exception.
+            /// Called by a producer whenever new data is produced.
+            /// This method should not throw an exception.
             ///
-            /// <para /> In case when result is closeable resource producer will close it 
-            /// after OnNewResult returns. Consumer needs to make copy of it if the resource 
-            /// must be accessed after that. Fortunately, with CloseableReferences, that 
-            /// should not impose too much overhead.
-            ///
-            /// <param name="newResult">The result provided by the producer</param>
-            /// <param name="isLast">True if newResult is the last result</param>
+            /// <para />In case when result is closeable resource producer
+            /// will close it after OnNewResult returns.
+            /// IConsumer needs to make copy of it if the resource must be
+            /// accessed after that. Fortunately, with CloseableReferences,
+            /// that should not impose too much overhead.
             /// </summary>
-
+            /// <param name="newResult">
+            /// The result provided by the producer.
+            /// </param>
+            /// <param name="isLast">
+            /// true if newResult is the last result.
+            /// </param>
             protected override void OnNewResultImpl(EncodedImage newResult, bool isLast)
             {
                 if (isLast && !EncodedImage.IsValid(newResult))
@@ -254,7 +258,8 @@ namespace ImagePipeline.Producers
                     try
                     {
                         image = await _parent._imageDecoder
-                            .DecodeImageAsync(encodedImage, length, quality, _imageDecodeOptions).ConfigureAwait(false);
+                            .DecodeImageAsync(encodedImage, length, quality, _imageDecodeOptions)
+                            .ConfigureAwait(false);
                     }
                     catch (Exception e)
                     {
@@ -326,8 +331,9 @@ namespace ImagePipeline.Producers
             }
 
             /// <summary>
-            /// @return true if producer is finished.
+            /// Checks if producer is finished.
             /// </summary>
+            /// <returns>true if producer is finished.</returns>
             private bool IsFinished()
             {
                 lock (_gate)
@@ -337,8 +343,9 @@ namespace ImagePipeline.Producers
             }
 
             /// <summary>
-            /// Finishes if not already finished and <code>shouldFinish</code> is specified.
-            /// <para /> If just finished, the intermediate image gets released.
+            /// Finishes if not already finished and <code>shouldFinish</code>
+            /// is specified.
+            /// <para />If just finished, the intermediate image gets released.
             /// </summary>
             private void MaybeFinish(bool shouldFinish)
             {
@@ -357,7 +364,8 @@ namespace ImagePipeline.Producers
             }
 
             /// <summary>
-            /// Notifies consumer of new result and finishes if the result is final.
+            /// Notifies consumer of new result and finishes if the result
+            /// is final.
             /// </summary>
             private void HandleResult(CloseableImage decodedImage, bool isFinal)
             {

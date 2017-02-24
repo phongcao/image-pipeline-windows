@@ -6,15 +6,17 @@ using System.IO;
 namespace FBCore.Common.File
 {
     /// <summary>
-    /// Static operations on <see cref="File"/>s
+    /// Static operations on <see cref="File"/>s.
     /// </summary>
     public class FileUtils
     {
         /// <summary>
-        /// Creates the specified directory, along with all parent paths if necessary
-        /// <param name="directory">Directory to be created</param>
-        /// @throws CreateDirectoryException
+        /// Creates the specified directory, along with all parent paths if necessary.
         /// </summary>
+        /// <param name="directory">Directory to be created.</param>
+        /// <exception cref="CreateDirectoryException">
+        /// Could not create the directory.
+        /// </exception>
         public static void Mkdirs(FileSystemInfo directory)
         {
             if (System.IO.File.Exists(directory.FullName))
@@ -42,12 +44,13 @@ namespace FBCore.Common.File
         }
 
         /// <summary>
-        /// Renames the source file to the target file. If the target file exists, then we attempt to
-        /// delete it. If the delete or the rename operation fails, then we raise an exception
-        /// <param name="source">The source file</param>
-        /// <param name="target">The new 'name' for the source file</param>
-        /// @throws RenameException
+        /// Renames the source file to the target file. If the target file exists, then we 
+        /// attempt to delete it. If the delete or the rename operation fails, then we raise 
+        /// an exception.
         /// </summary>
+        /// <param name="source">The source file.</param>
+        /// <param name="target">The new 'name' for the source file.</param>
+        /// <exception cref="RenameException">Could not rename file.</exception>
         public static void Rename(FileSystemInfo source, FileSystemInfo target)
         {
             Preconditions.CheckNotNull(source);
@@ -67,7 +70,8 @@ namespace FBCore.Common.File
                 return;
             }
 
-            throw new RenameException("Unknown error renaming " + source.FullName + " to " + target.FullName);
+            throw new RenameException(
+                "Unknown error renaming " + source.FullName + " to " + target.FullName);
         }
     }
 }

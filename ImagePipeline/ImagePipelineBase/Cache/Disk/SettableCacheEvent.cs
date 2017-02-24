@@ -4,8 +4,8 @@ using System.IO;
 namespace Cache.Disk
 {
     /// <summary>
-    /// Implementation of <see cref="ICacheEvent"/> that allows the values to be set and supports recycling of
-    /// instances.
+    /// Implementation of <see cref="ICacheEvent"/> that allows the values to be set
+    /// and supports recycling of instances.
     /// </summary>
     public class SettableCacheEvent : ICacheEvent
     {
@@ -25,9 +25,8 @@ namespace Cache.Disk
         private SettableCacheEvent _nextRecycledEvent;
 
         /// <summary>
-        /// Obtains the cache event instance
+        /// Obtains the cache event instance.
         /// </summary>
-        /// <returns></returns>
         public static SettableCacheEvent Obtain()
         {
             lock (RECYCLER_LOCK)
@@ -63,8 +62,6 @@ namespace Cache.Disk
         /// <summary>
         /// Sets the cache key related to this event.
         /// </summary>
-        /// <param name="cacheKey"></param>
-        /// <returns></returns>
         public SettableCacheEvent SetCacheKey(ICacheKey cacheKey)
         {
             _cacheKey = cacheKey;
@@ -74,7 +71,6 @@ namespace Cache.Disk
         /// <summary>
         /// Gets the resource ID for the cached item.
         /// </summary>
-        /// <returns></returns>
         public string ResourceId
         {
             get
@@ -86,8 +82,6 @@ namespace Cache.Disk
         /// <summary>
         /// Sets the resource ID for the cached item.
         /// </summary>
-        /// <param name="resourceId"></param>
-        /// <returns></returns>
         public SettableCacheEvent SetResourceId(string resourceId)
         {
             _resourceId = resourceId;
@@ -128,8 +122,6 @@ namespace Cache.Disk
         /// <summary>
         /// Sets the total size of the resources currently in storage, in bytes.
         /// </summary>
-        /// <param name="cacheSize"></param>
-        /// <returns></returns>
         public SettableCacheEvent SetCacheSize(long cacheSize)
         {
             _cacheSize = cacheSize;
@@ -150,8 +142,6 @@ namespace Cache.Disk
         /// <summary>
         /// Sets the current size limit for the cache, in bytes.
         /// </summary>
-        /// <param name="cacheLimit"></param>
-        /// <returns></returns>
         public SettableCacheEvent SetCacheLimit(long cacheLimit)
         {
             _cacheLimit = cacheLimit;
@@ -160,9 +150,9 @@ namespace Cache.Disk
 
 
         /// <summary>
-        /// Gets the exception which occurred to trigger a read or write exception event.
+        /// Gets the exception which occurred to trigger a read or write
+        /// exception event.
         /// </summary>
-        /// <returns></returns>
         public IOException Exception
         {
             get
@@ -172,10 +162,9 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Sets the exception which occurred to trigger a read or write exception event.
+        /// Sets the exception which occurred to trigger a read or write
+        /// exception event.
         /// </summary>
-        /// <param name="exception"></param>
-        /// <returns></returns>
         public SettableCacheEvent SetException(IOException exception)
         {
             _exception = exception;
@@ -185,7 +174,6 @@ namespace Cache.Disk
         /// <summary>
         /// Gets the reason for an item's eviction in eviction events.
         /// </summary>
-        /// <returns></returns>
         public EvictionReason EvictionReason
         {
             get
@@ -197,8 +185,6 @@ namespace Cache.Disk
         /// <summary>
         /// Sets the reason for an item's eviction in eviction events.
         /// </summary>
-        /// <param name="evictionReason"></param>
-        /// <returns></returns>
         public SettableCacheEvent SetEvictionReason(EvictionReason evictionReason)
         {
             _evictionReason = evictionReason;
@@ -206,7 +192,7 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Recycles the cache event
+        /// Recycles the cache event.
         /// </summary>
         public void Recycle()
         {

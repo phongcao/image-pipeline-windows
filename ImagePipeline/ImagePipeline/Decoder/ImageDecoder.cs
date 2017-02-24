@@ -1,5 +1,4 @@
-﻿using FBCore.Common.References;
-using ImageFormatUtils;
+﻿using ImageFormatUtils;
 using ImagePipeline.AnimatedFactory;
 using ImagePipeline.Common;
 using ImagePipeline.Image;
@@ -13,8 +12,8 @@ namespace ImagePipeline.Decoder
     /// <summary>
     /// Decodes images.
     ///
-    /// <para /> ImageDecoder implements image type recognition and passes decode requests to
-    /// specialized methods implemented by subclass
+    /// <para />ImageDecoder implements image type recognition and passes
+    /// decode requests to specialized methods implemented by subclass.
     /// </summary>
     public class ImageDecoder
     {
@@ -23,7 +22,7 @@ namespace ImagePipeline.Decoder
         private readonly IPlatformDecoder _platformDecoder;
 
         /// <summary>
-        /// Instantiates the <see cref="ImageDecoder"/>
+        /// Instantiates the <see cref="ImageDecoder"/>.
         /// </summary>
         public ImageDecoder(
             IAnimatedImageFactory animatedImageFactory,
@@ -37,13 +36,20 @@ namespace ImagePipeline.Decoder
 
         /// <summary>
         /// Decodes image.
-        ///
-        /// <param name="encodedImage">input image (encoded bytes plus meta data)</param>
-        /// <param name="length">if image type supports decoding incomplete image then 
-        /// determines where the image data should be cut for decoding.</param>
-        /// <param name="qualityInfo">quality information for the image</param>
-        /// <param name="options">options that cange decode behavior</param>
         /// </summary>
+        /// <param name="encodedImage">
+        /// Input image (encoded bytes plus meta data).
+        /// </param>
+        /// <param name="length">
+        /// If image type supports decoding incomplete image then 
+        /// determines where the image data should be cut for decoding.
+        /// </param>
+        /// <param name="qualityInfo">
+        /// Quality information for the image.
+        /// </param>
+        /// <param name="options">
+        /// Options that cange decode behavior.
+        /// </param>
         public Task<CloseableImage> DecodeImageAsync(
             EncodedImage encodedImage,
             int length,
@@ -86,11 +92,12 @@ namespace ImagePipeline.Decoder
 
         /// <summary>
         /// Decodes gif into CloseableImage.
-        ///
-        /// <param name="encodedImage">input image (encoded bytes plus meta data)</param>
-        /// <param name="options">decode options</param>
-        /// @return a CloseableImage
         /// </summary>
+        /// <param name="encodedImage">
+        /// Input image (encoded bytes plus meta data).
+        /// </param>
+        /// <param name="options">Decode options.</param>
+        /// <returns>A CloseableImage.</returns>
         public Task<CloseableImage> DecodeGifAsync(
             EncodedImage encodedImage,
             ImageDecodeOptions options)
@@ -99,9 +106,12 @@ namespace ImagePipeline.Decoder
         }
 
         /// <summary>
-        /// <param name="encodedImage">input image (encoded bytes plus meta data)</param>
-        /// @return a CloseableStaticBitmap
+        /// Decodes a static bitmap.
         /// </summary>
+        /// <param name="encodedImage">
+        /// Input image (encoded bytes plus meta data).
+        /// </param>
+        /// <returns>A CloseableStaticBitmap.</returns>
         public Task<CloseableStaticBitmap> DecodeStaticImageAsync(EncodedImage encodedImage)
         {
             return _platformDecoder
@@ -126,12 +136,17 @@ namespace ImagePipeline.Decoder
 
         /// <summary>
         /// Decodes a partial jpeg.
-        ///
-        /// <param name="encodedImage">input image (encoded bytes plus meta data)</param>
-        /// <param name="length">amount of currently available data in bytes</param>
-        /// <param name="qualityInfo">quality info for the image</param>
-        /// @return a CloseableStaticBitmap
         /// </summary>
+        /// <param name="encodedImage">
+        /// Input image (encoded bytes plus meta data).
+        /// </param>
+        /// <param name="length">
+        /// Amount of currently available data in bytes.
+        /// </param>
+        /// <param name="qualityInfo">
+        /// Quality info for the image.
+        /// </param>
+        /// <returns>A CloseableStaticBitmap.</returns>
         public Task<CloseableStaticBitmap> DecodeJpegAsync(
             EncodedImage encodedImage,
             int length,
@@ -159,13 +174,12 @@ namespace ImagePipeline.Decoder
 
         /// <summary>
         /// Decode a webp animated image into a CloseableImage.
-        ///
-        /// <para /> The image is decoded into a 'pinned' purgeable bitmap.
-        ///
-        /// <param name="encodedImage">input image (encoded bytes plus meta data)</param>
-        /// <param name="options"></param>
-        /// @return a <see cref="CloseableImage"/>
         /// </summary>
+        /// <param name="encodedImage">
+        /// Input image (encoded bytes plus meta data).
+        /// </param>
+        /// <param name="options">Image decode options.</param>
+        /// <returns>A <see cref="CloseableImage"/>.</returns>
         public Task<CloseableImage> DecodeAnimatedWebpAsync(
             EncodedImage encodedImage,
             ImageDecodeOptions options)

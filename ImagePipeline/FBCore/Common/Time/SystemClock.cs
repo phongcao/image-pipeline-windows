@@ -15,7 +15,7 @@ namespace FBCore.Common.Time
         }
 
         /// <summary>
-        /// Singleton
+        /// Singleton.
         /// </summary>
         /// <returns></returns>
         public static SystemClock Get()
@@ -27,8 +27,8 @@ namespace FBCore.Common.Time
         /// Gets the number of milliseconds elapsed since the system started.
         /// </summary>
         /// <returns>
-        /// A 32-bit signed integer containing the amount of time in milliseconds that has
-        /// passed since the last time the computer was started.
+        /// A 32-bit signed integer containing the amount of time in milliseconds
+        /// that has passed since the last time the computer was started.
         /// </returns>
         public static long UptimeMillis
         {
@@ -40,9 +40,8 @@ namespace FBCore.Common.Time
 
         /// <summary>
         /// Gets the current time in milliseconds.
-        ///
-        /// @return the current time in milliseconds.
         /// </summary>
+        /// <returns>The current time in milliseconds.</returns>
         public override long CurrentTimeMillis
         {
             get
@@ -53,9 +52,8 @@ namespace FBCore.Common.Time
 
         /// <summary>
         /// Gets the current time.
-        ///
-        /// @return the current time.
         /// </summary>
+        /// <returns>The current time.</returns>
         public override DateTime Now
         {
             get

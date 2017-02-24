@@ -1,19 +1,21 @@
 ﻿namespace FBCore.Common.Util
 {
     /// <summary>
-    /// Provides implementation of hashCode for compound objects. Implementation provided by
-    /// this class gives the same results as Objects.hashCode, but does not create array consisting of
-    /// all components
+    /// Provides implementation of GetHashCode for compound objects.
+    /// Implementation provided by this class gives the same results as object.GetHashCode,
+    /// but does not create array consisting of all components.
     /// </summary>
     public class HashCodeUtil
     {
         /// <summary>
-        /// Hash code is computed as value of polynomial whose coefficients are determined by hash codes
-        /// of objects passed as parameter to one of hashCode functions. More precisely:
-        /// hashCode(o1, o2, ..., on) = P[o1, o2, ..., on](X) =
-        /// X^n + o1.hashCode() * X ^ (n - 1) + o2.hashCode() * X ^ (n - 2) + ... + on.hashCode() * X ^ 0
+        /// Hash code is computed as value of polynomial whose coefficients are determined
+        /// by hash codes of objects passed as parameter to one of hashCode functions.
+        /// More precisely:
+        /// HashCode(o1, o2, ..., on) = P[o1, o2, ..., on](X) =
+        /// X^n + o1.GetHashCode() * X ^ (n - 1) + o2.GetHashCode() * X ^ (n - 2) + ... + 
+        /// on.GetHashCode() * X ^ 0
         ///
-        /// <para /> Constant X determines point at which polynomial is evaluated.
+        /// <para />Constant X determines point at which polynomial is evaluated.
         /// </summary>
         private const int X = 31;
 
@@ -23,12 +25,11 @@
         public static int HashCode(
             object o1)
         {
-            return HashCode(
-                o1 == null ? 0 : o1.GetHashCode());
+            return HashCode(o1 == null ? 0 : o1.GetHashCode());
         }
 
         /// <summary>
-        /// Calculates hash code
+        /// Calculates hash code.
         /// </summary>
         public static int HashCode(
             object o1,
@@ -40,7 +41,7 @@
         }
 
         /// <summary>
-        /// Calculates hash code
+        /// Calculates hash code.
         /// </summary>
         public static int HashCode(
             object o1,
@@ -54,7 +55,7 @@
         }
 
         /// <summary>
-        /// Calculates hash code
+        /// Calculates hash code.
         /// </summary>
         public static int HashCode(
             object o1,
@@ -70,7 +71,7 @@
         }
 
         /// <summary>
-        /// Calculates hash code
+        /// Calculates hash code.
         /// </summary>
         public static int HashCode(
             object o1,
@@ -88,7 +89,7 @@
         }
 
         /// <summary>
-        /// Calculates hash code
+        /// Calculates hash code.
         /// </summary>
         public static int HashCode(
             object o1,
@@ -108,7 +109,7 @@
         }
 
         /// <summary>
-        /// Calculates hash code
+        /// Calculates hash code.
         /// </summary>
         public static int HashCode(
             int i1)
@@ -118,7 +119,7 @@
         }
 
         /// <summary>
-        /// Calculates hash code
+        /// Calculates hash code.
         /// </summary>
         public static int HashCode(
             int i1,
@@ -130,7 +131,7 @@
         }
 
         /// <summary>
-        /// Calculates hash code
+        /// Calculates hash code.
         /// </summary>
         public static int HashCode(
             int i1,
@@ -144,7 +145,7 @@
         }
 
         /// <summary>
-        /// Calculates hash code
+        /// Calculates hash code.
         /// </summary>
         public static int HashCode(
             int i1,
@@ -160,7 +161,7 @@
         }
 
         /// <summary>
-        /// Calculates hash code
+        /// Calculates hash code.
         /// </summary>
         public static int HashCode(
             int i1,
@@ -178,7 +179,7 @@
         }
 
         /// <summary>
-        /// Calculates hash code
+        /// Calculates hash code.
         /// </summary>
         public static int HashCode(
             int i1,
@@ -198,10 +199,9 @@
         }
 
         /// <summary>
-        /// Calculates hash code
+        /// Calculates hash code.
         /// </summary>
-        public static int HashCode(
-            string s)
+        public static int HashCode(string s)
         {
             int length = s.Length;
             int hash = 0;

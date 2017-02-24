@@ -24,8 +24,8 @@ namespace FBCore.Concurrency
         // The maximum concurrency level allowed by this scheduler. 
         private readonly int _maxDegreeOfParallelism;
 
-        // The priority of the work item relative to other work items in the thread pool.
-        // The value of this parameter can be Low, Normal, or High.
+        // The priority of the work item relative to other work items in
+        // the thread pool. The value of this parameter can be Low, Normal, or High.
         private readonly WorkItemPriority _priority;
 
         // Indicates whether the scheduler is currently processing work items. 
@@ -35,8 +35,10 @@ namespace FBCore.Concurrency
         /// Creates a new instance with the specified degree of parallelism. 
         /// </summary>
         /// <param name="maxDegreeOfParallelism">The degrees of parallelism.</param>
-        /// <param name="priority">The priority of the work item relative to work items 
-        /// in the thread pool. The value of this parameter can be Low, Normal, or High.</param>
+        /// <param name="priority">
+        /// The priority of the work item relative to work items in the thread pool.
+        /// The value of this parameter can be Low, Normal, or High.
+        /// </param>
         public LimitedConcurrencyTaskScheduler(int maxDegreeOfParallelism, WorkItemPriority priority)
         {
             _maxDegreeOfParallelism = maxDegreeOfParallelism;

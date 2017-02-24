@@ -9,58 +9,61 @@ namespace ImageUtils
     public class JfifUtil
     {
         /// <summary>
-        /// Definitions of jpeg markers as well as overall description of jpeg file format can be found
-        /// here: <a href="http://www.w3.org/Graphics/JPEG/itu-t81.pdf">Recommendation T.81</a>
+        /// Definitions of jpeg markers as well as overall description of jpeg
+        /// file format can be found here:
+        /// <a href="http://www.w3.org/Graphics/JPEG/itu-t81.pdf">
+        /// Recommendation T.81.
+        /// </a>
         /// </summary>
         public const int MARKER_FIRST_BYTE = 0xFF;
 
         /// <summary>
-        /// Escape
+        /// Escape.
         /// </summary>
         public const int MARKER_ESCAPE_BYTE = 0x00;
 
         /// <summary>
-        /// Start of image marker
+        /// Start of image marker.
         /// </summary>
         public const int MARKER_SOI = 0xD8;
 
         /// <summary>
-        /// Temporary marker
+        /// Temporary marker.
         /// </summary>
         public const int MARKER_TEM = 0x01;
 
         /// <summary>
-        /// End of image marker
+        /// End of image marker.
         /// </summary>
         public const int MARKER_EOI = 0xD9;
 
         /// <summary>
-        /// Start of scan
+        /// Start of scan.
         /// </summary>
         public const int MARKER_SOS = 0xDA;
 
         /// <summary>
-        /// Marker reserved for application segments
+        /// Marker reserved for application segments.
         /// </summary>
         public const int MARKER_APP1 = 0xE1;
 
         /// <summary>
-        /// Baseline DCT process frame marker
+        /// Baseline DCT process frame marker.
         /// </summary>
         public const int MARKER_SOFn = 0xC0;
 
         /// <summary>
-        /// RST
+        /// RST.
         /// </summary>
         public const int MARKER_RST0 = 0xD0;
 
         /// <summary>
-        /// RST
+        /// RST.
         /// </summary>
         public const int MARKER_RST7 = 0xD7;
 
         /// <summary>
-        /// EXIF
+        /// EXIF.
         /// </summary>
         public const int APP1_EXIF_MAGIC = 0x45786966;
 
@@ -70,9 +73,13 @@ namespace ImageUtils
 
         /// <summary>
         /// Determines auto-rotate angle based on orientation information.
-        /// <param name="orientation">orientation information, one of {1, 3, 6, 8}.</param>
-        /// @return orientation: 1/3/6/8 -> 0/180/90/270.
         /// </summary>
+        /// <param name="orientation">
+        /// Orientation information, one of {1, 3, 6, 8}.
+        /// </param>
+        /// <returns>
+        /// Orientation: 1/3/6/8 -> 0/180/90/270.
+        /// </returns>
         public static int GetAutoRotateAngleFromOrientation(int orientation)
         {
             return TiffUtil.GetAutoRotateAngleFromOrientation(orientation);
@@ -80,20 +87,31 @@ namespace ImageUtils
 
         /// <summary>
         /// Gets orientation information from jpeg byte array.
-        /// <param name="jpeg">the input byte array of jpeg image</param>
-        /// @return orientation: 1/8/3/6. Returns 0 if there is no valid orientation information.
         /// </summary>
+        /// <param name="jpeg">
+        /// The input byte array of jpeg image.
+        /// </param>
+        /// <returns>
+        /// Orientation: 1/8/3/6.
+        /// Returns 0 if there is no valid orientation information.
+        /// </returns>
         public static int GetOrientation(byte[] jpeg)
         {
-            // Wrapping with ByteArrayInputStream is cheap and we don't have duplicate implementation
+            // Wrapping with ByteArrayInputStream is cheap and we don't
+            // have duplicate implementation
             return GetOrientation(new MemoryStream(jpeg));
         }
 
         /// <summary>
         /// Get orientation information from jpeg input stream.
-        /// <param name="inputStream">the input stream of jpeg image</param>
-        /// @return orientation: 1/8/3/6. Returns 0 if there is no valid orientation information.
         /// </summary>
+        /// <param name="inputStream">
+        /// The input stream of jpeg image.
+        /// </param>
+        /// <returns>
+        /// Orientation: 1/8/3/6.
+        /// Returns 0 if there is no valid orientation information.
+        /// </returns>
         public static int GetOrientation(Stream inputStream)
         {
             try
@@ -113,12 +131,15 @@ namespace ImageUtils
         }
 
         /// <summary>
-        ///  Reads the content of the input stream until specified marker is found. Marker will be
-        ///  consumed and the input stream will be positioned after the specified marker.
-        ///  <param name="inputStream">the input stream to read bytes from</param>
-        ///  <param name="markerToFind">the marker we are looking for</param>
-        ///  @return bool: whether or not we found the expected marker from input stream.
+        /// Reads the content of the input stream until specified marker is found.
+        /// Marker will be consumed and the input stream will be positioned after
+        /// the specified marker.
         /// </summary>
+        /// <param name="inputStream">The input stream to read bytes from.</param>
+        /// <param name="markerToFind">The marker we are looking for.</param>
+        /// <returns>
+        /// bool: whether or not we found the expected marker from input stream.
+        /// </returns>
         public static bool MoveToMarker(Stream inputStream, int markerToFind)
         {
             Preconditions.CheckNotNull(inputStream);
@@ -142,14 +163,15 @@ namespace ImageUtils
                     return true;
                 }
 
-                // Check if the marker is SOI or TEM. These two don't have length field, so we skip it.
+                // Check if the marker is SOI or TEM. These two don't have length
+                // field, so we skip it.
                 if (marker == MARKER_SOI || marker == MARKER_TEM)
                 {
                     continue;
                 }
 
-                // Check if the marker is EOI or SOS. We will stop reading since metadata markers don't
-                // come after these two markers.
+                // Check if the marker is EOI or SOS. We will stop reading since
+                // metadata markers don't come after these two markers.
                 if (marker == MARKER_EOI || marker == MARKER_SOS)
                 {
                     return false;
@@ -191,10 +213,11 @@ namespace ImageUtils
         }
 
         /// <summary>
-        /// Positions the given input stream to the beginning of the EXIF data in the JPEG APP1 block.
-        /// <param name="inputStream">the input stream of jpeg image</param>
-        /// @return length of EXIF data
+        /// Positions the given input stream to the beginning of the EXIF data in
+        /// the JPEG APP1 block.
         /// </summary>
+        /// <param name="inputStream">The input stream of jpeg image.</param>
+        /// <returns>Length of EXIF data.</returns>
         private static int MoveToAPP1EXIF(Stream inputStream)
         {
             if (MoveToMarker(inputStream, MARKER_APP1))

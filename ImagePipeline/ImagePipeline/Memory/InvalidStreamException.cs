@@ -3,7 +3,7 @@
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// An exception indicating that this stream is no longer valid
+    /// An exception indicating that this stream is no longer valid.
     /// </summary>
     class InvalidStreamException : Exception
     {

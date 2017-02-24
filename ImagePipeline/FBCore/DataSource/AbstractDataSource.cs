@@ -8,27 +8,29 @@ namespace FBCore.DataSource
     /// <summary>
     /// An abstract implementation of <see cref="IDataSource{T}"/> interface.
     ///
-    /// <para /> It is highly recommended that other data sources extend this class as it takes 
-    /// care of the state, as well as of notifying listeners when the state changes.
+    /// <para />It is highly recommended that other data sources extend this class
+    /// as it takes care of the state, as well as of notifying listeners when the
+    /// state changes.
     ///
-    /// <para /> Subclasses should override <see cref="CloseResult"/> if results need clean up
+    /// <para />Subclasses should override <see cref="CloseResult"/> if results
+    /// need clean up.
     /// </summary>
     public abstract class AbstractDataSource<T> : IDataSource<T>
     {
         private readonly object _gate = new object();
 
         /// <summary>
-        /// Describes state of data source
+        /// Describes state of data source.
         /// </summary>
         private enum DataSourceStatus
         {
-            // data source has not finished yet
+            // data source has not finished yet.
             IN_PROGRESS,
 
-            // data source has finished with success
+            // data source has finished with success.
             SUCCESS,
 
-            // data source has finished with failure
+            // data source has finished with failure.
             FAILURE,
         }
 
@@ -45,7 +47,7 @@ namespace FBCore.DataSource
         private readonly BlockingCollection<Tuple<IDataSubscriber<T>, IExecutorService>> _subscribers;
 
         /// <summary>
-        /// Instantiates the <see cref="AbstractDataSource{T}"/>
+        /// Instantiates the <see cref="AbstractDataSource{T}"/>.
         /// </summary>
         protected AbstractDataSource()
         {
@@ -55,8 +57,9 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// @return true if the data source is closed, false otherwise
+        /// Checks if the data source is closed.
         /// </summary>
+        /// <returns>true if the data source is closed, false otherwise</returns>
         public virtual bool IsClosed()
         {
             lock (_gate)
@@ -66,8 +69,9 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// @return true if request is finished, false otherwise
+        /// Checks if request is finished.
         /// </summary>
+        /// <returns>true if request is finished, false otherwise</returns>
         public virtual bool IsFinished()
         {
             lock (_gate)
@@ -77,8 +81,12 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// @return true if any result (possibly of lower quality) is available right now, false otherwise
+        /// Checks if any result (possibly of lower quality) is available right now.
         /// </summary>
+        /// <returns>
+        /// true if any result (possibly of lower quality) is available right now,
+        /// false otherwise.
+        /// </returns>
         public virtual bool HasResult()
         {
             lock (_gate)
@@ -90,15 +98,17 @@ namespace FBCore.DataSource
         /// <summary>
         /// The most recent result of the asynchronous computation.
         ///
-        /// <para />The caller gains ownership of the object and is responsible for releasing it.
-        /// Note that subsequent calls to GetResult might give different results. Later results should be
-        /// considered to be of higher quality.
+        /// <para />The caller gains ownership of the object and is responsible
+        /// for releasing it.
+        /// Note that subsequent calls to GetResult might give different results.
+        /// Later results should be considered to be of higher quality.
         ///
         /// <para />This method will return null in the following cases:
-        /// when the DataSource does not have a result (<code> HasResult</code> returns false).
-        /// when the last result produced was null.
-        /// @return current best result
+        ///     1. When the DataSource does not have a result
+        ///        (<code> HasResult</code> returns false).
+        ///     2. When the last result produced was null.
         /// </summary>
+        /// <returns>Current best result.</returns>
         public virtual T GetResult()
         {
             lock (_gate)
@@ -108,8 +118,9 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// @return true if request finished due to error
+        /// Checks if request finished due to error.
         /// </summary>
+        /// <returns>true if request finished due to error.</returns>
         public virtual bool HasFailed()
         {
             lock (_gate)
@@ -119,8 +130,11 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// @return failure cause if the source has failed, else null
+        /// Gets the failure cause.
         /// </summary>
+        /// <returns>
+        /// Failure cause if the source has failed, else null.
+        /// </returns>
         public virtual Exception GetFailureCause()
         {
             lock (_gate)
@@ -130,8 +144,9 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// @return progress in range [0, 1]
+        /// Gets the progress.
         /// </summary>
+        /// <returns>Progress in range [0, 1].</returns>
         public virtual float GetProgress()
         {
             lock (_gate)
@@ -144,8 +159,10 @@ namespace FBCore.DataSource
         /// Cancels the ongoing request and releases all associated resources.
         ///
         /// <para />Subsequent calls to <see cref="GetResult"/> will return null.
-        /// @return true if the data source is closed for the first time
         /// </summary>
+        /// <returns>
+        /// true if the data source is closed for the first time.
+        /// </returns>
         public virtual bool Close()
         {
             T resultToClose;
@@ -181,7 +198,8 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Subclasses should override this method to close the result that is not needed anymore.
+        /// Subclasses should override this method to close the result that is
+        /// not needed anymore.
         ///
         /// <para /> This method is called in two cases:
         /// 1. to clear the result when data source gets closed
@@ -193,13 +211,14 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Subscribe for notifications whenever the state of the DataSource changes.
+        /// Subscribe for notifications whenever the state of the IDataSource
+        /// changes.
         ///
         /// <para />All changes will be observed on the provided executor.
-        /// <param name="dataSubscriber"></param>
-        /// <param name="executor"></param>
         /// </summary>
-        public virtual void Subscribe(IDataSubscriber<T> dataSubscriber, IExecutorService executor)
+        public virtual void Subscribe(
+            IDataSubscriber<T> dataSubscriber, 
+            IExecutorService executor)
         {
             Preconditions.CheckNotNull(dataSubscriber);
             Preconditions.CheckNotNull(executor);
@@ -214,7 +233,9 @@ namespace FBCore.DataSource
 
                 if (_dataSourceStatus == DataSourceStatus.IN_PROGRESS)
                 {
-                    _subscribers.Add(new Tuple<IDataSubscriber<T>, IExecutorService>(dataSubscriber, executor));
+                    _subscribers.Add(
+                        new Tuple<IDataSubscriber<T>, 
+                        IExecutorService>(dataSubscriber, executor));
                 }
 
                 shouldNotify = HasResult() || IsFinished() || WasCancelled();
@@ -265,26 +286,34 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Subclasses should invoke this method to set the result to <code> value</code>.
+        /// Subclasses should invoke this method to set the result to
+        /// <code>value</code>.
         ///
-        /// <para /> This method will return <code> true</code> if the value was successfully set, or
-        /// <code> false</code> if the data source has already been set, failed or closed.
+        /// <para />This method will return <code> true</code> if the
+        /// value was successfully set, or <code>false</code> if the
+        /// data source has already been set, failed or closed.
         ///
-        /// <para /> If the value was successfully set and <code> isLast</code> is <code> true</code>, state of the
-        /// data source will be set to <see cref="DataSourceStatus.SUCCESS"/>.
+        /// <para />If the value was successfully set and 
+        /// <code>isLast</code> is <code>true</code>, state of the data
+        /// source will be set to <see cref="DataSourceStatus.SUCCESS"/>.
         ///
-        /// <para /> <see cref="CloseResult"/> will be called for the previous result if the new value was
-        /// successfully set, OR for the new result otherwise.
+        /// <para /><see cref="CloseResult"/> will be called for the
+        /// previous result if the new value was successfully set, OR
+        /// for the new result otherwise.
         ///
-        /// <para /> This will also notify the subscribers if the value was successfully set.
+        /// <para />This will also notify the subscribers if the value
+        /// was successfully set.
         ///
-        /// <para /> Do NOT call this method from a synchronized block as it invokes external code of the
-        /// subscribers.
-        ///
-        /// <param name="value">the value that was the result of the task.</param>
-        /// <param name="isLast">whether or not the value is last.</param>
-        /// @return true if the value was successfully set.
+        /// <para />Do NOT call this method from a synchronized block
+        /// as it invokes external code of the subscribers.
         /// </summary>
+        /// <param name="value">
+        /// The value that was the result of the task.
+        /// </param>
+        /// <param name="isLast">
+        /// Whether or not the value is last.
+        /// </param>
+        /// <returns>true if the value was successfully set.</returns>
         public virtual bool SetResult(T value, bool isLast)
         {
             bool result = SetResultInternal(value, isLast);
@@ -299,20 +328,26 @@ namespace FBCore.DataSource
         /// <summary>
         /// Subclasses should invoke this method to set the failure.
         ///
-        /// <para /> This method will return <code> true</code> if the failure was successfully set, or
-        /// <code> false</code> if the data source has already been set, failed or closed.
+        /// <para />This method will return <code>true</code> if the
+        /// failure was successfully set, or <code>false</code> if
+        /// the data source has already been set, failed or closed.
         ///
-        /// <para /> If the failure was successfully set, state of the data source will be set to
+        /// <para />If the failure was successfully set, state of
+        /// the data source will be set to
         /// <see cref="DataSourceStatus.FAILURE"/>.
         ///
-        /// <para /> This will also notify the subscribers if the failure was successfully set.
+        /// <para />This will also notify the subscribers if the
+        /// failure was successfully set.
         ///
-        /// <para /> Do NOT call this method from a synchronized block as it invokes external code of the
-        /// subscribers.
-        ///
-        /// <param name="throwable">the failure cause to be set.</param>
-        /// @return true if the failure was successfully set.
+        /// <para />Do NOT call this method from a synchronized
+        /// block as it invokes external code of the subscribers.
         /// </summary>
+        /// <param name="throwable">
+        /// The failure cause to be set.
+        /// </param>
+        /// <returns>
+        /// true if the failure was successfully set.
+        /// </returns>
         public virtual bool SetFailure(Exception throwable)
         {
             bool result = SetFailureInternal(throwable);
@@ -327,17 +362,22 @@ namespace FBCore.DataSource
         /// <summary>
         /// Subclasses should invoke this method to set the progress.
         ///
-        /// <para /> This method will return <code> true</code> if the progress was successfully set, or
-        /// <code> false</code> if the data source has already been set, failed or closed.
+        /// <para />This method will return <code>true</code> if the
+        /// progress was successfully set, or <code>false</code> if
+        /// the data source has already been set, failed or closed.
         ///
-        /// <para /> This will also notify the subscribers if the progress was successfully set.
+        /// <para />This will also notify the subscribers if the
+        /// progress was successfully set.
         ///
-        /// <para /> Do NOT call this method from a synchronized block as it invokes external code of the
-        /// subscribers.
-        ///
-        /// <param name="progress">the progress in range [0, 1] to be set.</param>
-        /// @return true if the progress was successfully set.
+        /// <para />Do NOT call this method from a synchronized
+        /// block as it invokes external code of the subscribers.
         /// </summary>
+        /// <param name="progress">
+        /// The progress in range [0, 1] to be set.
+        /// </param>
+        /// <returns>
+        /// true if the progress was successfully set.
+        /// </returns>
         public virtual bool SetProgress(float progress)
         {
             bool result = SetProgressInternal(progress);
@@ -427,7 +467,7 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Notifies progress update
+        /// Notifies progress update.
         /// </summary>
         protected void NotifyProgressUpdate()
         {

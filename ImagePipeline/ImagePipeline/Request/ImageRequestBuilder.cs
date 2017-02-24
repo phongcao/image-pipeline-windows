@@ -47,19 +47,23 @@ namespace ImagePipeline.Request
         internal IRequestListener RequestListener;
 
         /// <summary>
-        /// Creates a new request builder instance. The setting will be done according to the source type.
-        /// <param name="uri">the uri to fetch</param>
-        /// @return a new request builder instance
+        /// Creates a new request builder instance.
+        /// The setting will be done according to the source type.
         /// </summary>
+        /// <param name="uri">The uri to fetch.</param>
+        /// <returns>A new request builder instance.</returns>
         public static ImageRequestBuilder NewBuilderWithSource(Uri uri)
         {
             return new ImageRequestBuilder().SetSource(uri);
         }
 
         /// <summary>
-        /// Creates a new request builder instance with the same parameters as the imageRequest passed in.
-        /// <param name="imageRequest">the ImageRequest from where to copy the parameters to the builder.</param>
-        /// @return a new request builder instance
+        /// Creates a new request builder instance with the same parameters as
+        /// the imageRequest passed in.
+        /// <param name="imageRequest">
+        /// The ImageRequest from where to copy the parameters to the builder.
+        /// </param>
+        /// <returns>A new request builder instance.</returns>
         /// </summary>
         public static ImageRequestBuilder FromRequest(ImageRequest imageRequest)
         {
@@ -82,10 +86,11 @@ namespace ImagePipeline.Request
 
         /// <summary>
         /// Sets the source uri (both network and local uris are supported).
-        /// Note: this will enable disk caching for network sources, and disable it for local sources.
-        /// <param name="uri">the uri to fetch the image from</param>
-        /// @return the updated builder instance
+        /// Note: this will enable disk caching for network sources, and
+        /// disable it for local sources.
         /// </summary>
+        /// <param name="uri">The uri to fetch the image from.</param>
+        /// <returns>The updated builder instance.</returns>
         public ImageRequestBuilder SetSource(Uri uri)
         {
             Preconditions.CheckNotNull(uri);
@@ -96,9 +101,11 @@ namespace ImagePipeline.Request
 
         /// <summary>
         /// Sets the lowest level that is permitted to request the image from.
-        /// <param name="requestLevel">the lowest request level that is allowed</param>
-        /// @return the updated builder instance
         /// </summary>
+        /// <param name="requestLevel">
+        /// The lowest request level that is allowed.
+        /// </param>
+        /// <returns>The updated builder instance.</returns>
         public ImageRequestBuilder SetLowestPermittedRequestLevel(RequestLevel requestLevel)
         {
             LowestPermittedRequestLevel = requestLevel;
@@ -106,10 +113,10 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// Enables or disables auto-rotate for the image in case image has orientation.
-        /// @return the updated builder instance
-        /// <param name="enabled"></param>
+        /// Enables or disables auto-rotate for the image in case image
+        /// has orientation.
         /// </summary>
+        /// <returns>The updated builder instance.</returns>
         public ImageRequestBuilder SetAutoRotateEnabled(bool enabled)
         {
             IsAutoRotateEnabled = enabled;
@@ -118,9 +125,9 @@ namespace ImagePipeline.Request
 
         /// <summary>
         /// Sets resize options in case resize should be performed.
-        /// <param name="resizeOptions">resize options</param>
-        /// @return the modified builder instance
         /// </summary>
+        /// <param name="resizeOptions">Resize options.</param>
+        /// <returns>The modified builder instance.</returns>
         public ImageRequestBuilder SetResizeOptions(ResizeOptions resizeOptions)
         {
             ResizeOptions = resizeOptions;
@@ -128,10 +135,8 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// Sets image decode options
+        /// Sets image decode options.
         /// </summary>
-        /// <param name="imageDecodeOptions"></param>
-        /// <returns></returns>
         public ImageRequestBuilder SetImageDecodeOptions(ImageDecodeOptions imageDecodeOptions)
         {
             ImageDecodeOptions = imageDecodeOptions;
@@ -139,11 +144,12 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// Sets the cache option. Pipeline might use different caches and eviction policies for each
-        /// image type.
-        /// <param name="cacheChoice">the cache choice to set</param>
-        /// @return the modified builder instance
+        /// Sets the cache option.
+        /// Pipeline might use different caches and eviction policies for
+        /// each image type.
         /// </summary>
+        /// <param name="cacheChoice">The cache choice to set.</param>
+        /// <returns>The modified builder instance.</returns>
         public ImageRequestBuilder SetCacheChoice(CacheChoice cacheChoice)
         {
             CacheChoice = cacheChoice;
@@ -152,9 +158,8 @@ namespace ImagePipeline.Request
 
         /// <summary>
         /// Enables or disables progressive rendering.
-        /// <param name="enabled"></param>
-        /// @return the modified builder instance
         /// </summary>
+        /// <returns>The modified builder instance.</returns>
         public ImageRequestBuilder SetProgressiveRenderingEnabled(bool enabled)
         {
             IsProgressiveRenderingEnabled = enabled;
@@ -163,9 +168,8 @@ namespace ImagePipeline.Request
 
         /// <summary>
         /// Enables or disables the use of local thumbnails as previews.
-        /// <param name="enabled"></param>
-        /// @return the modified builder instance
         /// </summary>
+        /// <returns>The modified builder instance.</returns>
         public ImageRequestBuilder SetLocalThumbnailPreviewsEnabled(bool enabled)
         {
             IsLocalThumbnailPreviewsEnabled = enabled;
@@ -173,9 +177,9 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// Disables disk cache for this request, regardless where the image will come from.
+        /// Disables disk cache for this request, regardless where the image
+        /// will come from.
         /// </summary>
-        /// <returns></returns>
         public ImageRequestBuilder DisableDiskCache()
         {
             _diskCacheEnabled = false;
@@ -184,9 +188,9 @@ namespace ImagePipeline.Request
 
         /// <summary>
         /// Set priority for the request.
-        /// <param name="requestPriority"></param>
-        /// @return the modified builder instance
         /// </summary>
+        /// <param name="requestPriority">The request priority.</param>
+        /// <returns>The modified builder instance.</returns>
         public ImageRequestBuilder SetRequestPriority(int requestPriority)
         {
             Priority = requestPriority;
@@ -195,8 +199,10 @@ namespace ImagePipeline.Request
 
         /// <summary>
         /// Sets the postprocessor.
-        /// <param name="postprocessor">Postprocessor to postprocess the output bitmap with.</param>
-        /// @return the modified builder instance.
+        /// <param name="postprocessor">
+        /// IPostprocessor to postprocess the output bitmap with.
+        /// </param>
+        /// <returns>The modified builder instance.</returns>
         /// </summary>
         public ImageRequestBuilder SetPostprocessor(IPostprocessor postprocessor)
         {
@@ -206,8 +212,10 @@ namespace ImagePipeline.Request
 
         /// <summary>
         /// Sets the postprocessor.
-        /// <param name="postprocessor">Postprocessor to postprocess the output bitmap with.</param>
-        /// @return the modified builder instance
+        /// <param name="postprocessor">
+        /// IPostprocessor to postprocess the output bitmap with.
+        /// </param>
+        /// <returns>The modified builder instance.</returns>
         /// </summary>
         public ImageRequestBuilder SetPostprocessor(
             Action<byte[], int, int, BitmapPixelFormat, BitmapAlphaMode> postprocessor)
@@ -217,7 +225,7 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// Sets a request listener to use for just this image request
+        /// Sets a request listener to use for just this image request.
         /// </summary>
         public ImageRequestBuilder SetRequestListener(IRequestListener requestListener)
         {
@@ -227,21 +235,20 @@ namespace ImagePipeline.Request
 
         /// <summary>
         /// Builds the Request.
-        /// @return a valid image request
         /// </summary>
+        /// <returns>A valid image request.</returns>
         public ImageRequest Build()
         {
             Validate();
             return new ImageRequest(this);
         }
 
-        ///  An exception class for builder methods. 
+        ///  An exception class for builder methods.
         public class BuilderException : Exception
         {
             /// <summary>
-            /// Instantiates the <see cref="BuilderException"/>
+            /// Instantiates the <see cref="BuilderException"/>.
             /// </summary>
-            /// <param name="message"></param>
             public BuilderException(string message) : base($"Invalid request builder: { message }")
             {
             }

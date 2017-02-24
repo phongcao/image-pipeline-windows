@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace ImagePipeline.Producers
 {
     /// <summary>
-    /// Provides custom implementation for <see cref="StatefulProducerRunnable{T}"/>
+    /// Provides custom implementation for <see cref="StatefulProducerRunnable{T}"/>.
     /// </summary>
     public class StatefulProducerRunnableImpl<T> : StatefulProducerRunnable<T>
     {
@@ -19,7 +19,7 @@ namespace ImagePipeline.Producers
         private Func<Task<T>> _getResultFunc;
 
         /// <summary>
-        /// Instantiates the <see cref="StatefulProducerRunnableImpl{T}"/>
+        /// Instantiates the <see cref="StatefulProducerRunnableImpl{T}"/>.
         /// </summary>
         public StatefulProducerRunnableImpl(
             IConsumer<T> consumer,
@@ -51,7 +51,6 @@ namespace ImagePipeline.Producers
 
         /// <summary>
         /// Called after computing result successfully.
-        /// <param name="result"></param>
         /// </summary>
         protected override void OnSuccess(T result)
         {
@@ -67,7 +66,6 @@ namespace ImagePipeline.Producers
 
         /// <summary>
         /// Called if exception occurred during computation.
-        /// <param name="e"></param>
         /// </summary>
         protected override void OnFailure(Exception e)
         {
@@ -97,7 +95,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Create extra map for result
+        /// Create extra map for result.
         /// </summary>
         protected override IDictionary<string, string> GetExtraMapOnSuccess(T result)
         {
@@ -112,7 +110,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Create extra map for exception
+        /// Create extra map for exception.
         /// </summary>
         protected override IDictionary<string, string> GetExtraMapOnFailure(Exception exception)
         {
@@ -127,7 +125,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Create extra map for cancellation
+        /// Create extra map for cancellation.
         /// </summary>
         protected override IDictionary<string, string> GetExtraMapOnCancellation()
         {
@@ -142,8 +140,8 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called after OnSuccess callback completes in order to dispose the result.
-        /// <param name="result"></param>
+        /// Called after OnSuccess callback completes in order to dispose
+        /// the result.
         /// </summary>
         protected override void DisposeResult(T result)
         {
@@ -151,7 +149,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Gets the result of the runnable
+        /// Gets the result of the runnable.
         /// </summary>
         protected override Task<T> GetResult()
         {

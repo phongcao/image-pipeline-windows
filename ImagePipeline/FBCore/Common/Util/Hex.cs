@@ -45,10 +45,9 @@ namespace FBCore.Common.Util
         }
 
         /// <summary>
-       /// Convert an int [0-255] to a hexadecimal string representation.
-       ///
-       /// <param name="value">int value.</param>
-       /// </summary>
+        /// Convert an int [0-255] to a hexadecimal string representation.
+        /// </summary>
+        /// <param name="value">int value.</param>
         public static string Byte2Hex(int value)
         {
             if (value > 255 || value < 0)
@@ -138,10 +137,8 @@ namespace FBCore.Common.Util
         }
 
         /// <summary>
-        /// Converts hex string to byte array
+        /// Converts hex string to byte array.
         /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
         public static byte[] HexStringToByteArray(string s)
         {
             string noSpaceString = s.Replace(" ", "");

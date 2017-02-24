@@ -5,8 +5,8 @@ using System.IO;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// A factory to provide instances of <see cref="NativePooledByteBuffer"/> and
-    /// <see cref="NativePooledByteBufferOutputStream"/>.
+    /// A factory to provide instances of <see cref="NativePooledByteBuffer"/>
+    /// and <see cref="NativePooledByteBufferOutputStream"/>.
     /// </summary>
     public class NativePooledByteBufferFactory : IPooledByteBufferFactory
     {
@@ -20,8 +20,6 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Instantiates the <see cref="NativePooledByteBufferFactory"/>.
         /// </summary>
-        /// <param name="pool"></param>
-        /// <param name="pooledByteStreams"></param>
         public NativePooledByteBufferFactory(
             NativeMemoryChunkPool pool,
             PooledByteStreams pooledByteStreams)
@@ -31,10 +29,8 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Creates a new PooledByteBuffer instance of given size.
+        /// Creates a new IPooledByteBuffer instance of given size.
         /// </summary>
-        /// <param name="size"></param>
-        /// <returns></returns>
         public IPooledByteBuffer NewByteBuffer(int size)
         {
             Preconditions.CheckArgument(size > 0);
@@ -50,12 +46,18 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Creates a new NativePooledByteBuffer instance by reading in the entire contents 
-        /// of the input stream.
-        /// <param name="inputStream">The input stream to read from.</param>
-        /// @return an instance of the NativePooledByteBuffer.
-        /// @throws IOException.
+        /// Creates a new NativePooledByteBuffer instance by reading
+        /// in the entire contents of the input stream.
         /// </summary>
+        /// <param name="inputStream">
+        /// The input stream to read from.
+        /// </param>
+        /// <returns>
+        /// An instance of the NativePooledByteBuffer.
+        /// </returns>
+        /// <exception cref="IOException">
+        /// An I/O error occurs.
+        /// </exception>
         public IPooledByteBuffer NewByteBuffer(Stream inputStream)
         {
             NativePooledByteBufferOutputStream outputStream = 
@@ -72,11 +74,15 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-       /// Creates a new NativePooledByteBuffer instance by reading in the entire contents 
-       /// of the byte array.
-       /// <param name="bytes">The byte array to read from.</param>
-       /// @return an instance of the NativePooledByteBuffer.
-       /// </summary>
+        /// Creates a new NativePooledByteBuffer instance by reading
+        /// in the entire contents of the byte array.
+        /// </summary>
+        /// <param name="bytes">
+        /// The byte array to read from.
+        /// </param>
+        /// <returns>
+        /// An instance of the NativePooledByteBuffer.
+        /// </returns>
         public IPooledByteBuffer NewByteBuffer(byte[] bytes)
         {
             NativePooledByteBufferOutputStream outputStream = 
@@ -98,13 +104,22 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Creates a new NativePooledByteBuffer instance with an initial capacity, and 
-        /// reading the entire contents of the input stream.
-        /// <param name="inputStream">The input stream to read from.</param>
-        /// <param name="initialCapacity">Initial allocation size for the IPooledByteBuffer.</param>
-        /// @return an instance of NativePooledByteBuffer.
-        /// @throws IOException.
+        /// Creates a new NativePooledByteBuffer instance with an
+        /// initial capacity, and reading the entire contents of
+        /// the input stream.
         /// </summary>
+        /// <param name="inputStream">
+        /// The input stream to read from.
+        /// </param>
+        /// <param name="initialCapacity">
+        /// Initial allocation size for the IPooledByteBuffer.
+        /// </param>
+        /// <returns>
+        /// An instance of NativePooledByteBuffer.
+        /// </returns>
+        /// <exception cref="IOException">
+        /// An I/O error occurs.
+        /// </exception>
         public IPooledByteBuffer NewByteBuffer(Stream inputStream, int initialCapacity)
         {
             NativePooledByteBufferOutputStream outputStream = 
@@ -121,15 +136,24 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Reads all bytes from inputStream and writes them to outputStream. When all bytes
-        /// are read outputStream.toByteBuffer is called and obtained NativePooledByteBuffer 
-        /// is returned.
-        /// <param name="inputStream">The input stream to read from.</param>
-        /// <param name="outputStream">The output stream used to transform content of input 
-        /// stream to NativePooledByteBuffer.</param>
-        /// @return an instance of NativePooledByteBuffer
-        /// @throws IOException
+        /// Reads all bytes from inputStream and writes them to
+        /// outputStream. When all bytes are read, 
+        /// outputStream.ToByteBuffer is called and obtained
+        /// NativePooledByteBuffer is returned.
         /// </summary>
+        /// <param name="inputStream">
+        /// The input stream to read from.
+        /// </param>
+        /// <param name="outputStream">
+        /// The output stream used to transform content of input 
+        /// stream to NativePooledByteBuffer.
+        /// </param>
+        /// <returns>
+        /// An instance of NativePooledByteBuffer.
+        /// </returns>
+        /// <exception cref="IOException">
+        /// An I/O error occurs.
+        /// </exception>
         internal IPooledByteBuffer NewByteBuf(
             Stream inputStream,
             NativePooledByteBufferOutputStream outputStream)
@@ -139,22 +163,27 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Creates a new NativePooledByteBufferOutputStream instance with default initial 
-        /// capacity.
-        /// @return a new NativePooledByteBufferOutputStream.
+        /// Creates a new NativePooledByteBufferOutputStream instance
+        /// with default initial capacity.
         /// </summary>
+        /// <returns>
+        /// A new NativePooledByteBufferOutputStream.
+        /// </returns>
         public PooledByteBufferOutputStream NewOutputStream()
         {
             return new NativePooledByteBufferOutputStream(_pool);
         }
 
         /// <summary>
-        /// Creates a new NativePooledByteBufferOutputStream instance with the specified 
-        /// initial capacity.
-        /// <param name="initialCapacity">Initial allocation size for the underlying 
-        /// output stream.</param>
-        /// @return a new NativePooledByteBufferOutputStream.
+        /// Creates a new NativePooledByteBufferOutputStream instance
+        /// with the specified initial capacity.
         /// </summary>
+        /// <param name="initialCapacity">
+        /// Initial allocation size for the underlying output stream.
+        /// </param>
+        /// <returns>
+        /// A new NativePooledByteBufferOutputStream.
+        /// </returns>
         public PooledByteBufferOutputStream NewOutputStream(int initialCapacity)
         {
             return new NativePooledByteBufferOutputStream(_pool, initialCapacity);

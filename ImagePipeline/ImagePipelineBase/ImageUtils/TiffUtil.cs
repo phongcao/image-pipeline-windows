@@ -15,9 +15,13 @@ namespace ImageUtils
 
         /// <summary>
         /// Determines auto-rotate angle based on orientation information.
-        /// <param name="orientation">orientation information read from APP1 EXIF (TIFF) block.</param>
-        /// @return orientation: 1/3/6/8 -> 0/180/90/270.
         /// </summary>
+        /// <param name="orientation">
+        /// Orientation information read from APP1 EXIF (TIFF) block.
+        /// </param>
+        /// <returns>
+        /// Orientation: 1/3/6/8 -> 0/180/90/270.
+        /// </returns>
         public static int GetAutoRotateAngleFromOrientation(int orientation)
         {
             switch (orientation)
@@ -38,10 +42,12 @@ namespace ImageUtils
 
         /// <summary>
         /// Reads orientation information from TIFF data.
-        /// <param name="inputStream">the input stream of TIFF data</param>
-        /// <param name="length">length of the TIFF data</param>
-        /// @return orientation information (1/3/6/8 on success, 0 if not found)
         /// </summary>
+        /// <param name="inputStream">The input stream of TIFF data.</param>
+        /// <param name="length">Length of the TIFF data.</param>
+        /// <returns>
+        /// Orientation information (1/3/6/8 on success, 0 if not found).
+        /// </returns>
         public static int ReadOrientationFromTIFF(Stream inputStream, int length)
         {
             // Read tiff header
@@ -61,7 +67,8 @@ namespace ImageUtils
             length -= toSkip;
 
             // Move to the entry with orientation tag
-            length = MoveToTiffEntryWithTag(inputStream, length, tiffHeader.LittleEndian, TIFF_TAG_ORIENTATION);
+            length = MoveToTiffEntryWithTag(
+                inputStream, length, tiffHeader.LittleEndian, TIFF_TAG_ORIENTATION);
 
             // Read orientation
             return GetOrientationFromTiffEntry(inputStream, length, tiffHeader.LittleEndian);
@@ -81,12 +88,13 @@ namespace ImageUtils
 
         /// <summary>
         /// Reads the TIFF header to the provided structure.
-        /// <param name="inputStream">the input stream of TIFF data</param>
-        /// <param name="length">length of the TIFF data</param>
-        /// <param name="tiffHeader">TIFF header</param>
-        /// @return remaining length of the data on success, 0 on failure
-        /// @throws IOException
         /// </summary>
+        /// <param name="inputStream">The input stream of TIFF data.</param>
+        /// <param name="length">Length of the TIFF data.</param>
+        /// <param name="tiffHeader">TIFF header.</param>
+        /// <returns>
+        /// Remaining length of the data on success, 0 on failure.
+        /// </returns>
         private static int ReadTiffHeader(Stream inputStream, int length, TiffHeader tiffHeader)
         {
             if (length <= 8)
@@ -107,7 +115,9 @@ namespace ImageUtils
             tiffHeader.LittleEndian = (tiffHeader.ByteOrder == TIFF_BYTE_ORDER_LITTLE_END);
 
             // Read the offset of the first IFD and check if it is reasonable
-            tiffHeader.FirstIfdOffset = StreamProcessor.ReadPackedInt(inputStream, 4, tiffHeader.LittleEndian);
+            tiffHeader.FirstIfdOffset = 
+                StreamProcessor.ReadPackedInt(inputStream, 4, tiffHeader.LittleEndian);
+
             length -= 4;
             if (tiffHeader.FirstIfdOffset < 8 || tiffHeader.FirstIfdOffset - 8 > length)
             {
@@ -119,13 +129,23 @@ namespace ImageUtils
         }
 
         /// <summary>
-        /// Positions the given input stream to the entry that has a specified tag. Tag will be consumed.
-        /// <param name="inputStream">the input stream of TIFF data positioned to the beginning of an IFD.</param>
-        /// <param name="length">length of the available data in the given input stream.</param>
-        /// <param name="isLittleEndian">whether the TIFF data is stored in little or big endian format</param>
-        /// <param name="tagToFind">tag to find</param>
-        /// @return remaining length of the data on success, 0 on failure
+        /// Positions the given input stream to the entry that has a
+        /// specified tag. Tag will be consumed.
         /// </summary>
+        /// <param name="inputStream">
+        /// The input stream of TIFF data positioned to the beginning of
+        /// an IFD.
+        /// </param>
+        /// <param name="length">
+        /// Length of the available data in the given input stream.
+        /// </param>
+        /// <param name="isLittleEndian">
+        /// Whether the TIFF data is stored in little or big endian format.
+        /// </param>
+        /// <param name="tagToFind">Tag to find.</param>
+        /// <returns>
+        /// Remaining length of the data on success, 0 on failure.
+        /// </returns>
         private static int MoveToTiffEntryWithTag(
             Stream inputStream,
             int length,
@@ -160,12 +180,18 @@ namespace ImageUtils
 
         /// <summary>
         /// Reads the orientation information from the TIFF entry.
-        /// It is assumed that the entry has a TIFF orientation tag and that tag has already been consumed.
-        /// <param name="inputStream">the input stream positioned at the TIFF entry with tag already being consumed</param>
-        /// <param name="isLittleEndian">whether the TIFF data is stored in little or big endian format</param>
-        /// <param name="length">length</param>
-        /// @return Orientation value in TIFF IFD entry.
+        /// It is assumed that the entry has a TIFF orientation tag and that
+        /// tag has already been consumed.
         /// </summary>
+        /// <param name="inputStream">
+        /// The input stream positioned at the TIFF entry with tag already
+        /// being consumed.
+        /// </param>
+        /// <param name="isLittleEndian">
+        /// Whether the TIFF data is stored in little or big endian format.
+        /// </param>
+        /// <param name="length">Length.</param>
+        /// <returns>Orientation value in TIFF IFD entry.</returns>
         private static int GetOrientationFromTiffEntry(Stream inputStream, int length, bool isLittleEndian)
         {
             if (length < 10)

@@ -4,7 +4,7 @@ using System.Text;
 namespace FBCore.Common.Webp
 {
     /// <summary>
-    /// WebP helper class
+    /// WebP helper class.
     /// </summary>
     public class WebpSupportStatus
     {
@@ -16,10 +16,10 @@ namespace FBCore.Common.Webp
 
         /// <summary>
         /// Helper method that transforms provided string into its byte representation
-        /// using ASCII encoding
-        /// <param name="value">bytes value</param>
-        /// @return byte array representing ascii encoded value
+        /// using ASCII encoding.
         /// </summary>
+        /// <param name="value">Bytes value.</param>
+        /// <returns>Byte array representing ascii encoded value.</returns>
         private static byte[] AsciiBytes(string value)
         {
             try
@@ -44,7 +44,7 @@ namespace FBCore.Common.Webp
         private const int SIMPLE_WEBP_HEADER_LENGTH = 20;
 
         /// <summary>
-        /// Each VP8X WebP image has a "features" byte following its ChunkHeader('VP8X')
+        /// Each VP8X WebP image has a "features" byte following its ChunkHeader('VP8X').
         /// </summary>
         private const int EXTENDED_WEBP_HEADER_LENGTH = 21;
 
@@ -59,11 +59,8 @@ namespace FBCore.Common.Webp
         private static readonly byte[] WEBP_VP8X_BYTES = AsciiBytes("VP8X");
 
         /// <summary>
-        /// Checks if imageHeaderBytes is AnimatedWebp
+        /// Checks if imageHeaderBytes is AnimatedWebp.
         /// </summary>
-        /// <param name="imageHeaderBytes"></param>
-        /// <param name="offset"></param>
-        /// <returns></returns>
         public static bool IsAnimatedWebpHeader(byte[] imageHeaderBytes, int offset)
         {
             bool isVp8x = MatchBytePattern(imageHeaderBytes, offset + 12, WEBP_VP8X_BYTES);
@@ -74,34 +71,24 @@ namespace FBCore.Common.Webp
         }
 
         /// <summary>
-        /// Checks if imageHeaderBytes is SimpleWebp
+        /// Checks if imageHeaderBytes is SimpleWebp.
         /// </summary>
-        /// <param name="imageHeaderBytes"></param>
-        /// <param name="offset"></param>
-        /// <returns></returns>
         public static bool IsSimpleWebpHeader(byte[] imageHeaderBytes,int offset)
         {
             return MatchBytePattern(imageHeaderBytes, offset + 12, WEBP_VP8_BYTES);
         }
 
         /// <summary>
-        /// Checks if imageHeaderBytes is LosslessWebp
+        /// Checks if imageHeaderBytes is LosslessWebp.
         /// </summary>
-        /// <param name="imageHeaderBytes"></param>
-        /// <param name="offset"></param>
-        /// <returns></returns>
         public static bool IsLosslessWebpHeader(byte[] imageHeaderBytes,int offset)
         {
             return MatchBytePattern(imageHeaderBytes, offset + 12, WEBP_VP8L_BYTES);
         }
 
         /// <summary>
-        /// Checks if imageHeaderBytes is ExtendedWebp
+        /// Checks if imageHeaderBytes is ExtendedWebp.
         /// </summary>
-        /// <param name="imageHeaderBytes"></param>
-        /// <param name="offset"></param>
-        /// <param name="headerSize"></param>
-        /// <returns></returns>
         public static bool IsExtendedWebpHeader(
             byte[] imageHeaderBytes,
             int offset,
@@ -112,11 +99,8 @@ namespace FBCore.Common.Webp
         }
 
         /// <summary>
-        /// Checks if imageHeaderBytes is ExtendedWebpWithAlpha
+        /// Checks if imageHeaderBytes is ExtendedWebpWithAlpha.
         /// </summary>
-        /// <param name="imageHeaderBytes"></param>
-        /// <param name="offset"></param>
-        /// <returns></returns>
         public static bool IsExtendedWebpHeaderWithAlpha(
             byte[] imageHeaderBytes,
             int offset)
@@ -134,8 +118,8 @@ namespace FBCore.Common.Webp
         /// WebP file format can be found here:
         /// <a href="https://developers.google.com/speed/webp/docs/riff_container">
         ///   https://developers.google.com/speed/webp/docs/riff_container</a>
-        /// @return true if imageHeaderBytes contains a valid webp header
         /// </summary>
+        /// <returns>true if imageHeaderBytes contains a valid webp header.</returns>
         public static bool IsWebpHeader(
             byte[] imageHeaderBytes,
             int offset,

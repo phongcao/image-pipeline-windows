@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using Windows.Storage;
 
@@ -14,23 +13,23 @@ namespace FBCore.Common.Statfs
     ///
     /// <para />It is a singleton, and is thread-safe.
     ///
-    /// <para />Initialization is delayed until first use, so the first call to any method may incur some
-    /// additional cost.
+    /// <para />Initialization is delayed until first use, so the first call to any
+    /// method may incur some additional cost.
     /// </summary>
     public class StatFsHelper
     {
         /// <summary>
-        /// Storage types
+        /// Storage types.
         /// </summary>
         public enum StorageType
         {
             /// <summary>
-            /// Internal storage
+            /// Internal storage.
             /// </summary>
             INTERNAL,
 
             /// <summary>
-            /// External storage
+            /// External storage.
             /// </summary>
             EXTERNAL
         };
@@ -38,9 +37,10 @@ namespace FBCore.Common.Statfs
         private static StatFsHelper _statsFsHelper;
 
         /// <summary>
-        /// Time interval for updating disk information
+        /// Time interval for updating disk information.
         /// </summary>
-        private static readonly long RESTAT_INTERVAL_MS = (long)TimeSpan.FromMinutes(2).TotalMilliseconds;
+        private static readonly long RESTAT_INTERVAL_MS = 
+            (long)TimeSpan.FromMinutes(2).TotalMilliseconds;
 
         /// <summary>
         /// Internal path
@@ -53,12 +53,12 @@ namespace FBCore.Common.Statfs
         protected volatile StorageFolder _externalPath;
 
         /// <summary>
-        /// Internal storage space
+        /// Internal storage space.
         /// </summary>
         protected ulong? _internalStatFs = null;
 
         /// <summary>
-        /// External storage space
+        /// External storage space.
         /// </summary>
         protected ulong? _externalStatFs = null;
 
@@ -69,7 +69,7 @@ namespace FBCore.Common.Statfs
         private volatile bool _initialized = false;
 
         /// <summary>
-        /// Returns StatFsHelper singleton
+        /// Returns StatFsHelper singleton.
         /// </summary>
         public static StatFsHelper Instance
         {
@@ -90,8 +90,8 @@ namespace FBCore.Common.Statfs
         /// <summary>
         /// Constructor.
         ///
-        /// <para />Initialization is delayed until first use, so we must call <see cref="EnsureInitialized()"/>
-        /// when implementing member methods.
+        /// <para />Initialization is delayed until first use, so we must call
+        /// <see cref="EnsureInitialized()"/> when implementing member methods.
         /// </summary>
         protected StatFsHelper()
         {
@@ -112,8 +112,8 @@ namespace FBCore.Common.Statfs
                     {
                         _internalPath = ApplicationData.Current.LocalFolder;
 
-                        // Phong Cao: Checking external storage requires 'Removable devices' permission in the
-                        // app manifest, skip it for now
+                        // Phong Cao: Checking external storage requires 'Removable devices'
+                        // permission in the app manifest, skip it for now
                         _externalPath = null;
 
                         UpdateStats();
@@ -128,16 +128,23 @@ namespace FBCore.Common.Statfs
         }
 
         /// <summary>
-        /// Check if free space available in the filesystem is greater than the given threshold.
-        /// Note that the free space stats are cached and updated in intervals of RESTAT_INTERVAL_MS.
-        /// If the amount of free space has crossed over the threshold since the last update, it will
-        /// return incorrect results till the space stats are updated again.
-        ///
-        /// <param name="storageType">StorageType (internal or external) to test</param>
-        /// <param name="freeSpaceThreshold">compare the available free space to this size</param>
-        /// @return whether free space is lower than the input freeSpaceThreshold,
-        /// returns true if disk information is not available
+        /// Check if free space available in the filesystem is greater than
+        /// the given threshold. Note that the free space stats are cached
+        /// and updated in intervals of RESTAT_INTERVAL_MS.
+        /// If the amount of free space has crossed over the threshold since
+        /// the last update, it will return incorrect results till the space
+        /// stats are updated again.
         /// </summary>
+        /// <param name="storageType">
+        /// StorageType (internal or external) to test.
+        /// </param>
+        /// <param name="freeSpaceThreshold">
+        /// Compare the available free space to this size.
+        /// </param>
+        /// <returns>
+        /// Whether free space is lower than the input freeSpaceThreshold,
+        /// returns true if disk information is not available.
+        /// </returns>
         public bool TestLowDiskSpace(StorageType storageType, long freeSpaceThreshold)
         {
             EnsureInitialized();
@@ -153,23 +160,29 @@ namespace FBCore.Common.Statfs
 
         /// <summary>
         /// Gets the information about the available storage space
-        /// either internal or external depends on the give input
-        /// <param name="storageType">Internal or external storage type</param>
-        /// @return available space in bytes, 0 if no information is available
+        /// either internal or external depends on the give input.
         /// </summary>
+        /// <param name="storageType">Internal or external storage type.</param>
+        /// <returns>
+        /// Available space in bytes, 0 if no information is available.
+        /// </returns>
         public ulong GetAvailableStorageSpace(StorageType storageType)
         {
             EnsureInitialized();
             MaybeUpdateStats();
-            ulong? statFS = (storageType == StorageType.INTERNAL) ? _internalStatFs : _externalStatFs;
+            ulong? statFS = (storageType == StorageType.INTERNAL) ? 
+                _internalStatFs : _externalStatFs;
+
             return statFS ?? 0;
         }
 
         /// <summary>
-        /// Thread-safe call to update disk stats. Update occurs if the thread is able to acquire
-        /// the lock (i.e., no other thread is updating it at the same time), and it has been
-        /// at least RESTAT_INTERVAL_MS since the last update.
-        /// Assumes that initialization has been completed before this method is called.
+        /// Thread-safe call to update disk stats. Update occurs if the thread
+        /// is able to acquire the lock (i.e., no other thread is updating it
+        /// at the same time), and it has been at least RESTAT_INTERVAL_MS
+        /// since the last update.
+        /// Assumes that initialization has been completed before this method
+        /// is called.
         /// </summary>
         private void MaybeUpdateStats()
         {
@@ -193,9 +206,10 @@ namespace FBCore.Common.Statfs
 
         /// <summary>
         /// Thread-safe call to reset the disk stats.
-        /// If we know that the free space has changed recently (for example, if we have
-        /// deleted files), use this method to reset the internal state and
-        /// start tracking disk stats afresh, resetting the internal timer for updating stats.
+        /// If we know that the free space has changed recently (for example,
+        /// if we have deleted files), use this method to reset the internal
+        /// state and start tracking disk stats afresh, resetting the internal
+        /// timer for updating stats.
         /// </summary>
         public void ResetStats()
         {
@@ -227,8 +241,10 @@ namespace FBCore.Common.Statfs
         }
 
         /// <summary>
-        /// Update stats for a single directory and return the available space for that directory. If the
-        /// directory does not exist or the RetrievePropertiesAsync method fails, a null object is returned.
+        /// Update stats for a single directory and return the available space
+        /// for that directory.
+        /// If the directory does not exist or the RetrievePropertiesAsync
+        /// method fails, a null object is returned.
         /// </summary>
         internal virtual ulong? UpdateStatsHelper(StorageFolder dir)
         {
@@ -240,8 +256,9 @@ namespace FBCore.Common.Statfs
 
             try
             {
-                IDictionary<string, object> retrievedProperties = dir.Properties.RetrievePropertiesAsync(
-                    new string[] { "System.FreeSpace" }).GetAwaiter().GetResult();
+                IDictionary<string, object> retrievedProperties =
+                    dir.Properties.RetrievePropertiesAsync(
+                        new string[] { "System.FreeSpace" }).GetAwaiter().GetResult();
 
                 return (ulong)retrievedProperties["System.FreeSpace"];
             }

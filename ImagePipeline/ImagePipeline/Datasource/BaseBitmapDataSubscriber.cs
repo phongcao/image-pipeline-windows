@@ -7,15 +7,16 @@ using Windows.Graphics.Imaging;
 namespace ImagePipeline.Datasource
 {
     /// <summary>
-    /// Implementation of <see cref="IDataSubscriber{T}"/> for cases where the client 
-    /// wants access to a bitmap.
+    /// Implementation of <see cref="IDataSubscriber{T}"/> for cases where the
+    /// client wants access to a bitmap.
     ///
     /// <para />
     /// Sample usage:
     /// 
     /// <code>
     /// dataSource.Subscribe(
-    ///   new BaseBitmapDataSubscriber() {
+    ///   new BaseBitmapDataSubscriber() 
+    ///   {
     ///     public void OnNewResultImpl(SoftwareBitmap bitmap) 
     ///     {
     ///       // Pass bitmap to system, which makes a copy of the bitmap.
@@ -35,7 +36,8 @@ namespace ImagePipeline.Datasource
         BaseDataSubscriber<CloseableReference<CloseableImage>>
     {
         /// <summary>
-        /// Called whenever a new value is ready to be retrieved from the DataSource.
+        /// Called whenever a new value is ready to be retrieved from 
+        /// the IDataSource.
         /// </summary>
         public override async Task OnNewResultImpl(
             IDataSource<CloseableReference<CloseableImage>> dataSource)
@@ -65,10 +67,11 @@ namespace ImagePipeline.Datasource
         }
 
         /// <summary>
-        /// The bitmap provided to this method is only guaranteed to be around for the lifespan 
-        /// of the method.
+        /// The bitmap provided to this method is only guaranteed to be around
+        /// for the lifespan of the method.
         ///
-        /// <para />The framework will free the bitmap's memory after this method has completed.
+        /// <para />The framework will free the bitmap's memory after this
+        /// method has completed.
         /// </summary>
         public abstract Task OnNewResultImpl(SoftwareBitmap bitmap);
     }

@@ -3,12 +3,12 @@
 namespace ImagePipeline.Decoder
 {
     /// <summary>
-    /// Decode exception
+    /// Decode exception.
     /// </summary>
     public class DecodeException : Exception
     {
         /// <summary>
-        /// Instantiates the <see cref="DecodeException"/>
+        /// Instantiates the <see cref="DecodeException"/>.
         /// </summary>
         public DecodeException(string message) : 
             base(message)
@@ -16,7 +16,7 @@ namespace ImagePipeline.Decoder
         }
 
         /// <summary>
-        /// Instantiates the <see cref="DecodeException"/>
+        /// Instantiates the <see cref="DecodeException"/>.
         /// </summary>
         public DecodeException(string message, Exception innerException) : 
             base(message, innerException)

@@ -10,16 +10,15 @@ namespace ImagePipeline.Producers
         private readonly IConsumer<O> _consumer;
 
         /// <summary>
-        /// Instantiates the <see cref="DelegatingConsumer{I, O}"/>
+        /// Instantiates the <see cref="DelegatingConsumer{I, O}"/>.
         /// </summary>
-        /// <param name="consumer"></param>
         public DelegatingConsumer(IConsumer<O> consumer)
         {
             _consumer = consumer;
         }
 
         /// <summary>
-        /// Gets the consumer
+        /// Gets the consumer.
         /// </summary>
         public IConsumer<O> Consumer
         {
@@ -30,7 +29,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called by OnFailure, override this method instead
+        /// Called by OnFailure, override this method instead.
         /// </summary>
         protected override void OnFailureImpl(Exception error)
         {
@@ -38,7 +37,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called by OnCancellation, override this method instead
+        /// Called by OnCancellation, override this method instead.
         /// </summary>
         protected override void OnCancellationImpl()
         {
@@ -46,7 +45,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called when the progress updates
+        /// Called when the progress updates.
         /// </summary>
         protected override void OnProgressUpdateImpl(float progress)
         {

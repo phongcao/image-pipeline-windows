@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace ImagePipeline.Core
 {
     /// <summary>
-    /// Factory class that creates all producer sequences
+    /// Factory class that creates all producer sequences.
     /// </summary>
     public class ProducerSequenceFactory
     {
@@ -48,7 +48,7 @@ namespace ImagePipeline.Core
             IProducer<object>> _closeableImagePrefetchSequences;
 
         /// <summary>
-        /// Instantiates the <see cref="ProducerSequenceFactory"/>
+        /// Instantiates the <see cref="ProducerSequenceFactory"/>.
         /// </summary>
         public ProducerSequenceFactory(
             ProducerFactory producerFactory,
@@ -79,11 +79,15 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Returns a sequence that can be used for a request for an encoded image.
-        ///
-        /// <param name="imageRequest">the request that will be submitted</param>
-        /// @return the sequence that should be used to process the request
+        /// Returns a sequence that can be used for a request for
+        /// an encoded image.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request that will be submitted.
+        /// </param>
+        /// <returns>
+        /// The sequence that should be used to process the request.
+        /// </returns>
         public IProducer<CloseableReference<IPooledByteBuffer>> GetEncodedImageProducerSequence(
             ImageRequest imageRequest)
         {
@@ -101,15 +105,20 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Returns a sequence that can be used for a prefetch request for an 
-        /// encoded image.
+        /// Returns a sequence that can be used for a prefetch request
+        /// for an encoded image.
         ///
         /// <para />Guaranteed to return the same sequence as
-        /// <code> getEncodedImageProducerSequence(request)</code>, except that 
-        /// it is pre-pended with a <see cref="SwallowResultProducer{T}"/>.
-        /// <param name="imageRequest">the request that will be submitted</param>
-        /// @return the sequence that should be used to process the request
+        /// <code>GetEncodedImageProducerSequence(request)</code>,
+        /// except that it is pre-pended with a
+        /// <see cref="SwallowResultProducer{T}"/>.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request that will be submitted.
+        /// </param>
+        /// <returns>
+        /// The sequence that should be used to process the request.
+        /// </returns>
         public IProducer<object> GetEncodedImagePrefetchProducerSequence(ImageRequest imageRequest)
         {
             ValidateEncodedImageRequest(imageRequest);
@@ -117,11 +126,15 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Returns a sequence that can be used for a request for a decoded image.
-        ///
-        /// <param name="imageRequest">the request that will be submitted</param>
-        /// @return the sequence that should be used to process the request
+        /// Returns a sequence that can be used for a request for a
+        /// decoded image.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request that will be submitted.
+        /// </param>
+        /// <returns>
+        /// The sequence that should be used to process the request.
+        /// </returns>
         public IProducer<CloseableReference<CloseableImage>> GetDecodedImageProducerSequence(
             ImageRequest imageRequest)
         {
@@ -139,11 +152,15 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Returns a sequence that can be used for a prefetch request for a decoded image.
-        ///
-        /// <param name="imageRequest">the request that will be submitted</param>
-        /// @return the sequence that should be used to process the request
+        /// Returns a sequence that can be used for a prefetch request
+        /// for a decoded image.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request that will be submitted.
+        /// </param>
+        /// <returns>
+        /// The sequence that should be used to process the request.
+        /// </returns>
         public IProducer<object> GetDecodedImagePrefetchProducerSequence(
             ImageRequest imageRequest)
         {
@@ -151,7 +168,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// post-processor producer -> copy producer -> inputProducer
+        /// post-processor producer -> copy producer -> inputProducer.
         /// </summary>
         private IProducer<CloseableReference<CloseableImage>> GetPostprocessorSequence(
 
@@ -196,10 +213,15 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// encoded cache multiplex -> encoded cache -> (disk cache) -> (webp transcode)
-        /// <param name="inputProducer">producer providing the input to the transcode</param>
-        /// @return encoded cache multiplex to webp transcode sequence
+        /// encoded cache multiplex -> encoded cache -> (disk cache) ->
+        /// (webp transcode).
         /// </summary>
+        /// <param name="inputProducer">
+        /// Producer providing the input to the transcode.
+        /// </param>
+        /// <returns>
+        /// Encoded cache multiplex to webp transcode sequence.
+        /// </returns>
         private IProducer<EncodedImage> NewEncodedCacheMultiplexToTranscodeSequence(
             IProducer<EncodedImage> inputProducer)
         {
@@ -214,7 +236,8 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// multiplex -> encoded cache -> disk cache -> (webp transcode) -> network fetch.
+        /// multiplex -> encoded cache -> disk cache -> (webp transcode) ->
+        /// network fetch.
         /// </summary>
         private IProducer<EncodedImage> GetCommonNetworkFetchToEncodedMemorySequence()
         {
@@ -243,8 +266,9 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// swallow result if prefetch -> bitmap cache get ->
-        /// background thread hand-off -> multiplex -> bitmap cache -> decode -> 
-        /// multiplex -> encoded cache -> disk cache -> (webp transcode) -> network fetch.
+        /// background thread hand-off -> multiplex -> bitmap cache ->
+        /// decode -> multiplex -> encoded cache -> disk cache ->
+        /// (webp transcode) -> network fetch.
         /// </summary>
         private IProducer<CloseableReference<CloseableImage>> GetNetworkFetchSequence()
         {
@@ -283,10 +307,14 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Bitmap cache get -> thread hand off -> multiplex -> bitmap cache
-        /// <param name="inputProducer">Producer providing the input to the bitmap cache</param>
-        /// @return bitmap cache get to bitmap cache sequence.
+        /// Bitmap cache get -> thread hand off -> multiplex -> bitmap cache.
         /// </summary>
+        /// <param name="inputProducer">
+        /// Producer providing the input to the bitmap cache.
+        /// </param>
+        /// <returns>
+        /// Bitmap cache get to bitmap cache sequence.
+        /// </returns>
         private IProducer<CloseableReference<CloseableImage>> NewBitmapCacheGetToBitmapCacheSequence(
             IProducer<CloseableReference<CloseableImage>> inputProducer)
         {
@@ -305,11 +333,15 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Same as <code> NewBitmapCacheGetToBitmapCacheSequence</code> but with an 
-        /// extra DecodeProducer.
-        /// <param name="inputProducer">Producer providing the input to the decode.</param>
-        /// @return bitmap cache get to decode sequence.
+        /// Same as <code>NewBitmapCacheGetToBitmapCacheSequence</code> but
+        /// with an extra DecodeProducer.
         /// </summary>
+        /// <param name="inputProducer">
+        /// Producer providing the input to the decode.
+        /// </param>
+        /// <returns>
+        /// Bitmap cache get to decode sequence.
+        /// </returns>
         private IProducer<CloseableReference<CloseableImage>> NewBitmapCacheGetToDecodeSequence(
             IProducer<EncodedImage> inputProducer)
         {
@@ -337,12 +369,15 @@ namespace ImagePipeline.Core
         /// Branch on separate images
         ///   -> thumbnail resize and rotate -> thumbnail producers as provided
         ///   -> local image resize and rotate -> add meta data producer
-        /// <param name="inputProducer">Producer providing the input to add meta data producer.</param>
-        /// <param name="thumbnailProducers">The thumbnail producers from which to request the 
-        /// image before.</param>
-        /// falling back to the full image producer sequence
-        /// @return local transformations sequence
         /// </summary>
+        /// <param name="inputProducer">
+        /// Producer providing the input to add meta data producer.
+        /// </param>
+        /// <param name="thumbnailProducers">
+        /// The thumbnail producers from which to request the image before
+        /// falling back to the full image producer sequence.
+        /// </param>
+        /// <returns>Local transformations sequence.</returns>
         private IProducer<EncodedImage> NewLocalTransformationsSequence(
             IProducer<EncodedImage> inputProducer,
             IThumbnailProducer<EncodedImage>[] thumbnailProducers)
@@ -367,12 +402,15 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Creates a new fetch sequence that just needs the source producer.
-        /// <param name="inputProducer">The source producer.</param>
-        /// <param name="thumbnailProducers">The thumbnail producers from which to request 
-        /// the image before.</param>
-        /// falling back to the full image producer sequence
-        /// @return the new sequence
         /// </summary>
+        /// <param name="inputProducer">
+        /// The source producer.
+        /// </param>
+        /// <param name="thumbnailProducers">
+        /// The thumbnail producers from which to request the image before
+        /// falling back to the full image producer sequence.
+        /// </param>
+        /// <returns>The new sequence.</returns>
         private IProducer<CloseableReference<CloseableImage>> NewBitmapCacheGetToLocalTransformSequence(
             IProducer<EncodedImage> inputProducer,
             IThumbnailProducer<EncodedImage>[] thumbnailProducers)
@@ -386,9 +424,9 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Creates a new fetch sequence that just needs the source producer.
-        /// <param name="inputProducer">the source producer</param>
-        /// @return the new sequence
         /// </summary>
+        /// <param name="inputProducer">The source producer.</param>
+        /// <returns>The new sequence.</returns>
         private IProducer<CloseableReference<CloseableImage>> NewBitmapCacheGetToLocalTransformSequence(
             IProducer<EncodedImage> inputProducer)
         {
@@ -401,11 +439,12 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// bitmap cache get ->
-        /// background thread hand-off -> multiplex -> bitmap cache -> decode ->
-        /// branch on separate images
+        /// background thread hand-off -> multiplex -> bitmap cache ->
+        /// decode -> branch on separate images
         ///   -> exif resize and rotate -> exif thumbnail creation
-        ///   -> local image resize and rotate -> add meta data producer -> multiplex -> 
-        ///   encoded cache -> (webp transcode) -> local resource fetch.
+        ///   -> local image resize and rotate -> add meta data producer
+        ///   -> multiplex -> encoded cache -> (webp transcode)
+        ///   -> local resource fetch.
         /// </summary>
         private IProducer<CloseableReference<CloseableImage>> GetLocalResourceFetchSequence()
         {
@@ -426,8 +465,8 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// bitmap cache get ->
-        /// background thread hand-off -> bitmap cache -> decode -> resize and rotate -> 
-        /// (webp transcode) -> data fetch.
+        /// background thread hand-off -> bitmap cache -> decode ->
+        /// resize and rotate -> (webp transcode) -> data fetch.
         /// </summary>
         private IProducer<CloseableReference<CloseableImage>> GetDataFetchSequence()
         {
@@ -451,11 +490,12 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// bitmap cache get ->
-        /// background thread hand-off -> multiplex -> bitmap cache -> decode ->
-        /// branch on separate images
+        /// background thread hand-off -> multiplex ->
+        /// bitmap cache -> decode -> branch on separate images
         ///   -> exif resize and rotate -> exif thumbnail creation
-        ///   -> local image resize and rotate -> add meta data producer -> multiplex -> 
-        ///   encoded cache -> (webp transcode) -> local asset fetch.
+        ///   -> local image resize and rotate -> add meta data producer
+        ///   -> multiplex -> encoded cache -> (webp transcode)
+        ///   -> local asset fetch.
         /// </summary>
         private IProducer<CloseableReference<CloseableImage>> GetLocalAssetFetchSequence()
         {
@@ -475,11 +515,12 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// bitmap cache get ->
-        /// background thread hand-off -> multiplex -> bitmap cache -> decode ->
-        /// branch on separate images
+        /// background thread hand-off -> multiplex -> bitmap cache ->
+        /// decode -> branch on separate images
         ///   -> exif resize and rotate -> exif thumbnail creation
-        ///   -> local image resize and rotate -> add meta data producer -> multiplex -> 
-        ///   encoded cache -> (webp transcode) -> local file fetch.
+        ///   -> local image resize and rotate -> add meta data producer
+        ///   -> multiplex -> encoded cache -> (webp transcode)
+        ///   -> local file fetch.
         /// </summary>
         private IProducer<CloseableReference<CloseableImage>> GetLocalImageFileFetchSequence()
         {
@@ -499,8 +540,8 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Bitmap cache get -> thread hand off -> multiplex -> bitmap cache ->
-        /// local video thumbnail
+        /// Bitmap cache get -> thread hand off -> multiplex ->
+        /// bitmap cache -> local video thumbnail
         /// </summary>
         private IProducer<CloseableReference<CloseableImage>> GetLocalVideoFileFetchSequence()
         {

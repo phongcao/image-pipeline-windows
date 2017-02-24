@@ -11,11 +11,18 @@ namespace ImagePipeline.AnimatedFactory
     {
         /// <summary>
         /// Decodes a GIF into a CloseableImage.
-        /// <param name="encodedImage">encoded image (native byte array holding the encoded bytes and meta data)</param>
-        /// <param name="options">the options for the decode</param>
-        /// <param name="bitmapConfig">the Bitmap.Config used to generate the output bitmaps</param>
-        /// @return a <see cref="CloseableImage"/> for the GIF image
         /// </summary>
+        /// <param name="encodedImage">
+        /// Encoded image (native byte array holding the encoded bytes and
+        /// meta data).
+        /// </param>
+        /// <param name="options">The options for the decode.</param>
+        /// <param name="bitmapConfig">
+        /// The bitmap config used to generate the output bitmaps.
+        /// </param>
+        /// <returns>
+        /// A <see cref="CloseableImage"/> for the GIF image.
+        /// </returns>
         CloseableImage DecodeGif(
             EncodedImage encodedImage,
             ImageDecodeOptions options,
@@ -23,11 +30,18 @@ namespace ImagePipeline.AnimatedFactory
 
         /// <summary>
         /// Decode a WebP into a CloseableImage.
-        /// <param name="encodedImage">encoded image (native byte array holding the encoded bytes and meta data)</param>
-        /// <param name="options">the options for the decode</param>
-        /// <param name="bitmapConfig">the Bitmap.Config used to generate the output bitmaps</param>
-        /// @return a <see cref="CloseableImage"/> for the WebP image
         /// </summary>
+        /// <param name="encodedImage">
+        /// Encoded image (native byte array holding the encoded bytes and
+        /// meta data).
+        /// </param>
+        /// <param name="options">The options for the decode.</param>
+        /// <param name="bitmapConfig">
+        /// The bitmap config used to generate the output bitmaps.
+        /// </param>
+        /// <returns>
+        /// A <see cref="CloseableImage"/> for the WebP image.
+        /// </returns>
         CloseableImage DecodeWebP(
             EncodedImage encodedImage,
             ImageDecodeOptions options,

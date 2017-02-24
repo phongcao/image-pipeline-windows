@@ -13,13 +13,14 @@ namespace ImagePipeline.Producers
     /// <summary>
     /// Disk cache producer.
     ///
-    /// <para />This producer looks in the disk cache for the requested image. If the 
-    /// image is found, then it is passed to the consumer. If the image is not found, 
-    /// then the request is passed to the next producer in the sequence. Any results 
-    /// that the producer returns are passed to the consumer, and the last result is 
-    /// also put into the disk cache.
+    /// <para />This producer looks in the disk cache for the requested image.
+    /// If the image is found, then it is passed to the consumer. If the image
+    /// is not found, then the request is passed to the next producer in the
+    /// sequence. Any results that the producer returns are passed to the
+    /// consumer, and the last result is also put into the disk cache.
     ///
-    /// <para />This implementation delegates disk cache requests to BufferedDiskCache.
+    /// <para />This implementation delegates disk cache requests to
+    /// <see cref="BufferedDiskCache"/>.
     /// </summary>
     public class DiskCacheProducer : IProducer<EncodedImage>
     {
@@ -34,7 +35,7 @@ namespace ImagePipeline.Producers
         private readonly int _forceSmallCacheThresholdBytes;
 
         /// <summary>
-        /// Instantiates the <see cref="DiskCacheProducer"/>
+        /// Instantiates the <see cref="DiskCacheProducer"/>.
         /// </summary>
         public DiskCacheProducer(
             BufferedDiskCache defaultBufferedDiskCache,
@@ -52,8 +53,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Start producing results for given context. Provided consumer is notified whenever 
-        /// progress is made (new value is ready or error occurs).
+        /// Start producing results for given context.
+        /// Provided consumer is notified whenever progress is made
+        /// (new value is ready or error occurs).
         /// </summary>
         public void ProduceResults(
             IConsumer<EncodedImage> consumer,
@@ -250,8 +252,9 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// Consumer that consumes results from next producer in the sequence.
         ///
-        /// <para />The consumer puts the last result received into disk cache, and passes 
-        /// all results (success or failure) down to the next consumer.
+        /// <para />The consumer puts the last result received into disk
+        /// cache, and passes all results (success or failure) down to the
+        /// next consumer.
         /// </summary>
         private class DiskCacheConsumer : DelegatingConsumer<EncodedImage, EncodedImage>
         {
@@ -263,7 +266,7 @@ namespace ImagePipeline.Producers
             private readonly ICacheKey _cacheKey;
 
             /// <summary>
-            /// Instantiates the <see cref="DiskCacheConsumer"/>
+            /// Instantiates the <see cref="DiskCacheConsumer"/>.
             /// </summary>
             internal DiskCacheConsumer(
                 BufferedDiskCache defaultBufferedDiskCache,

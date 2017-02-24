@@ -8,37 +8,37 @@ namespace FBCore.Concurrency
 {
     /// <summary>
     /// Provides default implementations of IExecutorService execution methods
-    /// using <see cref="LimitedConcurrencyTaskScheduler"/>
+    /// using <see cref="LimitedConcurrencyTaskScheduler"/>.
     /// </summary>
     public class SerialExecutorService : IScheduledExecutorService, IDisposable
     {
         /// <summary>
-        /// Lock
+        /// Lock.
         /// </summary>
         protected readonly object _gate = new object();
 
         /// <summary>
-        /// Dispose flag
+        /// Dispose flag.
         /// </summary>
         protected int _disposed;
 
         /// <summary>
-        /// The name of the executor
+        /// The name of the executor.
         /// </summary>
         protected readonly string _name;
 
         /// <summary>
-        /// The exception handler
+        /// The exception handler.
         /// </summary>
         protected readonly Action<Exception> _handler;
 
         /// <summary>
-        /// The task scheduler
+        /// The task scheduler.
         /// </summary>
         protected readonly TaskScheduler _taskScheduler;
 
         /// <summary>
-        /// The task factory
+        /// The task factory.
         /// </summary>
         protected readonly TaskFactory _taskFactory;
 
@@ -47,8 +47,10 @@ namespace FBCore.Concurrency
         /// </summary>
         /// <param name="name">The name of the executor.</param>
         /// <param name="maxDegreeOfParallelism">The degrees of parallelism.</param>
-        /// <param name="priority">The priority of the work item relative to work items 
-        /// in the thread pool. The value of this parameter can be Low, Normal, or High.</param>
+        /// <param name="priority">
+        /// The priority of the work item relative to work items in the thread pool.
+        /// The value of this parameter can be Low, Normal, or High.
+        /// </param>
         /// <param name="handler">The exception handler.</param>
         internal SerialExecutorService(
             string name,
@@ -135,7 +137,8 @@ namespace FBCore.Concurrency
         }
 
         /// <summary>
-        /// Creates and executes a one-shot action that becomes enabled after the given delay.
+        /// Creates and executes a one-shot action that becomes enabled after
+        /// the given delay.
         /// </summary>
         /// <remarks>
         /// The action will be submitted to the end of the event queue
@@ -151,7 +154,8 @@ namespace FBCore.Concurrency
         }
 
         /// <summary>
-        /// Creates and executes a one-shot action that becomes enabled after the given delay.
+        /// Creates and executes a one-shot action that becomes enabled after
+        /// the given delay.
         /// </summary>
         /// <remarks>
         /// The action will be submitted to the end of the event queue
@@ -223,7 +227,8 @@ namespace FBCore.Concurrency
         }
 
         /// <summary>
-        /// Creates and executes a one-shot function that becomes enabled after the given delay.
+        /// Creates and executes a one-shot function that becomes enabled after
+        /// the given delay.
         /// </summary>
         /// <remarks>
         /// The function will be submitted to the end of the event queue
@@ -241,7 +246,8 @@ namespace FBCore.Concurrency
         }
 
         /// <summary>
-        /// Creates and executes a one-shot function that becomes enabled after the given delay.
+        /// Creates and executes a one-shot function that becomes enabled after
+        /// the given delay.
         /// </summary>
         /// <remarks>
         /// The function will be submitted to the end of the event queue

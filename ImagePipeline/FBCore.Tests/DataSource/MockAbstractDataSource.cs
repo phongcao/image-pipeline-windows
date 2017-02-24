@@ -56,7 +56,7 @@ namespace FBCore.Tests.DataSource
         }
 
         /// <summary>
-        /// @return true if the data source is closed, false otherwise
+        /// <returns>true if the data source is closed, false otherwise</returns>
         /// </summary>
         public override bool IsClosed()
         {
@@ -74,7 +74,7 @@ namespace FBCore.Tests.DataSource
         /// <para />This method will return null in the following cases:
         /// when the DataSource does not have a result (<code> HasResult</code> returns false).
         /// when the last result produced was null.
-        /// @return current best result
+        /// <returns>current best result</returns>
         /// </summary>
         public override T GetResult()
         {
@@ -83,7 +83,7 @@ namespace FBCore.Tests.DataSource
         }
 
         /// <summary>
-        /// @return true if any result (possibly of lower quality) is available right now, false otherwise
+        /// <returns>true if any result (possibly of lower quality) is available right now, false otherwise</returns>
         /// </summary>
         public override bool HasResult()
         {
@@ -92,7 +92,7 @@ namespace FBCore.Tests.DataSource
         }
 
         /// <summary>
-        /// @return true if request is finished, false otherwise
+        /// <returns>true if request is finished, false otherwise</returns>
         /// </summary>
         public override bool IsFinished()
         {
@@ -101,7 +101,7 @@ namespace FBCore.Tests.DataSource
         }
 
         /// <summary>
-        /// @return true if request finished due to error
+        /// <returns>true if request finished due to error</returns>
         /// </summary>
         public override bool HasFailed()
         {
@@ -110,7 +110,7 @@ namespace FBCore.Tests.DataSource
         }
 
         /// <summary>
-        /// @return failure cause if the source has failed, else null
+        /// <returns>failure cause if the source has failed, else null</returns>
         /// </summary>
         public override Exception GetFailureCause()
         {
@@ -119,7 +119,7 @@ namespace FBCore.Tests.DataSource
         }
 
         /// <summary>
-        /// @return progress in range [0, 1]
+        /// <returns>progress in range [0, 1]</returns>
         /// </summary>
         public override float GetProgress()
         {
@@ -131,7 +131,7 @@ namespace FBCore.Tests.DataSource
         /// Cancels the ongoing request and releases all associated resources.
         ///
         /// <para />Subsequent calls to <see cref="GetResult"/> will return null.
-        /// @return true if the data source is closed for the first time
+        /// <returns>true if the data source is closed for the first time</returns>
         /// </summary>
         public override bool Close()
         {

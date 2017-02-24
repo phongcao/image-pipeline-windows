@@ -1,7 +1,7 @@
 ﻿namespace ImagePipeline.Request
 {
     /// <summary>
-    /// Base RepeatedPostProcessor
+    /// Base RepeatedPostProcessor.
     /// </summary>
     public abstract class BaseRepeatedPostprocessor : BasePostprocessor, IRepeatedPostprocessor
     {
@@ -9,9 +9,9 @@
         private IRepeatedPostprocessorRunner _callback;
 
         /// <summary>
-        /// Callback used to pass the postprocessor a reference to the object that will run the
-        /// postprocessor's <code> PostProcessor.Process</code> method when the client requires.
-        /// <param name="runner"></param>
+        /// Callback used to pass the postprocessor a reference to the object
+        /// that will run the postprocessor's <code>IPostProcessor.Process</code>
+        /// method when the client requires.
         /// </summary>
         public void SetCallback(IRepeatedPostprocessorRunner runner)
         {
@@ -30,7 +30,7 @@
         }
 
         /// <summary>
-        /// Used when a new postprocessing of the last received result is requested
+        /// Used when a new postprocessing of the last received result is requested.
         /// </summary>
         public void Update()
         {

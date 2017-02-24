@@ -16,11 +16,12 @@ namespace ImagePipeline.Core
     /// <summary>
     /// Factory class for the image pipeline.
     ///
-    /// <para />This class constructs the pipeline and its dependencies from other libraries.
+    /// <para />This class constructs the pipeline and its dependencies
+    /// from other libraries.
     ///
-    /// <para />As the pipeline object can be quite expensive to create, it is strongly
-    /// recommended that applications create just one instance of this class
-    /// and of the pipeline.
+    /// <para />As the pipeline object can be quite expensive to create,
+    /// it is strongly recommended that applications create just one
+    /// instance of this class and of the pipeline.
     /// </summary>
     public class ImagePipelineFactory
     {
@@ -49,7 +50,6 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Gets the instance of <see cref="ImagePipelineFactory"/>.
         /// </summary>
-        /// <returns></returns>
         public static ImagePipelineFactory Instance
         {
             get
@@ -64,7 +64,8 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Initializes <see cref="ImagePipelineFactory"/> with default config.
+        /// Initializes <see cref="ImagePipelineFactory"/> with
+        /// default config.
         /// </summary>
 
         private static void Initialize()
@@ -73,9 +74,12 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Initializes <see cref="ImagePipelineFactory"/> with the specified config. 
+        /// Initializes <see cref="ImagePipelineFactory"/> with
+        /// the specified config.
         /// </summary>
-        /// <param name="imagePipelineConfig">The imagepipeline configuration.</param>
+        /// <param name="imagePipelineConfig">
+        /// The imagepipeline configuration.
+        /// </param>
         public static void Initialize(ImagePipelineConfig imagePipelineConfig)
         {
             _instance = new ImagePipelineFactory(imagePipelineConfig);
@@ -96,9 +100,11 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Creates a new <see cref="DiskStorageCache"/> from the given <see cref="DiskCacheConfig"/>
+        /// Creates a new <see cref="DiskStorageCache"/> from
+        /// the given <see cref="DiskCacheConfig"/>.
         ///
-        /// @deprecated use <see cref="DiskStorageCacheFactory.BuildDiskStorageCache"/>
+        /// @deprecated use
+        /// <see cref="DiskStorageCacheFactory.BuildDiskStorageCache"/>.
         /// </summary>
         public static DiskStorageCache BuildDiskStorageCache(
             DiskCacheConfig diskCacheConfig,
@@ -108,13 +114,12 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Provide the implementation of the PlatformBitmapFactory for the current platform
-        /// using the provided PoolFactory.
-        ///
+        /// Provide the implementation of the PlatformBitmapFactory
+        /// for the current platform using the provided PoolFactory.
+        /// </summary>
         /// <param name="poolFactory">The PoolFactory.</param>
         /// <param name="platformDecoder">The PlatformDecoder.</param>
-        /// @return The PlatformBitmapFactory implementation.
-        /// </summary>
+        /// <returns>The PlatformBitmapFactory implementation.</returns>
         public static PlatformBitmapFactory BuildPlatformBitmapFactory(
             PoolFactory poolFactory,
             IPlatformDecoder platformDecoder)
@@ -123,13 +128,12 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Provide the implementation of the PlatformDecoder for the current platform using the
-        /// provided PoolFactory.
-        ///
+        /// Provide the implementation of the PlatformDecoder for the
+        /// current platform using the provided PoolFactory.
+        /// </summary>
         /// <param name="poolFactory">The PoolFactory.</param>
         /// <param name="webpSupportEnabled">Webp support.</param>
-        /// @return The PlatformDecoder implementation.
-        /// </summary>
+        /// <returns>The PlatformDecoder implementation.</returns>
         public static IPlatformDecoder BuildPlatformDecoder(
             PoolFactory poolFactory, bool webpSupportEnabled)
         {
@@ -139,7 +143,6 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Instantiates the <see cref="ImagePipelineFactory"/>.
         /// </summary>
-        /// <param name="config"></param>
         public ImagePipelineFactory(ImagePipelineConfig config)
         {
             _config = Preconditions.CheckNotNull(config);
@@ -407,7 +410,6 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Gets the small image file cache.
         /// </summary>
-        /// <returns></returns>
         public IFileCache GetSmallImageFileCache()
         {
             if (_smallImageFileCache == null)

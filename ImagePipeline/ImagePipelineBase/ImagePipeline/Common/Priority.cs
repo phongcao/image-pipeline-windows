@@ -11,26 +11,27 @@
         /// </summary>
 
         /// <summary>
-        /// Lowest priority level. Used for prefetches of non-visible images.
+        /// Lowest priority level.
+        /// Used for prefetches of non-visible images.
         /// </summary>
         public const int LOW = 1;
 
         /// <summary>
-        /// Medium priority level. Used for warming of images that might soon get visible.
+        /// Medium priority level.
+        /// Used for warming of images that might soon get visible.
         /// </summary>
         public const int MEDIUM = 2;
 
         /// <summary>
-        /// Highest priority level. Used for images that are currently visible on screen.
+        /// Highest priority level.
+        /// Used for images that are currently visible on screen.
         /// </summary>
         public const int HIGH = 3;
 
         /// <summary>
-       /// Gets the higher priority among the two.
-       /// <param name="priority1"></param>
-       /// <param name="priority2"></param>
-       /// @return higher priority
-       /// </summary>
+        /// Gets the higher priority among the two.
+        /// </summary>
+        /// <returns>Higher priority.</returns>
         public static int GetHigherPriority(
             int priority1,
             int priority2)

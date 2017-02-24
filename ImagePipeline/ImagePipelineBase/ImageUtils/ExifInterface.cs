@@ -6,48 +6,48 @@
     public class ExifInterface
     {
         /// <summary>
-        /// Undefined constant
+        /// Undefined constant.
         /// </summary>
         public const int ORIENTATION_UNDEFINED = 0;
 
         /// <summary>
-        /// Normal constant
+        /// Normal constant.
         /// </summary>
         public const int ORIENTATION_NORMAL = 1;
 
         /// <summary>
-        /// Flip horizontal constant
+        /// Flip horizontal constant.
         /// </summary>
-        public const int ORIENTATION_FLIP_HORIZONTAL = 2;  // left right reversed mirror
+        public const int ORIENTATION_FLIP_HORIZONTAL = 2; // left right reversed mirror
 
         /// <summary>
-        /// Rotate 180 degrees constant
+        /// Rotate 180 degrees constant.
         /// </summary>
         public const int ORIENTATION_ROTATE_180 = 3;
 
         /// <summary>
-        /// Flip vertical constant
+        /// Flip vertical constant.
         /// </summary>
-        public const int ORIENTATION_FLIP_VERTICAL = 4;  // upside down mirror
+        public const int ORIENTATION_FLIP_VERTICAL = 4; // upside down mirror
 
         /// <summary>
-        /// Transpose constant
+        /// Transpose constant.
         /// </summary>
-        public const int ORIENTATION_TRANSPOSE = 5;  // flipped about top-left <--> bottom-right axis
+        public const int ORIENTATION_TRANSPOSE = 5; // flipped about top-left <--> bottom-right axis
 
         /// <summary>
-        /// Rotate 90 degrees constant
+        /// Rotate 90 degrees constant.
         /// </summary>
-        public const int ORIENTATION_ROTATE_90 = 6;  // rotate 90 cw to right it
+        public const int ORIENTATION_ROTATE_90 = 6; // rotate 90 cw to right it
 
         /// <summary>
-        /// Transverse constant
+        /// Transverse constant.
         /// </summary>
-        public const int ORIENTATION_TRANSVERSE = 7;  // flipped about top-right <--> bottom-left axis
+        public const int ORIENTATION_TRANSVERSE = 7; // flipped about top-right <--> bottom-left axis
 
         /// <summary>
-        /// Rotate 270 degrees constant
+        /// Rotate 270 degrees constant.
         /// </summary>
-        public const int ORIENTATION_ROTATE_270 = 8;  // rotate 270 to right it
+        public const int ORIENTATION_ROTATE_270 = 8; // rotate 270 to right it
     }
 }

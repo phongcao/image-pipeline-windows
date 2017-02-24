@@ -46,16 +46,36 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Instantiates the <see cref="ImagePipelineCore"/>.
         /// </summary>
-        /// <param name="producerSequenceFactory">The factory that creates all producer sequences.</param>
-        /// <param name="requestListeners">The listeners for the image requests.</param>
-        /// <param name="isPrefetchEnabledSupplier">The supplier for enabling prefetch.</param>
-        /// <param name="bitmapMemoryCache">The memory cache for CloseableImage.</param>
-        /// <param name="encodedMemoryCache">The memory cache for IPooledByteBuffer.</param>
-        /// <param name="mainBufferedDiskCache">The default buffered disk cache.</param>
-        /// <param name="smallImageBufferedDiskCache">The buffered disk cache used for small images.</param>
-        /// <param name="cacheKeyFactory">The factory that creates cache keys for the pipeline.</param>
-        /// <param name="threadHandoffProducerQueue">Move further computation to different thread.</param>
-        /// <param name="flexByteArrayPool">The memory pool use for BitmapImage conversion.</param>
+        /// <param name="producerSequenceFactory">
+        /// The factory that creates all producer sequences.
+        /// </param>
+        /// <param name="requestListeners">
+        /// The listeners for the image requests.
+        /// </param>
+        /// <param name="isPrefetchEnabledSupplier">
+        /// The supplier for enabling prefetch.
+        /// </param>
+        /// <param name="bitmapMemoryCache">
+        /// The memory cache for CloseableImage.
+        /// </param>
+        /// <param name="encodedMemoryCache">
+        /// The memory cache for IPooledByteBuffer.
+        /// </param>
+        /// <param name="mainBufferedDiskCache">
+        /// The default buffered disk cache.
+        /// </param>
+        /// <param name="smallImageBufferedDiskCache">
+        /// The buffered disk cache used for small images.
+        /// </param>
+        /// <param name="cacheKeyFactory">
+        /// The factory that creates cache keys for the pipeline.
+        /// </param>
+        /// <param name="threadHandoffProducerQueue">
+        /// Move further computation to different thread.
+        /// </param>
+        /// <param name="flexByteArrayPool">
+        /// The memory pool use for BitmapImage conversion.
+        /// </param>
         public ImagePipelineCore(
             ProducerSequenceFactory producerSequenceFactory,
             HashSet<IRequestListener> requestListeners,
@@ -83,19 +103,17 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Generates unique id for RequestFuture.
-        ///
-        /// @return unique id
+        /// Generates unique id for request.
         /// </summary>
+        /// <returns>Unique id.</returns>
         private string GenerateUniqueFutureId()
         {
             return Interlocked.Increment(ref _idCounter).ToString();
         }
 
         /// <summary>
-        /// @deprecated Use GetDataSourceSupplier(ImageRequest imageRequest, object callerContext,
-        /// RequestLevel requestLevel).
-        /// instead.
+        /// @deprecated Use GetDataSourceSupplier(ImageRequest imageRequest,
+        /// object callerContext, RequestLevel requestLevel) instead.
         /// </summary>
         public ISupplier<IDataSource<CloseableReference<CloseableImage>>> GetDataSourceSupplier(
             ImageRequest imageRequest,
@@ -110,14 +128,23 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Returns a DataSource supplier that will on get submit the request for execution 
-        /// and return a IDataSource representing the pending results of the task.
-        ///
-        /// <param name="imageRequest">The request to submit (what to execute).</param>
-        /// <param name="callerContext">The caller context of the caller of data source supplier.</param>
-        /// <param name="requestLevel">Which level to look down until for the image.</param>
-        /// @return a IDataSource representing pending results and completion of the request.
+        /// Returns an IDataSource supplier that will on get submit
+        /// the request for execution and return an IDataSource
+        /// representing the pending results of the task.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request to submit (what to execute).
+        /// </param>
+        /// <param name="callerContext">
+        /// The caller context of the caller of data source supplier.
+        /// </param>
+        /// <param name="requestLevel">
+        /// Which level to look down until for the image.
+        /// </param>
+        /// <returns>
+        /// An IDataSource representing pending results and completion
+        /// of the request.
+        /// </returns>
         public ISupplier<IDataSource<CloseableReference<CloseableImage>>> GetDataSourceSupplier(
             ImageRequest imageRequest,
             object callerContext,
@@ -135,13 +162,20 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Returns a DataSource supplier that will on get submit the request for execution 
-        /// and return a IDataSource representing the pending results of the task.
-        ///
-        /// <param name="imageRequest">The request to submit (what to execute).</param>
-        /// <param name="callerContext">The caller context of the caller of data source supplier.</param>
-        /// @return a IDataSource representing pending results and completion of the request.
+        /// Returns an IDataSource supplier that will on get submit
+        /// the request for execution and return an IDataSource
+        /// representing the pending results of the task.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request to submit (what to execute).
+        /// </param>
+        /// <param name="callerContext">
+        /// The caller context of the caller of data source supplier.
+        /// </param>
+        /// <returns>
+        /// An IDataSource representing pending results and completion
+        /// of the request.
+        /// </returns>
         public ISupplier<IDataSource<CloseableReference<IPooledByteBuffer>>> 
             GetEncodedImageDataSourceSupplier(
                 ImageRequest imageRequest,
@@ -160,11 +194,16 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Submits a request for bitmap cache lookup.
-        ///
-        /// <param name="imageRequest">The request to submit.</param>
-        /// <param name="callerContext">The caller context for image request.</param>
-        /// @return a IDataSource representing the image.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request to submit.
+        /// </param>
+        /// <param name="callerContext">
+        /// The caller context for image request.
+        /// </param>
+        /// <returns>
+        /// An IDataSource representing the image.
+        /// </returns>
         public IDataSource<CloseableReference<CloseableImage>> FetchImageFromBitmapCache(
             ImageRequest imageRequest,
             object callerContext)
@@ -177,11 +216,16 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Submits a request for bitmap cache lookup.
-        ///
-        /// <param name="imageRequest">The request to submit.</param>
-        /// <param name="token">The cancellation token.</param>
-        /// @return a Task{WriteableBitmap} representing the image.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request to submit.
+        /// </param>
+        /// <param name="token">
+        /// The cancellation token.
+        /// </param>
+        /// <returns>
+        /// A Task{WriteableBitmap} representing the image.
+        /// </returns>
         public Task<WriteableBitmap> FetchImageFromBitmapCacheAsync(
             ImageRequest imageRequest,
             CancellationToken token = default(CancellationToken))
@@ -233,13 +277,20 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Submits a request for execution and returns a DataSource representing the 
-        /// pending decoded image(s).
-        /// <para />The returned DataSource must be closed once the client has finished with it.
-        /// <param name="imageRequest">The request to submit.</param>
-        /// <param name="callerContext">The caller context for image request.</param>
-        /// @return a IDataSource representing the pending decoded image(s).
+        /// Submits a request for execution and returns an IDataSource
+        /// representing the pending decoded image(s).
+        /// <para />The returned IDataSource must be closed once the
+        /// client has finished with it.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request to submit.
+        /// </param>
+        /// <param name="callerContext">
+        /// The caller context for image request.
+        /// </param>
+        /// <returns>
+        /// An IDataSource representing the pending decoded image(s).
+        /// </returns>
         public IDataSource<CloseableReference<CloseableImage>> FetchDecodedImage(
             ImageRequest imageRequest,
             object callerContext)
@@ -251,14 +302,23 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Submits a request for execution and returns a DataSource representing the 
-        /// pending decoded image(s).
-        /// <para />The returned DataSource must be closed once the client has finished with it.
-        /// <param name="imageRequest">The request to submit.</param>
-        /// <param name="callerContext">The caller context for image request.</param>
-        /// <param name="lowestPermittedRequestLevelOnSubmit">The lowest request level permitted for image request.</param>
-        /// @return a IDataSource representing the pending decoded image(s).
+        /// Submits a request for execution and returns an IDataSource
+        /// representing the pending decoded image(s).
+        /// <para />The returned DataSource must be closed once the
+        /// client has finished with it.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request to submit.
+        /// </param>
+        /// <param name="callerContext">
+        /// The caller context for image request.
+        /// </param>
+        /// <param name="lowestPermittedRequestLevelOnSubmit">
+        /// The lowest request level permitted for image request.
+        /// </param>
+        /// <returns>
+        /// An IDataSource representing the pending decoded image(s).
+        /// </returns>
         public IDataSource<CloseableReference<CloseableImage>> FetchDecodedImage(
             ImageRequest imageRequest,
             object callerContext,
@@ -282,17 +342,24 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Submits a request for execution and returns a DataSource representing the pending 
-        /// encoded image(s).
+        /// Submits a request for execution and returns an IDataSource
+        /// representing the pending encoded image(s).
         ///
-        /// <para /> The ResizeOptions in the imageRequest will be ignored for this fetch.
+        /// <para />The ResizeOptions in the imageRequest will be
+        /// ignored for this fetch.
         ///
-        /// <para />The returned DataSource must be closed once the client has finished with it.
-        ///
-        /// <param name="imageRequest">The request to submit.</param>
-        /// <param name="callerContext">The caller context for image request.</param>
-        /// @return a IDataSource representing the pending encoded image(s).
+        /// <para />The returned IDataSource must be closed once the
+        /// client has finished with it.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request to submit.
+        /// </param>
+        /// <param name="callerContext">
+        /// The caller context for image request.
+        /// </param>
+        /// <returns>
+        /// An IDataSource representing the pending encoded image(s).
+        /// </returns>
         public IDataSource<CloseableReference<IPooledByteBuffer>> FetchEncodedImage(
             ImageRequest imageRequest,
             object callerContext)
@@ -309,8 +376,8 @@ namespace ImagePipeline.Core
                 // downsampled and it's a local image it will be kept as a FileStream until 
                 // decoding instead of reading it in memory. Since this method returns an 
                 // encoded image, it should always be read into memory. Therefore, the resize 
-                // options are ignored to avoid treating the image as if it was to be downsampled
-                // during decode.
+                // options are ignored to avoid treating the image as if it was to be
+                // downsampled during decode.
                 if (imageRequest.ResizeOptions != null)
                 {
                     imageRequest = ImageRequestBuilder.FromRequest(imageRequest)
@@ -333,11 +400,13 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Fetches the encoded BitmapImage.
+        /// </summary>
         /// <param name="uri">The image uri.</param>
         /// <param name="token">The cancellation token.</param>
         /// <returns>The encoded BitmapImage.</returns>
-        /// @throws IOException if the image uri can't be found.
-        /// </summary>
+        /// <exception cref="IOException">
+        /// If the image uri can't be found.
+        /// </exception>
         public Task<BitmapImage> FetchEncodedBitmapImageAsync(
             Uri uri, 
             CancellationToken token = default(CancellationToken))
@@ -420,12 +489,14 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Fetches the decoded SoftwareBitmapSource.
+        /// Fetches the decoded WriteableBitmap.
+        /// </summary>
         /// <param name="imageRequest">The image request.</param>
         /// <param name="token">The cancellation token.</param>
-        /// <returns>The decoded SoftwareBitmapSource.</returns>
-        /// @throws IOException if the image request isn't valid.
-        /// </summary>
+        /// <returns>The decoded WriteableBitmap.</returns>
+        /// <exception cref="IOException">
+        /// If the image request isn't valid.
+        /// </exception>
         public Task<WriteableBitmap> FetchDecodedBitmapImageAsync(
             ImageRequest imageRequest,
             CancellationToken token = default(CancellationToken))
@@ -474,10 +545,16 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Submits a request for prefetching to the bitmap cache.
-        /// <param name="imageRequest">The request to submit.</param>
-        /// <param name="callerContext">The caller context for image request.</param>
-        /// @return a IDataSource that can safely be ignored.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request to submit.
+        /// </param>
+        /// <param name="callerContext">
+        /// The caller context for image request.
+        /// </param>
+        /// <returns>
+        /// An IDataSource that can safely be ignored.
+        /// </returns>
         public IDataSource<object> PrefetchToBitmapCache(
             ImageRequest imageRequest,
             object callerContext)
@@ -507,10 +584,12 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Submits a request for prefetching to the bitmap cache.
+        /// </summary>
         /// <param name="uri">The image uri.</param>
         /// <param name="token">The cancellation token.</param>
-        /// @return a DataSource that can safely be ignored.
-        /// </summary>
+        /// <returns>
+        /// An IDataSource that can safely be ignored.
+        /// </returns>
         public Task PrefetchToBitmapCacheAsync(
             Uri uri, 
             CancellationToken token = default(CancellationToken))
@@ -540,11 +619,18 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Submits a request for prefetching to the disk cache with a default priority.
-        /// <param name="imageRequest">The request to submit.</param>
-        /// <param name="callerContext">The caller context for image request.</param>
-        /// @return a DataSource that can safely be ignored.
+        /// Submits a request for prefetching to the disk cache
+        /// with a default priority.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request to submit.
+        /// </param>
+        /// <param name="callerContext">
+        /// The caller context for image request.
+        /// </param>
+        /// <returns>
+        /// An IDataSource that can safely be ignored.
+        /// </returns>
         public IDataSource<object> PrefetchToDiskCache(
             ImageRequest imageRequest,
             object callerContext)
@@ -554,11 +640,19 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Submits a request for prefetching to the disk cache.
-        /// <param name="imageRequest">The request to submit.</param>
-        /// <param name="callerContext">The caller context for image request.</param>
-        /// <param name="priority">Custom priority for the fetch.</param>
-        /// @return a DataSource that can safely be ignored.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request to submit.
+        /// </param>
+        /// <param name="callerContext">
+        /// The caller context for image request.
+        /// </param>
+        /// <param name="priority">
+        /// Custom priority for the fetch.
+        /// </param>
+        /// <returns>
+        /// An IDataSource that can safely be ignored.
+        /// </returns>
         public IDataSource<object> PrefetchToDiskCache(
             ImageRequest imageRequest,
             object callerContext,
@@ -590,10 +684,12 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Submits a request for prefetching to the disk cache.
+        /// </summary>
         /// <param name="uri">The image uri.</param>
         /// <param name="token">The cancellation token.</param>
-        /// @return a DataSource that can safely be ignored.
-        /// </summary>
+        /// <returns>
+        /// An IDataSource that can safely be ignored.
+        /// </returns>
         public Task PrefetchToDiskCacheAsync(
             Uri uri, 
             CancellationToken token = default(CancellationToken))
@@ -623,9 +719,12 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Removes all images with the specified <see cref="Uri"/> from memory cache.
-        /// <param name="uri">The uri of the image to evict.</param>
+        /// Removes all images with the specified <see cref="Uri"/>
+        /// from memory cache.
         /// </summary>
+        /// <param name="uri">
+        /// The uri of the image to evict.
+        /// </param>
         public void EvictFromMemoryCache(Uri uri)
         {
             Predicate<ICacheKey> predicate = PredicateForUri(uri);
@@ -634,22 +733,26 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// <para />If you have supplied your own cache key factory when configuring the 
-        /// pipeline, this method may not work correctly. It will only work if the custom 
-        /// factory builds the cache key entirely from the URI. If that is not the case, 
-        /// use EvictFromDiskCache(ImageRequest).
-        /// <param name="uri">The uri of the image to evict.</param>
+        /// <para />If you have supplied your own cache key factory
+        /// when configuring the pipeline, this method may not work
+        /// correctly.
+        /// It will only work if the custom factory builds the cache
+        /// key entirely from the URI. If that is not the case, use
+        /// EvictFromDiskCache(ImageRequest).
         /// </summary>
+        /// <param name="uri">The uri of the image to evict.</param>
         public Task EvictFromDiskCacheAsync(Uri uri)
         {
             return EvictFromDiskCacheAsync(ImageRequest.FromUri(uri));
         }
 
         /// <summary>
-        /// Removes all images with the specified <see cref="Uri"/> from disk cache.
-        ///
-        /// <param name="imageRequest">The imageRequest for the image to evict from disk cache.</param>
+        /// Removes all images with the specified <see cref="Uri"/>
+        /// from disk cache.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The imageRequest for the image to evict from disk cache.
+        /// </param>
         public async Task EvictFromDiskCacheAsync(ImageRequest imageRequest)
         {
             ICacheKey cacheKey = _cacheKeyFactory.GetEncodedCacheKey(imageRequest, null);
@@ -658,12 +761,15 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// <para />If you have supplied your own cache key factory when configuring the pipeline, 
-        /// this method may not work correctly. It will only work if the custom factory builds the 
-        /// cache key entirely from the URI. If that is not the case, use EvictFromMemoryCache(Uri)
-        /// and EvictFromDiskCache(ImageRequest) separately.
-        /// <param name="uri">The uri of the image to evict.</param>
+        /// <para />If you have supplied your own cache key factory
+        /// when configuring the pipeline, this method may not work
+        /// correctly.
+        /// It will only work if the custom factory builds the cache
+        /// key entirely from the URI. If that is not the case, use
+        /// EvictFromMemoryCache(Uri) and
+        /// EvictFromDiskCache(ImageRequest) separately.
         /// </summary>
+        /// <param name="uri">The uri of the image to evict.</param>
         public async Task EvictFromCacheAsync(Uri uri)
         {
             EvictFromMemoryCache(uri);
@@ -700,10 +806,14 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Returns whether the image is stored in the bitmap memory cache.
-        ///
-        /// <param name="uri">The uri for the image to be looked up.</param>
-        /// @return true if the image was found in the bitmap memory cache, false otherwise.
         /// </summary>
+        /// <param name="uri">
+        /// The uri for the image to be looked up.
+        /// </param>
+        /// <returns>
+        /// true if the image was found in the bitmap memory cache,
+        /// false otherwise.
+        /// </returns>
         public bool IsInBitmapMemoryCache(Uri uri)
         {
             if (uri == null)
@@ -716,8 +826,11 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// @return The Bitmap MemoryCache.
+        /// Gets the bitmap memory cache.
         /// </summary>
+        /// <returns>
+        /// The CountingMemoryCache{ICacheKey, CloseableImage}.
+        /// </returns>
         public IMemoryCache<ICacheKey, CloseableImage> GetBitmapMemoryCache()
         {
             return _bitmapMemoryCache;
@@ -725,10 +838,14 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Returns whether the image is stored in the bitmap memory cache.
-        ///
-        /// <param name="imageRequest">The imageRequest for the image to be looked up.</param>
-        /// @return true if the image was found in the bitmap memory cache, false otherwise.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The imageRequest for the image to be looked up.
+        /// </param>
+        /// <returns>
+        /// true if the image was found in the bitmap memory cache,
+        /// false otherwise.
+        /// </returns>
         public bool IsInBitmapMemoryCache(ImageRequest imageRequest)
         {
             if (imageRequest == null)
@@ -751,13 +868,19 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Returns whether the image is stored in the disk cache.
-        /// Performs disk cache check synchronously. It is not recommended to use this
-        /// unless you know what exactly you are doing. Disk cache check is a costly operation,
-        /// the call will block the caller thread until the cache check is completed.
-        ///
-        /// <param name="uri">The uri for the image to be looked up.</param>
-        /// @return true if the image was found in the disk cache, false otherwise.
+        /// Performs disk cache check synchronously. It is not
+        /// recommended to use this unless you know what exactly
+        /// you are doing. Disk cache check is a costly operation,
+        /// the call will block the caller thread until the cache
+        /// check is completed.
         /// </summary>
+        /// <param name="uri">
+        /// The uri for the image to be looked up.
+        /// </param>
+        /// <returns>
+        /// true if the image was found in the disk cache,
+        /// false otherwise.
+        /// </returns>
         public bool IsInDiskCacheSync(Uri uri)
         {
             return IsInDiskCacheSync(uri, CacheChoice.SMALL) ||
@@ -766,14 +889,22 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Returns whether the image is stored in the disk cache.
-        /// Performs disk cache check synchronously. It is not recommended to use this
-        /// unless you know what exactly you are doing. Disk cache check is a costly operation,
-        /// the call will block the caller thread until the cache check is completed.
-        ///
-        /// <param name="uri">The uri for the image to be looked up.</param>
-        /// <param name="cacheChoice">The cacheChoice for the cache to be looked up.</param>
-        /// @return true if the image was found in the disk cache, false otherwise.
+        /// Performs disk cache check synchronously. It is not
+        /// recommended to use this unless you know what exactly
+        /// you are doing. Disk cache check is a costly operation,
+        /// the call will block the caller thread until the cache
+        /// check is completed.
         /// </summary>
+        /// <param name="uri">
+        /// The uri for the image to be looked up.
+        /// </param>
+        /// <param name="cacheChoice">
+        /// The cacheChoice for the cache to be looked up.
+        /// </param>
+        /// <returns>
+        /// true if the image was found in the disk cache,
+        /// false otherwise.
+        /// </returns>
         public bool IsInDiskCacheSync(Uri uri, CacheChoice cacheChoice)
         {
             ImageRequest imageRequest = ImageRequestBuilder
@@ -785,12 +916,20 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Performs disk cache check synchronously. It is not recommended to use this
-        /// unless you know what exactly you are doing. Disk cache check is a costly operation,
-        /// the call will block the caller thread until the cache check is completed.
-        /// <param name="imageRequest">The imageRequest for the image to be looked up.</param>
-        /// @return true if the image was found in the disk cache, false otherwise.
+        /// Returns whether the image is stored in the disk cache.
+        /// Performs disk cache check synchronously. It is not
+        /// recommended to use this unless you know what exactly
+        /// you are doing. Disk cache check is a costly operation,
+        /// the call will block the caller thread until the cache
+        /// check is completed.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The image request to be looked up.
+        /// </param>
+        /// <returns>
+        /// true if the image was found in the disk cache,
+        /// false otherwise.
+        /// </returns>
         public bool IsInDiskCacheSync(ImageRequest imageRequest)
         {
             ICacheKey cacheKey = _cacheKeyFactory.GetEncodedCacheKey(imageRequest, null);
@@ -812,13 +951,20 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Returns whether the image is stored in the disk cache.
         ///
-        /// <para />If you have supplied your own cache key factory when configuring the pipeline, 
-        /// this method may not work correctly. It will only work if the custom factory builds the 
-        /// cache key entirely from the URI. If that is not the case, use IsInDiskCache(ImageRequest).
-        ///
-        /// <param name="uri">The uri for the image to be looked up.</param>
-        /// @return true if the image was found in the disk cache, false otherwise.
+        /// <para />If you have supplied your own cache key factory
+        /// when configuring the pipeline, this method may not work
+        /// correctly.
+        /// It will only work if the custom factory builds the cache
+        /// key entirely from the URI. If that is not the case, use
+        /// IsInDiskCache(ImageRequest).
         /// </summary>
+        /// <param name="uri">
+        /// The uri for the image to be looked up.
+        /// </param>
+        /// <returns>
+        /// true if the image was found in the disk cache,
+        /// false otherwise.
+        /// </returns>
         public IDataSource<bool> IsInDiskCache(Uri uri)
         {
             return IsInDiskCache(ImageRequest.FromUri(uri));
@@ -826,10 +972,14 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Returns whether the image is stored in the disk cache.
-        ///
-        /// <param name="imageRequest">The imageRequest for the image to be looked up.</param>
-        /// @return true if the image was found in the disk cache, false otherwise.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The imageRequest for the image to be looked up.
+        /// </param>
+        /// <returns>
+        /// true if the image was found in the disk cache,
+        /// false otherwise.
+        /// </returns>
         public IDataSource<bool> IsInDiskCache(ImageRequest imageRequest)
         {
             ICacheKey cacheKey = _cacheKeyFactory.GetEncodedCacheKey(imageRequest, null);
@@ -859,10 +1009,14 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Returns whether the image is stored in the disk cache.
-        ///
-        /// <param name="imageRequest">The imageRequest for the image to be looked up.</param>
-        /// @return true if the image was found in the disk cache, false otherwise.
         /// </summary>
+        /// <param name="imageRequest">
+        /// The imageRequest for the image to be looked up.
+        /// </param>
+        /// <returns>
+        /// true if the image was found in the disk cache,
+        /// false otherwise.
+        /// </returns>
         public async Task<bool> IsInDiskCacheAsync(ImageRequest imageRequest)
         {
             ICacheKey cacheKey = _cacheKeyFactory.GetEncodedCacheKey(imageRequest, null);
@@ -877,10 +1031,14 @@ namespace ImagePipeline.Core
 
         /// <summary>
         /// Returns whether the image is stored in the disk cache.
-        ///
-        /// <param name="uri">The uri for the image to be looked up.</param>
-        /// @return true if the image was found in the disk cache, false otherwise.
         /// </summary>
+        /// <param name="uri">
+        /// The uri for the image to be looked up.
+        /// </param>
+        /// <returns>
+        /// true if the image was found in the disk cache,
+        /// false otherwise.
+        /// </returns>
         public Task<bool> IsInDiskCacheAsync(Uri uri)
         {
             return IsInDiskCacheAsync(ImageRequest.FromUri(uri));
@@ -992,15 +1150,17 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Returns true if the producer queue is paused, false otherwise.
         /// </summary>
-        /// <returns></returns>
         public bool IsPaused()
         {
             return _threadHandoffProducerQueue.IsQueueing();
         }
 
         /// <summary>
-        /// @return The CacheKeyFactory implementation used by ImagePipeline.
+        /// Gets the cache key factory.
         /// </summary>
+        /// <returns>
+        /// The ICacheKeyFactory implementation used by ImagePipeline.
+        /// </returns>
         public ICacheKeyFactory GetCacheKeyFactory()
         {
             return _cacheKeyFactory;

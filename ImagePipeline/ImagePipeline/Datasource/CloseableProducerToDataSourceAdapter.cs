@@ -6,9 +6,11 @@ using ImagePipeline.Producers;
 namespace ImagePipeline.Datasource
 {
     /// <summary>
-    /// IDataSource{CloseableReference{T}} backed by a Producer{CloseableReference{T}}
+    /// IDataSource{CloseableReference{T}} backed by a 
+    /// IProducer{CloseableReference{T}}.
     /// </summary>
-    public class CloseableProducerToDataSourceAdapter<T> : AbstractProducerToDataSourceAdapter<CloseableReference<T>>
+    public class CloseableProducerToDataSourceAdapter<T> : 
+        AbstractProducerToDataSourceAdapter<CloseableReference<T>>
     {
         /// <summary>
         /// CloseableProducerToDataSourceAdapter factory method
@@ -35,7 +37,6 @@ namespace ImagePipeline.Datasource
         /// <summary>
         /// The most recent result of the asynchronous computation.
         /// </summary>
-        /// <returns></returns>
         public override CloseableReference<T> GetResult()
         {
             return CloseableReference<T>.CloneOrNull(base.GetResult());
@@ -52,10 +53,8 @@ namespace ImagePipeline.Datasource
         }
 
         /// <summary>
-        /// OnNewResult implementation
+        /// OnNewResult implementation.
         /// </summary>
-        /// <param name="result"></param>
-        /// <param name="isLast"></param>
         protected override void OnNewResultImpl(CloseableReference<T> result, bool isLast)
         {
             base.OnNewResultImpl(CloseableReference<T>.CloneOrNull(result), isLast);

@@ -22,19 +22,20 @@ namespace ImageFormatUtils
         private const int SIMPLE_WEBP_HEADER_LENGTH = 20;
 
         /// <summary>
-        /// Each VP8X WebP image has "features" byte following its ChunkHeader('VP8X')
+        /// Each VP8X WebP image has "features" byte following its
+        /// ChunkHeader('VP8X').
         /// </summary>
         private const int EXTENDED_WEBP_HEADER_LENGTH = 21;
 
         /// <summary>
-        /// Every JPEG image should start with SOI mark (0xFF, 0xD8) followed by beginning
-        /// of another segment (0xFF)
+        /// Every JPEG image should start with SOI mark (0xFF, 0xD8) followed
+        /// by beginning of another segment (0xFF).
         /// </summary>
         private static readonly byte[] JPEG_HEADER = new byte[] { 0xFF, 0xD8, 0xFF };
 
         /// <summary>
         /// Every PNG image starts with 8 byte signature consisting of
-        /// following bytes
+        /// following bytes.
         /// </summary>
         private static readonly byte[] PNG_HEADER = new byte[] 
         {
@@ -44,15 +45,15 @@ namespace ImageFormatUtils
         };
 
         /// <summary>
-        /// Every gif image starts with "GIF" bytes followed by
-        /// bytes indicating version of gif standard
+        /// Every gif image starts with "GIF" bytes followed by bytes
+        /// indicating version of gif standard.
         /// </summary>
         private static readonly byte[] GIF_HEADER_87A = AsciiBytes("GIF87a");
         private static readonly byte[] GIF_HEADER_89A = AsciiBytes("GIF89a");
         private const int GIF_HEADER_LENGTH = 6;
 
         /// <summary>
-        /// Every bmp image starts with "BM" bytes
+        /// Every bmp image starts with "BM" bytes.
         /// </summary>
         private static readonly byte[] BMP_HEADER = AsciiBytes("BM");
 
@@ -60,8 +61,8 @@ namespace ImageFormatUtils
         /// Maximum header size for any image type.
         ///
         /// <para />This determines how much data <see cref="GetImageFormat(Stream)" />
-        /// reads from a stream. After changing any of the type detection algorithms, or adding a new one,
-        /// this value should be edited.
+        /// reads from a stream. After changing any of the type detection
+        /// algorithms, or adding a new one, this value should be edited.
         /// </summary>
         private static readonly int MAX_HEADER_LENGTH = new []
         {
@@ -76,12 +77,14 @@ namespace ImageFormatUtils
         private ImageFormatChecker() { }
 
         /// <summary>
-        /// Tries to match imageHeaderByte and headerSize against every known image format.
-        /// If any match succeeds, corresponding ImageFormat is returned.
-        /// <param name="imageHeaderBytes"></param>
-        /// <param name="headerSize"></param>
-        /// @return ImageFormat for given imageHeaderBytes or UNKNOWN if no such type could be recognized
+        /// Tries to match imageHeaderByte and headerSize against every known
+        /// image format. If any match succeeds, corresponding ImageFormat
+        /// is returned.
         /// </summary>
+        /// <returns>
+        /// ImageFormat for given imageHeaderBytes or UNKNOWN if no such type
+        /// could be recognized.
+        /// </returns>
         private static ImageFormat DoGetImageFormat(
             byte[] imageHeaderBytes,
             int headerSize)
@@ -117,15 +120,13 @@ namespace ImageFormatUtils
         }
 
         /// <summary>
-        /// Reads up to MAX_HEADER_LENGTH bytes from is InputStream. If mark is supported by is, it is
-        /// used to restore content of the stream after appropriate amount of data is read.
-        /// Read bytes are stored in imageHeaderBytes, which should be capable of storing
+        /// Reads up to MAX_HEADER_LENGTH bytes from is inputStream. If mark is
+        /// supported by is, it is used to restore content of the stream after
+        /// appropriate amount of data is read. Read bytes are stored in
+        /// imageHeaderBytes, which should be capable of storing
         /// MAX_HEADER_LENGTH bytes.
-        /// <param name="inputStream"></param>
-        /// <param name="imageHeaderBytes"></param>
-        /// @return number of bytes read from is
-        /// @throws IOException
         /// </summary>
+        /// <returns>Number of bytes read from is.</returns>
         private static int ReadHeaderFromStream(
             Stream inputStream,
             byte[] imageHeaderBytes)
@@ -137,15 +138,20 @@ namespace ImageFormatUtils
         }
 
         /// <summary>
-        /// Tries to read up to MAX_HEADER_LENGTH bytes from InputStream is and use read bytes to
-        /// determine type of the image contained in is. If provided input stream does not support mark,
-        /// then this method consumes data from is and it is not safe to read further bytes from is after
-        /// this method returns. Otherwise, if mark is supported, it will be used to preserve oryginal
-        /// content of inputStream.
-        /// <param name="inputStream"></param>
-        /// @return ImageFormat matching content of is InputStream or UNKNOWN if no type is suitable
-        /// @throws IOException if exception happens during read
+        /// Tries to read up to MAX_HEADER_LENGTH bytes from InputStream is and
+        /// use read bytes to determine type of the image contained in is.
+        /// If provided input stream does not support mark, then this method
+        /// consumes data from is and it is not safe to read further bytes from
+        /// is after this method returns. Otherwise, if mark is supported, it
+        /// will be used to preserve oryginal content of inputStream.
         /// </summary>
+        /// <returns>
+        /// ImageFormat matching content of is InputStream or UNKNOWN if no type
+        /// is suitable.
+        /// </returns>
+        /// <exception cref="IOException">
+        /// If exception happens during read.
+        /// </exception>
         public static ImageFormat GetImageFormat(Stream inputStream)
         {
             Preconditions.CheckNotNull(inputStream);
@@ -155,8 +161,9 @@ namespace ImageFormatUtils
         }
 
         /// <summary>
-        /// A variant of getImageFormat that wraps IOException with RuntimeException.
-        /// This relieves clients of implementing dummy rethrow try-catch block.
+        /// A variant of GetImageFormat that wraps IOException with
+        /// RuntimeException. This relieves clients of implementing dummy
+        /// rethrow try-catch block.
         /// </summary>
         public static ImageFormat GetImageFormat_WrapIOException(Stream inputStream)
         {
@@ -171,12 +178,11 @@ namespace ImageFormatUtils
         }
 
         /// <summary>
-        /// Reads image header from a file indicated by provided filename and determines
-        /// its format. This method does not throw IOException if one occurs. In this case,
-        /// ImageFormat.UNKNOWN will be returned.
-        /// <param name="filename"></param>
-        /// @return ImageFormat for image stored in filename
+        /// Reads image header from a file indicated by provided filename and
+        /// determines its format. This method does not throw IOException if
+        /// one occurs. In this case, ImageFormat.UNKNOWN will be returned.
         /// </summary>
+        /// <returns>ImageFormat for image stored in filename.</returns>
         public static ImageFormat GetImageFormat(string filename)
         {
             FileStream fileInputStream = null;
@@ -197,13 +203,10 @@ namespace ImageFormatUtils
         }
 
         /// <summary>
-        /// Checks if byteArray interpreted as sequence of bytes has a subsequence equal to pattern
-        /// starting at position equal to offset.
-        /// <param name="byteArray"></param>
-        /// <param name="offset"></param>
-        /// <param name="pattern"></param>
-        /// @return true if match succeeds, false otherwise
+        /// Checks if byteArray interpreted as sequence of bytes has a
+        /// subsequence equal to pattern starting at position equal to offset.
         /// </summary>
+        /// <returns>true if match succeeds, false otherwise.</returns>
         private static bool MatchBytePattern(
             byte[] byteArray,
             int offset,
@@ -229,11 +232,12 @@ namespace ImageFormatUtils
         }
 
         /// <summary>
-        /// Helper method that transforms provided string into it's byte representation
-        /// using ASCII encoding
-        /// <param name="value"></param>
-        /// @return byte array representing ascii encoded value
+        /// Helper method that transforms provided string into it's byte
+        /// representation using ASCII encoding.
         /// </summary>
+        /// <returns>
+        /// Byte array representing ascii encoded value.
+        /// </returns>
         private static byte[] AsciiBytes(string value)
         {
             Preconditions.CheckNotNull(value);
@@ -250,7 +254,8 @@ namespace ImageFormatUtils
         }
 
         /// <summary>
-        /// Determines type of WebP image. imageHeaderBytes has to be header of a WebP image
+        /// Determines type of WebP image. imageHeaderBytes has to be header
+        /// of a WebP image.
         /// </summary>
         private static ImageFormat GetWebpFormat(byte[] imageHeaderBytes, int headerSize)
         {
@@ -284,43 +289,44 @@ namespace ImageFormatUtils
         }
 
         /// <summary>
-        /// Checks if imageHeaderBytes starts with SOI (start of image) marker, followed by 0xFF.
-        /// If headerSize is lower than 3 false is returned.
+        /// Checks if imageHeaderBytes starts with SOI (start of image) marker,
+        /// followed by 0xFF. If headerSize is lower than 3 false is returned.
         /// Description of jpeg format can be found here:
         /// <a href="http://www.w3.org/Graphics/JPEG/itu-t81.pdf">
         ///   http://www.w3.org/Graphics/JPEG/itu-t81.pdf</a>
-        /// Annex B deals with compressed data format
-        /// <param name="imageHeaderBytes"></param>
-        /// <param name="headerSize"></param>
-        /// @return true if imageHeaderBytes starts with SOI_BYTES and headerSize >= 3
+        /// Annex B deals with compressed data format.
         /// </summary>
+        /// <returns>
+        /// true if imageHeaderBytes starts with SOI_BYTES and headerSize >= 3.
+        /// </returns>
         private static bool IsJpegHeader(byte[] imageHeaderBytes, int headerSize)
         {
             return headerSize >= JPEG_HEADER.Length && MatchBytePattern(imageHeaderBytes, 0, JPEG_HEADER);
         }
 
         /// <summary>
-        /// Checks if array consisting of first headerSize bytes of imageHeaderBytes
-        /// starts with png signature. More information on PNG can be found there:
+        /// Checks if array consisting of first headerSize bytes of
+        /// imageHeaderBytes starts with png signature. More information on
+        /// PNG can be found there:
         /// <a href="http://en.wikipedia.org/wiki/Portable_Network_Graphics">
         ///   http://en.wikipedia.org/wiki/Portable_Network_Graphics</a>
-        /// <param name="imageHeaderBytes"></param>
-        /// <param name="headerSize"></param>
-        /// @return true if imageHeaderBytes starts with PNG_HEADER
         /// </summary>
+        /// <returns>
+        /// true if imageHeaderBytes starts with PNG_HEADER.
+        /// </returns>
         private static bool IsPngHeader(byte[] imageHeaderBytes, int headerSize)
         {
             return headerSize >= PNG_HEADER.Length && MatchBytePattern(imageHeaderBytes, 0, PNG_HEADER);
         }
 
         /// <summary>
-        /// Checks if first headerSize bytes of imageHeaderBytes constitute a valid header for a gif image.
-        /// Details on GIF header can be found <a href="http://www.w3.org/Graphics/GIF/spec-gif89a.txt">
-        ///  on page 7</a>
-        /// <param name="imageHeaderBytes"></param>
-        /// <param name="headerSize"></param>
-        /// @return true if imageHeaderBytes is a valid header for a gif image
+        /// Checks if first headerSize bytes of imageHeaderBytes constitute a valid
+        /// header for a gif image. Details on GIF header can be found
+        /// <a href="http://www.w3.org/Graphics/GIF/spec-gif89a.txt"> on page 7.</a>
         /// </summary>
+        /// <returns>
+        /// true if imageHeaderBytes is a valid header for a gif image.
+        /// </returns>
         private static bool IsGifHeader(byte[] imageHeaderBytes, int headerSize)
         {
             if (headerSize < GIF_HEADER_LENGTH)
@@ -333,13 +339,13 @@ namespace ImageFormatUtils
         }
 
         /// <summary>
-        /// Checks if first headerSize bytes of imageHeaderBytes constitute a valid header for a bmp image.
-        /// Details on BMP header can be found <a href="http://www.onicos.com/staff/iz/formats/bmp.html">
-        /// </a>
-        /// <param name="imageHeaderBytes"></param>
-        /// <param name="headerSize"></param>
-        /// @return true if imageHeaderBytes is a valid header for a bmp image
+        /// Checks if first headerSize bytes of imageHeaderBytes constitute a valid
+        /// header for a bmp image. Details on BMP header can be found
+        /// <a href="http://www.onicos.com/staff/iz/formats/bmp.html"></a>.
         /// </summary>
+        /// <returns>
+        /// true if imageHeaderBytes is a valid header for a bmp image.
+        /// </returns>
         private static bool IsBmpHeader(byte[] imageHeaderBytes, int headerSize)
         {
             if (headerSize < BMP_HEADER.Length)

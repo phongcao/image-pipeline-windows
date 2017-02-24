@@ -9,22 +9,23 @@ namespace ImagePipeline.Memory
     /// <summary>
     /// Maintains a shareable reference to a byte array.
     ///
-    /// <para /> When accessing the shared array proper synchronization is guaranteed.
-    /// Under hood the get method acquires an exclusive lock, which is released
-    /// whenever the returned CloseableReference is closed.
+    /// <para />When accessing the shared array proper synchronization
+    /// is guaranteed.
+    /// Under hood the get method acquires an exclusive lock, which is
+    /// released whenever the returned CloseableReference is closed.
     ///
-    /// <para /> If the currently available byte array is too small for a request
-    /// it is replaced with a bigger one.
+    /// <para />If the currently available byte array is too small for
+    /// a request it is replaced with a bigger one.
     ///
-    /// <para /> This class will also release the byte array if it is unused and
-    /// collecting it can prevent an OOM.
+    /// <para />This class will also release the byte array if it is
+    /// unused and collecting it can prevent an OOM.
     /// </summary>
     public class SharedByteArray : IMemoryTrimmable
     {
         private readonly object _arrayGate = new object();
 
         /// <summary>
-        /// Synchronization primitive used by this implementation
+        /// Synchronization primitive used by this implementation.
         /// </summary>
         internal readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
@@ -34,8 +35,9 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// The underlying byte array.
         ///
-        /// <para /> If we receive a memory trim notification, or the runtime runs pre-OOM gc
-        /// it will be cleared to reduce memory pressure.
+        /// <para />If we receive a memory trim notification, or the
+        /// runtime runs pre-OOM gc it will be cleared to reduce
+        /// memory pressure.
         /// </summary>
         internal readonly OOMSoftReference<byte[]> _byteArraySoftRef;
 
@@ -44,8 +46,10 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Instantiates the <see cref="SharedByteArray"/>.
         /// </summary>
-        /// <param name="memoryTrimmableRegistry">A class to be notified of system memory events.</param>
-        /// <param name="args">The pool params</param>
+        /// <param name="memoryTrimmableRegistry">
+        /// A class to be notifiedof system memory events.
+        /// </param>
+        /// <param name="args">The pool params.</param>
         public SharedByteArray(
             IMemoryTrimmableRegistry memoryTrimmableRegistry,
             PoolParams args)
@@ -66,10 +70,11 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Get exclusive access to the byte array of size greater or equal to the passed one.
+        /// Get exclusive access to the byte array of size greater or
+        /// equal to the passed one.
         ///
-        /// <para /> Under the hood this method acquires an exclusive lock that is released when
-        /// the returned reference is closed.
+        /// <para />Under the hood this method acquires an exclusive
+        /// lock that is released when the returned reference is closed.
         /// </summary>
         public CloseableReference<byte[]> Get(int size)
         {
@@ -102,11 +107,12 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Responds to memory pressure by simply 'discarding' the local byte array if it is not used
-        /// at the moment.
-        ///
-        /// <param name="trimType">Kind of trimming to perform (ignored)</param>
+        /// Responds to memory pressure by simply 'discarding' the local
+        /// byte array if it is not used at the moment.
         /// </summary>
+        /// <param name="trimType">
+        /// Kind of trimming to perform (ignored).
+        /// </param>
         public void Trim(double trimType)
         {
             if (!_semaphore.Wait(1))

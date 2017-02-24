@@ -10,20 +10,16 @@ namespace ImagePipeline.Core
         private IDiskStorageFactory _diskStorageFactory;
 
         /// <summary>
-        /// Instantiates the <see cref="DiskStorageCacheFactory"/>
+        /// Instantiates the <see cref="DiskStorageCacheFactory"/>.
         /// </summary>
-        /// <param name="diskStorageFactory"></param>
         public DiskStorageCacheFactory(IDiskStorageFactory diskStorageFactory)
         {
             _diskStorageFactory = diskStorageFactory;
         }
 
         /// <summary>
-        /// Builds the <see cref="DiskStorageCache"/>
+        /// Builds the <see cref="DiskStorageCache"/>.
         /// </summary>
-        /// <param name="diskCacheConfig"></param>
-        /// <param name="diskStorage"></param>
-        /// <returns></returns>
         public static DiskStorageCache BuildDiskStorageCache(
             DiskCacheConfig diskCacheConfig,
             IDiskStorage diskStorage)
@@ -44,7 +40,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Returns the <see cref="IFileCache"/> from the <see cref="DiskCacheConfig"/>
+        /// Returns the <see cref="IFileCache"/> from the <see cref="DiskCacheConfig"/>.
         /// </summary>
         public IFileCache Get(DiskCacheConfig diskCacheConfig)
         {

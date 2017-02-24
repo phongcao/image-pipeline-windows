@@ -9,7 +9,8 @@ using Windows.Graphics.Imaging;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// Counts bitmaps - keeps track of both, count and total size in bytes.
+    /// Counts bitmaps - keeps track of both, count and total size
+    /// in bytes.
     /// </summary>
     public class BitmapCounter
     {
@@ -26,8 +27,6 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Instantiates the <see cref="BitmapCounter"/>.
         /// </summary>
-        /// <param name="maxCount"></param>
-        /// <param name="maxSize"></param>
         public BitmapCounter(int maxCount, int maxSize)
         {
             Preconditions.CheckArgument(maxCount > 0);
@@ -48,12 +47,14 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Includes given bitmap in the bitmap count. The bitmap is included only if doing so
-        /// does not violate configured limit
-        ///
-        /// <param name="bitmap">To include in the count</param>
-        /// @return true if and only if bitmap is successfully included in the count
+        /// Includes given bitmap in the bitmap count. The bitmap is
+        /// included only if doing so does not violate configured limit.
         /// </summary>
+        /// <param name="bitmap">To include in the count.</param>
+        /// <returns>
+        /// true if and only if bitmap is successfully included in
+        /// the count.
+        /// </returns>
         public bool Increase(SoftwareBitmap bitmap)
         {
             lock (_bitmapGate)
@@ -72,9 +73,10 @@ namespace ImagePipeline.Memory
 
         /// <summary>
         /// Excludes given bitmap from the count.
-        ///
-        /// <param name="bitmap">to be excluded from the count</param>
         /// </summary>
+        /// <param name="bitmap">
+        /// To be excluded from the count.
+        /// </param>
         public void Decrease(SoftwareBitmap bitmap)
         {
             lock (_bitmapGate)
@@ -92,8 +94,9 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// @return number of counted bitmaps
+        /// Gets the number of counted bitmaps.
         /// </summary>
+        /// <returns>Number of counted bitmaps.</returns>
         public int GetCount()
         {
             lock (_bitmapGate)
@@ -103,8 +106,11 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// @return total size in bytes of counted bitmaps
+        /// Gets the total size in bytes of counted bitmaps.
         /// </summary>
+        /// <returns>
+        /// Total size in bytes of counted bitmaps.
+        /// </returns>
         public long GetSize()
         {
             lock (_bitmapGate)
@@ -114,24 +120,30 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Gets the bitmap pool releaser
+        /// Gets the bitmap pool releaser.
         /// </summary>
-        /// <returns>The bitmap pool releaser</returns>
+        /// <returns>The bitmap pool releaser.</returns>
         public IResourceReleaser<SoftwareBitmap> GetReleaser()
         {
             return _unpooledBitmapsReleaser;
         }
 
         /// <summary>
-        /// Associates bitmaps with the bitmap counter. <p/> <para />If this method throws
-        /// TooManyBitmapsException, the code will have called<see cref="SoftwareBitmap.Dispose"/> on the
-        /// bitmaps.
-        ///
-        /// <param name = "bitmaps" > the bitmaps to associate</param>
-        /// @return the references to the bitmaps that are now tied to the bitmap pool
-        /// @throws TooManyBitmapsException if the pool is full
+        /// Associates bitmaps with the bitmap counter.
+        /// <para />If this method throws TooManyBitmapsException,
+        /// the code will have called<see cref="SoftwareBitmap.Dispose"/>
+        /// on the bitmaps.
         /// </summary>
-        public IList<CloseableReference<SoftwareBitmap>> AssociateBitmapsWithBitmapCounter(IList<SoftwareBitmap> bitmaps)
+        /// <param name="bitmaps">The bitmaps to associate.</param>
+        /// <returns>
+        /// The references to the bitmaps that are now tied to the
+        /// bitmap pool.
+        /// </returns>
+        /// <exception cref="TooManyBitmapsException">
+        /// If the pool is full.
+        /// </exception>
+        public IList<CloseableReference<SoftwareBitmap>> AssociateBitmapsWithBitmapCounter(
+            IList<SoftwareBitmap> bitmaps)
         {
             int countedBitmaps = 0;
 

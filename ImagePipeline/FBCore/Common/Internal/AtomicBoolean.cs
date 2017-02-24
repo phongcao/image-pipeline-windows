@@ -10,7 +10,7 @@ namespace FBCore.Common.Internal
         private int _value;
 
         /// <summary>
-        /// Instantiates the <see cref="AtomicBoolean"/>
+        /// Instantiates the <see cref="AtomicBoolean"/>.
         /// </summary>
         /// <param name="value">The initial value.</param>
         public AtomicBoolean(bool value)

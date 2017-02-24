@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace ImagePipeline.Producers
 {
     /// <summary>
-    /// Uses IExecutorService to move further computation to different thread
+    /// Uses IExecutorService to move further computation to different thread.
     /// </summary>
     public class ThreadHandoffProducer<T> : IProducer<T>
     {
@@ -15,7 +15,7 @@ namespace ImagePipeline.Producers
         private readonly ThreadHandoffProducerQueue _threadHandoffProducerQueue;
 
         /// <summary>
-        /// Instantiates the <see cref="ThreadHandoffProducer{T}"/>
+        /// Instantiates the <see cref="ThreadHandoffProducer{T}"/>.
         /// </summary>
         public ThreadHandoffProducer(
             IProducer<T> inputProducer,
@@ -26,8 +26,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Start producing results for given context. Provided consumer is notified whenever 
-        /// progress is made (new value is ready or error occurs).
+        /// Start producing results for given context.
+        /// Provided consumer is notified whenever progress is made
+        /// (new value is ready or error occurs).
         /// </summary>
 
         public void ProduceResults(IConsumer<T> consumer, IProducerContext context)

@@ -13,7 +13,7 @@ namespace ImagePipeline.Producers
         internal new const string PRODUCER_NAME = "BitmapMemoryCacheGetProducer";
 
         /// <summary>
-        /// Instantiates the <see cref="BitmapMemoryCacheGetProducer"/>
+        /// Instantiates the <see cref="BitmapMemoryCacheGetProducer"/>.
         /// </summary>
         public BitmapMemoryCacheGetProducer(
             IMemoryCache<ICacheKey, CloseableImage> memoryCache,
@@ -24,18 +24,19 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Wraps the target consumer by the BitmapMemoryCacheConsumer
+        /// Wraps the target consumer by the BitmapMemoryCacheConsumer.
         /// </summary>
         protected override IConsumer<CloseableReference<CloseableImage>> WrapConsumer(
             IConsumer<CloseableReference<CloseableImage>> consumer,
             ICacheKey cacheKey)
         {
-            // Since this cache is read-only, we can pass our consumer directly to the next producer
+            // Since this cache is read-only, we can pass our consumer
+            // directly to the next producer
             return consumer;
         }
 
         /// <summary>
-        /// Gets the producer name
+        /// Gets the producer name.
         /// </summary>
         protected override string ProducerName
         {

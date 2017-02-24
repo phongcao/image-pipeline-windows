@@ -7,50 +7,50 @@ namespace FBCore.Concurrency
     /// <summary>
     /// Abstraction for computation.
     ///
-    /// <para /> Computation expressed as StatefulRunnable can be cancelled, but only if it 
-    /// has not started yet.
+    /// <para />Computation expressed as StatefulRunnable can be cancelled, but
+    /// only if it has not started yet.
     ///
-    /// <para /> For better decoupling of the code computing the result and the code that 
-    /// handles it, 4 separate methods are provided: GetResult, OnSuccess, OnFailure and 
-    /// OnCancellation.
+    /// <para />For better decoupling of the code computing the result and the
+    /// code that handles it, 4 separate methods are provided: GetResult,
+    /// OnSuccess, OnFailure and OnCancellation.
     ///
-    /// <para /> This runnable can be run only once. Subsequent calls to run method won't 
-    /// have any effect.
+    /// <para />This runnable can be run only once. Subsequent calls to run
+    /// method won't have any effect.
     /// </summary>
     public abstract class StatefulRunnable<T>
     {
         /// <summary>
-        /// State Created
+        /// State Created.
         /// </summary>
         internal const int STATE_CREATED = 0;
 
         /// <summary>
-        /// State Started
+        /// State Started.
         /// </summary>
         internal const int STATE_STARTED = 1;
 
         /// <summary>
-        /// State Cancelled
+        /// State Cancelled.
         /// </summary>
         internal const int STATE_CANCELLED = 2;
 
         /// <summary>
-        /// State Finished
+        /// State Finished.
         /// </summary>
         internal const int STATE_FINISHED = 3;
 
         /// <summary>
-        /// State Failed
+        /// State Failed.
         /// </summary>
         internal const int STATE_FAILED = 4;
 
         /// <summary>
-        /// State
+        /// State.
         /// </summary>
         protected int _state;
 
         /// <summary>
-        /// Runnable
+        /// Runnable.
         /// </summary>
         private Func<Task> _runnable;
 
@@ -66,7 +66,7 @@ namespace FBCore.Concurrency
         }
 
         /// <summary>
-        /// Instantiates the <see cref="StatefulRunnable{T}"/>
+        /// Instantiates the <see cref="StatefulRunnable{T}"/>.
         /// </summary>
         public StatefulRunnable()
         {
@@ -105,7 +105,7 @@ namespace FBCore.Concurrency
         }
 
         /// <summary>
-        /// Cancelling the runnable
+        /// Cancelling the runnable.
         /// </summary>
         public void Cancel()
         {
@@ -118,14 +118,14 @@ namespace FBCore.Concurrency
 
         /// <summary>
         /// Called after computing result successfully.
-        /// <param name="result"></param>
         /// </summary>
+        /// <param name="result"></param>
         protected internal virtual void OnSuccess(T result) { }
 
         /// <summary>
         /// Called if exception occurred during computation.
-        /// <param name="e"></param>
         /// </summary>
+        /// <param name="e"></param>
         protected internal virtual void OnFailure(Exception e) { }
 
         /// <summary>
@@ -135,8 +135,8 @@ namespace FBCore.Concurrency
 
         /// <summary>
         /// Called after OnSuccess callback completes in order to dispose the result.
-        /// <param name="result"></param>
         /// </summary>
+        /// <param name="result"></param>
         protected internal virtual void DisposeResult(T result) { }
 
         /// <summary>

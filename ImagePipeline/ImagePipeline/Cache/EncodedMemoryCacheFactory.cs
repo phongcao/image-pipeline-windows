@@ -4,12 +4,12 @@ using ImagePipeline.Memory;
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// Factory for the instrumented <see cref="EncodedCountingMemoryCacheFactory"/>"/>
+    /// Factory for the instrumented <see cref="EncodedCountingMemoryCacheFactory"/>.
     /// </summary>
     public class EncodedMemoryCacheFactory
     {
         /// <summary>
-        /// Returns the instrumented <see cref="EncodedCountingMemoryCacheFactory"/>
+        /// Returns the instrumented <see cref="EncodedCountingMemoryCacheFactory"/>.
         /// </summary>
         public static IMemoryCache<ICacheKey, IPooledByteBuffer> Get(
             CountingMemoryCache<ICacheKey, IPooledByteBuffer> encodedCountingMemoryCache,

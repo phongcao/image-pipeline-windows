@@ -1,6 +1,5 @@
 ﻿using FBCore.Common.Internal;
 using FBCore.Common.Memory;
-using System;
 
 namespace ImagePipeline.Memory
 {
@@ -9,73 +8,88 @@ namespace ImagePipeline.Memory
     /// </summary>
     public class PoolConfig
     {
-        /// <summary>
-        /// There are a lot of parameters in this class. Please follow strict alphabetical order.
-        /// </summary>
+        /// <remark>
+        /// There are a lot of parameters in this class.
+        /// Please follow strict alphabetical order.
+        /// </remark>
 
         /// <summary>
-        /// Gets the <see cref="BitmapPool"/> params
+        /// Gets the <see cref="BitmapPool"/> params.
         /// </summary>
         public PoolParams BitmapPoolParams { get;  }
 
         /// <summary>
-        /// Gets the <see cref="BitmapPool"/> stats tracker
+        /// Gets the <see cref="BitmapPool"/> stats tracker.
         /// </summary>
         public PoolStatsTracker BitmapPoolStatsTracker { get; }
 
         /// <summary>
-        /// Gets the <see cref="FlexByteArrayPool"/> params
+        /// Gets the <see cref="FlexByteArrayPool"/> params.
         /// </summary>
         public PoolParams FlexByteArrayPoolParams { get; }
 
         /// <summary>
-        /// Gets the <see cref="IMemoryTrimmableRegistry"/>
+        /// Gets the <see cref="IMemoryTrimmableRegistry"/>.
         /// </summary>
         public IMemoryTrimmableRegistry MemoryTrimmableRegistry { get; }
 
         /// <summary>
-        /// Gets the <see cref="NativeMemoryChunkPool"/> params
+        /// Gets the <see cref="NativeMemoryChunkPool"/> params.
         /// </summary>
         public PoolParams NativeMemoryChunkPoolParams { get; }
 
         /// <summary>
-        /// Gets the <see cref="NativeMemoryChunkPool"/> stats tracker
+        /// Gets the <see cref="NativeMemoryChunkPool"/> stats tracker.
         /// </summary>
         public PoolStatsTracker NativeMemoryChunkPoolStatsTracker { get; }
 
         /// <summary>
-        /// Gets the <see cref="GenericByteArrayPool"/> params
+        /// Gets the <see cref="GenericByteArrayPool"/> params.
         /// </summary>
         public PoolParams SmallByteArrayPoolParams { get; }
 
         /// <summary>
-        /// Gets the <see cref="GenericByteArrayPool"/> stats tracker
+        /// Gets the <see cref="GenericByteArrayPool"/> stats tracker.
         /// </summary>
         public PoolStatsTracker SmallByteArrayPoolStatsTracker { get; }
 
         private PoolConfig(Builder builder)
         {
-            BitmapPoolParams = builder._bitmapPoolParams ?? DefaultBitmapPoolParams.Get();
-            BitmapPoolStatsTracker = builder._bitmapPoolStatsTracker ?? NoOpPoolStatsTracker.Instance;
-            FlexByteArrayPoolParams = builder._flexByteArrayPoolParams ?? DefaultFlexByteArrayPoolParams.Get();
-            MemoryTrimmableRegistry = builder._memoryTrimmableRegistry ?? NoOpMemoryTrimmableRegistry.Instance;
-            NativeMemoryChunkPoolParams = builder._nativeMemoryChunkPoolParams ?? DefaultNativeMemoryChunkPoolParams.Get();
-            NativeMemoryChunkPoolStatsTracker = builder._nativeMemoryChunkPoolStatsTracker ?? NoOpPoolStatsTracker.Instance;
-            SmallByteArrayPoolParams = builder._smallByteArrayPoolParams ?? DefaultByteArrayPoolParams.Get();
-            SmallByteArrayPoolStatsTracker = builder._smallByteArrayPoolStatsTracker ?? NoOpPoolStatsTracker.Instance;
+            BitmapPoolParams = builder._bitmapPoolParams ?? 
+                DefaultBitmapPoolParams.Get();
+
+            BitmapPoolStatsTracker = builder._bitmapPoolStatsTracker ?? 
+                NoOpPoolStatsTracker.Instance;
+
+            FlexByteArrayPoolParams = builder._flexByteArrayPoolParams ?? 
+                DefaultFlexByteArrayPoolParams.Get();
+
+            MemoryTrimmableRegistry = builder._memoryTrimmableRegistry ?? 
+                NoOpMemoryTrimmableRegistry.Instance;
+
+            NativeMemoryChunkPoolParams = builder._nativeMemoryChunkPoolParams ?? 
+                DefaultNativeMemoryChunkPoolParams.Get();
+
+            NativeMemoryChunkPoolStatsTracker = builder._nativeMemoryChunkPoolStatsTracker ?? 
+                NoOpPoolStatsTracker.Instance;
+
+            SmallByteArrayPoolParams = builder._smallByteArrayPoolParams ?? 
+                DefaultByteArrayPoolParams.Get();
+
+            SmallByteArrayPoolStatsTracker = builder._smallByteArrayPoolStatsTracker ?? 
+                NoOpPoolStatsTracker.Instance;
         }
 
         /// <summary>
-        /// Builder class factory method
+        /// Builder class factory method.
         /// </summary>
-        /// <returns></returns>
         public static Builder NewBuilder()
         {
             return new Builder();
         }
 
         /// <summary>
-        /// Builder class for PoolConfig
+        /// Builder class for PoolConfig.
         /// </summary>
         public class Builder
         {
@@ -93,10 +107,8 @@ namespace ImagePipeline.Memory
             }
 
             /// <summary>
-            /// Sets the <see cref="BitmapPool"/> params
+            /// Sets the <see cref="BitmapPool"/> params.
             /// </summary>
-            /// <param name="bitmapPoolParams"></param>
-            /// <returns></returns>
             public Builder SetBitmapPoolParams(PoolParams bitmapPoolParams)
             {
                 _bitmapPoolParams = Preconditions.CheckNotNull(bitmapPoolParams);
@@ -104,10 +116,8 @@ namespace ImagePipeline.Memory
             }
 
             /// <summary>
-            /// Sets the <see cref="BitmapPool"/> stats tracker
+            /// Sets the <see cref="BitmapPool"/> stats tracker.
             /// </summary>
-            /// <param name="bitmapPoolStatsTracker"></param>
-            /// <returns></returns>
             public Builder SetBitmapPoolStatsTracker(
                 PoolStatsTracker bitmapPoolStatsTracker)
             {
@@ -116,10 +126,8 @@ namespace ImagePipeline.Memory
             }
 
             /// <summary>
-            /// Sets the <see cref="FlexByteArrayPool"/> params
+            /// Sets the <see cref="FlexByteArrayPool"/> params.
             /// </summary>
-            /// <param name="flexByteArrayPoolParams"></param>
-            /// <returns></returns>
             public Builder SetFlexByteArrayPoolParams(PoolParams flexByteArrayPoolParams)
             {
                 _flexByteArrayPoolParams = flexByteArrayPoolParams;
@@ -127,21 +135,18 @@ namespace ImagePipeline.Memory
             }
 
             /// <summary>
-            /// Sets the <see cref="IMemoryTrimmableRegistry"/>
+            /// Sets the <see cref="IMemoryTrimmableRegistry"/>.
             /// </summary>
-            /// <param name="memoryTrimmableRegistry"></param>
-            /// <returns></returns>
-            public Builder SetMemoryTrimmableRegistry(IMemoryTrimmableRegistry memoryTrimmableRegistry)
+            public Builder SetMemoryTrimmableRegistry(
+                IMemoryTrimmableRegistry memoryTrimmableRegistry)
             {
                 _memoryTrimmableRegistry = memoryTrimmableRegistry;
                 return this;
             }
 
             /// <summary>
-            /// Sets the <see cref="NativeMemoryChunkPool"/> params
+            /// Sets the <see cref="NativeMemoryChunkPool"/> params.
             /// </summary>
-            /// <param name="nativeMemoryChunkPoolParams"></param>
-            /// <returns></returns>
             public Builder SetNativeMemoryChunkPoolParams(PoolParams nativeMemoryChunkPoolParams)
             {
                 _nativeMemoryChunkPoolParams = Preconditions.CheckNotNull(nativeMemoryChunkPoolParams);
@@ -149,10 +154,8 @@ namespace ImagePipeline.Memory
             }
 
             /// <summary>
-            /// Sets the <see cref="NativeMemoryChunkPool"/> stats tracker
+            /// Sets the <see cref="NativeMemoryChunkPool"/> stats tracker.
             /// </summary>
-            /// <param name="nativeMemoryChunkPoolStatsTracker"></param>
-            /// <returns></returns>
             public Builder SetNativeMemoryChunkPoolStatsTracker(
                 PoolStatsTracker nativeMemoryChunkPoolStatsTracker)
             {
@@ -162,10 +165,8 @@ namespace ImagePipeline.Memory
             }
 
             /// <summary>
-            /// Sets the small <see cref="GenericByteArrayPool"/> params
+            /// Sets the small <see cref="GenericByteArrayPool"/> params.
             /// </summary>
-            /// <param name="commonByteArrayPoolParams"></param>
-            /// <returns></returns>
             public Builder SetSmallByteArrayPoolParams(PoolParams commonByteArrayPoolParams)
             {
                 _smallByteArrayPoolParams = Preconditions.CheckNotNull(commonByteArrayPoolParams);
@@ -173,10 +174,8 @@ namespace ImagePipeline.Memory
             }
 
             /// <summary>
-            /// Sets the small <see cref="GenericByteArrayPool"/> stats tracker
+            /// Sets the small <see cref="GenericByteArrayPool"/> stats tracker.
             /// </summary>
-            /// <param name="smallByteArrayPoolStatsTracker"></param>
-            /// <returns></returns>
             public Builder SetSmallByteArrayPoolStatsTracker(
                 PoolStatsTracker smallByteArrayPoolStatsTracker)
             {
@@ -186,9 +185,8 @@ namespace ImagePipeline.Memory
             }
 
             /// <summary>
-            /// Builds the pool config
+            /// Builds the pool config.
             /// </summary>
-            /// <returns></returns>
             public PoolConfig Build()
             {
                 return new PoolConfig(this);

@@ -9,12 +9,13 @@ using System.Threading.Tasks;
 namespace ImagePipeline.Datasource
 {
     /// <summary>
-    /// Data source that wraps number of other data sources and waits until all of them are finished.
-    /// After that each call to GetResult() returns list of final results of wrapped data sources.
-    /// Caller of GetResult() is responsible for closing all each of the results separately.
+    /// Data source that wraps number of other data sources and waits until
+    /// all of them are finished. After that each call to GetResult() returns
+    /// list of final results of wrapped data sources.
+    /// Caller of GetResult() is responsible for closing all each of the
+    /// results separately.
     ///
-    /// <para /> This data source does not propagate intermediate results.
-    ///
+    /// <para />This data source does not propagate intermediate results.
     /// </summary>
     public class ListDataSource<T> : AbstractDataSource<IList<CloseableReference<T>>>
     {
@@ -34,10 +35,8 @@ namespace ImagePipeline.Datasource
         }
 
         /// <summary>
-        /// ListDataSource factory method
+        /// ListDataSource factory method.
         /// </summary>
-        /// <param name="dataSources"></param>
-        /// <returns></returns>
         public static ListDataSource<T> Create(
             params IDataSource<CloseableReference<T>>[] dataSources)
         {
@@ -69,7 +68,9 @@ namespace ImagePipeline.Datasource
                     return null;
                 }
 
-                IList<CloseableReference<T>> results = new List<CloseableReference<T>>(_dataSources.Length);
+                IList<CloseableReference<T>> results = 
+                    new List<CloseableReference<T>>(_dataSources.Length);
+
                 foreach (var dataSource in _dataSources)
                 {
                     results.Add(dataSource.GetResult());
@@ -82,7 +83,6 @@ namespace ImagePipeline.Datasource
         /// <summary>
         /// Cancels the ongoing request and releases all associated resources.
         /// </summary>
-        /// <returns></returns>
         public override bool Close()
         {
             if (!base.Close())
@@ -136,8 +136,12 @@ namespace ImagePipeline.Datasource
         }
 
         /// <summary>
-        /// @return true if any result (possibly of lower quality) is available right now, false otherwise
+        /// Checks if any result (possibly of lower quality) is available right now.
         /// </summary>
+        /// <returns>
+        /// true if any result (possibly of lower quality) is available right now,
+        /// false otherwise.
+        /// </returns>
         public override bool HasResult()
         {
             lock (_gate)

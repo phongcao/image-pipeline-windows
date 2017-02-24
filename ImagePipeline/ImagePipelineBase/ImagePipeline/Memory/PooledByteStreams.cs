@@ -7,12 +7,13 @@ namespace ImagePipeline.Memory
 {
     /// <summary>
     /// Helper class for interacting with streams.
-    /// To prevent numerous allocations of temp buffers pool of byte arrays is used.
+    /// To prevent numerous allocations of temp buffers pool of byte arrays
+    /// is used.
     /// </summary>
     public class PooledByteStreams
     {
         /// <summary>
-        /// Size of temporary buffer to use for copying (16 kb)
+        /// Size of temporary buffer to use for copying (16 kb).
         /// </summary>
         private const int DEFAULT_TEMP_BUF_SIZE = 16 * ByteConstants.KB;
 
@@ -22,7 +23,6 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Instantiates the <see cref="PooledByteStreams"/>.
         /// </summary>
-        /// <param name="byteArrayPool"></param>
         public PooledByteStreams(IByteArrayPool byteArrayPool) : 
             this(byteArrayPool, DEFAULT_TEMP_BUF_SIZE)
         {
@@ -40,11 +40,13 @@ namespace ImagePipeline.Memory
 
         /// <summary>
         /// Copy all bytes from the input stream to the output stream.
+        /// </summary>
         /// <param name="from">The intput stream.</param>
         /// <param name="to">The output stream.</param>
-        /// @return number of copied bytes.
-        /// @throws IOException.
-        /// </summary>
+        /// <returns>Number of copied bytes.</returns>
+        /// <exception cref="IOException">
+        /// An I/O error occurs.
+        /// </exception>
         public long Copy(Stream from, Stream to)
         {
             long count = 0;
@@ -71,13 +73,16 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-       /// Copy at most number of bytes from the input stream to the output stream.
-       /// <param name="from">The input stream.</param>
-       /// <param name="to">The output stream.</param>
-       /// <param name="bytesToCopy">Bytes to copy.</param>
-       /// @return number of copied bytes.
-       /// @throws IOException.
-       /// </summary>
+        /// Copy at most number of bytes from the input stream to the
+        /// output stream.
+        /// </summary>
+        /// <param name="from">The input stream.</param>
+        /// <param name="to">The output stream.</param>
+        /// <param name="bytesToCopy">Bytes to copy.</param>
+        /// <returns>Number of copied bytes.</returns>
+        /// <exception cref="IOException">
+        /// An I/O error occurs.
+        /// </exception>
         public long Copy(Stream from, Stream to, long bytesToCopy)
         {
             Preconditions.CheckState(bytesToCopy > 0);

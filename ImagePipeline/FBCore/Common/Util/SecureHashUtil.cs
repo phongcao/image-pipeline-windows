@@ -23,10 +23,8 @@ namespace FBCore.Common.Util
         private static readonly char[] PADDING = { '=' };
 
         /// <summary>
-        /// Make SHA1 hash
+        /// Make SHA1 hash.
         /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
         public static string MakeSHA1Hash(string text)
         {
             try
@@ -45,9 +43,9 @@ namespace FBCore.Common.Util
         }
 
         /// <summary>
-        /// Generates the SHA1 hash of the input byte array and converts to hex string
+        /// Generates the SHA1 hash of the input byte array and converts to hex string.
         /// </summary>
-        /// <param name="bytes"></param>
+        /// <param name="bytes">The input byte array.</param>
         /// <returns>Hex string</returns>
         public static string MakeSHA1Hash(byte[] bytes)
         {
@@ -57,15 +55,17 @@ namespace FBCore.Common.Util
         }
 
         /// <summary>
-        /// Generates the SHA1 hash of the input byte array and encodes to base64 string
+        /// Generates the SHA1 hash of the input byte array and encodes to base64 string.
         /// </summary>
-        /// <param name="bytes"></param>
-        /// <returns>Base64 string</returns>
+        /// <param name="bytes">The input byte array.</param>
+        /// <returns>Base64 string.</returns>
         public static string MakeSHA1HashBase64(byte[] bytes)
         {
             try
             {
-                HashAlgorithmProvider provider = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha1);
+                HashAlgorithmProvider provider = HashAlgorithmProvider.OpenAlgorithm(
+                    HashAlgorithmNames.Sha1);
+
                 IBuffer sha1HashBuffer = provider.HashData(bytes.AsBuffer());
 
                 // http://stackoverflow.com/questions/26353710/how-to-achieve-base64-url-safe-encoding-in-c
@@ -82,10 +82,8 @@ namespace FBCore.Common.Util
         }
 
         /// <summary>
-        /// Make MD5 hash
+        /// Make MD5 hash.
         /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
         public static string MakeMD5Hash(string text)
         {
             try
@@ -104,10 +102,10 @@ namespace FBCore.Common.Util
         }
 
         /// <summary>
-        /// Generates the MD5 hash of the input byte array and converts to hex string
+        /// Generates the MD5 hash of the input byte array and converts to hex string.
         /// </summary>
-        /// <param name="bytes"></param>
-        /// <returns>Hex string</returns>
+        /// <param name="bytes">The input byte array.</param>
+        /// <returns>Hex string.</returns>
         public static string MakeMD5Hash(byte[] bytes)
         {
             HashAlgorithmProvider provider = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Md5);
@@ -116,10 +114,8 @@ namespace FBCore.Common.Util
         }
 
         /// <summary>
-        /// Converts byte array to hex string
+        /// Converts byte array to hex string.
         /// </summary>
-        /// <param name="raw"></param>
-        /// <returns></returns>
         public static string ConvertToHex(byte[] raw)
         {
             StringBuilder sb = new StringBuilder(raw.Length);

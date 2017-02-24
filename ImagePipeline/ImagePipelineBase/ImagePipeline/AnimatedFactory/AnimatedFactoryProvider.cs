@@ -1,6 +1,5 @@
 ﻿using ImagePipeline.Bitmaps;
 using ImagePipeline.Core;
-using System;
 
 namespace ImagePipeline.AnimatedFactory
 {

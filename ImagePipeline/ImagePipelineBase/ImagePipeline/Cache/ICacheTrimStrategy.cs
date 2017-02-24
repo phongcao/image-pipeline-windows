@@ -6,10 +6,8 @@
     public interface ICacheTrimStrategy
     {
         /// <summary>
-        /// Gets the trim ratio 
+        /// Gets the trim ratio.
         /// </summary>
-        /// <param name="trimType"></param>
-        /// <returns></returns>
         double GetTrimRatio(double trimType);
     }
 }

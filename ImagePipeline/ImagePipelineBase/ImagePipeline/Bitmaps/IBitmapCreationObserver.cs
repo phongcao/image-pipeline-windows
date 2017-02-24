@@ -10,10 +10,8 @@ namespace ImagePipeline.Bitmaps
     public interface IBitmapCreationObserver
     {
         /// <summary>
-        /// Notifies external creation of bitmap using
+        /// Notifies external creation of bitmap.
         /// </summary>
-        /// <param name="bitmap"></param>
-        /// <param name="callerContext"></param>
         void OnBitmapCreated(SoftwareBitmap bitmap, object callerContext);
     }
 }

@@ -13,16 +13,15 @@ namespace ImagePipeline.Cache
         private static DefaultCacheKeyFactory _instance = null;
 
         /// <summary>
-        /// Instantiates the <see cref="DefaultCacheKeyFactory"/>
+        /// Instantiates the <see cref="DefaultCacheKeyFactory"/>.
         /// </summary>
         protected DefaultCacheKeyFactory()
         {
         }
 
         /// <summary>
-        /// Singleton
+        /// Singleton.
         /// </summary>
-        /// <returns></returns>
         public static DefaultCacheKeyFactory Instance
         {
             get
@@ -40,8 +39,12 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// @return <see cref="ICacheKey"/> for doing bitmap cache lookups in the pipeline.
+        /// Gets the bitmap cache key.
         /// </summary>
+        /// <returns>
+        /// <see cref="ICacheKey" /> for doing bitmap cache lookups
+        /// in the pipeline.
+        /// </returns>
         public ICacheKey GetBitmapCacheKey(ImageRequest request, object callerContext)
         {
             return new BitmapMemoryCacheKey(
@@ -55,8 +58,12 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// @return <see cref="ICacheKey"/> for doing post-processed bitmap cache lookups in the pipeline.
+        /// Gets the post-processed bitmap cache key.
         /// </summary>
+        /// <returns>
+        /// <see cref="ICacheKey" /> for doing post-processed bitmap cache
+        /// lookups in the pipeline.
+        /// </returns>
         public ICacheKey GetPostprocessedBitmapCacheKey(ImageRequest request, object callerContext)
         {
             IPostprocessor postprocessor = request.Postprocessor;
@@ -83,18 +90,27 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// <param name="request">Image request</param>
-        /// <param name="callerContext">included for optional debugging or logging purposes only</param>
-        /// @return <see cref="ICacheKey"/> for doing encoded image lookups in the pipeline.
+        /// Gets the encoded cache key.
         /// </summary>
+        /// <param name="request">Image request.</param>
+        /// <param name="callerContext">
+        /// Included for optional debugging or logging purposes only.
+        /// </param>
+        /// <returns>
+        /// <see cref="ICacheKey"/> for doing encoded image lookups
+        /// in the pipeline.
+        /// </returns>
         public ICacheKey GetEncodedCacheKey(ImageRequest request, object callerContext)
         {
             return new SimpleCacheKey(GetCacheKeySourceUri(request.SourceUri).ToString());
         }
 
         /// <summary>
-        /// @return a string that unambiguously indicates the source of the image.
+        /// Gets the cache key source uri.
         /// </summary>
+        /// <returns>
+        /// A string that unambiguously indicates the source of the image.
+        /// </returns>
         protected Uri GetCacheKeySourceUri(Uri sourceUri)
         {
             return sourceUri;

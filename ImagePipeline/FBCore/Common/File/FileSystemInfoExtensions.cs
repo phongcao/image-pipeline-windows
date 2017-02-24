@@ -5,15 +5,13 @@ using System.IO;
 namespace FBCore.Common.File.Extensions
 {
     /// <summary>
-    /// Extension methods of <see cref="Directory"/>
+    /// Extension methods of <see cref="Directory"/>.
     /// </summary>
     public static class FileSystemInfoExtensions
     {
         /// <summary>
-        /// Returns an array of files contained in the directory represented by this file
+        /// Returns an array of files contained in the directory represented by this file.
         /// </summary>
-        /// <param name="directory"></param>
-        /// <returns></returns>
         public static FileSystemInfo[] ListFiles(this FileSystemInfo directory)
         {
             List<FileSystemInfo> files = new List<FileSystemInfo>();
@@ -37,9 +35,9 @@ namespace FBCore.Common.File.Extensions
         }
 
         /// <summary>
-        /// Check if file is a directory
+        /// Check if file is a directory.
         /// </summary>
-        /// <param name="file">a file</param>
+        /// <param name="file">A file.</param>
         /// <returns>true if file is a directory, false otherwise.</returns>
         public static bool IsDirectory(this FileSystemInfo file)
         {
@@ -47,11 +45,11 @@ namespace FBCore.Common.File.Extensions
         }
 
         /// <summary>
-        /// Renames this file to <code> newPath</code>. This operation is supported for both
-        /// files and directories.
+        /// Renames this file to <code>newFileInfo</code>. This operation is supported 
+        /// for both files and directories.
         /// </summary>
-        /// <param name="currentFileInfo">the current path.</param>
-        /// <param name="newFileInfo">the new path.</param>
+        /// <param name="currentFileInfo">The current file.</param>
+        /// <param name="newFileInfo">The new file.</param>
         /// <returns>true on success.</returns>
         public static bool RenameTo(this FileSystemInfo currentFileInfo, FileSystemInfo newFileInfo)
         {
@@ -76,7 +74,7 @@ namespace FBCore.Common.File.Extensions
 
         /// <summary>
         /// Returns a new file made from the pathname of the parent of this file.
-        /// This is the path up to but not including the last name. <code> null</code> is
+        /// This is the path up to but not including the last name. <code>null</code> is
         /// returned when there is no parent.
         /// </summary>
         public static DirectoryInfo GetParent(this FileSystemInfo file)
@@ -93,9 +91,9 @@ namespace FBCore.Common.File.Extensions
         }
 
         /// <summary>
-        /// Creates an empty directory or file and close it
+        /// Creates an empty directory or file and close it.
         /// </summary>
-        /// <param name="file">a file</param>
+        /// <param name="file">A file.</param>
         /// <returns>true if the creation is successful, false otherwise.</returns>
         public static bool CreateEmpty(this FileSystemInfo file)
         {

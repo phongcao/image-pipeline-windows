@@ -11,9 +11,8 @@ namespace ImagePipeline.Bitmaps
         private static SimpleBitmapReleaser _instance;
 
         /// <summary>
-        /// Gets singleton
+        /// Gets singleton.
         /// </summary>
-        /// <returns></returns>
         public static SimpleBitmapReleaser Instance
         {
             get
@@ -30,9 +29,8 @@ namespace ImagePipeline.Bitmaps
         private SimpleBitmapReleaser() { }
 
         /// <summary>
-        /// Releases bitmap
+        /// Releases bitmap.
         /// </summary>
-        /// <param name="value"></param>
         public void Release(SoftwareBitmap value)
         {
             value.Dispose();

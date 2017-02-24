@@ -5,12 +5,13 @@ using System.Text;
 namespace Cache.Common
 {
     /// <summary>
-    /// Cache key util
+    /// Cache key util.
     /// </summary>
     public sealed class CacheKeyUtil
     {
         /// <summary>
-        /// Get a list of possible resourceIds from MultiCacheKey or get single resourceId from CacheKey.
+        /// Get a list of possible resourceIds from MultiCacheKey or get single
+        /// resourceId from ICacheKey.
         /// </summary>
         public static IList<string> GetResourceIds(ICacheKey key)
         {
@@ -42,7 +43,8 @@ namespace Cache.Common
         }
 
         /// <summary>
-        /// Get the resourceId from the first key in MultiCacheKey or get single resourceId from CacheKey.
+        /// Get the resourceId from the first key in MultiCacheKey or get single
+        /// resourceId from ICacheKey.
         /// </summary>
         public static string GetFirstResourceId(ICacheKey key)
         {

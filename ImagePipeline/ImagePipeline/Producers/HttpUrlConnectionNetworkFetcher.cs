@@ -12,8 +12,8 @@ namespace ImagePipeline.Producers
     /// <summary>
     /// Network fetcher that uses the simplest Windows stack.
     ///
-    /// <para /> Apps requiring more sophisticated networking should implement their own
-    /// <see cref="INetworkFetcher{FetchState}"/>.
+    /// <para />Apps requiring more sophisticated networking should
+    /// implement their own <see cref="INetworkFetcher{FetchState}"/>.
     /// </summary>
     public sealed class HttpUrlConnectionNetworkFetcher : BaseNetworkFetcher<FetchState>, IDisposable
     {
@@ -25,7 +25,7 @@ namespace ImagePipeline.Producers
         private readonly HttpClient _client;
 
         /// <summary>
-        /// Instantiates the <see cref="HttpUrlConnectionNetworkFetcher"/>
+        /// Instantiates the <see cref="HttpUrlConnectionNetworkFetcher"/>.
         /// </summary>
         public HttpUrlConnectionNetworkFetcher() : 
             this(Executors.NewFixedThreadPool(NUM_NETWORK_THREADS))
@@ -64,12 +64,12 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="FetchState"/>-derived object used to store state.
-        ///
-        /// <param name="consumer">the consumer</param>
-        /// <param name="context">the producer's context</param>
-        /// @return a new fetch state instance
+        /// Creates a new instance of the <see cref="FetchState"/>-derived
+        /// object used to store state.
         /// </summary>
+        /// <param name="consumer">The consumer.</param>
+        /// <param name="context">The producer's context.</param>
+        /// <returns>A new fetch state instance.</returns>
         public override FetchState CreateFetchState(
             IConsumer<EncodedImage> consumer, 
             IProducerContext context)
@@ -78,12 +78,15 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Initiates the network fetch and informs the producer when a response is received via the
-        /// provided callback.
-        ///
-        /// <param name="fetchState">the fetch-specific state</param>
-        /// <param name="callback">the callback used to inform the network fetch producer</param>
+        /// Initiates the network fetch and informs the producer when a
+        /// response is received via the provided callback.
         /// </summary>
+        /// <param name="fetchState">
+        /// The fetch-specific state.
+        /// </param>
+        /// <param name="callback">
+        /// The callback used to inform the network fetch producer.
+        /// </param>
         public override void Fetch(
             FetchState fetchState, 
             INetworkFetcherCallback callback)
@@ -135,7 +138,8 @@ namespace ImagePipeline.Producers
             .Result;
         }
 
-        private async Task<HttpResponseMessage> DownloadFrom(Uri uri, int maxRedirects, CancellationToken token)
+        private async Task<HttpResponseMessage> DownloadFrom(
+            Uri uri, int maxRedirects, CancellationToken token)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
             var asyncInfo = _client.SendRequestAsync(request);
@@ -156,7 +160,8 @@ namespace ImagePipeline.Producers
 
                         if (maxRedirects > 0 && nextUri != null && !nextUri.Scheme.Equals(originalScheme))
                         {
-                            return await DownloadFrom(nextUri, maxRedirects - 1, token).ConfigureAwait(false);
+                            return await DownloadFrom(nextUri, maxRedirects - 1, token)
+                                .ConfigureAwait(false);
                         }
                         else
                         {

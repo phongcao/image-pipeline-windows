@@ -13,7 +13,7 @@ namespace ImagePipeline.Producers
         private Action _onPriorityChangedFunc;
 
         /// <summary>
-        /// Instantiates the <see cref="BaseProducerContextCallbacks"/>
+        /// Instantiates the <see cref="BaseProducerContextCallbacks"/>.
         /// </summary>
         public BaseProducerContextCallbacks(
             Action onCancellationRequestedFunc,
@@ -36,7 +36,8 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Method that is called when a request is no longer a prefetch, or vice versa.
+        /// Method that is called when a request is no longer a prefetch
+        /// or vice versa.
         /// </summary>
         public void OnIsPrefetchChanged()
         {
@@ -44,7 +45,8 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Method that is called when intermediate results start or stop being expected.
+        /// Method that is called when intermediate results start or
+        /// stop being expected.
         /// </summary>
         public void OnIsIntermediateResultExpectedChanged()
         {

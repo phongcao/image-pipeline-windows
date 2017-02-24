@@ -3,76 +3,75 @@
 namespace ImageFormatUtils
 {
     /// <summary>
-    /// Image format enum
+    /// Image format enum.
     /// </summary>
     public enum ImageFormat
     {
         /// <summary>
-        /// Uninitialized
+        /// Uninitialized.
         /// </summary>
         UNINITIALIZED,
 
         /// <summary>
-        /// WebP simple
+        /// WebP simple.
         /// </summary>
         WEBP_SIMPLE,
 
         /// <summary>
-        /// WebP lossless
+        /// WebP lossless.
         /// </summary>
         WEBP_LOSSLESS,
 
         /// <summary>
-        /// WebP extended
+        /// WebP extended.
         /// </summary>
         WEBP_EXTENDED,
 
         /// <summary>
-        /// WebP extended with alpha
+        /// WebP extended with alpha.
         /// </summary>
         WEBP_EXTENDED_WITH_ALPHA,
 
         /// <summary>
-        /// WebP animated
+        /// WebP animated.
         /// </summary>
         WEBP_ANIMATED,
 
         /// <summary>
-        /// jpeg
+        /// jpeg.
         /// </summary>
         JPEG,
 
         /// <summary>
-        /// png
+        /// png.
         /// </summary>
         PNG,
 
         /// <summary>
-        /// gif
+        /// gif.
         /// </summary>
         GIF,
 
         /// <summary>
-        /// bmp
+        /// bmp.
         /// </summary>
         BMP,
 
         /// <summary>
-        /// Unknown image. This is needed in case we fail to detect any type for particular image.
+        /// Unknown image.
+        /// This is needed in case we fail to detect any type for particular image.
         /// </summary>
         UNKNOWN
     }
 
     /// <summary>
-    /// Extensions methods
+    /// Extensions methods.
     /// </summary>
     public static class ImageFormatHelper
     {
         /// <summary>
-        /// Checks if the image format is WebP
+        /// Checks if the image format is WebP.
         /// </summary>
-        /// <param name="imageFormat"></param>
-        /// <returns></returns>
         public static bool IsWebpFormat(ImageFormat imageFormat)
         {
             return imageFormat == ImageFormat.WEBP_SIMPLE ||
@@ -83,11 +82,13 @@ namespace ImageFormatUtils
         }
 
         /// <summary>
-        /// Maps an image format to the file extension
-        /// <param name="imageFormat">image format</param>
-        /// @return  file extension for the image format
-        /// @throws UnsupportedOperationException
+        /// Maps an image format to the file extension.
         /// </summary>
+        /// <param name="imageFormat">Image format.</param>
+        /// <returns>File extension for the image format.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Unknown image format.
+        /// </exception>
         public static string GetFileExtension(ImageFormat imageFormat)
         {
             switch (imageFormat)

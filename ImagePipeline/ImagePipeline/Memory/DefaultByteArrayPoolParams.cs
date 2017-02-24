@@ -4,17 +4,21 @@ using System.Collections.Generic;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// Provides pool parameters (<see cref="PoolParams"/>) for common <see cref="IByteArrayPool"/>.
+    /// Provides pool parameters (<see cref="PoolParams"/>) for common
+    /// <see cref="IByteArrayPool"/>.
     /// </summary>
     public static class DefaultByteArrayPoolParams
     {
         private const int DEFAULT_IO_BUFFER_SIZE = 16 * ByteConstants.KB;
 
         /// <summary>
-        /// There are up to 9 simultaneous IO operations in new pipeline performed by:
+        /// There are up to 9 simultaneous IO operations in the new
+        /// pipeline performed by:
         /// - 5 image-fetch threads (NUM_NETWORK_THREADS)
-        /// - 4 image-cache threads (for both main and small buffered disk cache).
-        /// We should be able to satisfy these requirements without any allocations.
+        /// - 4 image-cache threads (for both main and small buffered
+        ///   disk cache).
+        /// We should be able to satisfy these requirements without
+        /// any allocation.
         /// </summary>
         private const int DEFAULT_BUCKET_SIZE = 9;
         private const int MAX_SIZE_SOFT_CAP = DEFAULT_BUCKET_SIZE * DEFAULT_IO_BUFFER_SIZE;

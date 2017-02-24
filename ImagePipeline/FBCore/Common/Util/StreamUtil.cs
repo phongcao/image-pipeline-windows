@@ -22,12 +22,10 @@ namespace FBCore.Common.Util
 
         /// <summary>
         /// Skips exactly bytesCount bytes in inputStream unless end of stream is reached first.
-        ///
+        /// </summary>
         /// <param name="inputStream">Input stream to skip bytes from.</param>
         /// <param name="bytesCount">Number of bytes to skip.</param>
-        /// @return number of skipped bytes.
-        /// @throws IOException
-        /// </summary>
+        /// <returns>Number of skipped bytes.</returns>
         public static long Skip(Stream inputStream, long bytesCount)
         {
             Preconditions.CheckNotNull(inputStream);

@@ -6,8 +6,8 @@ using System.IO;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// An implementation of <see cref="PooledByteBufferOutputStream"/> that produces a
-    /// <see cref="NativePooledByteBuffer"/>.
+    /// An implementation of <see cref="PooledByteBufferOutputStream"/>
+    /// that produces a <see cref="NativePooledByteBuffer"/>.
     /// </summary>
     public class NativePooledByteBufferOutputStream : PooledByteBufferOutputStream
     {
@@ -24,26 +24,30 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Number of bytes 'used' in the current chunk.
         /// </summary>
-        private int _count; 
+        private int _count;
 
         /// <summary>
         /// Construct a new instance of this outputstream.
-        /// <param name="pool">the pool to use</param>
         /// </summary>
+        /// <param name="pool">The pool to use.</param>
         public NativePooledByteBufferOutputStream(NativeMemoryChunkPool pool) : 
             this(pool, pool.GetMinBufferSize())
         {
         }
 
         /// <summary>
-        /// Construct a new instance of this output stream with this initial capacity.
-        /// It is not an error to have this initial capacity be inaccurate. If the actual 
-        /// contents end up being larger than the initialCapacity, then we will reallocate 
-        /// memory if needed. If the actual contents are smaller, then we'll end up wasting 
+        /// Construct a new instance of this output stream with this
+        /// initial capacity.
+        /// It is not an error to have this initial capacity be inaccurate.
+        /// If the actual contents end up being larger than the
+        /// initialCapacity, then we will reallocate memory if needed.
+        /// If the actual contents are smaller, then we'll end up wasting 
         /// some memory.
-        /// <param name="pool">The pool to use.</param>
-        /// <param name="initialCapacity">Initial capacity to allocate for this stream.</param>
         /// </summary>
+        /// <param name="pool">The pool to use.</param>
+        /// <param name="initialCapacity">
+        /// Initial capacity to allocate for this stream.
+        /// </param>
         public NativePooledByteBufferOutputStream(
             NativeMemoryChunkPool pool, 
             int initialCapacity)
@@ -55,11 +59,17 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Gets a IPooledByteBuffer from the current contents. If the stream has already 
-        /// been closed, then an <see cref="InvalidStreamException"/> is thrown.
-        /// @return a PooledByteBuffer instance for the contents of the stream
-        /// @throws InvalidStreamException if the stream is invalid
+        /// Gets a IPooledByteBuffer from the current contents.
+        /// If the stream has already been closed, then an
+        /// <see cref="InvalidStreamException"/> is thrown.
         /// </summary>
+        /// <returns>
+        /// An IPooledByteBuffer instance for the contents of
+        /// the stream.
+        /// </returns>
+        /// <exception cref="InvalidStreamException">
+        /// If the stream is invalid.
+        /// </exception>
         public override IPooledByteBuffer ToByteBuffer()
         {
             EnsureValid();
@@ -68,8 +78,8 @@ namespace ImagePipeline.Memory
 
         /// <summary>
         /// Returns the total number of bytes written to this stream so far.
-        /// @return the number of bytes written to this stream.
         /// </summary>
+        /// <returns>The number of bytes written to this stream.</returns>
         public override int Size
         {
             get
@@ -106,22 +116,33 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Writes <code> count</code> bytes from the byte array <code> buffer</code> 
-        /// starting  at position <code> offset</code> to this stream.
-        /// The underlying stream MUST be valid
-        ///
-        /// <param name="buffer">The source buffer to read from.</param>
-        /// <param name="offset">The start position in <code> buffer</code> from where to 
-        /// get bytes.</param>
-        /// <param name="count">The number of bytes from <code> buffer</code> to write to 
-        /// this stream.</param>
-        /// @throws IOException if an error occurs while writing to this stream.
-        /// @throws ArgumentOutOfRangeException
-        ///             if <code> offset &lt; 0</code> or <code> count &lt; 0</code>, or if
-        ///             <code> offset + count</code> is bigger than the length of
-        ///             <code> buffer</code>.
-        /// @throws InvalidStreamException if the stream is invalid.
+        /// Writes <code>count</code> bytes from the byte array
+        /// <code>buffer</code> starting  at position <code>offset</code>
+        /// to this stream.
+        /// The underlying stream MUST be valid.
         /// </summary>
+        /// <param name="buffer">
+        /// The source buffer to read from.
+        /// </param>
+        /// <param name="offset">
+        /// The start position in <code>buffer</code> from where to
+        /// get bytes.
+        /// </param>
+        /// <param name="count">
+        /// The number of bytes from <code>buffer</code> to write to 
+        /// this stream.
+        /// </param>
+        /// <exception cref="IOException">
+        /// If an error occurs while writing to this stream.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// if <code>offset &lt; 0</code> or <code>count &lt; 0</code>,
+        /// or if <code>offset + count</code> is bigger than the length
+        /// of <code>buffer</code>.
+        /// </exception>
+        /// <exception cref="InvalidStreamException">
+        /// If the stream is invalid.
+        /// </exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
             if (offset < 0 || count < 0 || offset + count > buffer.Length)
@@ -137,9 +158,8 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Closes the stream. Owned resources are released back to the pool. It is not allowed 
-        /// to call ToByteBuffer after call to this method.
-        /// @throws IOException
+        /// Closes the stream. Owned resources are released back to the pool.
+        /// It is not allowed to call ToByteBuffer after call to this method.
         /// </summary>
         protected override void Dispose(bool disposing)
         {
@@ -152,10 +172,14 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Reallocate the local buffer to hold the new length specified.
         /// Also copy over existing data to this new buffer.
-        /// <param name="newLength">New length of buffer.</param>
-        /// @throws InvalidStreamException if the stream is invalid.
-        /// @throws BasePool.SizeTooLargeException if the allocation from the pool fails.
         /// </summary>
+        /// <param name="newLength">New length of buffer.</param>
+        /// <exception cref="InvalidStreamException">
+        /// If the stream is invalid.
+        /// </exception>
+        /// <exception cref="SizeTooLargeException">
+        /// If the allocation from the pool fails.
+        /// </exception>
         internal void Realloc(int newLength)
         {
             EnsureValid();
@@ -172,10 +196,12 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Ensure that the current stream is valid, that is underlying closeable reference 
-        /// is not null and is valid.
-        /// @throws InvalidStreamException if the stream is invalid.
+        /// Ensure that the current stream is valid, that is underlying
+        /// closeable reference is not null and is valid.
         /// </summary>
+        /// <exception cref="InvalidStreamException">
+        /// If the stream is invalid.
+        /// </exception>
         private void EnsureValid()
         {
             if (!CloseableReference<NativeMemoryChunk>.IsValid(_bufRef))

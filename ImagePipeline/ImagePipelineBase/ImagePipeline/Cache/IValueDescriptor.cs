@@ -8,8 +8,6 @@
         /// <summary>
         /// Returns the size in bytes of the given value.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
         int GetSizeInBytes(T value);
     }
 }

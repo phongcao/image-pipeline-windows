@@ -9,9 +9,11 @@ using System.Diagnostics;
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// This is class encapsulates Map that maps ImageCacheKeys to EncodedImages pointing to
-    /// PooledByteBuffers. It is used by SimpleImageCache to store values that are being written
-    /// to disk cache, so that they can be returned by parallel cache get operations.
+    /// This is class encapsulates Map that maps ImageCacheKeys to EncodedImages
+    /// pointing to IPooledByteBuffer.
+    /// It is used by SimpleImageCache to store values that are being written
+    /// to disk cache, so that they can be returned by parallel cache get
+    /// operations.
     /// </summary>
     public class StagingArea
     {
@@ -22,7 +24,7 @@ namespace ImagePipeline.Cache
         private IDictionary<ICacheKey, EncodedImage> _map;
 
         /// <summary>
-        /// Test-only variables
+        /// Test-only variables.
         ///
         /// <para /><b>DO NOT USE in application code.</b>
         /// </summary>
@@ -39,9 +41,8 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Singleton
+        /// Singleton.
         /// </summary>
-        /// <returns></returns>
         public static StagingArea Instance
         {
             get
@@ -59,11 +60,12 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Stores key-value in this StagingArea. This call overrides previous value
-        /// of stored reference if
-        /// <param name="key"></param>
-        /// <param name="encodedImage">EncodedImage to be associated with key</param>
+        /// Stores key-value in this StagingArea.
         /// </summary>
+        /// <param name="key">The cache key.</param>
+        /// <param name="encodedImage">
+        /// EncodedImage to be associated with key.
+        /// </param>
         public void Put(ICacheKey key, EncodedImage encodedImage)
         {
             lock (_mapGate)
@@ -112,9 +114,9 @@ namespace ImagePipeline.Cache
 
         /// <summary>
         /// Removes item from the StagingArea.
-        /// <param name="key"></param>
-        /// @return true if item was removed
         /// </summary>
+        /// <param name="key">The cache key.</param>
+        /// <returns>true if item was removed.</returns>
         public bool Remove(ICacheKey key)
         {
             // For unit test
@@ -144,10 +146,10 @@ namespace ImagePipeline.Cache
 
         /// <summary>
         /// Removes key-value from the StagingArea. Both key and value must match.
-        /// <param name="key"></param>
-        /// <param name="encodedImage">value corresponding to key</param>
-        /// @return true if item was removed
         /// </summary>
+        /// <param name="key">The cache key.</param>
+        /// <param name="encodedImage">Value corresponding to key.</param>
+        /// <returns>true if item was removed.</returns>
         public bool Remove(ICacheKey key, EncodedImage encodedImage)
         {
             lock (_mapGate)
@@ -189,9 +191,11 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// <param name="key"></param>
-        /// @return value associated with given key or null if no value is associated
+        /// Gets the encoded image.
         /// </summary>
+        /// <returns>
+        /// Value associated with given key or null if no value is associated.
+        /// </returns>
         public EncodedImage Get(ICacheKey key)
         {
             lock (_mapGate)
@@ -202,9 +206,9 @@ namespace ImagePipeline.Cache
                 {
                     if (!EncodedImage.IsValid(storedEncodedImage))
                     {
-                        // Reference is not valid, this means that someone cleared reference while it was still in
-                        // use. Log error
-                        // TODO: 3697790
+                        // Reference is not valid, this means that someone
+                        // cleared reference while it was still in use.
+                        // Log error TODO: 3697790
                         _map.Remove(key);
                         Debug.WriteLine($"Found closed reference { storedEncodedImage.GetHashCode() } for key { key.ToString() } ({ key.GetHashCode() })");
                         return null;
@@ -233,9 +237,9 @@ namespace ImagePipeline.Cache
 
                 if (!EncodedImage.IsValid(storedEncodedImage))
                 {
-                    // Reference is not valid, this means that someone cleared reference while it was still in
-                    // use. Log error
-                    // TODO: 3697790
+                    // Reference is not valid, this means that someone cleared reference
+                    // while it was still in use.
+                    // Log error TODO: 3697790
                     _map.Remove(key);
                     Debug.WriteLine($"Found closed reference { storedEncodedImage.GetHashCode() } for key { key.ToString() } ({ key.GetHashCode() })");
                     return false;

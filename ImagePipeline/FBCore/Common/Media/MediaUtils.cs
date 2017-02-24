@@ -587,7 +587,7 @@ namespace FBCore.Common.Media
             };
 
         /// <summary>
-        /// Checks if mimeType is photo
+        /// Checks if mimeType is photo.
         /// </summary>
         public static bool IsPhoto(string mimeType)
         {
@@ -595,7 +595,7 @@ namespace FBCore.Common.Media
         }
 
         /// <summary>
-        /// Checks if mimeType is video
+        /// Checks if mimeType is video.
         /// </summary>
         public static bool IsVideo(string mimeType)
         {
@@ -603,7 +603,7 @@ namespace FBCore.Common.Media
         }
 
         /// <summary>
-        /// Extracts mime data
+        /// Extracts mime data.
         /// </summary>
         public static string ExtractMime(string path)
         {
@@ -616,8 +616,8 @@ namespace FBCore.Common.Media
             extension = extension.ToLower();
             string mimeType = default(string);
 
-            // If we did not find a mime type for the extension specified, check our additional
-            // extension/mime-type mappings.
+            // If we did not find a mime type for the extension specified, check our
+            // additional extension/mime-type mappings.
             if (!GENERAL_ALLOWED_MIME_TYPES.TryGetValue(extension, out mimeType))
             {
                 ADDITIONAL_ALLOWED_MIME_TYPES.TryGetValue(extension, out mimeType);
@@ -627,8 +627,8 @@ namespace FBCore.Common.Media
         }
 
         /// <summary>
-        /// return true if the mime type is one of our whitelisted mimetypes that we support 
-        /// beyond what the native platform supports.
+        /// Returns true if the mime type is one of our whitelisted mimetypes that we
+        /// support beyond what the native platform supports.
         /// </summary>
         public static bool IsNonNativeSupportedMimeType(string mimeType)
         {

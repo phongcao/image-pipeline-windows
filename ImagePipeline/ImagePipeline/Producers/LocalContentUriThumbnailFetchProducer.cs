@@ -17,7 +17,7 @@ namespace ImagePipeline.Producers
         internal const string PRODUCER_NAME = "LocalContentUriThumbnailFetchProducer";
 
         /// <summary>
-        /// Instantiates the <see cref="LocalContentUriThumbnailFetchProducer"/>
+        /// Instantiates the <see cref="LocalContentUriThumbnailFetchProducer"/>.
         /// </summary>
         public LocalContentUriThumbnailFetchProducer(
             IExecutorService executor,
@@ -28,13 +28,15 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Checks whether the producer may be able to produce images of the specified 
-        /// size. This makes no promise about being able to produce images for a particular 
-        /// source, only generally being able to produce output of the desired resolution.
-        ///
-        /// <param name="resizeOptions">the resize options from the current request</param>
-        /// @return true if the producer can meet these needs
+        /// Checks whether the producer may be able to produce images of
+        /// the specified size. This makes no promise about being able to
+        /// produce images for a particular source, only generally being
+        /// able to produce output of the desired resolution.
         /// </summary>
+        /// <param name="resizeOptions">
+        /// The resize options from the current request.
+        /// </param>
+        /// <returns>true if the producer can meet these needs.</returns>
         public bool CanProvideImageForSize(ResizeOptions resizeOptions)
         {
             throw new NotImplementedException();
@@ -49,7 +51,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// The name of the Producer
+        /// The name of the Producer.
         /// </summary>
         protected override string ProducerName
         {

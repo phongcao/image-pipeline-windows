@@ -10,12 +10,19 @@ namespace ImagePipeline.Listener
     public interface IRequestListener : IProducerListener
     {
         /// <summary>
-        /// Called when request is about to be submitted to the Orchestrator's executor queue.
-        /// <param name="request">which triggered the event</param>
-        /// <param name="callerContext">context of the caller of the request</param>
-        /// <param name="requestId">unique id generated automatically for each request submission</param>
-        /// <param name="isPrefetch">whether the request is a prefetch or not</param>
+        /// Called when request is about to be submitted to the Orchestrator's
+        /// executor queue.
         /// </summary>
+        /// <param name="request">Which triggered the event.</param>
+        /// <param name="callerContext">
+        /// Context of the caller of the request.
+        /// </param>
+        /// <param name="requestId">
+        /// Unique id generated automatically for each request submission.
+        /// </param>
+        /// <param name="isPrefetch">
+        /// Whether the request is a prefetch or not.
+        /// </param>
         void OnRequestStart(
             ImageRequest request,
             object callerContext,
@@ -23,20 +30,29 @@ namespace ImagePipeline.Listener
             bool isPrefetch);
 
         /// <summary>
-        /// Called after successful completion of the request (all producers completed successfully).
-        /// <param name="request">which triggered the event</param>
-        /// <param name="requestId">unique id generated automatically for each request submission</param>
-        /// <param name="isPrefetch">whether the request is a prefetch or not</param>
+        /// Called after successful completion of the request
+        /// (all producers completed successfully).
         /// </summary>
+        /// <param name="request">Which triggered the event.</param>
+        /// <param name="requestId">
+        /// Unique id generated automatically for each request submission.
+        /// </param>
+        /// <param name="isPrefetch">
+        /// Whether the request is a prefetch or not.
+        /// </param>
         void OnRequestSuccess(ImageRequest request, string requestId, bool isPrefetch);
 
         /// <summary>
         /// Called after failure to complete the request (some producer failed).
-        /// <param name="request">which triggered the event</param>
-        /// <param name="requestId">unique id generated automatically for each request submission</param>
-        /// <param name="error">cause of failure</param>
-        /// <param name="isPrefetch">whether the request is a prefetch or not</param>
         /// </summary>
+        /// <param name="request">Which triggered the event.</param>
+        /// <param name="requestId">
+        /// Unique id generated automatically for each request submission.
+        /// </param>
+        /// <param name="error">Cause of failure.</param>
+        /// <param name="isPrefetch">
+        /// Whether the request is a prefetch or not.
+        /// </param>
         void OnRequestFailure(
             ImageRequest request,
             string requestId,
@@ -45,8 +61,10 @@ namespace ImagePipeline.Listener
 
         /// <summary>
         /// Called after the request is cancelled.
-        /// <param name="requestId">unique id generated automatically for each request submission</param>
         /// </summary>
+        /// <param name="requestId">
+        /// Unique id generated automatically for each request submission.
+        /// </param>
         void OnRequestCancellation(string requestId);
     }
 }

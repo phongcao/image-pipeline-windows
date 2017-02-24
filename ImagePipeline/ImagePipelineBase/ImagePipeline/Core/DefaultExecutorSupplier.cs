@@ -6,8 +6,8 @@ namespace ImagePipeline.Core
     /// <summary>
     /// Basic implementation of <see cref="IExecutorSupplier"/>.
     ///
-    /// <para /> Provides one thread pool for the CPU-bound operations and another thread pool for the
-    /// IO-bound operations.
+    /// <para />Provides one thread pool for the CPU-bound operations and
+    /// another thread pool for the IO-bound operations.
     /// </summary>
     public class DefaultExecutorSupplier : IExecutorSupplier
     {
@@ -21,9 +21,8 @@ namespace ImagePipeline.Core
         private readonly IExecutorService _lightWeightBackgroundExecutor;
 
         /// <summary>
-        /// Instantiates the <see cref="DefaultExecutorSupplier"/>
+        /// Instantiates the <see cref="DefaultExecutorSupplier"/>.
         /// </summary>
-        /// <param name="numCpuBoundThreads"></param>
         public DefaultExecutorSupplier(int numCpuBoundThreads)
         {
             _ioBoundExecutor = Executors.NewFixedThreadPool(
@@ -52,7 +51,8 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Executor used to do all disk reads, whether for disk cache or local files.
+        /// Executor used to do all disk reads, whether for disk cache or
+        /// local files.
         /// </summary>
         public IExecutorService ForLocalStorageRead
         {
@@ -63,9 +63,9 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Executor used to do all disk writes, whether for disk cache or local files.
+        /// Executor used to do all disk writes, whether for disk cache or
+        /// local files.
         /// </summary>
-        /// <returns></returns>
         public IExecutorService ForLocalStorageWrite
         {
             get
@@ -86,8 +86,8 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        ///  Executor used for background tasks such as image transcoding, resizing, rotating and
-        ///  post processing.
+        ///  Executor used for background tasks such as image transcoding,
+        ///  resizing, rotating and post processing.
         /// </summary>
         public IExecutorService ForBackgroundTasks
         {
@@ -98,8 +98,8 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Executor used for lightweight background operations, such as handing request off the
-        /// main thread.
+        /// Executor used for lightweight background operations, such as
+        /// handing request off the main thread.
         /// </summary>
         public IExecutorService ForLightweightBackgroundTasks
         {

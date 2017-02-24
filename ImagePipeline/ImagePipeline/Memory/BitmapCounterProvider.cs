@@ -4,7 +4,7 @@ using Windows.System;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// Allocates the bitmap counter basing on the memory constraints
+    /// Allocates the bitmap counter basing on the memory constraints.
     /// </summary>
     public class BitmapCounterProvider
     {
@@ -12,16 +12,17 @@ namespace ImagePipeline.Memory
         private const long MB = 1024 * KB;
 
         /// <summary>
-        /// Our Bitmaps live in ashmem, meaning that they are pinned in Android's shared native memory.
+        /// Our bitmaps live in native memory.
         ///
-        /// <para /> Therefore, we are not constrained by the max heap size of the dalvik heap, but we want to
-        /// make sure we don't use too much memory on low end devices, so that we don't force other
-        /// background process to be killed.
+        /// <para />Therefore, we are not constrained by the max size
+        /// of the managed memory, but we want to make sure we don't
+        /// use too much memory on low end devices, so that we don't
+        /// force other background process to be killed.
         /// </summary>
         public static readonly int MAX_BITMAP_TOTAL_SIZE = GetMaxSizeHardCap();
 
         /// <summary>
-        /// The maximum number of bitmaps
+        /// The maximum number of bitmaps.
         /// </summary>
         public const int MAX_BITMAP_COUNT = 384;
 
@@ -41,9 +42,9 @@ namespace ImagePipeline.Memory
         }
 
         /// <summary>
-        /// Gets the bitmap counter
+        /// Gets the bitmap counter.
         /// </summary>
-        /// <returns>The bitmap counter</returns>
+        /// <returns>The bitmap counter.</returns>
         public static BitmapCounter Get()
         {
             if (_bitmapCounter == null)

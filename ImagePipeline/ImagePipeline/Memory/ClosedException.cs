@@ -3,7 +3,7 @@
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// Exception indicating that the PooledByteBuffer is closed
+    /// Exception indicating that the PooledByteBuffer is closed.
     /// </summary>
     class ClosedException : Exception
     {

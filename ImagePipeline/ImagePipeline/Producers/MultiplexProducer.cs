@@ -24,21 +24,21 @@ namespace ImagePipeline.Producers
         private readonly object _gate = new object();
 
         /// <summary>
-        /// Map of multiplexers guarded by _gate lock. The lock should be used only 
-        /// to synchronize accesses to this map. In particular, no callbacks or third 
-        /// party code should be run under _gate lock.
+        /// Map of multiplexers guarded by _gate lock. The lock should be used
+        /// only to synchronize accesses to this map. In particular, no callbacks
+        /// or third party code should be run under _gate lock.
         ///
-        /// <para /> The map might contain entries in progress, entries in progress for 
-        /// which cancellation has been requested and ignored, or cancelled entries for 
-        /// which OnCancellation has not been called yet.
+        /// <para />The map might contain entries in progress, entries in progress
+        /// for which cancellation has been requested and ignored, or cancelled
+        /// entries for which OnCancellation has not been called yet.
         /// </summary>
         internal readonly IDictionary<K, Multiplexer> _multiplexers;
         private readonly IProducer<T> _inputProducer;
 
         /// <summary>
-        /// Instantiates the <see cref="MultiplexProducer{K, T}"/>
+        /// Instantiates the <see cref="MultiplexProducer{K, T}"/>.
         /// </summary>
-        /// <param name="inputProducer"></param>
+        /// <param name="inputProducer">The input producer.</param>
         protected MultiplexProducer(IProducer<T> inputProducer)
         {
             _inputProducer = inputProducer;
@@ -46,8 +46,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Start producing results for given context. Provided consumer is notified whenever 
-        /// progress is made (new value is ready or error occurs).
+        /// Start producing results for given context.
+        /// Provided consumer is notified whenever progress is made
+        /// (new value is ready or error occurs).
         /// </summary>
         public void ProduceResults(IConsumer<T> consumer, IProducerContext context)
         {
@@ -55,11 +56,12 @@ namespace ImagePipeline.Producers
             Multiplexer multiplexer;
             bool createdNewMultiplexer;
 
-            // We do want to limit scope of this lock to guard only accesses to _multiplexers 
-            // map. However what we would like to do here is to atomically lookup _multiplexers, 
-            // add new consumer to consumers set associated with the map's entry and call 
-            // consumer's callback with last intermediate result. We should not do all of those 
-            // things under _gate lock.
+            // We do want to limit scope of this lock to guard only accesses
+            // to _multiplexers map. However what we would like to do here
+            // is to atomically lookup _multiplexers, add new consumer to
+            // consumers set associated with the map's entry and call consumer's
+            // callback with last intermediate result. We should not do all of
+            // those things under _gate lock.
             do
             {
                 createdNewMultiplexer = false;
@@ -130,19 +132,25 @@ namespace ImagePipeline.Producers
         public abstract T CloneOrNull(T result);
 
         /// <summary>
-        /// Multiplexes same requests - passes the same result to multiple consumers, 
-        /// manages cancellation and maintains last intermediate result.
+        /// Multiplexes same requests - passes the same result to multiple
+        /// consumers, manages cancellation and maintains last intermediate
+        /// result.
         ///
-        /// <para /> Multiplexed computation might be in one of 3 states:
+        /// <para />Multiplexed computation might be in one of 3 states:
         /// <ul>
-        ///   <li> in progress </li>
-        ///   <li> in progress after requesting cancellation (cancellation has been denied) </li>
-        ///   <li> cancelled, but without OnCancellation method being called yet </li>
+        ///   <li>In progress.</li>
+        ///   <li>
+        ///     In progress after requesting cancellation
+        ///     (cancellation has been denied).
+        ///   </li>
+        ///   <li>
+        ///     Cancelled, but without OnCancellation method being called yet.
+        ///   </li>
         /// </ul>
         ///
-        /// <para /> In last case new consumers may be added before onCancellation is 
-        /// called. When it is, the Multiplexer has to check if it is the case and start 
-        /// next producer once again if so.
+        /// <para /> In last case new consumers may be added before OnCancellation
+        /// is called. When it is, the Multiplexer has to check if it is the case
+        /// and start next producer once again if so.
         /// </summary>
         internal class Multiplexer
         {
@@ -153,18 +161,23 @@ namespace ImagePipeline.Producers
             private readonly K _key;
 
             /// <summary>
-            /// Set of consumer-context pairs participating in multiplexing. Cancelled pairs
-            /// are removed from the set.
+            /// Set of consumer-context pairs participating in multiplexing.
+            /// Cancelled pairs are removed from the set.
             ///
-            /// <para /> Following invariant is maintained: if _consumerContextPairs is not 
-            /// empty, then this instance of Multiplexer is present in _multiplexers map. 
-            /// This way all ongoing multiplexed requests might be attached to by other requests
+            /// <para />Following invariant is maintained:
+            /// if _consumerContextPairs is not empty, then this instance of
+            /// Multiplexer is present in _multiplexers map.
+            /// This way all ongoing multiplexed requests might be attached
+            /// to by other requests.
             ///
-            /// <para /> A Multiplexer is removed from the map only if
+            /// <para />A Multiplexer is removed from the map only if
             /// <ul>
-            ///   <li> final result is received </li>
-            ///   <li> error is received </li>
-            ///   <li> cancellation notification is received and _consumerContextPairs is empty </li>
+            ///   <li>Final result is received.</li>
+            ///   <li>Error is received.</li>
+            ///   <li>
+            ///     Cancellation notification is received and
+            ///     _consumerContextPairs is empty.
+            ///   </li>
             /// </ul>
             /// </summary>
             private readonly ConcurrentDictionary<Tuple<IConsumer<T>, IProducerContext>, object> 
@@ -174,23 +187,24 @@ namespace ImagePipeline.Producers
             private float _lastProgress;
 
             /// <summary>
-            /// Producer context used for cancelling producers below MultiplexProducers, 
-            /// and for setting whether the request is a prefetch or not.
+            /// Producer context used for cancelling producers below
+            /// MultiplexProducers, and for setting whether the request is
+            /// a prefetch or not.
             ///
-            /// <para /> If not null, then underlying computation has been started, and 
-            /// no OnCancellation callback has been received yet.
+            /// <para />If not null, then underlying computation has been
+            /// started, and no OnCancellation callback has been received yet.
             /// </summary>
             private BaseProducerContext _multiplexProducerContext;
 
             /// <summary>
             /// Currently used consumer of next producer.
             ///
-            /// <para /> The same Multiplexer might call _inputProducer.produceResults 
-            /// multiple times when cancellation happens. This field is used to guard 
-            /// against late callbacks.
+            /// <para />The same Multiplexer might call
+            /// _inputProducer.ProduceResults multiple times when cancellation
+            /// happens. This field is used to guard against late callbacks.
             ///
-            /// <para />  If not null, then underlying computation has been started, 
-            /// and no OnCancellation callback has been received yet.
+            /// <para />If not null, then underlying computation has been
+            /// started, and no OnCancellation callback has been received yet.
             /// </summary>
             private ForwardingConsumer _forwardingConsumer;
 
@@ -203,15 +217,17 @@ namespace ImagePipeline.Producers
             }
 
             /// <summary>
-            /// Tries to add consumer to set of consumers participating in multiplexing. 
-            /// If successful and appropriate intermediate result is already known, then 
-            /// it will be passed to the consumer.
+            /// Tries to add consumer to set of consumers participating in
+            /// multiplexing. If successful and appropriate intermediate
+            /// result is already known, then it will be passed to the
+            /// consumer.
             ///
-            /// <para /> This function will fail and return false if the multiplexer is 
-            /// not present in _multiplexers map.
-            ///
-            /// @return true if consumer was added successfully
+            /// <para />This function will fail and return false if the
+            /// multiplexer is not present in _multiplexers map.
             /// </summary>
+            /// <returns>
+            /// true if consumer was added successfully.
+            /// </returns>
             internal bool AddNewConsumer(
                 IConsumer<T> consumer,
                 IProducerContext producerContext)
@@ -224,9 +240,9 @@ namespace ImagePipeline.Producers
                 IList<IProducerContextCallbacks> intermediateResultsCallbacks;
                 float lastProgress;
 
-                // Check if Multiplexer is still in _multiplexers map, and if so add 
-                // new consumer. Also store current intermediate result - we will notify 
-                // consumer after acquiring appropriate lock.
+                // Check if Multiplexer is still in _multiplexers map, and if so
+                // add new consumer. Also store current intermediate result - we
+                // will notify consumer after acquiring appropriate lock.
                 lock (_gate)
                 {
                     if (_parent.GetExistingMultiplexer(_key) != this)
@@ -248,8 +264,8 @@ namespace ImagePipeline.Producers
 
                 lock (consumerContextPair)
                 {
-                    // Check if last result changed in the mean time. In such case we should 
-                    // not propagate it
+                    // Check if last result changed in the mean time.
+                    // In such case we should not propagate it
                     lock (_gate)
                     {
                         if (!Equals(lastIntermediateResult, _lastIntermediateResult))
@@ -279,8 +295,8 @@ namespace ImagePipeline.Producers
             }
 
             /// <summary>
-            /// Register callbacks to be called when cancellation of consumer is requested, 
-            /// or if the prefetch status of the consumer changes.
+            /// Register callbacks to be called when cancellation of consumer
+            /// is requested, or if the prefetch status of the consumer changes.
             /// </summary>
             private void AddCallbacks(
                 Tuple<IConsumer<T>, IProducerContext> consumerContextPair,
@@ -346,9 +362,10 @@ namespace ImagePipeline.Producers
             }
 
             /// <summary>
-            /// Starts next producer if it is not started yet and there is at least 
-            /// one Consumer waiting for the data. If all consumers are cancelled, 
-            /// then this multiplexer is removed from _request map to clean up.
+            /// Starts next producer if it is not started yet and there is
+            /// at least one Consumer waiting for the data. If all consumers
+            /// are cancelled, then this multiplexer is removed from _request
+            /// map to clean up.
             /// </summary>
             internal void StartInputProducerIfHasAttachedConsumers()
             {
@@ -359,7 +376,8 @@ namespace ImagePipeline.Producers
                     Preconditions.CheckArgument(_multiplexProducerContext == null);
                     Preconditions.CheckArgument(_forwardingConsumer == null);
 
-                    // Cleanup if all consumers have been cancelled before this method was called
+                    // Cleanup if all consumers have been cancelled before
+                    // this method was called
                     if (_consumerContextPairs.IsEmpty)
                     {
                         _parent.RemoveMultiplexer(_key, this);

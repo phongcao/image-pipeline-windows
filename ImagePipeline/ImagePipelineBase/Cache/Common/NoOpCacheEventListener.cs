@@ -13,9 +13,8 @@
         }
 
         /// <summary>
-        /// Gets singleton
+        /// Gets singleton.
         /// </summary>
-        /// <returns></returns>
         public static NoOpCacheEventListener Instance
         {
             get
@@ -33,49 +32,42 @@
         }
 
         /// <summary>
-        /// Do nothing
+        /// Do nothing.
         /// </summary>
-        /// <param name="cacheEvent"></param>
         public void OnHit(ICacheEvent cacheEvent) { }
 
         /// <summary>
-        /// Do nothing
+        /// Do nothing.
         /// </summary>
-        /// <param name="cacheEvent"></param>
         public void OnMiss(ICacheEvent cacheEvent) { }
 
         /// <summary>
-        /// Do nothing
+        /// Do nothing.
         /// </summary>
-        /// <param name="cacheEvent"></param>
         public void OnWriteAttempt(ICacheEvent cacheEvent) { }
 
         /// <summary>
-        /// Do nothing
+        /// Do nothing.
         /// </summary>
-        /// <param name="cacheEvent"></param>
         public void OnWriteSuccess(ICacheEvent cacheEvent) { }
 
         /// <summary>
-        /// Do nothing
+        /// Do nothing.
         /// </summary>
-        /// <param name="cacheEvent"></param>
         public void OnReadException(ICacheEvent cacheEvent) { }
 
         /// <summary>
-        /// Do nothing
+        /// Do nothing.
         /// </summary>
-        /// <param name="cacheEvent"></param>
         public void OnWriteException(ICacheEvent cacheEvent) { }
 
         /// <summary>
-        /// Do nothing
+        /// Do nothing.
         /// </summary>
-        /// <param name="cacheEvent"></param>
         public void OnEviction(ICacheEvent cacheEvent) { }
 
         /// <summary>
-        /// Do nothing
+        /// Do nothing.
         /// </summary>
         public void OnCleared() { }
     }

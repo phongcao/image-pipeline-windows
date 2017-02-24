@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace ImagePipeline.Listener
 {
     /// <summary>
-    /// Provides custom implementation for <see cref="IRequestListener"/>
+    /// Provides custom implementation for <see cref="IRequestListener"/>.
     /// </summary>
     public class RequestListenerImpl : IRequestListener
     {
@@ -17,7 +17,7 @@ namespace ImagePipeline.Listener
         private Action<string> _onRequestCancellationFunc;
 
         /// <summary>
-        /// Instantiates the <see cref="RequestListenerImpl"/>
+        /// Instantiates the <see cref="RequestListenerImpl"/>.
         /// </summary>
         public RequestListenerImpl(
             ProducerListenerImpl producerListener,
@@ -34,9 +34,10 @@ namespace ImagePipeline.Listener
         }
 
         /// <summary>
-        /// Called whenever a producer starts processing unit of work. This method 
-        /// might be called multiple times, but between any two consecutive calls to 
-        /// OnProducerStart OnProducerFinishWithSuccess will be called exactly once.
+        /// Called whenever a producer starts processing unit of work.
+        /// This method might be called multiple times, but between any
+        /// two consecutive calls to OnProducerStart and 
+        /// OnProducerFinishWithSuccess will be called exactly once.
         /// </summary>
         public void OnProducerStart(string requestId, string producerName)
         {
@@ -44,9 +45,10 @@ namespace ImagePipeline.Listener
         }
 
         /// <summary>
-        /// Called whenever an important producer-specific event occurs. This may only 
-        /// be called if OnProducerStart has been called, but corresponding 
-        /// OnProducerFinishWith method has not been called yet.
+        /// Called whenever an important producer-specific event occurs.
+        /// This may only be called if OnProducerStart has been called,
+        /// but corresponding OnProducerFinishWith method has not been
+        /// called yet.
         /// </summary>
         public void OnProducerEvent(string requestId, string producerName, string eventName)
         {
@@ -54,13 +56,15 @@ namespace ImagePipeline.Listener
         }
 
         /// <summary>
-        /// Called when a producer successfully finishes processing current unit of work.
-        ///
-        /// <param name="requestId">Request id</param>
-        /// <param name="producerName">Producer name</param>
-        /// <param name="extraMap">Additional parameters about the producer. This map is 
-        /// immutable and will throw an exception if attempts are made to modify it.</param>
+        /// Called when a producer successfully finishes processing current
+        /// unit of work.
         /// </summary>
+        /// <param name="requestId">Request id.</param>
+        /// <param name="producerName">Producer name.</param>
+        /// <param name="extraMap">
+        /// Additional parameters about the producer. This map is immutable
+        /// and will throw an exception if attempts are made to modify it.
+        /// </param>
         public void OnProducerFinishWithSuccess(
             string requestId,
             string producerName,
@@ -70,14 +74,16 @@ namespace ImagePipeline.Listener
         }
 
         /// <summary>
-        /// Called when producer finishes processing current unit of work due to an error.
-        ///
-        /// <param name="requestId">Request id</param>
-        /// <param name="producerName">Producer name</param>
-        /// <param name="extraMap">Additional parameters about the producer. This map is 
-        /// immutable and will throw an exception if attempts are made to modify it.</param>
-        /// <param name="error">Error</param>
+        /// Called when producer finishes processing current unit of work due
+        /// to an error.
         /// </summary>
+        /// <param name="requestId">Request id.</param>
+        /// <param name="producerName">Producer name.</param>
+        /// <param name="extraMap">
+        /// Additional parameters about the producer. This map is immutable
+        /// and will throw an exception if attempts are made to modify it.
+        /// </param>
+        /// <param name="error">Error.</param>
         public void OnProducerFinishWithFailure(
             string requestId,
             string producerName,
@@ -89,12 +95,13 @@ namespace ImagePipeline.Listener
 
         /// <summary>
         /// Called once when producer finishes due to cancellation.
-        ///
-        /// <param name="requestId">Request id</param>
-        /// <param name="producerName">Producer name</param>
-        /// <param name="extraMap">Additional parameters about the producer. This map is 
-        /// immutable and will throw an exception if attempts are made to modify it.</param>
         /// </summary>
+        /// <param name="requestId">Request id.</param>
+        /// <param name="producerName">Producer name.</param>
+        /// <param name="extraMap">
+        /// Additional parameters about the producer. This map is immutable
+        /// and will throw an exception if attempts are made to modify it.
+        /// </param>
         public void OnProducerFinishWithCancellation(
             string requestId,
             string producerName,
@@ -104,7 +111,7 @@ namespace ImagePipeline.Listener
         }
 
         /// <summary>
-        /// @return true if listener makes use of extra map
+        /// <returns>true if listener makes use of extra map</returns>
         /// <param name="requestId"></param>
         /// </summary>
         public bool RequiresExtraMap(string requestId)
@@ -113,12 +120,19 @@ namespace ImagePipeline.Listener
         }
 
         /// <summary>
-        /// Called when request is about to be submitted to the Orchestrator's executor queue.
-        /// <param name="request">which triggered the event</param>
-        /// <param name="callerContext">context of the caller of the request</param>
-        /// <param name="requestId">unique id generated automatically for each request submission</param>
-        /// <param name="isPrefetch">whether the request is a prefetch or not</param>
+        /// Called when request is about to be submitted to the Orchestrator's
+        /// executor queue.
         /// </summary>
+        /// <param name="request">Which triggered the event.</param>
+        /// <param name="callerContext">
+        /// Context of the caller of the request.
+        /// </param>
+        /// <param name="requestId">
+        /// Unique id generated automatically for each request submission.
+        /// </param>
+        /// <param name="isPrefetch">
+        /// Whether the request is a prefetch or not.
+        /// </param>
         public void OnRequestStart(
             ImageRequest request,
             object callerContext,
@@ -129,11 +143,16 @@ namespace ImagePipeline.Listener
         }
 
         /// <summary>
-        /// Called after successful completion of the request (all producers completed successfully).
-        /// <param name="request">which triggered the event</param>
-        /// <param name="requestId">unique id generated automatically for each request submission</param>
-        /// <param name="isPrefetch">whether the request is a prefetch or not</param>
+        /// Called after successful completion of the request
+        /// (all producers completed successfully).
         /// </summary>
+        /// <param name="request">Which triggered the event.</param>
+        /// <param name="requestId">
+        /// Unique id generated automatically for each request submission.
+        /// </param>
+        /// <param name="isPrefetch">
+        /// Whether the request is a prefetch or not.
+        /// </param>
         public void OnRequestSuccess(ImageRequest request, string requestId, bool isPrefetch)
         {
             _onRequestSuccessFunc(request, requestId, isPrefetch);
@@ -141,11 +160,15 @@ namespace ImagePipeline.Listener
 
         /// <summary>
         /// Called after failure to complete the request (some producer failed).
-        /// <param name="request">which triggered the event</param>
-        /// <param name="requestId">unique id generated automatically for each request submission</param>
-        /// <param name="error">cause of failure</param>
-        /// <param name="isPrefetch">whether the request is a prefetch or not</param>
         /// </summary>
+        /// <param name="request">Which triggered the event.</param>
+        /// <param name="requestId">
+        /// Unique id generated automatically for each request submission.
+        /// </param>
+        /// <param name="error">Cause of failure.</param>
+        /// <param name="isPrefetch">
+        /// Whether the request is a prefetch or not.
+        /// </param>
         public void OnRequestFailure(
             ImageRequest request,
             string requestId,
@@ -157,8 +180,10 @@ namespace ImagePipeline.Listener
 
         /// <summary>
         /// Called after the request is cancelled.
-        /// <param name="requestId">unique id generated automatically for each request submission</param>
         /// </summary>
+        /// <param name="requestId">
+        /// Unique id generated automatically for each request submission.
+        /// </param>
         public void OnRequestCancellation(string requestId)
         {
             _onRequestCancellationFunc(requestId);

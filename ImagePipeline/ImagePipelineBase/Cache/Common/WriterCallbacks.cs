@@ -9,25 +9,26 @@ namespace Cache.Common
     public class WriterCallbacks
     {
         /// <summary>
-        /// Creates a writer callback that copies all the content read from an <see cref="Stream"/> into
-        /// the target stream.
+        /// Creates a writer callback that copies all the content read from an
+        /// <see cref="Stream"/> into the target stream.
         ///
         /// <para />This writer can be used only once.
-        /// <param name="inputStream">the source</param>
-        /// @return the writer callback
         /// </summary>
+        /// <param name="inputStream">The source.</param>
+        /// <returns>The writer callback.</returns>
         public static IWriterCallback From(Stream inputStream)
         {
             return new WriterCallbackStream(inputStream);
         }
 
         /// <summary>
-        /// Creates a writer callback that writes some byte array to the target stream.
+        /// Creates a writer callback that writes some byte array to the
+        /// target stream.
         ///
         /// <para />This writer can be used many times.
-        /// <param name="data">the bytes to write</param>
-        /// @return the writer callback
         /// </summary>
+        /// <param name="data">The bytes to write.</param>
+        /// <returns>The writer callback.</returns>
         public static IWriterCallback From(byte[] data)
         {
             return new WriterCallbackByteArray(data);

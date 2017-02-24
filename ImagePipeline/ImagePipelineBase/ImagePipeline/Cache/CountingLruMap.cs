@@ -5,7 +5,8 @@ using Truncon.Collections;
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// Map that keeps track of the elements order (according to the LRU policy) and their size.
+    /// Map that keeps track of the elements order (according to the LRU policy)
+    /// and their size.
     /// </summary>
     public class CountingLruMap<K, V> where V : class
     {
@@ -18,7 +19,6 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Instantiates the <see cref="CountingLruMap{K, V}"/>.
         /// </summary>
-        /// <param name="valueDescriptor"></param>
         public CountingLruMap(IValueDescriptor<V> valueDescriptor)
         {
             _valueDescriptor = valueDescriptor;
@@ -93,8 +93,6 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Gets the all matching elements.
         /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
         public IList<KeyValuePair<K, V>> GetMatchingEntries(Predicate<K> predicate)
         {
             lock (_mapGate)
@@ -115,8 +113,6 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Returns whether the map contains an element with the given key.
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
         public bool Contains(K key)
         {
             lock (_mapGate)
@@ -143,14 +139,16 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Adds the element to the map, and removes the old element with the same key if any.
+        /// Adds the element to the map, and removes the old element with the
+        /// same key if any.
         /// </summary>
         public V Put(K key, V value)
         {
             lock (_mapGate)
             {
-                // We do remove and insert instead of just replace, in order to cause a structural change
-                // to the map, as we always want the latest inserted element to be last in the queue.
+                // We do remove and insert instead of just replace, in order to
+                // cause a structural change to the map, as we always want the
+                // latest inserted element to be last in the queue.
                 V oldValue = default(V);
                 if (_map.TryGetValue(key, out oldValue))
                 {
@@ -185,8 +183,6 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Removes all the matching elements from the map.
         /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
         public IList<V> RemoveAll(Predicate<K> predicate)
         {
             lock (_mapGate)

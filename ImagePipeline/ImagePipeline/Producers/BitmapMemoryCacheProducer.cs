@@ -21,7 +21,7 @@ namespace ImagePipeline.Producers
         private readonly IProducer<CloseableReference<CloseableImage>> _inputProducer;
 
         /// <summary>
-        /// Instantiates the <see cref="BitmapMemoryCacheProducer"/>
+        /// Instantiates the <see cref="BitmapMemoryCacheProducer"/>.
         /// </summary>
         public BitmapMemoryCacheProducer(
             IMemoryCache<ICacheKey, CloseableImage> memoryCache,
@@ -34,8 +34,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Start producing results for given context. Provided consumer is notified 
-        /// whenever progress is made (new value is ready or error occurs).
+        /// Start producing results for given context.
+        /// Provided consumer is notified whenever progress is made
+        /// (new value is ready or error occurs).
         /// </summary>
         public void ProduceResults(
             IConsumer<CloseableReference<CloseableImage>> consumer,
@@ -116,7 +117,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Wraps the target consumer by the BitmapMemoryCacheConsumer
+        /// Wraps the target consumer by the BitmapMemoryCacheConsumer.
         /// </summary>
         protected virtual IConsumer<CloseableReference<CloseableImage>> WrapConsumer(
             IConsumer<CloseableReference<CloseableImage>> consumer,
@@ -129,7 +130,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Gets the producer name
+        /// Gets the producer name.
         /// </summary>
         protected virtual string ProducerName
         {
@@ -178,8 +179,8 @@ namespace ImagePipeline.Producers
                     return;
                 }
 
-                // If the intermediate result is not of a better quality than the cached result,
-                // forward the already cached result and don't cache the new result.
+                // If the intermediate result is not of a better quality than the cached
+                // result, forward the already cached result and don't cache the new result.
                 if (!isLast)
                 {
                     CloseableReference<CloseableImage> currentCachedResult = _memoryCache.Get(_cacheKey);

@@ -8,7 +8,8 @@ using System.IO;
 namespace ImagePipeline.Request
 {
     /// <summary>
-    /// Immutable object encapsulating everything pipeline has to know about requested image to proceed.
+    /// Immutable object encapsulating everything pipeline has to know about
+    /// requested image to proceed.
     /// </summary>
     public class ImageRequest
     {
@@ -17,17 +18,17 @@ namespace ImagePipeline.Request
         private FileSystemInfo _sourceFile;
 
         /// <summary>
-        /// Cache choice
+        /// Cache choice.
         /// </summary>
         public CacheChoice CacheChoice { get; }
 
         /// <summary>
-        /// Source Uri
+        /// Source Uri.
         /// </summary>
         public Uri SourceUri { get; }
 
         /// <summary>
-        /// Source File - for local fetches only, lazily initialized
+        /// Source File - for local fetches only, lazily initialized.
         /// </summary>
         public FileSystemInfo SourceFile
         {
@@ -46,22 +47,23 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// If set - the client will receive intermediate results
+        /// If set - the client will receive intermediate results.
         /// </summary>
         public bool IsProgressiveRenderingEnabled { get; }
 
         /// <summary>
-        /// If set the client will receive thumbnail previews for local images, before the whole image
+        /// If set the client will receive thumbnail previews for local images,
+        /// before the whole image.
         /// </summary>
         public bool IsLocalThumbnailPreviewsEnabled { get; }
 
         /// <summary>
-        /// Image decode options
+        /// Image decode options.
         /// </summary>
         public ImageDecodeOptions ImageDecodeOptions { get; }
 
         /// <summary>
-        /// Resize options
+        /// Resize options.
         /// </summary>
         public ResizeOptions ResizeOptions { get; } = null;
 
@@ -76,12 +78,12 @@ namespace ImagePipeline.Request
         public int Priority { get; }
 
         /// <summary>
-        /// Lowest level that is permitted to fetch an image from
+        /// Lowest level that is permitted to fetch an image from.
         /// </summary>
         public RequestLevel LowestPermittedRequestLevel { get; }
 
         /// <summary>
-        /// Whether the disk cache should be used for this request
+        /// Whether the disk cache should be used for this request.
         /// </summary>
         public bool IsDiskCacheEnabled { get; }
 
@@ -91,12 +93,12 @@ namespace ImagePipeline.Request
         public IPostprocessor Postprocessor { get; }
 
         /// <summary>
-        /// Request listener to use for this image request
+        /// Request listener to use for this image request.
         /// </summary>
         public IRequestListener RequestListener { get; }
 
         /// <summary>
-        /// Gets preferred width
+        /// Gets preferred width.
         /// </summary>
         public int PreferredWidth
         {
@@ -107,7 +109,7 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// Gets preferred height
+        /// Gets preferred height.
         /// </summary>
         public int PreferredHeight
         {
@@ -118,20 +120,18 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// Creates ImageRequest from uri
+        /// Creates ImageRequest from uri.
         /// </summary>
-        /// <param name="uri">uri</param>
-        /// <returns></returns>
+        /// <param name="uri">The uri.</param>
         public static ImageRequest FromUri(Uri uri)
         {
             return (uri == null) ? null : ImageRequestBuilder.NewBuilderWithSource(uri).Build();
         }
 
         /// <summary>
-        /// Creates ImageRequest from uri string
+        /// Creates ImageRequest from uri string.
         /// </summary>
-        /// <param name="uriString">uri string</param>
-        /// <returns></returns>
+        /// <param name="uriString">The uri string.</param>
         public static ImageRequest FromUri(string uriString)
         {
             if (uriString != null && uriString.Length != 0)
@@ -147,9 +147,8 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// Instantiates the <see cref="ImageRequest"/>
+        /// Instantiates the <see cref="ImageRequest"/>.
         /// </summary>
-        /// <param name="builder"></param>
         internal ImageRequest(ImageRequestBuilder builder)
         {
             CacheChoice = builder.CacheChoice;
@@ -173,10 +172,8 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// Custom Equals method
+        /// Custom Equals method.
         /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
         public override bool Equals(object o)
         {
             if (o.GetType() != typeof(ImageRequest)) 
@@ -191,9 +188,8 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// Custom GetHashCode method
+        /// Custom GetHashCode method.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return HashCodeUtil.HashCode(CacheChoice, SourceUri, SourceFile);
@@ -206,55 +202,56 @@ namespace ImagePipeline.Request
     public enum CacheChoice
     {
         /// <summary>
-        /// Indicates that this image should go in the small disk cache, if one is being used
+        /// Indicates that this image should go in the small disk cache,
+        /// if one is being used.
         /// </summary>
         SMALL,
 
         /// <summary>
-        /// Default
+        /// Default.
         /// </summary>
         DEFAULT,
     }
 
     /// <summary>
-    /// Level down to we are willing to go in order to find an image. E.g., we might only want to go
-    /// down to bitmap memory cache, and not check the disk cache or do a full fetch.
+    /// Level down to we are willing to go in order to find an image. E.g.,
+    /// we might only want to go down to bitmap memory cache, and not check
+    /// the disk cache or do a full fetch.
     /// </summary>
     public class RequestLevel
     {
         /// <summary>
-        /// Fetch (from the network or local storage)
+        /// Fetch (from the network or local storage).
         /// </summary>
         public const int FULL_FETCH = 1;
 
         /// <summary>
-        /// Disk caching
+        /// Disk caching.
         /// </summary>
         public const int DISK_CACHE = 2;
 
         /// <summary>
-        /// Encoded memory caching
+        /// Encoded memory caching.
         /// </summary>
         public const int ENCODED_MEMORY_CACHE = 3;
 
         /// <summary>
-        /// Bitmap caching
+        /// Bitmap caching.
         /// </summary>
         public const int BITMAP_MEMORY_CACHE = 4;
 
         private int _value;
 
         /// <summary>
-        /// Instantiates the request level
+        /// Instantiates the request level.
         /// </summary>
-        /// <param name="value"></param>
         public RequestLevel(int value)
         {
             _value = value;
         }
 
         /// <summary>
-        /// Gets the request level value
+        /// Gets the request level value.
         /// </summary>
         public int Value
         {
@@ -265,11 +262,8 @@ namespace ImagePipeline.Request
         }
 
         /// <summary>
-        /// Gets the max value
+        /// Gets the max value.
         /// </summary>
-        /// <param name="requestLevel1"></param>
-        /// <param name="requestLevel2"></param>
-        /// <returns></returns>
         public static RequestLevel GetMax(RequestLevel requestLevel1, RequestLevel requestLevel2)
         {
             return requestLevel1.Value > requestLevel2.Value ? requestLevel1 : requestLevel2;

@@ -15,9 +15,8 @@ namespace Cache.Common
         }
 
         /// <summary>
-        /// Gets singleton
+        /// Gets singleton.
         /// </summary>
-        /// <returns></returns>
         public static NoOpCacheErrorLogger Instance
         {
             get
@@ -36,10 +35,10 @@ namespace Cache.Common
 
         /// <summary>
         /// Log an error of the specified category.
-        /// <param name="category">Error category</param>
-        /// <param name="clazz">Class reporting the error</param>
-        /// <param name="message">An optional error message</param>
         /// </summary>
+        /// <param name="category">Error category.</param>
+        /// <param name="clazz">Class reporting the error.</param>
+        /// <param name="message">An optional error message.</param>
         public void LogError(
             CacheErrorCategory category,
             Type clazz,

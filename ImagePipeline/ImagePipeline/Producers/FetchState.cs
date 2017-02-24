@@ -4,9 +4,11 @@ using System;
 namespace ImagePipeline.Producers
 {
     /// <summary>
-    /// Used by <see cref="INetworkFetcher{FETCH_STATE}"/> to encapsulate the state of one network fetch.
+    /// Used by <see cref="INetworkFetcher{FETCH_STATE}"/> to encapsulate
+    /// the state of one network fetch.
     ///
-    /// <para />Implementations can subclass this to store additional fetch-scoped fields.
+    /// <para />Implementations can subclass this to store additional
+    /// fetch-scoped fields.
     /// </summary>
     public class FetchState
     {
@@ -15,10 +17,8 @@ namespace ImagePipeline.Producers
         private long _lastIntermediateResultTimeMs;
 
         /// <summary>
-        /// Instantiates the <see cref="FetchState"/>
+        /// Instantiates the <see cref="FetchState"/>.
         /// </summary>
-        /// <param name="consumer"></param>
-        /// <param name="context"></param>
         public FetchState(
             IConsumer<EncodedImage> consumer,
             IProducerContext context)
@@ -29,7 +29,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Gets the consumer
+        /// Gets the consumer.
         /// </summary>
         public IConsumer<EncodedImage> Consumer
         {
@@ -40,7 +40,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Gets the producer context
+        /// Gets the producer context.
         /// </summary>
         public IProducerContext Context
         {
@@ -51,7 +51,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Gets the context id
+        /// Gets the context id.
         /// </summary>
         public string Id
         {
@@ -62,7 +62,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Gets the producer listener
+        /// Gets the producer listener.
         /// </summary>
         public IProducerListener Listener
         {
@@ -73,7 +73,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Gets the image request source uri
+        /// Gets the image request source uri.
         /// </summary>
         public Uri Uri
         {
@@ -84,7 +84,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Gets and sets the last intermediate result time in milliseconds
+        /// Gets and sets the last intermediate result time in milliseconds.
         /// </summary>
         public long LastIntermediateResultTimeMs
         {

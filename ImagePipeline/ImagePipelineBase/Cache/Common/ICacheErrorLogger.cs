@@ -8,22 +8,22 @@ namespace Cache.Common
     public enum CacheErrorCategory
     {
         /// <summary>
-        /// READ_DECODE error
+        /// READ_DECODE error.
         /// </summary>
         READ_DECODE,
 
         /// <summary>
-        /// READ_FILE error
+        /// READ_FILE error.
         /// </summary>
         READ_FILE,
 
         /// <summary>
-        /// READ_FILE_NOT_FOUND error
+        /// READ_FILE_NOT_FOUND error.
         /// </summary>
         READ_FILE_NOT_FOUND,
 
         /// <summary>
-        /// READ_INVALID_ENTRY error
+        /// READ_INVALID_ENTRY error.
         /// </summary>
         READ_INVALID_ENTRY,
 
@@ -33,62 +33,62 @@ namespace Cache.Common
         WRITE_ENCODE,
 
         /// <summary>
-        /// WRITE_CREATE_TEMPFILE error
+        /// WRITE_CREATE_TEMPFILE error.
         /// </summary>
         WRITE_CREATE_TEMPFILE,
 
         /// <summary>
-        /// WRITE_UPDATE_FILE_NOT_FOUND error
+        /// WRITE_UPDATE_FILE_NOT_FOUND error.
         /// </summary>
         WRITE_UPDATE_FILE_NOT_FOUND,
 
         /// <summary>
-        /// WRITE_RENAME_FILE_TEMPFILE_NOT_FOUND error
+        /// WRITE_RENAME_FILE_TEMPFILE_NOT_FOUND error.
         /// </summary>
         WRITE_RENAME_FILE_TEMPFILE_NOT_FOUND,
 
         /// <summary>
-        /// WRITE_RENAME_FILE_TEMPFILE_PARENT_NOT_FOUND error
+        /// WRITE_RENAME_FILE_TEMPFILE_PARENT_NOT_FOUND error.
         /// </summary>
         WRITE_RENAME_FILE_TEMPFILE_PARENT_NOT_FOUND,
 
         /// <summary>
-        /// WRITE_RENAME_FILE_OTHER error
+        /// WRITE_RENAME_FILE_OTHER error.
         /// </summary>
         WRITE_RENAME_FILE_OTHER,
 
         /// <summary>
-        /// WRITE_CREATE_DIR error
+        /// WRITE_CREATE_DIR error.
         /// </summary>
         WRITE_CREATE_DIR,
 
         /// <summary>
-        /// WRITE_CALLBACK_ERROR error
+        /// WRITE_CALLBACK_ERROR error.
         /// </summary>
         WRITE_CALLBACK_ERROR,
 
         /// <summary>
-        /// WRITE_INVALID_ENTRY error
+        /// WRITE_INVALID_ENTRY error.
         /// </summary>
         WRITE_INVALID_ENTRY,
 
         /// <summary>
-        /// DELETE_FILE error
+        /// DELETE_FILE error.
         /// </summary>
         DELETE_FILE,
 
         /// <summary>
-        /// EVICTION error
+        /// EVICTION error.
         /// </summary>
         EVICTION,
 
         /// <summary>
-        /// GENERIC_IO error
+        /// GENERIC_IO error.
         /// </summary>
         GENERIC_IO,
 
         /// <summary>
-        /// OTHER error
+        /// OTHER error.
         /// </summary>
         OTHER
     }
@@ -100,10 +100,10 @@ namespace Cache.Common
     {
         /// <summary>
         /// Log an error of the specified category.
-        /// <param name="category">Error category</param>
-        /// <param name="clazz">Class reporting the error</param>
-        /// <param name="message">An optional error message</param>
         /// </summary>
+        /// <param name="category">Error category.</param>
+        /// <param name="clazz">Class reporting the error.</param>
+        /// <param name="message">An optional error message.</param>
         void LogError(
             CacheErrorCategory category,
             Type clazz,

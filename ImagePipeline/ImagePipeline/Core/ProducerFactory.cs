@@ -10,7 +10,7 @@ using ImagePipeline.Producers;
 namespace ImagePipeline.Core
 {
     /// <summary>
-    /// Producer factory
+    /// Producer factory.
     /// </summary>
     public class ProducerFactory
     {
@@ -40,21 +40,51 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Instantiates the <see cref="ProducerFactory"/>
         /// </summary>
-        /// <param name="byteArrayPool">The IByteArrayPool used by DecodeProducer.</param>
-        /// <param name="imageDecoder">The image decoder.</param>
-        /// <param name="progressiveJpegConfig">The progressive Jpeg configuration.</param>
-        /// <param name="downsampleEnabled">Enabling downsample.</param>
-        /// <param name="resizeAndRotateEnabledForNetwork">Enabling resize and rotate.</param>
-        /// <param name="executorSupplier">The supplier for tasks.</param>
-        /// <param name="pooledByteBufferFactory">The factory that allocates IPooledByteBuffer memory.</param>
-        /// <param name="bitmapMemoryCache">The memory cache for CloseableImage.</param>
-        /// <param name="encodedMemoryCache">The memory cache for IPooledByteBuffer.</param>
-        /// <param name="defaultBufferedDiskCache">The default buffered disk cache.</param>
-        /// <param name="smallImageBufferedDiskCache">The buffered disk cache used for small images.</param>
-        /// <param name="cacheKeyFactory">The factory that creates cache keys for the pipeline.</param>
-        /// <param name="platformBitmapFactory">The bitmap factory used for post process.</param>
-        /// <param name="flexByteArrayPool">The memory pool used for post process.</param>
-        /// <param name="forceSmallCacheThresholdBytes">The threshold set for using the small buffered disk cache.</param>
+        /// <param name="byteArrayPool">
+        /// The IByteArrayPool used by DecodeProducer.
+        /// </param>
+        /// <param name="imageDecoder">
+        /// The image decoder.
+        /// </param>
+        /// <param name="progressiveJpegConfig">
+        /// The progressive Jpeg configuration.
+        /// </param>
+        /// <param name="downsampleEnabled">
+        /// Enabling downsample.
+        /// </param>
+        /// <param name="resizeAndRotateEnabledForNetwork">
+        /// Enabling resize and rotate.
+        /// </param>
+        /// <param name="executorSupplier">
+        /// The supplier for tasks.
+        /// </param>
+        /// <param name="pooledByteBufferFactory">
+        /// The factory that allocates IPooledByteBuffer memory.
+        /// </param>
+        /// <param name="bitmapMemoryCache">
+        /// The memory cache for CloseableImage.
+        /// </param>
+        /// <param name="encodedMemoryCache">
+        /// The memory cache for IPooledByteBuffer.
+        /// </param>
+        /// <param name="defaultBufferedDiskCache">
+        /// The default buffered disk cache.
+        /// </param>
+        /// <param name="smallImageBufferedDiskCache">
+        /// The buffered disk cache used for small images.
+        /// </param>
+        /// <param name="cacheKeyFactory">
+        /// The factory that creates cache keys for the pipeline.
+        /// </param>
+        /// <param name="platformBitmapFactory">
+        /// The bitmap factory used for post process.
+        /// </param>
+        /// <param name="flexByteArrayPool">
+        /// The memory pool used for post process.
+        /// </param>
+        /// <param name="forceSmallCacheThresholdBytes">
+        /// The threshold set for using the small buffered disk cache.
+        /// </param>
         public ProducerFactory(
             IByteArrayPool byteArrayPool,
             ImageDecoder imageDecoder,
@@ -94,7 +124,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="AddImageTransformMetaDataProducer"/>
+        /// Instantiates the <see cref="AddImageTransformMetaDataProducer"/>.
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>
         public static AddImageTransformMetaDataProducer NewAddImageTransformMetaDataProducer(
@@ -104,7 +134,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="BitmapMemoryCacheGetProducer"/>
+        /// Instantiates the <see cref="BitmapMemoryCacheGetProducer"/>.
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>
         public BitmapMemoryCacheGetProducer NewBitmapMemoryCacheGetProducer(
@@ -114,7 +144,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="BitmapMemoryCacheKeyMultiplexProducer"/>
+        /// Instantiates the <see cref="BitmapMemoryCacheKeyMultiplexProducer"/>.
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>
         public BitmapMemoryCacheKeyMultiplexProducer NewBitmapMemoryCacheKeyMultiplexProducer(
@@ -124,7 +154,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="BitmapMemoryCacheProducer"/>
+        /// Instantiates the <see cref="BitmapMemoryCacheProducer"/>.
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>
         public BitmapMemoryCacheProducer NewBitmapMemoryCacheProducer(
@@ -134,7 +164,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="BranchOnSeparateImagesProducer"/>
+        /// Instantiates the <see cref="BranchOnSeparateImagesProducer"/>.
         /// </summary>
         /// <param name="inputProducer1">The first input producer.</param>
         /// <param name="inputProducer2">The second input producer.</param>
@@ -146,7 +176,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="DataFetchProducer"/>
+        /// Instantiates the <see cref="DataFetchProducer"/>.
         /// </summary>
         public DataFetchProducer NewDataFetchProducer()
         {
@@ -154,7 +184,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="DecodeProducer"/>
+        /// Instantiates the <see cref="DecodeProducer"/>.
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>
         public DecodeProducer NewDecodeProducer(IProducer<EncodedImage> inputProducer)
@@ -170,7 +200,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="DiskCacheProducer"/>
+        /// Instantiates the <see cref="DiskCacheProducer"/>.
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>
         public DiskCacheProducer NewDiskCacheProducer(
@@ -185,7 +215,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="EncodedCacheKeyMultiplexProducer"/>
+        /// Instantiates the <see cref="EncodedCacheKeyMultiplexProducer"/>.
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>
         public EncodedCacheKeyMultiplexProducer NewEncodedCacheKeyMultiplexProducer(
@@ -197,7 +227,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="EncodedMemoryCacheProducer"/>
+        /// Instantiates the <see cref="EncodedMemoryCacheProducer"/>.
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>
         public EncodedMemoryCacheProducer NewEncodedMemoryCacheProducer(
@@ -210,7 +240,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="LocalAssetFetchProducer"/>
+        /// Instantiates the <see cref="LocalAssetFetchProducer"/>.
         /// </summary>
         public LocalAssetFetchProducer NewLocalAssetFetchProducer()
         {
@@ -220,7 +250,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="LocalContentUriFetchProducer"/>
+        /// Instantiates the <see cref="LocalContentUriFetchProducer"/>.
         /// </summary>
         public LocalContentUriFetchProducer NewLocalContentUriFetchProducer()
         {
@@ -230,7 +260,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="LocalContentUriThumbnailFetchProducer"/>
+        /// Instantiates the <see cref="LocalContentUriThumbnailFetchProducer"/>.
         /// </summary>
         public LocalContentUriThumbnailFetchProducer NewLocalContentUriThumbnailFetchProducer()
         {
@@ -240,7 +270,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="LocalExifThumbnailProducer"/>
+        /// Instantiates the <see cref="LocalExifThumbnailProducer"/>.
         /// </summary>
         public LocalExifThumbnailProducer NewLocalExifThumbnailProducer()
         {
@@ -250,7 +280,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="ThumbnailBranchProducer"/>
+        /// Instantiates the <see cref="ThumbnailBranchProducer"/>.
         /// </summary>
         public ThumbnailBranchProducer NewThumbnailBranchProducer(
             IThumbnailProducer<EncodedImage>[] thumbnailProducers)
@@ -259,7 +289,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="LocalFileFetchProducer"/>
+        /// Instantiates the <see cref="LocalFileFetchProducer"/>.
         /// </summary>
         public LocalFileFetchProducer NewLocalFileFetchProducer()
         {
@@ -269,7 +299,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="LocalResourceFetchProducer"/>
+        /// Instantiates the <see cref="LocalResourceFetchProducer"/>.
         /// </summary>
         public LocalResourceFetchProducer NewLocalResourceFetchProducer()
         {
@@ -279,7 +309,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="LocalVideoThumbnailProducer"/>
+        /// Instantiates the <see cref="LocalVideoThumbnailProducer"/>.
         /// </summary>
         public LocalVideoThumbnailProducer NewLocalVideoThumbnailProducer()
         {
@@ -287,7 +317,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="NetworkFetchProducer"/>
+        /// Instantiates the <see cref="NetworkFetchProducer"/>.
         /// </summary>
         public NetworkFetchProducer NewNetworkFetchProducer(INetworkFetcher<FetchState> networkFetcher)
         {
@@ -298,7 +328,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="NullProducer{T}"/>
+        /// Instantiates the <see cref="NullProducer{T}"/>.
         /// </summary>
         public static NullProducer<T> NewNullProducer<T>()
         {
@@ -306,7 +336,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="PostprocessedBitmapMemoryCacheProducer"/>
+        /// Instantiates the <see cref="PostprocessedBitmapMemoryCacheProducer"/>.
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>
         public PostprocessedBitmapMemoryCacheProducer NewPostprocessorBitmapMemoryCacheProducer(
@@ -317,7 +347,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="PostprocessorProducer"/>
+        /// Instantiates the <see cref="PostprocessorProducer"/>.
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>
         public PostprocessorProducer NewPostprocessorProducer(
@@ -331,7 +361,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="ResizeAndRotateProducer"/>
+        /// Instantiates the <see cref="ResizeAndRotateProducer"/>.
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>
         public ResizeAndRotateProducer NewResizeAndRotateProducer(IProducer<EncodedImage> inputProducer)
@@ -343,7 +373,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="SwallowResultProducer{T}"/>
+        /// Instantiates the <see cref="SwallowResultProducer{T}"/>.
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>
         public static SwallowResultProducer<T> NewSwallowResultProducer<T>(IProducer<T> inputProducer)
@@ -352,10 +382,14 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="ThreadHandoffProducer{T}"/>
+        /// Instantiates the <see cref="ThreadHandoffProducer{T}"/>.
         /// </summary>
-        /// <param name="inputProducer">The input producer.</param>
-        /// <param name="inputThreadHandoffProducerQueue">The thread handoff producer queue.</param>
+        /// <param name="inputProducer">
+        /// The input producer.
+        /// </param>
+        /// <param name="inputThreadHandoffProducerQueue">
+        /// The thread handoff producer queue.
+        /// </param>
         public ThreadHandoffProducer<T> NewBackgroundThreadHandoffProducer<T>(
             IProducer<T> inputProducer, 
             ThreadHandoffProducerQueue inputThreadHandoffProducerQueue)
@@ -366,10 +400,14 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="ThrottlingProducer{T}"/>
+        /// Instantiates the <see cref="ThrottlingProducer{T}"/>.
         /// </summary>
-        /// <param name="maxSimultaneousRequests">The max simultaneous requests.</param>
-        /// <param name="inputProducer">The input producer.</param>
+        /// <param name="maxSimultaneousRequests">
+        /// The max simultaneous requests.
+        /// </param>
+        /// <param name="inputProducer">
+        /// The input producer.
+        /// </param>
         public ThrottlingProducer<T> NewThrottlingProducer<T>(
             int maxSimultaneousRequests,
             IProducer<T> inputProducer)
@@ -381,7 +419,7 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// Instantiates the <see cref="WebpTranscodeProducer"/>
+        /// Instantiates the <see cref="WebpTranscodeProducer"/>.
         /// </summary>
         /// <param name="inputProducer">The input producer.</param>
         public WebpTranscodeProducer NewWebpTranscodeProducer(

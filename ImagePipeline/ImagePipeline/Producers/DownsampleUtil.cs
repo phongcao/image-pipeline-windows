@@ -18,13 +18,16 @@ namespace ImagePipeline.Producers
         private static readonly int DEFAULT_SAMPLE_SIZE = 1;
 
         /// <summary>
-        /// Get the factor between the dimensions of the encodedImage (actual image) and the ones 
-        /// of the imageRequest (requested size).
-        ///
-        /// <param name="imageRequest">The request containing the requested dimensions.</param>
-        /// <param name="encodedImage">The encoded image with the actual dimensions.</param>
-        /// @return
+        /// Get the factor between the dimensions of the encodedImage
+        /// (actual image) and the ones of the imageRequest
+        /// (requested size).
         /// </summary>
+        /// <param name="imageRequest">
+        /// The request containing the requested dimensions.
+        /// </param>
+        /// <param name="encodedImage">
+        /// The encoded image with the actual dimensions.
+        /// </param>
         public static int DetermineSampleSize(ImageRequest imageRequest, EncodedImage encodedImage)
         {
             if (!EncodedImage.IsMetaDataAvailable(encodedImage))
@@ -43,8 +46,8 @@ namespace ImagePipeline.Producers
                 sampleSize = RatioToSampleSize(ratio);
             }
 
-            // Check the case when the dimension of the downsampled image is still larger than the max
-            // possible dimension for an image.
+            // Check the case when the dimension of the downsampled image
+            // is still larger than the max possible dimension for an image.
             int maxDimension = Math.Max(encodedImage.Height, encodedImage.Width);
             while (maxDimension / sampleSize > MAX_BITMAP_SIZE)
             {

@@ -15,7 +15,7 @@ namespace ImagePipeline.Producers
         internal const string PRODUCER_NAME = "LocalFileFetchProducer";
 
         /// <summary>
-        /// Instantiates the <see cref="LocalFileFetchProducer"/>
+        /// Instantiates the <see cref="LocalFileFetchProducer"/>.
         /// </summary>
         public LocalFileFetchProducer(
             IExecutorService executor,
@@ -35,7 +35,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// The name of the Producer
+        /// The name of the Producer.
         /// </summary>
         protected override string ProducerName
         {

@@ -4,20 +4,20 @@ using System;
 namespace Cache.Common
 {
     /// <summary>
-    /// <see cref="ICacheKey"/> implementation that is a simple wrapper around a <see cref="string"/> object.
+    /// <see cref="ICacheKey"/> implementation that is a simple wrapper around a
+    /// <see cref="string"/> object.
     ///
-    /// <para />Users of CacheKey should construct it by providing a unique string that unambiguously
-    /// identifies the cached resource.
+    /// <para />Users of ICacheKey should construct it by providing a unique
+    /// string that unambiguously identifies the cached resource.
     /// </summary>
     public class SimpleCacheKey : ICacheKey
     {
         private string _key;
 
         /// <summary>
-        /// Instantiate the <see cref="SimpleCacheKey"/>
+        /// Instantiate the <see cref="SimpleCacheKey"/>.
         /// </summary>
-        /// <param name="key"></param>
-        public SimpleCacheKey(String key)
+        public SimpleCacheKey(string key)
         {
             _key = Preconditions.CheckNotNull(key);
         }
@@ -25,17 +25,14 @@ namespace Cache.Common
         /// <summary>
         /// This is useful for instrumentation and debugging purposes.
         /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
             return _key;
         }
 
         /// <summary>
-        /// Compares objects _key
+        /// Compares objects _key.
         /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
         public override bool Equals(object o)
         {
             if (o == this)
@@ -53,9 +50,8 @@ namespace Cache.Common
         }
 
         /// <summary>
-        /// Gets the hash code
+        /// Gets the hash code.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return _key.GetHashCode();

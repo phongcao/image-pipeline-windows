@@ -6,7 +6,8 @@ using Windows.System;
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// Supplies <see cref="MemoryCacheParams"/> for the encoded image memory cache.
+    /// Supplies <see cref="MemoryCacheParams"/> for the encoded image
+    /// memory cache.
     /// </summary>
     public class DefaultEncodedMemoryCacheParamsSupplier : ISupplier<MemoryCacheParams>
     {
@@ -15,7 +16,7 @@ namespace ImagePipeline.Cache
         private const int MAX_EVICTION_QUEUE_ENTRIES = MAX_CACHE_ENTRIES;
 
         /// <summary>
-        /// Gets the memory cache params
+        /// Gets the memory cache params.
         /// </summary>
         public MemoryCacheParams Get()
         {

@@ -5,33 +5,35 @@ using System.Collections.Generic;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// Provides pool parameters (<see cref="PoolParams"/>) for <see cref="SharedByteArray"/>
+    /// Provides pool parameters (<see cref="PoolParams"/>) for
+    /// <see cref="SharedByteArray"/>.
     /// </summary>
     public static class DefaultFlexByteArrayPoolParams
     {
         /// <summary>
-        /// The default max buffer size we'll use
+        /// The default max buffer size we'll use.
         /// </summary>
         // Phong Cao: Increases pool size for Windows devices
         public const int DEFAULT_MAX_BYTE_ARRAY_SIZE = 10 * ByteConstants.MB; // 4 * ByteConstants.MB;
 
         /// <summary>
-        /// The min buffer size we'll use
+        /// The min buffer size we'll use.
         /// </summary>
         private const int DEFAULT_MIN_BYTE_ARRAY_SIZE = 16 * ByteConstants.KB;
 
         /// <summary>
-        /// The maximum number of threads permitted to touch this pool
+        /// The maximum number of threads permitted to touch this pool.
         /// </summary>
         public static readonly int DEFAULT_MAX_NUM_THREADS = Environment.ProcessorCount;
 
         /// <summary>
-        /// Generates bucket with parameters
+        /// Generates bucket with parameters.
         /// </summary>
-        /// <param name="min">The min buffer size</param>
-        /// <param name="max">The max buffer size</param>
-        /// <param name="numThreads">The number of threads permitted to touch this pool</param>
-        /// <returns></returns>
+        /// <param name="min">The min buffer size.</param>
+        /// <param name="max">The max buffer size.</param>
+        /// <param name="numThreads">
+        /// The number of threads permitted to touch this pool.
+        /// </param>
         public static Dictionary<int, int> GenerateBuckets(int min, int max, int numThreads)
         {
             Dictionary<int, int> buckets = new Dictionary<int, int>();
@@ -46,7 +48,6 @@ namespace ImagePipeline.Memory
         /// <summary>
         /// Instantiates the <see cref="PoolParams"/>.
         /// </summary>
-        /// <returns></returns>
         public static PoolParams Get()
         {
             return new PoolParams(

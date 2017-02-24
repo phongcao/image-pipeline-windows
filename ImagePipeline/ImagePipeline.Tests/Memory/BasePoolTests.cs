@@ -627,7 +627,7 @@ namespace ImagePipeline.Tests.Memory
             /// <summary>
             /// Allocate the smallest even number than is greater than or equal to the requested size
             /// <param name="requestSize">The logical request size</param>
-            /// @return the slightly higher size
+            /// <returns>the slightly higher size</returns>
             /// </summary>
             protected internal override int GetBucketedSize(int requestSize)
             {

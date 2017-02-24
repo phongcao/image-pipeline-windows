@@ -39,13 +39,13 @@ namespace FBCore.Common.Internal
 
         /// <summary>
         /// Reads all bytes from a file into a byte array.
-        ///
-        /// <param name="file">the file to read from</param>
-        /// @return a byte array containing all the bytes from file
-        /// @throws IllegalArgumentException if the file is bigger than the largest
-        ///     possible byte array (2^31 - 1)
-        /// @throws IOException if an I/O error occurs
         /// </summary>
+        /// <param name="file">The file to read from.</param>
+        /// <returns>A byte array containing all the bytes from file.</returns>
+        /// <exception cref="ArgumentException">
+        /// If the file is bigger than the largest possible byte array (2^31 - 1).
+        /// </exception>
+        /// <exception cref="IOException">If an I/O error occurs.</exception>
         public static byte[] ToByteArray(FileInfo file)
         {
             using (FileStream inputStream = file.OpenRead())

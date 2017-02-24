@@ -1,11 +1,11 @@
 ﻿namespace ImagePipeline.Core
 {
     /// <summary>
-    /// Encapsulates additional elements of the <see cref="ImagePipelineConfig"/> which are 
-    /// currently in an experimental state.
+    /// Encapsulates additional elements of the <see cref="ImagePipelineConfig"/>
+    /// which are currently in an experimental state.
     ///
-    /// <para />These options may often change or disappear altogether and it is not recommended 
-    /// to change their values from their defaults.
+    /// <para />These options may often change or disappear altogether and it is
+    /// not recommended to change their values from their defaults.
     /// </summary>
     public class ImagePipelineExperiments
     {
@@ -36,7 +36,6 @@
         /// <summary>
         /// Gets the force small cache threshold bytes.
         /// </summary>
-        /// <returns></returns>
         public int ForceSmallCacheThresholdBytes
         {
             get
@@ -77,7 +76,7 @@
         }
 
         /// <summary>
-        /// Builder class for ImagePipelineExperiments
+        /// Builder class for ImagePipelineExperiments.
         /// </summary>
         public class Builder
         {
@@ -93,7 +92,6 @@
             /// <summary>
             /// Instantiates the ImagePipelineExperiments builder.
             /// </summary>
-            /// <param name="configBuilder"></param>
             public Builder(ImagePipelineConfig.Builder configBuilder)
             {
                 ConfigBuilder = configBuilder;
@@ -110,12 +108,12 @@
             }
 
             /// <summary>
-            /// If this value is nonnegative, then all network-downloaded images below this 
-            /// size will be written to the small image cache.
+            /// If this value is nonnegative, then all network-downloaded images
+            /// below this size will be written to the small image cache.
             ///
-            /// <para />This will require the image pipeline to do up to two disk reads, instead 
-            /// of one, before going out to network. Use only if this pattern makes sense for your 
-            /// application.
+            /// <para />This will require the image pipeline to do up to two disk
+            /// reads, instead of one, before going out to network. Use only if
+            /// this pattern makes sense for your application.
             /// </summary>
             public ImagePipelineConfig.Builder SetForceSmallCacheThresholdBytes(
                 int forceSmallCacheThresholdBytes)
@@ -134,11 +132,15 @@
             }
 
             /// <summary>
-            /// Using this method is possible to change the max number of threads for loading 
-            /// and sizing local images.
-            /// <param name="throttlingMaxSimultaneousRequests">Max number of thread.</param>
-            /// @return The Builder itself for chaining.
+            /// Using this method is possible to change the max number of
+            /// threads for loading and sizing local images.
             /// </summary>
+            /// <param name="throttlingMaxSimultaneousRequests">
+            /// Max number of thread.
+            /// </param>
+            /// <returns>
+            /// The Builder itself for chaining.
+            /// </returns>
             public ImagePipelineConfig.Builder SetThrottlingMaxSimultaneousRequests(
                 int throttlingMaxSimultaneousRequests)
             {

@@ -6,10 +6,12 @@ namespace ImagePipeline.Cache
     /// <summary>
     /// CountingMemoryCache eviction strategy appropriate for bitmap caches.
     ///
-    /// <para />If run on KitKat or below, then this TrimStrategy behaves exactly as
-    /// NativeMemoryCacheTrimStrategy. If run on Lollipop, then BitmapMemoryCacheTrimStrategy will trim
-    /// cache in one additional case: when OnCloseToDalvikHeapLimit trim type is received, cache's
-    /// eviction queue will be trimmed according to OnCloseToDalvikHeapLimit's suggested trim ratio.
+    /// <para />If run on KitKat or below, then this ICacheTrimStrategy behaves
+    /// exactly as NativeMemoryCacheTrimStrategy. If run on Lollipop, then
+    /// BitmapMemoryCacheTrimStrategy will trim cache in one additional case:
+    /// when OnCloseToDalvikHeapLimit trim type is received, cache's eviction
+    /// queue will be trimmed according to OnCloseToDalvikHeapLimit's suggested
+    /// trim ratio.
     /// </summary>
     public class BitmapMemoryCacheTrimStrategy : ICacheTrimStrategy
     {

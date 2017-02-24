@@ -23,6 +23,7 @@ namespace ImagePipeline.Core
     ///       .SetXXX(xxx)
     ///       .SetYYY(yyy)
     ///       .Build();
+    ///       
     ///   ImagePipelineFactory factory = new ImagePipelineFactory(config);
     ///   ImagePipeline pipeline = factory.GetImagePipeline();
     /// </code>
@@ -31,10 +32,8 @@ namespace ImagePipeline.Core
     /// </summary>
     public sealed class ImagePipelineConfig : IDisposable
     {
-        // If a member here is marked @Nullable, it must be constructed by ImagePipelineFactory
-        // on demand if needed.
-
-        // There are a lot of parameters in this class. Please follow strict alphabetical order.
+        // There are a lot of parameters in this class.
+        // Please follow strict alphabetical order.
         private readonly IAnimatedImageFactory _animatedImageFactory;
         private readonly BitmapPixelFormat _bitmapConfig;
         private readonly ISupplier<MemoryCacheParams> _bitmapMemoryCacheParamsSupplier;
@@ -180,7 +179,8 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// @deprecated Use GetExperiments() and ImagePipelineExperiments.IsDecodeFileDescriptorEnabled().
+        /// @deprecated Use GetExperiments() and
+        /// ImagePipelineExperiments.IsDecodeFileDescriptorEnabled().
         /// </summary>
         public bool IsDecodeFileDescriptorEnabled
         {
@@ -224,7 +224,8 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// @deprecated Use GetExperiments and ImagePipelineExperiments.IsWebpSupportEnabled().
+        /// @deprecated Use GetExperiments and
+        /// ImagePipelineExperiments.IsWebpSupportEnabled().
         /// </summary>
         public bool IsWebpSupportEnabled
         {
@@ -257,7 +258,8 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
-        /// @deprecated Use GetExperiments and ImagePipelineExperiments.GetForceSmallCacheThresholdBytes().
+        /// @deprecated Use GetExperiments and
+        /// ImagePipelineExperiments.GetForceSmallCacheThresholdBytes().
         /// </summary>
         public int ForceSmallCacheThresholdBytes
         {
@@ -419,14 +421,13 @@ namespace ImagePipeline.Core
         /// <summary>
         /// Instantiates imagepipelineconfig builder.
         /// </summary>
-        /// <returns></returns>
         public static Builder NewBuilder()
         {
             return new Builder();
         }
 
         /// <summary>
-        /// Builder class for ImagePipelineConfig
+        /// Builder class for ImagePipelineConfig.
         /// </summary>
         public class Builder
         {
@@ -517,7 +518,7 @@ namespace ImagePipeline.Core
             }
 
             /// <summary>
-            /// @deprecated use <see cref="SetFileCacheFactory"/> instead
+            /// @deprecated use <see cref="SetFileCacheFactory"/> instead.
             /// </summary>
             public Builder SetDiskStorageFactory(IDiskStorageFactory diskStorageFactory)
             {
@@ -537,7 +538,7 @@ namespace ImagePipeline.Core
             }
 
             /// <summary>
-            /// Sets the encoded memory cache params supplier
+            /// Sets the encoded memory cache params supplier.
             /// </summary>
             public Builder SetEncodedMemoryCacheParamsSupplier(
                 ISupplier<MemoryCacheParams> encodedMemoryCacheParamsSupplier)

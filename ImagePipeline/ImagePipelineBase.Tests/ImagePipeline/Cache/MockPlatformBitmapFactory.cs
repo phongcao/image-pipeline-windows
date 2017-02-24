@@ -44,9 +44,8 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Cache
         /// <param name="width">the width of the bitmap</param>
         /// <param name="height">the height of the bitmap</param>
         /// <param name="bitmapConfig">the Bitmap.Config used to create the Bitmap</param>
-        /// @return a reference to the bitmap
-        /// @throws TooManyBitmapsException if the pool is full
-        /// @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
+        /// <returns>a reference to the bitmap</returns>
+        /// <exception cref="OutOfMemoryException">if the Bitmap cannot be allocated</exception>
         /// </summary>
         public override CloseableReference<SoftwareBitmap> CreateBitmapInternal(
             int width,

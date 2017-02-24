@@ -12,7 +12,8 @@ namespace FBCore.DataSource
     /// which will forward results of the first available data source.
     ///
     /// <para />Data sources are obtained in order. Only if the current data 
-    /// source fails, or if it finishes without result, the next one will be tried.
+    /// source fails, or if it finishes without result, the next one will be
+    /// tried.
     /// </summary>
     public class FirstAvailableDataSourceSupplier<T> : ISupplier<IDataSource<T>>
     {
@@ -25,10 +26,8 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Creates the <see cref="FirstAvailableDataSourceSupplier{T}"/>
+        /// Creates the <see cref="FirstAvailableDataSourceSupplier{T}"/>.
         /// </summary>
-        /// <param name="dataSourceSuppliers"></param>
-        /// <returns></returns>
         public static FirstAvailableDataSourceSupplier<T> Create(
             IList<ISupplier<IDataSource<T>>> dataSourceSuppliers)
         {
@@ -36,27 +35,24 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Gets the first available data source
+        /// Gets the first available data source.
         /// </summary>
-        /// <returns></returns>
         public IDataSource<T> Get()
         {
             return new FirstAvailableDataSource(_dataSourceSuppliers);
         }
 
         /// <summary>
-        /// Custom GetHashCode method
+        /// Custom GetHashCode method.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return _dataSourceSuppliers.GetHashCode();
         }
 
         /// <summary>
-        /// Custom Equals method
+        /// Custom Equals method.
         /// </summary>
-        /// <param name="other"></param>
         public override bool Equals(object other)
         {
             if (other == this)
@@ -74,9 +70,8 @@ namespace FBCore.DataSource
         }
 
         /// <summary>
-        /// Custom ToString method
+        /// Custom ToString method.
         /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
             return $"{ base.ToString() }{{list={ _dataSourceSuppliers.ToString() }}}";
@@ -230,11 +225,13 @@ namespace FBCore.DataSource
                         return;
                     }
 
-                    // If we didn't have any result so far, we got one now, so we'll set
-                    // <code> _dataSourceWithResult</code> to point to the current data source.
+                    // If we didn't have any result so far, we got one now, so we'll
+                    // set <code>_dataSourceWithResult</code> to point to the current
+                    // data source.
                     // If we did have a result which came from another data source,
-                    // we'll only set <code> _dataSourceWithResult</code> to point to the current
-                    // data source if it has finished (i.e. the new result is final).
+                    // we'll only set <code>_dataSourceWithResult</code> to point to
+                    // the current data source if it has finished (i.e. the new result
+                    // is final).
                     if (_dataSourceWithResult == default(IDataSource<T>) || isFinished)
                     {
                         oldDataSource = _dataSourceWithResult;
@@ -267,8 +264,9 @@ namespace FBCore.DataSource
             {
                 MaybeSetDataSourceWithResult(dataSource, dataSource.IsFinished());
 
-                // If the data source with the new result is our <code> _dataSourceWithResult</code>,
-                // we have to notify our subscribers about the new result.
+                // If the data source with the new result is our
+                // <code>_dataSourceWithResult</code>, we have to
+                // notify our subscribers about the new result.
                 if (dataSource == GetDataSourceWithResult())
                 {
                     SetResult(default(T), dataSource.IsFinished());

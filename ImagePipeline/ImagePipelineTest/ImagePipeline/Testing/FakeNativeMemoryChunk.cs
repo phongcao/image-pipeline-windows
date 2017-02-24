@@ -4,9 +4,9 @@ using System;
 namespace ImagePipeline.Testing
 {
     /// <summary>
-    /// A fake implementation of <see cref="NativeMemoryChunk"/> to allow us to test out pools and other
-    /// functionality. This uses byte arrays instead of actual native memory, but supports the same
-    /// public interface
+    /// A fake implementation of <see cref="NativeMemoryChunk"/> to allow us to
+    /// test out pools and other functionality. This uses byte arrays instead of
+    /// actual native memory, but supports the same public interface.
     /// </summary>
     public class FakeNativeMemoryChunk : NativeMemoryChunk
     {
@@ -15,14 +15,14 @@ namespace ImagePipeline.Testing
         /// <summary>
         /// Instantiates the <see cref="FakeNativeMemoryChunk"/>.
         /// </summary>
-        /// <param name="bufSize">Size</param>
+        /// <param name="bufSize">Size.</param>
         public FakeNativeMemoryChunk(int bufSize)
         {
             _buf = new byte[bufSize];
         }
 
         /// <summary>
-        /// Fake Dispose method
+        /// Fake Dispose method.
         /// </summary>
         protected override void Dispose(bool disposing)
         {
@@ -31,9 +31,8 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Fake Closed attribute
+        /// Fake Closed attribute.
         /// </summary>
-        /// <returns></returns>
         public override bool Closed
         {
             get
@@ -43,7 +42,7 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Fake Size
+        /// Fake Size.
         /// </summary>
         public override int Size
         {
@@ -54,14 +53,13 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        ///  Fake Write method
+        ///  Fake Write method.
         /// </summary>
-        /// <param name="nativeMemoryOffset"></param>
-        /// <param name="byteArray"></param>
-        /// <param name="byteArrayOffset"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public override int Write(int nativeMemoryOffset, byte[] byteArray, int byteArrayOffset, int count)
+        public override int Write(
+            int nativeMemoryOffset, 
+            byte[] byteArray, 
+            int byteArrayOffset, 
+            int count)
         {
             int numToWrite = Math.Min(count, _buf.Length - nativeMemoryOffset);
             Array.Copy(byteArray, byteArrayOffset, _buf, nativeMemoryOffset, numToWrite);
@@ -69,24 +67,21 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Fake Read method
+        /// Fake Read method.
         /// </summary>
-        /// <param name="nativeMemoryOffset"></param>
-        /// <returns></returns>
         public override byte Read(int nativeMemoryOffset)
         {
             return _buf[nativeMemoryOffset];
         }
 
         /// <summary>
-        /// Fake Read method
+        /// Fake Read method.
         /// </summary>
-        /// <param name="nativeMemoryOffset"></param>
-        /// <param name="byteArray"></param>
-        /// <param name="byteArrayOffset"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public override int Read(int nativeMemoryOffset, byte[] byteArray, int byteArrayOffset, int count)
+        public override int Read(
+            int nativeMemoryOffset, 
+            byte[] byteArray, 
+            int byteArrayOffset, 
+            int count)
         {
             int numToRead = Math.Min(count, _buf.Length - nativeMemoryOffset);
             Array.Copy(_buf, nativeMemoryOffset, byteArray, byteArrayOffset, numToRead);
@@ -94,12 +89,8 @@ namespace ImagePipeline.Testing
         }
 
         /// <summary>
-        /// Fake Copy method
+        /// Fake Copy method.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="other"></param>
-        /// <param name="otherOffset"></param>
-        /// <param name="count"></param>
         public override void Copy(int offset, NativeMemoryChunk other, int otherOffset, int count)
         {
             FakeNativeMemoryChunk that = (FakeNativeMemoryChunk)other;

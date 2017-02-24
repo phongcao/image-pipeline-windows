@@ -13,8 +13,8 @@ using Windows.Storage;
 namespace Cache.Disk
 {
     /// <summary>
-    /// The default disk storage implementation. Subsumes both 'simple' and 'sharded' implementations
-    /// via a new SubdirectorySupplier.
+    /// The default disk storage implementation. Subsumes both 'simple' and
+    /// 'sharded' implementations via a new SubdirectorySupplier.
     /// </summary>
     public class DefaultDiskStorage : IDiskStorage
     {
@@ -24,57 +24,69 @@ namespace Cache.Disk
         private const string DEFAULT_DISK_STORAGE_VERSION_PREFIX = "v2";
 
         /// <summary>
-       /// We use sharding to avoid Samsung's RFS problem, and to avoid having one big directory
-       /// containing thousands of files.
-       /// This number of directories is large enough based on the following reasoning:
-       /// - high usage: 150 photos per day
-       /// - such usage will hit Samsung's 6,500 photos cap in 43 days
-       /// - 100 buckets will extend that period to 4,300 days which is 11.78 years
-       /// </summary>
+        /// We use sharding to avoid Samsung's RFS problem, and to avoid having
+        /// one big directory containing thousands of files.
+        /// This number of directories is large enough based on the following
+        /// reasoning:
+        /// - high usage: 150 photos per day.
+        /// - such usage will hit Samsung's 6,500 photos cap in 43 days.
+        /// - 100 buckets will extend that period to 4,300 days which is 11.78
+        ///   years.
+        /// </summary>
         private const int SHARDING_BUCKET_COUNT = 100;
 
         /// <summary>
         /// We will allow purging of any temp files older than this.
         /// </summary>
-        internal static readonly long TEMP_FILE_LIFETIME_MS = (long)TimeSpan.FromMinutes(30).TotalMilliseconds;
+        internal static readonly long TEMP_FILE_LIFETIME_MS = 
+            (long)TimeSpan.FromMinutes(30).TotalMilliseconds;
 
         private static readonly Random _random = new Random();
 
         /// <summary>
-        /// The base directory used for the cache
+        /// The base directory used for the cache.
         /// </summary>
         private readonly FileSystemInfo _rootDirectory;
 
         /// <summary>
-       /// True if cache is external
+       /// True if cache is external.
        /// </summary>
         private readonly bool _isExternal;
 
         /// <summary>
-        /// All the sharding occurs inside a version-directory. That allows for easy version upgrade.
-        /// When we find a base directory with no version-directory in it, it means that it's a different
-        /// version and we should delete the whole directory (including itself) for both reasons:
-        /// 1) clear all unusable files 2) avoid Samsung RFS problem that was hit with old implementations
+        /// All the sharding occurs inside a version-directory. That allows 
+        /// for easy version upgrade. When we find a base directory with no
+        /// version-directory in it, it means that it's a different version
+        /// and we should delete the whole directory (including itself) for
+        /// both reasons:
+        /// 1) Clear all unusable files.
+        /// 2) Avoid Samsung RFS problem that was hit with old implementations
         /// of DiskStorage which used a single directory for all the files.
         /// </summary>
         private readonly FileSystemInfo _versionDirectory;
 
         private readonly ICacheErrorLogger _cacheErrorLogger;
         
-        // For unit tests
+        // For unit tests.
         private readonly Clock _clock;
 
         /// <summary>
-        /// Instantiates a ShardedDiskStorage that will use the directory to save a map between
-        /// keys and files. The version is very important if clients change the format
-        /// saved in those files. ShardedDiskStorage will assure that files saved with different
+        /// Instantiates a ShardedDiskStorage that will use the directory to
+        /// save a map between keys and files. The version is very important
+        /// if clients change the format saved in those files.
+        /// ShardedDiskStorage will assure that files saved with different
         /// version will be never used and eventually removed.
-        /// <param name="rootDirectory">root directory to create all content under</param>
-        /// <param name="version">version of the format used in the files. If passed a different version
-        /// files saved with the previous value will not be read and will be purged eventually.</param>
-        /// <param name="cacheErrorLogger">logger for various events</param>
-        /// <param name="clock">optional parameter for unit test</param>
         /// </summary>
+        /// <param name="rootDirectory">
+        /// Root directory to create all content under.
+        /// </param>
+        /// <param name="version">
+        /// Version of the format used in the files. If passed a different
+        /// version files saved with the previous value will not be read and
+        /// will be purged eventually.
+        /// </param>
+        /// <param name="cacheErrorLogger">Logger for various events.</param>
+        /// <param name="clock">Optional parameter for unit test.</param>
         public DefaultDiskStorage(
             FileSystemInfo rootDirectory,
             int version,
@@ -85,15 +97,16 @@ namespace Cache.Disk
 
             _rootDirectory = rootDirectory;
 
-            // Phong Cao: Checking external storage requires 'Removable devices' permission in the
-            // app manifest, skip it for now
+            // Phong Cao: Checking external storage requires 'Removable devices'
+            // permission in the app manifest, skip it for now.
             _isExternal = false; // CheckExternal(rootDirectory, cacheErrorLogger);
 
             // _versionDirectory's name identifies:
             // - the cache structure's version (sharded)
             // - the content's version (version value)
-            // if structure changes, prefix will change... if content changes version will be different
-            // the ideal would be asking _sharding its name, but it's created receiving the directory
+            // if structure changes, prefix will change... if content changes version
+            // will be different the ideal would be asking _sharding its name, but it's
+            // created receiving the directory
             _versionDirectory = new DirectoryInfo(Path.Combine(_rootDirectory.FullName, GetVersionSubdirectoryName(version)));
             _cacheErrorLogger = cacheErrorLogger;
             RecreateDirectoryIfVersionChanges();
@@ -134,8 +147,8 @@ namespace Cache.Disk
 
         /// <summary>
         /// Is this storage enabled?
-        /// @return true, if enabled
         /// </summary>
+        /// <returns>true, if enabled.</returns>
         public bool IsEnabled
         {
             get
@@ -146,8 +159,8 @@ namespace Cache.Disk
 
         /// <summary>
         /// Is this storage external?
-        /// @return true, if external
         /// </summary>
+        /// <returns>true, if external.</returns>
         public bool IsExternal
         {
             get
@@ -157,9 +170,9 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Get the storage's name, which should be unique
-        /// @return name of the this storage
+        /// Get the storage's name, which should be unique.
         /// </summary>
+        /// <returns>Name of the this storage.</returns>
         public string StorageName
         {
             get
@@ -173,10 +186,11 @@ namespace Cache.Disk
 
         /// <summary>
         /// Checks if we have to recreate rootDirectory.
-        /// This is needed because old versions of this storage created too much different files
-        /// in the same dir, and Samsung's RFS has a bug that after the 13.000th creation fails.
-        /// So if cache is not already in expected version let's destroy everything
-        /// (if not in expected version... there's nothing to reuse here anyway).
+        /// This is needed because old versions of this storage created too
+        /// much different files in the same dir, and Samsung's RFS has a bug
+        /// that after the 13.000th creation fails. So if cache is not already
+        /// in expected version let's destroy everything (if not in expected
+        /// version... there's nothing to reuse here anyway).
         /// </summary>
         private void RecreateDirectoryIfVersionChanges()
         {
@@ -199,7 +213,8 @@ namespace Cache.Disk
                 }
                 catch (CreateDirectoryException)
                 {
-                    // Not the end of the world, when saving files we will try to create missing parent dirs
+                    // Not the end of the world, when saving files we will try to
+                    // create missing parent dirs
                     _cacheErrorLogger.LogError(
                         CacheErrorCategory.WRITE_CREATE_DIR,
                         typeof(DefaultDiskStorage),
@@ -223,7 +238,7 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Calculates which should be the CONTENT file for the given key
+        /// Calculates which should be the CONTENT file for the given key.
         /// </summary>
         internal FileSystemInfo GetContentFileFor(string resourceId)
         {
@@ -231,10 +246,12 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Gets the directory to use to store the given key
-        /// <param name="resourceId">the id of the file we're going to store</param>
-        /// @return the directory to store the file in
+        /// Gets the directory to use to store the given key.
         /// </summary>
+        /// <param name="resourceId">
+        /// The id of the file we're going to store.
+        /// </param>
+        /// <returns>The directory to store the file in.</returns>
         private string GetSubdirectoryPath(string resourceId)
         {
             int hashCode = HashCodeUtil.HashCode(resourceId);
@@ -243,18 +260,21 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Gets the directory to use to store the given key
-        /// <param name="resourceId">the id of the file we're going to store</param>
-        /// @return the directory to store the file in
+        /// Gets the directory to use to store the given key.
         /// </summary>
+        /// <param name="resourceId">
+        /// The id of the file we're going to store.
+        /// </param>
+        /// <returns>The directory to store the file in.</returns>
         private DirectoryInfo GetSubdirectory(string resourceId)
         {
             return new DirectoryInfo(GetSubdirectoryPath(resourceId));
         }
 
         /// <summary>
-        /// Implementation of <see cref="IFileTreeVisitor"/> to iterate over all the sharded files and
-        /// collect those valid content files. It's used in entriesIterator method.
+        /// Implementation of <see cref="IFileTreeVisitor"/> to iterate over
+        /// all the sharded files and collect those valid content files.
+        /// It's used in entriesIterator method.
         /// </summary>
         class EntriesCollector : IFileTreeVisitor
         {
@@ -283,7 +303,9 @@ namespace Cache.Disk
             {
             }
 
-            ///  Returns an immutable list of the entries. 
+            /// <summary>
+            /// Returns an immutable list of the entries.
+            /// </summary>
             public IList<IEntry> GetEntries()
             {
                 return result.AsReadOnly();
@@ -291,13 +313,13 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// This implements a  <see cref="IFileTreeVisitor"/> to iterate over all the files in _directory
-        /// and delete any unexpected file or directory. It also gets rid of any empty directory in
-        /// the shard.
-        /// As a shortcut it checks that things are inside (current) _versionDirectory. If it's not
-        /// then it's directly deleted. If it's inside then it checks if it's a recognized file and
-        /// if it's in the correct shard according to its name (checkShard method). If it's unexpected
-        /// file is deleted.
+        /// This implements a <see cref="IFileTreeVisitor"/> to iterate over all the
+        /// files in _directory and delete any unexpected file or directory. It also
+        /// gets rid of any empty directory in the shard.
+        /// As a shortcut it checks that things are inside (current) _versionDirectory.
+        /// If it's not then it's directly deleted. If it's inside then it checks if
+        /// it's a recognized file and if it's in the correct shard according to its
+        /// name (checkShard method). If it's unexpected file is deleted.
         /// </summary>
         class PurgingVisitor : IFileTreeVisitor
         {
@@ -362,8 +384,13 @@ namespace Cache.Disk
             }
 
             /// <summary>
-            /// @return true if and only if the file is not old enough to be considered an old temp file
+            /// Checks if and only if the file is not old enough to be considered
+            /// an old temp file.
             /// </summary>
+            /// <returns>
+            /// true if and only if the file is not old enough to be considered an
+            /// old temp file.
+            /// </returns>
             private bool IsRecentFile(FileSystemInfo file)
             {
                 return file.LastWriteTime > (
@@ -372,7 +399,7 @@ namespace Cache.Disk
         };
 
         /// <summary>
-        /// Purge unexpected resources
+        /// Purge unexpected resources.
         /// </summary>
         public void PurgeUnexpectedResources()
         {
@@ -381,11 +408,14 @@ namespace Cache.Disk
 
         /// <summary>
         /// Creates the directory (and its parents, if necessary).
-        /// In case of an exception, log an error message with the relevant parameters
-        /// <param name="directory">the directory to create</param>
-        /// <param name="message">message to use</param>
-        /// @throws IOException
+        /// In case of an exception, log an error message with the relevant
+        /// parameters.
         /// </summary>
+        /// <param name="directory">The directory to create.</param>
+        /// <param name="message">Message to use.</param>
+        /// <exception cref="CreateDirectoryException">
+        /// Could not create the directory.
+        /// </exception>
         private void Mkdirs(FileSystemInfo directory, string message)
         {
             try
@@ -404,16 +434,20 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Creates a temporary resource for writing content. Split from commit()
+        /// Creates a temporary resource for writing content. Split from Commit()
         /// in order to allow concurrent writing of cache entries.
-        /// This entry will not be available to cache clients until
-        /// commit() is called passing in the resource returned
-        /// from this method.
-        /// <param name="resourceId">id of the resource</param>
-        /// <param name="debugInfo">helper object for debugging</param>
-        /// @return the Inserter object with methods to write data, commit or cancel the insertion
-        /// @exception IOException on errors during this operation
+        /// This entry will not be available to cache clients until Commit() is
+        /// called passing in the resource returned from this method.
         /// </summary>
+        /// <param name="resourceId">Id of the resource.</param>
+        /// <param name="debugInfo">Helper object for debugging.</param>
+        /// <returns>
+        /// The Inserter object with methods to write data, commit or cancel the
+        /// insertion.
+        /// </returns>
+        /// <exception cref="IOException">
+        /// On errors during this operation.
+        /// </exception>
         public IInserter Insert(string resourceId, object debugInfo)
         {
             // Ensure that the parent directory exists
@@ -441,12 +475,16 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Get the resource with the specified name
-        /// <param name="resourceId">id of the resource</param>
-        /// <param name="debugInfo">helper object for debugging</param>
-        /// @return the resource with the specified name. NULL if not found
-        /// @throws IOException for unexpected behavior.
+        /// Get the resource with the specified name.
         /// </summary>
+        /// <param name="resourceId">Id of the resource.</param>
+        /// <param name="debugInfo">Helper object for debugging.</param>
+        /// <returns>
+        /// The resource with the specified name. NULL if not found.
+        /// </returns>
+        /// <exception cref="IOException">
+        /// For unexpected behavior.
+        /// </exception>
         public IBinaryResource GetResource(string resourceId, object debugInfo)
         {
             FileSystemInfo file = GetContentFileFor(resourceId);
@@ -461,31 +499,35 @@ namespace Cache.Disk
 
         private string GetFilename(string resourceId)
         {
-            StorageFileInfo fileInfo = new StorageFileInfo(new FileType(CONTENT_FILE_EXTENSION), resourceId);
+            StorageFileInfo fileInfo = new StorageFileInfo(
+                new FileType(CONTENT_FILE_EXTENSION), resourceId);
+
             string path = GetSubdirectoryPath(fileInfo.ResourceId);
             return fileInfo.ToPath(path);
         }
 
         /// <summary>
         /// Does a resource with this name exist?
-        /// <param name="resourceId">id of the resource</param>
-        /// <param name="debugInfo">helper object for debugging</param>
-        /// @return true, if the resource is present in the storage, false otherwise
-        /// @throws IOException
         /// </summary>
+        /// <param name="resourceId">Id of the resource.</param>
+        /// <param name="debugInfo">Helper object for debugging.</param>
+        /// <returns>
+        /// true, if the resource is present in the storage, false otherwise.
+        /// </returns>
         public bool Contains(string resourceId, object debugInfo)
         {
             return Query(resourceId, false);
         }
 
         /// <summary>
-        /// Does a resource with this name exist? If so, update the last-accessed time for the
-        /// resource
-        /// <param name="resourceId">id of the resource</param>
-        /// <param name="debugInfo">helper object for debugging</param>
-        /// @return true, if the resource is present in the storage, false otherwise
-        /// @throws IOException
+        /// Does a resource with this name exist? If so, update the last-accessed
+        /// time for the resource.
         /// </summary>
+        /// <param name="resourceId">Id of the resource.</param>
+        /// <param name="debugInfo">Helper object for debugging.</param>
+        /// <returns>
+        /// true, if the resource is present in the storage, false otherwise.
+        /// </returns>
         public bool Touch(string resourceId, object debugInfo)
         {
             return Query(resourceId, true);
@@ -504,11 +546,12 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Remove the resource represented by the entry
-        /// <param name="entry">entry of the resource to delete</param>
-        /// @return size of deleted file if successfully deleted, -1 otherwise
-        /// @throws IOException
+        /// Remove the resource represented by the entry.
+        /// <param name="entry">Entry of the resource to delete.</param>
         /// </summary>
+        /// <returns>
+        /// Size of deleted file if successfully deleted, -1 otherwise.
+        /// </returns>
         public long Remove(IEntry entry)
         {
             // It should be one entry return by us :)
@@ -518,11 +561,12 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Remove the resource with specified id
-        /// <param name="resourceId"></param>
-        /// @return size of deleted file if successfully deleted, -1 otherwise
-        /// @throws IOException
+        /// Remove the resource with specified id.
         /// </summary>
+        /// <param name="resourceId">The resource Id.</param>
+        /// <returns>
+        /// Size of deleted file if successfully deleted, -1 otherwise.
+        /// </returns>
         public long Remove(string resourceId)
         {
             return DoRemove((FileInfo)GetContentFileFor(resourceId));
@@ -550,9 +594,7 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Clear all contents of the storage
-        /// @exception IOException
-        /// @throws IOException
+        /// Clear all contents of the storage.
         /// </summary>
         public void ClearAll()
         {
@@ -560,7 +602,7 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Gets the disk dump info
+        /// Gets the disk dump info.
         /// </summary>
         public DiskDumpInfo GetDumpInfo()
         {
@@ -707,10 +749,13 @@ namespace Cache.Disk
 
         /// <summary>
         /// Checks that the file is placed in the correct shard according to its
-        /// filename (and hence the represented key). If it's correct its StorageFileInfo is returned.
-        /// <param name="file">the file to check</param>
-        /// @return the corresponding FileInfo object if shard is correct, null otherwise
+        /// filename (and hence the represented key). If it's correct its
+        /// StorageFileInfo is returned.
         /// </summary>
+        /// <param name="file">The file to check.</param>
+        /// <returns>
+        /// The corresponding FileInfo object if shard is correct, null otherwise.
+        /// </returns>
         private StorageFileInfo GetShardFileInfo(FileSystemInfo file)
         {
             StorageFileInfo info = StorageFileInfo.FromFile(file);
@@ -725,9 +770,11 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Categories for the different internal files a ShardedDiskStorage maintains.
-        /// CONTENT: the file that has the content
-        /// TEMP: temporal files, used to write the content until they are switched to CONTENT files
+        /// Categories for the different internal files a ShardedDiskStorage
+        /// maintains.
+        /// CONTENT: the file that has the content.
+        /// TEMP: temporal files, used to write the content until they are
+        /// switched to CONTENT files.
         /// </summary>
         class FileType
         {
@@ -759,7 +806,8 @@ namespace Cache.Disk
         }
 
         /// <summary>
-        /// Holds information about the different files this storage uses (content, tmp).
+        /// Holds information about the different files this storage uses
+        /// (content, tmp).
         /// All file name parsing should be done through here.
         /// Temp files creation is also handled here, to encapsulate naming.
         /// </summary>
@@ -841,14 +889,14 @@ namespace Cache.Disk
             }
 
             /// <summary>
-            /// Update the contents of the resource to be inserted. Executes outside the session lock.
-            /// The writer callback will be provided with an OutputStream to write to.
-            /// For high efficiency client should make sure that data is written in big chunks
-            /// (for example by employing BufferedInputStream or writing all data at once).
-            /// <param name="callback">the write callback</param>
-            /// <param name="debugInfo">helper object for debugging</param>
-            /// @throws IOException
+            /// Update the contents of the resource to be inserted. Executes
+            /// outside the session lock. The writer callback will be provided
+            /// with an output Stream to write to. For high efficiency client
+            /// should make sure that data is written in big chunks (for example
+            /// by employing BufferedInputStream or writing all data at once).
             /// </summary>
+            /// <param name="callback">The write callback.</param>
+            /// <param name="debugInfo">Helper object for debugging.</param>
             public void WriteData(IWriterCallback callback, object debugInfo)
             {
                 FileStream fileStream;
@@ -871,21 +919,23 @@ namespace Cache.Disk
                 try
                 {
                     callback.Write(fileStream);
-                    // just in case underlying stream's close method doesn't flush:
+
+                    // Just in case underlying stream's close method doesn't flush:
                     // we flush it manually and inside the try/catch
                     fileStream.Flush();
                     length = fileStream.Position;
                 }
                 finally
                 {
-                    // if it fails to close (or write the last piece) we really want to know
-                    // Normally we would want this to be quiet because a closing exception would hide one
-                    // inside the try, but now we really want to know if something fails at flush or close
+                    // If it fails to close (or write the last piece) we really want
+                    // to know. Normally we would want this to be quiet because a
+                    // closing exception would hide one inside the try, but now we
+                    // really want to know if something fails at Flush or Close
                     fileStream.Dispose();
                 }
 
-                // this code should never throw, but if filesystem doesn't fail on a failing/uncomplete close
-                // we want to know and manually fail
+                // This code should never throw, but if filesystem doesn't fail on a
+                // failing /uncomplete close we want to know and manually fail
                 if (_temporaryFile.Length != length)
                 {
                     throw new IncompleteFileException(length, _temporaryFile.Length);
@@ -893,12 +943,14 @@ namespace Cache.Disk
             }
 
             /// <summary>
-            /// Commits the insertion into the cache.
-            /// Once this is called the entry will be available to clients of the cache.
-            /// <param name="debugInfo">debug object for debugging</param>
-            /// @return the final resource created
-            /// @exception IOException on errors during the commit
+            /// Commits the insertion into the cache. Once this is called the entry
+            /// will be available to clients of the cache.
             /// </summary>
+            /// <param name="debugInfo">Debug object for debugging.</param>
+            /// <returns>The final resource created.</returns>
+            /// <exception cref="IOException">
+            /// On errors during the commit.
+            /// </exception>
             public IBinaryResource Commit(object debugInfo)
             {
                 // The temp resource must be ours!
@@ -930,8 +982,11 @@ namespace Cache.Disk
             /// <summary>
             /// Discards the insertion process.
             /// If resource was already committed the call is ignored.
-            /// @return true if cleanUp is successful (or noop), false if something couldn't be dealt with
             /// </summary>
+            /// <returns>
+            /// true if cleanUp is successful(or noop), false if something
+            /// couldn't be dealt with.
+            /// </returns>
             public bool CleanUp()
             {
                 if (_temporaryFile.Exists)

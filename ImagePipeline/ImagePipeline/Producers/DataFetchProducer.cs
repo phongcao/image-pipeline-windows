@@ -14,23 +14,25 @@ namespace ImagePipeline.Producers
     /// <summary>
     /// Producer for data URIs.
     ///
-    /// <para />Data URIs embed the data in the URI itself. They don't point to a 
-    /// file location; the URI is the data. Data can be encoded in either base-64 
-    /// or escaped ASCII. See the <a href="http://tools.ietf.org/html/rfc2397">spec</a> 
+    /// <para />Data URIs embed the data in the URI itself. They don't
+    /// point to a file location; the URI is the data. Data can be
+    /// encoded in either base-64 or escaped ASCII.
+    /// See the <a href="http://tools.ietf.org/html/rfc2397">spec</a>
     /// for full details.
     ///
-    /// <para />Data URIs are intended for small pieces of data only, since the URI 
-    /// lives on the heap. For large data, use a another URI type.
+    /// <para />Data URIs are intended for small pieces of data only,
+    /// since the URI lives on the heap. For large data, use a another
+    /// URI type.
     ///
-    /// <para />Charsets specified in the URI are ignored. Only UTF-8 encoding is 
-    /// currently supported.
+    /// <para />Charsets specified in the URI are ignored. Only UTF-8
+    /// encoding is currently supported.
     /// </summary>
     public class DataFetchProducer : LocalFetchProducer
     {
         private const string PRODUCER_NAME = "DataFetchProducer";
 
         /// <summary>
-        /// Instantiates the <see cref="DataFetchProducer"/>
+        /// Instantiates the <see cref="DataFetchProducer"/>.
         /// </summary>
         public DataFetchProducer(
             IPooledByteBufferFactory pooledByteBufferFactory) : base(
@@ -45,7 +47,8 @@ namespace ImagePipeline.Producers
         protected override Task<EncodedImage> GetEncodedImage(ImageRequest imageRequest)
         {
             byte[] data = GetData(imageRequest.SourceUri.ToString());
-            return Task.FromResult(GetByteBufferBackedEncodedImage(new MemoryStream(data), data.Length));
+            return Task.FromResult(
+                GetByteBufferBackedEncodedImage(new MemoryStream(data), data.Length));
         }
 
         /// <summary>

@@ -15,8 +15,9 @@ namespace ImagePipeline.Producers
     /// <summary>
     /// Runs a caller-supplied post-processor object.
     ///
-    /// <para />Post-processors are only supported for static bitmaps. If the request 
-    /// is for an animated image, the post-processor step will be skipped without warning.
+    /// <para />Post-processors are only supported for static bitmaps.
+    /// If the request is for an animated image, the post-processor
+    /// step will be skipped without warning.
     /// </summary>
     public class PostprocessorProducer : IProducer<CloseableReference<CloseableImage>>
     {
@@ -29,7 +30,7 @@ namespace ImagePipeline.Producers
         private readonly IExecutorService _executor;
 
         /// <summary>
-        /// Instantiates the <see cref="PostprocessorProducer"/>
+        /// Instantiates the <see cref="PostprocessorProducer"/>.
         /// </summary>
         public PostprocessorProducer(
             IProducer<CloseableReference<CloseableImage>> inputProducer,
@@ -44,8 +45,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Start producing results for given context. Provided consumer is notified whenever 
-        /// progress is made (new value is ready or error occurs).
+        /// Start producing results for given context.
+        /// Provided consumer is notified whenever progress is made
+        /// (new value is ready or error occurs).
         /// </summary>
         public void ProduceResults(
             IConsumer<CloseableReference<CloseableImage>> consumer, 
@@ -177,7 +179,8 @@ namespace ImagePipeline.Producers
                     bool isLast;
                     lock (_gate)
                     {
-                        // instead of cloning and closing the reference, we do a more efficient move.
+                        // instead of cloning and closing the reference, we do a more
+                        // efficient move.
                         closeableImageRef = _sourceImageRef;
                         isLast = _isLast;
                         _sourceImageRef = null;
@@ -298,7 +301,10 @@ namespace ImagePipeline.Producers
                 CloseableStaticBitmap staticBitmap = (CloseableStaticBitmap)sourceImage;
                 SoftwareBitmap sourceBitmap = staticBitmap.UnderlyingBitmap;
                 CloseableReference<SoftwareBitmap> bitmapRef = 
-                    _postprocessor.Process(sourceBitmap, _parent._bitmapFactory, _parent._flexByteArrayPool);
+                    _postprocessor.Process(
+                        sourceBitmap, 
+                        _parent._bitmapFactory, 
+                        _parent._flexByteArrayPool);
 
                 int rotationAngle = staticBitmap.RotationAngle;
 
@@ -393,12 +399,13 @@ namespace ImagePipeline.Producers
         /// <summary>
         /// PostprocessorConsumer wrapper that allows repeated postprocessing.
         ///
-        /// <para /> Reference to the last result received is cloned and kept until the request is 
-        /// cancelled. In order to allow multiple postprocessing, results are always propagated as 
-        /// non-final. When Update() is called, a new postprocessing of the last received result is 
-        /// requested.
+        /// <para />Reference to the last result received is cloned and kept
+        /// until the request is cancelled. In order to allow multiple
+        /// postprocessing, results are always propagated as non-final.
+        /// When Update() is called, a new postprocessing of the last received
+        /// result is requested.
         ///
-        /// <para /> Intermediate results are ignored.
+        /// <para />Intermediate results are ignored.
         /// </summary>
         internal class RepeatedPostprocessorConsumer :
             DelegatingConsumer<CloseableReference<CloseableImage>, CloseableReference<CloseableImage>>,

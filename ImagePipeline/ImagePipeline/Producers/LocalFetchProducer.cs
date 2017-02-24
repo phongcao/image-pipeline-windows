@@ -18,7 +18,7 @@ namespace ImagePipeline.Producers
         private readonly IPooledByteBufferFactory _pooledByteBufferFactory;
 
         /// <summary>
-        /// Instantiates the <see cref="LocalFetchProducer"/>
+        /// Instantiates the <see cref="LocalFetchProducer"/>.
         /// </summary>
         protected LocalFetchProducer(
             IExecutorService executor,
@@ -29,8 +29,9 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Start producing results for given context. Provided consumer is notified whenever 
-        /// progress is made (new value is ready or error occurs).
+        /// Start producing results for given context.
+        /// Provided consumer is notified whenever progress is made
+        /// (new value is ready or error occurs).
         /// </summary>
         public void ProduceResults(
             IConsumer<EncodedImage> consumer,
@@ -58,7 +59,9 @@ namespace ImagePipeline.Producers
                     },
                     async () =>
                     {
-                        EncodedImage encodedImage = await GetEncodedImage(imageRequest).ConfigureAwait(false);
+                        EncodedImage encodedImage = await GetEncodedImage(imageRequest)
+                            .ConfigureAwait(false);
+
                         if (encodedImage == null)
                         {
                             return null;
@@ -82,7 +85,8 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Creates a memory-backed encoded image from the stream. The stream is closed.
+        /// Creates a memory-backed encoded image from the stream.
+        /// The stream is closed.
         /// </summary>
         protected EncodedImage GetByteBufferBackedEncodedImage(Stream inputStream, int length)
         {
@@ -139,12 +143,13 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Gets an encoded image from the local resource. It can be either backed 
-        /// by a FileStream or a PooledByteBuffer
-        /// <param name="imageRequest">Request that includes the local resource that 
-        /// is being accessed</param>
-        /// @throws IOException
+        /// Gets an encoded image from the local resource. It can be
+        /// either backed by a FileStream or an IPooledByteBuffer.
         /// </summary>
+        /// <param name="imageRequest">
+        /// Request that includes the local resource that is being accessed.
+        /// </param>
+        /// <exception cref="IOException">Source uri is invalid.</exception>
         protected abstract Task<EncodedImage> GetEncodedImage(ImageRequest imageRequest);
 
         /// <summary>

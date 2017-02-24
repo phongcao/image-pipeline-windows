@@ -4,7 +4,7 @@ using System.Threading;
 namespace FBCore.Common.Internal
 {
     /// <summary>
-    /// Provides custom implementation for <see cref="ISupplier{T}"/>
+    /// Provides custom implementation for <see cref="ISupplier{T}"/>.
     /// </summary>
     public class SupplierImpl<T> : ISupplier<T>
     {
@@ -12,14 +12,14 @@ namespace FBCore.Common.Internal
         private readonly Func<string> _toStringFunc;
 
         /// <summary>
-        /// Test-only variables
+        /// Test-only variables.
         ///
         /// <para /><b>DO NOT USE in application code.</b>
         /// </summary>
         private int _getCallCount;
 
         /// <summary>
-        /// Instantiates the <see cref="SupplierImpl{T}"/>
+        /// Instantiates the <see cref="SupplierImpl{T}"/>.
         /// </summary>
         public SupplierImpl(Func<T> getFunc, Func<string> toStringFunc)
         {
@@ -31,7 +31,7 @@ namespace FBCore.Common.Internal
         }
 
         /// <summary>
-        /// Instantiates the <see cref="SupplierImpl{T}"/>
+        /// Instantiates the <see cref="SupplierImpl{T}"/>.
         /// </summary>
         public SupplierImpl(Func<T> getFunc) : this(getFunc, null)
         {
@@ -40,9 +40,8 @@ namespace FBCore.Common.Internal
         /// <summary>
         /// Retrieves an instance of the appropriate type. The returned object may or
         /// may not be a new instance, depending on the implementation.
-        ///
-        /// @return an instance of the appropriate type
         /// </summary>
+        /// <returns>An instance of the appropriate type.</returns>
         public T Get()
         {
             // For unit test
@@ -54,7 +53,6 @@ namespace FBCore.Common.Internal
         /// <summary>
         /// Overrides the base ToString method.
         /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
             if (_toStringFunc != null)
@@ -66,7 +64,7 @@ namespace FBCore.Common.Internal
         }
 
         /// <summary>
-        /// For unit test
+        /// For unit test.
         /// </summary>
         internal int GetCallCount
         {

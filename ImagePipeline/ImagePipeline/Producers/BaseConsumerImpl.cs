@@ -3,9 +3,8 @@
 namespace ImagePipeline.Producers
 {
     /// <summary>
-    /// Provides custom implementation for <see cref="BaseConsumer{T}"/>
+    /// Provides custom implementation for <see cref="BaseConsumer{T}"/>.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class BaseConsumerImpl<T> : BaseConsumer<T>
     {
         private Action<T, bool> _onNewResultImplFunc;
@@ -14,12 +13,8 @@ namespace ImagePipeline.Producers
         private Action<float> _onProgressUpdateImplFunc;
 
         /// <summary>
-        /// Instantiates the <see cref="BaseConsumerImpl{T}"/>
+        /// Instantiates the <see cref="BaseConsumerImpl{T}"/>.
         /// </summary>
-        /// <param name="onNewResultImplFunc"></param>
-        /// <param name="onFailureImplFunc"></param>
-        /// <param name="onCancellationImplFunc"></param>
-        /// <param name="onProgressUpdateImplFunc"></param>
         public BaseConsumerImpl(
             Action<T, bool> onNewResultImplFunc,
             Action<Exception> onFailureImplFunc,
@@ -41,7 +36,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called by OnFailure, override this method instead
+        /// Called by OnFailure, override this method instead.
         /// </summary>
         protected override void OnFailureImpl(Exception error)
         {
@@ -49,7 +44,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called by OnCancellation, override this method instead
+        /// Called by OnCancellation, override this method instead.
         /// </summary>
         protected override void OnCancellationImpl()
         {
@@ -57,7 +52,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Called when the progress updates
+        /// Called when the progress updates.
         /// </summary>
         protected override void OnProgressUpdateImpl(float progress)
         {

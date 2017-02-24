@@ -4,22 +4,22 @@ using System.Diagnostics;
 namespace ImagePipeline.Image
 {
     /// <summary>
-    /// A simple wrapper around an image that implements <see cref="IDisposable"/>
+    /// A simple wrapper around an image that implements <see cref="IDisposable"/>.
     /// </summary>
     public abstract class CloseableImage : IDisposable, IImageInfo
     {
         /// <summary>
-        /// Returns size in bytes of the bitmap(s)
+        /// Returns size in bytes of the bitmap(s).
         /// </summary>
         public abstract int SizeInBytes { get; }
 
         /// <summary>
-        /// Returns width of the bitmap(s)
+        /// Returns width of the bitmap(s).
         /// </summary>
         public abstract int Width { get; }
 
         /// <summary>
-        /// Returns height of the bitmap(s)
+        /// Returns height of the bitmap(s).
         /// </summary>
         public abstract int Height { get; }
 
@@ -30,7 +30,7 @@ namespace ImagePipeline.Image
 
         /// <summary>
         /// Returns quality information for the image.
-        /// <para /> Image classes that can contain intermediate results should 
+        /// <para />Image classes that can contain intermediate results should 
         /// override this as appropriate.
         /// </summary>
         public virtual IQualityInfo QualityInfo
@@ -65,7 +65,8 @@ namespace ImagePipeline.Image
         }
 
         /// <summary>
-        /// This has to be called before we get rid of this object in order to release underlying memory
+        /// This has to be called before we get rid of this object in order to
+        /// release underlying memory.
         /// </summary>
         protected virtual void Dispose(bool disposing)
         {

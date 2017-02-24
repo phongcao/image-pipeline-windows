@@ -11,18 +11,20 @@ using Windows.Graphics.Imaging;
 namespace ImagePipeline.Cache
 {
     /// <summary>
-    /// Layer of memory cache stack responsible for managing eviction of the the cached items.
+    /// Layer of memory cache stack responsible for managing eviction of
+    /// the cached items.
     ///
-    /// <para /> This layer is responsible for LRU eviction strategy and for maintaining the size boundaries
-    /// of the cached items.
+    /// <para />This layer is responsible for LRU eviction strategy and
+    /// for maintaining the size boundaries of the cached items.
     ///
-    /// <para /> Only the exclusively owned elements, i.e. the elements not referenced by any client, can be
-    /// evicted.
+    /// <para />Only the exclusively owned elements, i.e. the elements not
+    /// referenced by any client, can be evicted.
     /// </summary>
     public class CountingMemoryCache<K, V> : IMemoryCache<K, V>, IMemoryTrimmable
     {
         /// <summary>
-        /// The internal representation of a key-value pair stored by the cache.
+        /// The internal representation of a key-value pair stored
+        /// by the cache.
         /// </summary>
         internal class Entry
         {
@@ -31,14 +33,15 @@ namespace ImagePipeline.Cache
             public CloseableReference<V> ValueRef { get; }
 
             /// <summary>
-            /// The number of clients that reference the value
+            /// The number of clients that reference the value.
             /// </summary>
             public int ClientCount { get; set; }
 
             /// <summary>
-            /// Whether or not this entry is tracked by this cache. Orphans are not tracked by the cache and
-            /// as soon as the last client of an orphaned entry closes their reference, the entry's copy is
-            /// closed too.
+            /// Whether or not this entry is tracked by this cache.
+            /// Orphans are not tracked by the cache and as soon as
+            /// the last client of an orphaned entry closes their
+            /// reference, the entry's copy is closed too.
             /// </summary>
             public bool Orphan { get; set; }
 
@@ -71,12 +74,14 @@ namespace ImagePipeline.Cache
         internal readonly long PARAMS_INTERCHECK_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 
         /// <summary>
-        /// Contains the items that are not being used by any client and are hence viable for eviction.
+        /// Contains the items that are not being used by any client
+        /// and are hence viable for eviction.
         /// </summary>
         internal readonly CountingLruMap<K, Entry> _exclusiveEntries;
 
         /// <summary>
-        /// Contains all the cached items including the exclusively owned ones.
+        /// Contains all the cached items including the exclusively
+        /// owned ones.
         /// </summary>
         internal readonly CountingLruMap<K, Entry> _cachedEntries;
 
@@ -93,7 +98,7 @@ namespace ImagePipeline.Cache
         private readonly ISupplier<MemoryCacheParams> _memoryCacheParamsSupplier;
 
         /// <summary>
-        /// Memory cache params
+        /// Memory cache params.
         /// </summary>
         protected MemoryCacheParams _memoryCacheParams;
 
@@ -104,11 +109,6 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Instantiates the <see cref="CountingMemoryCache{K, V}"/>.
         /// </summary>
-        /// <param name="valueDescriptor"></param>
-        /// <param name="cacheTrimStrategy"></param>
-        /// <param name="memoryCacheParamsSupplier"></param>
-        /// <param name="platformBitmapFactory"></param>
-        /// <param name="isExternalCreatedBitmapLogEnabled"></param>
         public CountingMemoryCache(
             IValueDescriptor<V> valueDescriptor,
             ICacheTrimStrategy cacheTrimStrategy,
@@ -136,18 +136,21 @@ namespace ImagePipeline.Cache
             return new ValueDescriptorImpl<Entry>(
                 entry =>
                 {
-                    return entry.ValueRef.Valid ? evictableValueDescriptor.GetSizeInBytes(entry.ValueRef.Get()) : 0;
+                    return entry.ValueRef.Valid ? 
+                        evictableValueDescriptor.GetSizeInBytes(entry.ValueRef.Get()) : 0;
                 });
         }
 
         /// <summary>
         /// Caches the given key-value pair.
         ///
-        /// <para /> Important: the client should use the returned reference instead of the original one.
-        /// It is the caller's responsibility to close the returned reference once not needed anymore.
-        ///
-        /// @return the new reference to be used, null if the value cannot be cached
+        /// <para />Important: the client should use the returned reference
+        /// instead of the original one. It is the caller's responsibility
+        /// to close the returned reference once not needed anymore.
         /// </summary>
+        /// <returns>
+        /// The new reference to be used, null if the value cannot be cached.
+        /// </returns>
         public CloseableReference<V> Cache(K key, CloseableReference<V> valueRef)
         {
             return Cache(key, valueRef, null);
@@ -156,11 +159,13 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Caches the given key-value pair.
         ///
-        /// <para /> Important: the client should use the returned reference instead of the original one.
-        /// It is the caller's responsibility to close the returned reference once not needed anymore.
-        ///
-        /// @return the new reference to be used, null if the value cannot be cached
+        /// <para />Important: the client should use the returned reference
+        /// instead of the original one. It is the caller's responsibility
+        /// to close the returned reference once not needed anymore.
         /// </summary>
+        /// <returns>
+        /// The new reference to be used, null if the value cannot be cached.
+        /// </returns>
         public CloseableReference<V> Cache(
             K key,
             CloseableReference<V> valueRef,
@@ -201,10 +206,9 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Checks the cache constraints to determine whether the new value can be cached or not.
+        /// Checks the cache constraints to determine whether the new value
+        /// can be cached or not.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
         private bool CanCacheNewValue(V value)
         {
             lock (_cacheGate)
@@ -219,7 +223,8 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Gets the item with the given key, or null if there is no such item.
         ///
-        /// <para /> It is the caller's responsibility to close the returned reference once not needed anymore.
+        /// <para />It is the caller's responsibility to close the returned
+        /// reference once not needed anymore.
         /// </summary>
         public CloseableReference<V> Get(K key)
         {
@@ -275,7 +280,8 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Adds the entry to the exclusively owned queue if it is viable for eviction.
+        /// Adds the entry to the exclusively owned queue if it is viable
+        /// for eviction.
         /// </summary>
         private bool MaybeAddToExclusives(Entry entry)
         {
@@ -292,9 +298,11 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Gets the value with the given key to be reused, or null if there is no such value.
+        /// Gets the value with the given key to be reused, or null if there
+        /// is no such value.
         ///
-        /// <para /> The item can be reused only if it is exclusively owned by the cache.
+        /// <para />The item can be reused only if it is exclusively owned
+        /// by the cache.
         /// </summary>
         public CloseableReference<V> Reuse(K key)
         {
@@ -310,8 +318,8 @@ namespace ImagePipeline.Cache
                     Entry entry = _cachedEntries.Remove(key);
                     Preconditions.CheckNotNull(entry);
                     Preconditions.CheckState(entry.ClientCount == 0);
-                    // optimization: instead of cloning and then closing the original reference,
-                    // we just do a move
+                    // Optimization: instead of cloning and then closing the
+                    // original reference, we just do a move
                     clientRef = entry.ValueRef;
                     removed = true;
                 }
@@ -326,11 +334,13 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Removes all the items from the cache whose key matches the specified predicate.
-        ///
-        /// <param name="predicate">returns true if an item with the given key should be removed</param>
-        /// @return number of the items removed from the cache
+        /// Removes all the items from the cache whose key matches the
+        /// specified predicate.
         /// </summary>
+        /// <param name="predicate">
+        /// Returns true if an item with the given key should be removed.
+        /// </param>
+        /// <returns>Number of the items removed from the cache.</returns>
         public int RemoveAll(Predicate<K> predicate)
         {
             IList<Entry> oldExclusives;
@@ -369,10 +379,13 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Check if any items from the cache whose key matches the specified predicate.
+        /// Check if any items from the cache whose key matches the
+        /// specified predicate.
         ///
-        /// <param name="predicate">returns true if an item with the given key matches</param>
-        /// @return true is any items matches from the cache
+        /// <param name="predicate">
+        /// Returns true if an item with the given key matches.
+        /// </param>
+        /// <returns>true is any items matches from the cache.</returns>
         /// </summary>
         public bool Contains(Predicate<K> predicate)
         {
@@ -383,9 +396,9 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Trims the cache according to the specified trimming strategy and the given trim type.
+        /// Trims the cache according to the specified trimming strategy and
+        /// the given trim type.
         /// </summary>
-        /// <param name="trimType"></param>
         public void Trim(double trimType)
         {
             IList<Entry> oldEntries;
@@ -405,7 +418,8 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Updates the cache params (constraints) if enough time has passed since the last update.
+        /// Updates the cache params (constraints) if enough time has passed
+        /// since the last update.
         /// </summary>
         private void MaybeUpdateCacheParams()
         {
@@ -424,7 +438,7 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Force updating the cache params (
+        /// Force updating the cache params.
         /// </summary>
         internal void ForceUpdateCacheParams(ISupplier<MemoryCacheParams> cacheParamsSupplier)
         {
@@ -437,10 +451,12 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Removes the exclusively owned items until the cache constraints are met.
+        /// Removes the exclusively owned items until the cache constraints
+        /// are met.
         ///
-        /// <para /> This method invokes the external <see cref="CloseableReference{V}.Dispose"/> method,
-        /// so it must not be called while holding the <code>this</code> lock.
+        /// <para />This method invokes the external
+        /// <see cref="CloseableReference{V}.Dispose"/> method, so it must
+        /// not be called while holding the <code>_cacheGate</code> lock.
         /// </summary>
         private void MaybeEvictEntries()
         {
@@ -464,11 +480,13 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Removes the exclusively owned items until there is at most <code>count</code> of them
-        /// and they occupy no more than <code>size</code> bytes.
+        /// Removes the exclusively owned items until there is at most
+        /// <code>count</code> of them and they occupy no more than
+        /// <code>size</code> bytes.
         ///
-        /// <para /> This method returns the removed items instead of actually closing them, so it 
-        /// is safe to be called while holding the <code>this</code> lock.
+        /// <para />This method returns the removed items instead of
+        /// actually closing them, so it  is safe to be called while
+        /// holding the <code>_cacheGate</code> lock.
         /// </summary>
         private IList<Entry> TrimExclusivelyOwnedEntries(int count, int size)
         {
@@ -498,8 +516,9 @@ namespace ImagePipeline.Cache
         /// <summary>
         /// Notifies the client that the cache no longer tracks the given items.
         ///
-        /// <para /> This method invokes the external <see cref="CloseableReference{V}.Dispose"/> method,
-        /// so it must not be called while holding the <code>this</code> lock.
+        /// <para />This method invokes the external
+        /// <see cref="CloseableReference{V}.Dispose"/> method, so it must not
+        /// be called while holding the <code>_cacheGate</code> lock.
         /// </summary>
         private void MaybeClose(IList<Entry> oldEntries)
         {
@@ -596,7 +615,8 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Returns the value reference of the entry if it should be closed, null otherwise.
+        /// Returns the value reference of the entry if it should be closed,
+        /// null otherwise.
         /// </summary>
         private CloseableReference<V> ReferenceToClose(Entry entry)
         {
@@ -636,7 +656,8 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Gets the number of the cached items that are used by at least one client.
+        /// Gets the number of the cached items that are used by at least
+        /// one client.
         /// </summary>
         public int InUseCount
         {
@@ -650,7 +671,8 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
-        /// Gets the total size in bytes of the cached items that are used by at least one client.
+        /// Gets the total size in bytes of the cached items that are used
+        /// by at least one client.
         /// </summary>
         public int InUseSizeInBytes
         {

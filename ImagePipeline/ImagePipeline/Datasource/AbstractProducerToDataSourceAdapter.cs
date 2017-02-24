@@ -7,7 +7,7 @@ using System;
 namespace ImagePipeline.Datasource
 {
     /// <summary>
-    /// DataSource{T} backed by a IProducer{T}
+    /// DataSource{T} backed by a IProducer{T}.
     /// </summary>
     public abstract class AbstractProducerToDataSourceAdapter<T> : AbstractDataSource<T>
     {
@@ -17,11 +17,8 @@ namespace ImagePipeline.Datasource
         private readonly IRequestListener _requestListener;
 
         /// <summary>
-        /// Instantiates the <see cref="AbstractProducerToDataSourceAdapter{T}"/>
+        /// Instantiates the <see cref="AbstractProducerToDataSourceAdapter{T}"/>.
         /// </summary>
-        /// <param name="producer"></param>
-        /// <param name="settableProducerContext"></param>
-        /// <param name="requestListener"></param>
         protected AbstractProducerToDataSourceAdapter(
             IProducer<T> producer,
             SettableProducerContext settableProducerContext,
@@ -34,6 +31,7 @@ namespace ImagePipeline.Datasource
                 _settableProducerContext.CallerContext,
                 _settableProducerContext.Id,
                 _settableProducerContext.IsPrefetch);
+
             producer.ProduceResults(CreateConsumer(), settableProducerContext);
         }
 
@@ -60,10 +58,8 @@ namespace ImagePipeline.Datasource
         }
 
         /// <summary>
-        /// OnNewResult implementation
+        /// OnNewResult implementation.
         /// </summary>
-        /// <param name="result"></param>
-        /// <param name="isLast"></param>
         protected virtual void OnNewResultImpl(T result, bool isLast)
         {
             if (SetResult(result, isLast))
@@ -79,9 +75,8 @@ namespace ImagePipeline.Datasource
         }
 
         /// <summary>
-        /// OnFailure implementation
+        /// OnFailure implementation.
         /// </summary>
-        /// <param name="throwable"></param>
         private void OnFailureImpl(Exception throwable)
         {
             if (SetFailure(throwable))
@@ -105,7 +100,6 @@ namespace ImagePipeline.Datasource
         /// <summary>
         /// Cancels the ongoing request and releases all associated resources.
         /// </summary>
-
         public override bool Close()
         {
             if (!base.Close())

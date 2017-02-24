@@ -17,7 +17,7 @@ namespace ImagePipeline.Producers
         internal const string PRODUCER_NAME = "LocalAssetFetchProducer";
 
         /// <summary>
-        /// Instantiates the <see cref="LocalAssetFetchProducer"/>
+        /// Instantiates the <see cref="LocalAssetFetchProducer"/>.
         /// </summary>
         public LocalAssetFetchProducer(
             IExecutorService executor,
@@ -28,12 +28,13 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// Gets an encoded image from the local resource. It can be either backed 
-        /// by a FileStream or a PooledByteBuffer
-        /// <param name="imageRequest">Request that includes the local resource that 
-        /// is being accessed</param>
-        /// @throws IOException
+        /// Gets an encoded image from the local resource. It can be either
+        /// backed by a FileStream or a IPooledByteBuffer.
         /// </summary>
+        /// <param name="imageRequest">
+        /// Request that includes the local resource that is being accessed.
+        /// </param>
+        /// <exception cref="IOException">Source uri not valid.</exception>
         protected override async Task<EncodedImage> GetEncodedImage(ImageRequest imageRequest)
         {
             var file = await StorageFile.GetFileFromApplicationUriAsync(imageRequest.SourceUri)
@@ -47,7 +48,7 @@ namespace ImagePipeline.Producers
         }
 
         /// <summary>
-        /// The name of the Producer
+        /// The name of the Producer.
         /// </summary>
         protected override string ProducerName
         {
