@@ -9,7 +9,7 @@
 
 #include "Common.h"
 
-YG_EXTERN_C_BEGIN
+EXTERN_C_BEGIN
 
 WIN_EXPORT int64_t NativeAllocate(int size);
 
@@ -23,4 +23,4 @@ WIN_EXPORT void NativeMemcpy(int64_t dst, int64_t src, int count);
 
 WIN_EXPORT uint8_t NativeReadByte(int64_t lpointer);
 
-YG_EXTERN_C_END
+EXTERN_C_END

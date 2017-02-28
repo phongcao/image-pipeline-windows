@@ -10,11 +10,11 @@
 #pragma once
 
 #ifdef __cplusplus
-#define YG_EXTERN_C_BEGIN extern "C" {
-#define YG_EXTERN_C_END }
+#define EXTERN_C_BEGIN extern "C" {
+#define EXTERN_C_END }
 #else
-#define YG_EXTERN_C_BEGIN
-#define YG_EXTERN_C_END
+#define EXTERN_C_BEGIN
+#define EXTERN_C_END
 #endif
 
 #ifdef _WINDLL
