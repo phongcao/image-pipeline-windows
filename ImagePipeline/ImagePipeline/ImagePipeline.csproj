@@ -167,6 +167,7 @@
     <Compile Include="Listener\ForwardingRequestListener.cs" />
     <Compile Include="Listener\IRequestListener.cs" />
     <Compile Include="Listener\RequestListenerImpl.cs" />
+    <Compile Include="NativeInterop\NativeMethods.cs" />
     <Compile Include="Platform\DispatcherHelpers.cs" />
     <Compile Include="Platform\IPlatformDecoder.cs" />
     <Compile Include="Platform\WinRTDecoder.cs" />
@@ -276,10 +277,6 @@
     <ProjectReference Include="..\ImagePipelineBase\ImagePipelineBase.csproj">
       <Project>{563BC30E-4300-4E2B-9D6D-720F3AF8834F}</Project>
       <Name>ImagePipelineBase</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ImagePipelineNative\ImagePipelineNative.vcxproj">
-      <Project>{1209a04d-3d8e-497a-abfb-631518b27b94}</Project>
-      <Name>ImagePipelineNative</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

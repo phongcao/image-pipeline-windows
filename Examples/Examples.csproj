@@ -171,11 +171,11 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <Import Project="$(SolutionDir)..\ImagePipeline\ImagePipelineNative\ImagePipelineNative.targets" Condition="Exists('$(SolutionDir)..\ImagePipeline\ImagePipelineNative\ImagePipelineNative.targets')" Label="ImportNativeInteropTargets" />
+  <Target Name="EnsureNativeInteropImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references a native interop target that is missing. The missing build target is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)..\ImagePipeline\ImagePipelineNative\ImagePipelineNative.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)..\ImagePipeline\ImagePipelineNative\ImagePipelineNative.targets'))" />
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
