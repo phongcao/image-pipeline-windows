@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples.csproj", "{8911E9AC-521A-4B2C-B638-A8F15AA35C2E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C} = {452B28D0-30BE-4F40-A646-B9EB607F5B7C}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagePipeline", "..\ImagePipeline\ImagePipeline\ImagePipeline.csproj", "{A6D3ECAA-105A-48FC-BE2A-D78220E32145}"
 EndProject
@@ -11,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBCore", "..\ImagePipeline\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagePipelineBase", "..\ImagePipeline\ImagePipelineBase\ImagePipelineBase.csproj", "{563BC30E-4300-4E2B-9D6D-720F3AF8834F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImagePipelineNative", "..\ImagePipeline\ImagePipelineNative\ImagePipelineNative.vcxproj", "{1209A04D-3D8E-497A-ABFB-631518B27B94}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImagePipelineNative", "..\ImagePipeline\ImagePipelineNative\ImagePipelineNative.vcxproj", "{452B28D0-30BE-4F40-A646-B9EB607F5B7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,20 +96,20 @@ Global
 		{563BC30E-4300-4E2B-9D6D-720F3AF8834F}.Release|x64.Build.0 = Release|x64
 		{563BC30E-4300-4E2B-9D6D-720F3AF8834F}.Release|x86.ActiveCfg = Release|x86
 		{563BC30E-4300-4E2B-9D6D-720F3AF8834F}.Release|x86.Build.0 = Release|x86
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Debug|ARM.ActiveCfg = Debug|ARM
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Debug|ARM.Build.0 = Debug|ARM
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Debug|x64.ActiveCfg = Debug|x64
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Debug|x64.Build.0 = Debug|x64
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Debug|x86.ActiveCfg = Debug|Win32
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Debug|x86.Build.0 = Debug|Win32
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Release|Any CPU.ActiveCfg = Release|Win32
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Release|ARM.ActiveCfg = Release|ARM
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Release|ARM.Build.0 = Release|ARM
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Release|x64.ActiveCfg = Release|x64
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Release|x64.Build.0 = Release|x64
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Release|x86.ActiveCfg = Release|Win32
-		{1209A04D-3D8E-497A-ABFB-631518B27B94}.Release|x86.Build.0 = Release|Win32
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Debug|ARM.ActiveCfg = Debug|ARM
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Debug|ARM.Build.0 = Debug|ARM
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Debug|x64.ActiveCfg = Debug|x64
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Debug|x64.Build.0 = Debug|x64
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Debug|x86.ActiveCfg = Debug|Win32
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Debug|x86.Build.0 = Debug|Win32
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Release|Any CPU.ActiveCfg = Release|Win32
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Release|ARM.ActiveCfg = Release|ARM
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Release|ARM.Build.0 = Release|ARM
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Release|x64.ActiveCfg = Release|x64
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Release|x64.Build.0 = Release|x64
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Release|x86.ActiveCfg = Release|Win32
+		{452B28D0-30BE-4F40-A646-B9EB607F5B7C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

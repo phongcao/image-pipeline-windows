@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>fresco.imagepipeline</id>
+    <version>0.0.2</version>
+    <title>Image Pipeline</title>
+    <authors>Phong Cao</authors>
+    <owners>Phong Cao</owners>
+    <licenseUrl>https://raw.githubusercontent.com/phongcao/image-pipeline-windows/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/phongcao/image-pipeline-windows</projectUrl>
+    <iconUrl>http://frescolib.org/static/logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Image Pipeline loads images from the network, local storage, or local resources. To save data and CPU, it has three levels of cache; two in memory and another in internal storage.</description>
+    <releaseNotes>First release.</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Fresco ImagePipeline</tags>
+  </metadata>
+  <files>
+	<file src=".\ImagePipeline_stub.dll" target="lib\uap10.0"/>
+	<file src=".\ImagePipelineBase_stub.dll" target="lib\uap10.0"/>
+	<file src=".\FBCore_stub.dll" target="lib\uap10.0"/>
+	<file src="..\x64\Release\ImagePipelineNative\ImagePipelineNative.winmd" target="runtimes\win10-x64\lib\uap10.0"/>
+	<file src="..\x64\Release\ImagePipelineNative\ImagePipelineNative.pri" target="runtimes\win10-x64\native"/>
+	<file src="..\x64\Release\ImagePipelineNative\ImagePipelineNative.dll" target="runtimes\win10-x64\native"/>
+	<file src="bin\x64\Release\FBCore.dll" target="runtimes\win10-x64\lib\uap10.0"/>
+	<file src="bin\x64\Release\FBCore.pri" target="runtimes\win10-x64\lib\uap10.0"/>
+	<file src="bin\x64\Release\ImagePipelineBase.dll" target="runtimes\win10-x64\lib\uap10.0"/>
+	<file src="bin\x64\Release\ImagePipelineBase.pri" target="runtimes\win10-x64\lib\uap10.0"/>
+	<file src="bin\x64\Release\ImagePipeline.dll" target="runtimes\win10-x64\lib\uap10.0"/>
+	<file src="bin\x64\Release\ImagePipeline.pri" target="runtimes\win10-x64\lib\uap10.0"/>
+    <file src="..\Release\ImagePipelineNative\ImagePipelineNative.winmd" target="runtimes\win10-x86\lib\uap10.0"/>
+	<file src="..\Release\ImagePipelineNative\ImagePipelineNative.pri" target="runtimes\win10-x86\native"/>
+	<file src="..\Release\ImagePipelineNative\ImagePipelineNative.dll" target="runtimes\win10-x86\native"/>
+	<file src="bin\x86\Release\FBCore.dll" target="runtimes\win10-x86\lib\uap10.0"/>
+	<file src="bin\x86\Release\FBCore.pri" target="runtimes\win10-x86\lib\uap10.0"/>
+	<file src="bin\x86\Release\ImagePipelineBase.dll" target="runtimes\win10-x86\lib\uap10.0"/>
+	<file src="bin\x86\Release\ImagePipelineBase.pri" target="runtimes\win10-x86\lib\uap10.0"/>
+	<file src="bin\x86\Release\ImagePipeline.dll" target="runtimes\win10-x86\lib\uap10.0"/>
+	<file src="bin\x86\Release\ImagePipeline.pri" target="runtimes\win10-x86\lib\uap10.0"/>
+    <file src="..\ARM\Release\ImagePipelineNative\ImagePipelineNative.winmd" target="runtimes\win10-arm\lib\uap10.0"/>
+	<file src="..\ARM\Release\ImagePipelineNative\ImagePipelineNative.pri" target="runtimes\win10-arm\native"/>
+	<file src="..\ARM\Release\ImagePipelineNative\ImagePipelineNative.dll" target="runtimes\win10-arm\native"/>
+	<file src="bin\ARM\Release\FBCore.dll" target="runtimes\win10-arm\lib\uap10.0"/>
+	<file src="bin\ARM\Release\FBCore.pri" target="runtimes\win10-arm\lib\uap10.0"/>
+	<file src="bin\ARM\Release\ImagePipelineBase.dll" target="runtimes\win10-arm\lib\uap10.0"/>
+	<file src="bin\ARM\Release\ImagePipelineBase.pri" target="runtimes\win10-arm\lib\uap10.0"/>
+	<file src="bin\ARM\Release\ImagePipeline.dll" target="runtimes\win10-arm\lib\uap10.0"/>
+	<file src="bin\ARM\Release\ImagePipeline.pri" target="runtimes\win10-arm\lib\uap10.0"/>
+  </files>
+</package>
