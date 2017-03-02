@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 
-namespace ImagePipeline.NativeInterop
+namespace ImagePipeline.NativeCode
 {
     internal static class NativeMethods
     {
@@ -23,5 +24,13 @@ namespace ImagePipeline.NativeInterop
 
         [DllImport(DllName, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
         public static extern byte NativeReadByte(long lpointer);
+
+        [DllImport(DllName, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void NativeTranscodeJpeg(
+            IStream inputStream,
+            IStream outputStream,
+            int rotationAngle,
+            int scaleNominator,
+            int quality);
     }
 }

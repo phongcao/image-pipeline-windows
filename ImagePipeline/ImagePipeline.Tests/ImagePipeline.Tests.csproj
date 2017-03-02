@@ -150,6 +150,17 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\jpegs\1.jpeg" />
+    <Content Include="Assets\jpegs\2.jpeg" />
+    <Content Include="Assets\jpegs\3.jpeg" />
+    <Content Include="Assets\jpegs\4.jpeg" />
+    <Content Include="Assets\jpegs\5.jpeg" />
+    <Content Include="Assets\jpegs\beach.jpg" />
+    <Content Include="Assets\pngs\1.png" />
+    <Content Include="Assets\pngs\2.png" />
+    <Content Include="Assets\pngs\3.png" />
+    <Content Include="Assets\pngs\4.png" />
+    <Content Include="Assets\pngs\5.png" />
     <Content Include="Properties\UnitTestApp.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

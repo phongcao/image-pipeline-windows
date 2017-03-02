@@ -4,11 +4,20 @@
     <Filter Include="MemChunk">
       <UniqueIdentifier>{0219bf46-0356-4762-bac4-93717810b25c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImagePipeline">
+      <UniqueIdentifier>{8b81ca5c-fd45-4ff0-887c-cca2fb540822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImagePipeline\jpeg">
+      <UniqueIdentifier>{7058cf90-82af-4c51-9431-26eb3acc7683}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="MemChunk\NativeMemoryChunk.c">
       <Filter>MemChunk</Filter>
+    </ClCompile>
+    <ClCompile Include="ImagePipeline\JpegTranscoder.c">
+      <Filter>ImagePipeline</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -18,5 +27,8 @@
     </ClInclude>
     <ClInclude Include="Common.h" />
     <ClInclude Include="Macros.h" />
+    <ClInclude Include="ImagePipeline\JpegTranscoder.h">
+      <Filter>ImagePipeline</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

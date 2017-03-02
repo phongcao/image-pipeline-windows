@@ -200,6 +200,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ImagePipeline\JpegTranscoder.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="MemChunk\NativeMemoryChunk.h" />
     <ClInclude Include="Common.h" />
@@ -207,6 +208,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="ImagePipeline\JpegTranscoder.c" />
     <ClCompile Include="MemChunk\NativeMemoryChunk.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

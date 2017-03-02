@@ -154,6 +154,7 @@
     <Compile Include="Common\Util\Hex.cs" />
     <Compile Include="Common\Util\SecureHashUtil.cs" />
     <Compile Include="Common\Util\StreamUtil.cs" />
+    <Compile Include="Common\Util\TriState.cs" />
     <Compile Include="Common\Util\UriUtil.cs" />
     <Compile Include="Common\Webp\WebpSupportStatus.cs" />
     <Compile Include="Concurrency\CallerThreadExecutor.cs" />

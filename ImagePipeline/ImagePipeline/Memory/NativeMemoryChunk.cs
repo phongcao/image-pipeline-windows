@@ -1,5 +1,5 @@
 ﻿using FBCore.Common.Internal;
-using ImagePipeline.NativeInterop;
+using ImagePipeline.NativeCode;
 using System;
 using System.Diagnostics;
 

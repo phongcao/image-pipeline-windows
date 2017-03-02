@@ -38,6 +38,7 @@ namespace ImagePipeline.Producers
         {
             OnFirstImageConsumer onFirstImageConsumer = new OnFirstImageConsumer(
                 _inputProducer2, consumer, context);
+
             _inputProducer1.ProduceResults(onFirstImageConsumer, context);
         }
 

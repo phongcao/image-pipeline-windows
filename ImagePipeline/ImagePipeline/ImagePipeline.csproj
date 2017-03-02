@@ -167,7 +167,10 @@
     <Compile Include="Listener\ForwardingRequestListener.cs" />
     <Compile Include="Listener\IRequestListener.cs" />
     <Compile Include="Listener\RequestListenerImpl.cs" />
-    <Compile Include="NativeInterop\NativeMethods.cs" />
+    <Compile Include="NativeCode\JpegTranscoder.cs" />
+    <Compile Include="NativeCode\ManagedIStream.cs" />
+    <Compile Include="NativeCode\NativeMethods.cs" />
+    <Compile Include="NativeCode\StreamExtensions.cs" />
     <Compile Include="Platform\DispatcherHelpers.cs" />
     <Compile Include="Platform\IPlatformDecoder.cs" />
     <Compile Include="Platform\WinRTDecoder.cs" />
