@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2015-present, Facebook, Inc.
  * All rights reserved.
  *
@@ -7,15 +7,18 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#include "common.h"
+#include <stdexcept>
+#include "exceptions.h"
 
-EXTERN_C_BEGIN
+using namespace std;
 
-WIN_EXPORT void nativeTranscodeJpeg(
-	LPSTREAM inputStream,
-	LPSTREAM outputStream,
-	int rotationAngle,
-	int scaleNominator,
-	int quality);
-
-EXTERN_C_END
+namespace facebook 
+{
+	namespace imagepipeline 
+	{
+		void safeThrowException(const char* msg)
+		{
+			throw exception(msg);
+		}
+	} 
+}

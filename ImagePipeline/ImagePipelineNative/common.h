@@ -18,5 +18,6 @@
 #include <windows.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <ocidl.h>
 
-#include "Macros.h"
+#include "macros.h"

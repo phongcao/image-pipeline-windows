@@ -9,7 +9,7 @@
 
 #include "NativeMemoryChunk.h"
 
-int64_t NativeAllocate(int size)
+int64_t nativeAllocate(int size)
 {
 	void* pointer = malloc(size);
 	if (!pointer)
@@ -20,27 +20,27 @@ int64_t NativeAllocate(int size)
 	return PTR_TO_LONG(pointer);
 }
 
-void NativeFree(int64_t lpointer)
+void nativeFree(int64_t lpointer)
 {
 	free(LONG_TO_PTR(lpointer));
 }
 
-void NativeCopyToByteArray(int64_t lpointer, uint8_t* byteArray, int offset, int count)
+void nativeCopyToByteArray(int64_t lpointer, uint8_t* byteArray, int offset, int count)
 {
 	memcpy(byteArray, LONG_TO_PTR(lpointer + offset), count);
 }
 
-void NativeCopyFromByteArray(int64_t lpointer, uint8_t* byteArray, int offset, int count)
+void nativeCopyFromByteArray(int64_t lpointer, uint8_t* byteArray, int offset, int count)
 {
 	memcpy(LONG_TO_PTR(lpointer + offset), byteArray, count);
 }
 
-void NativeMemcpy(int64_t dst, int64_t src, int count)
+void nativeMemcpy(int64_t dst, int64_t src, int count)
 {
 	memcpy(LONG_TO_PTR(dst), LONG_TO_PTR(src), count);
 }
 
-uint8_t NativeReadByte(int64_t lpointer)
+uint8_t nativeReadByte(int64_t lpointer)
 {
 	return *((uint8_t*)LONG_TO_PTR(lpointer));
 }

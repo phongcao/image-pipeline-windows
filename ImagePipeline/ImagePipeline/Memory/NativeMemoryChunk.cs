@@ -46,7 +46,7 @@ namespace ImagePipeline.Memory
         {
             Preconditions.CheckArgument(size > 0);
             _size = size;
-            _nativePtr = NativeMethods.NativeAllocate(size);
+            _nativePtr = NativeMethods.nativeAllocate(size);
             _closed = false;
         }
 
@@ -86,7 +86,7 @@ namespace ImagePipeline.Memory
                     }
 
                     _closed = true;
-                    NativeMethods.NativeFree(_nativePtr);
+                    NativeMethods.nativeFree(_nativePtr);
                 }
             }
         }
@@ -136,7 +136,7 @@ namespace ImagePipeline.Memory
                 Preconditions.CheckState(!Closed);
                 int actualCount = AdjustByteCount(nativeMemoryOffset, count);
                 CheckBounds(nativeMemoryOffset, byteArray.Length, byteArrayOffset, actualCount);
-                NativeMethods.NativeCopyFromByteArray(
+                NativeMethods.nativeCopyFromByteArray(
                     _nativePtr + nativeMemoryOffset,
                     byteArray,
                     byteArrayOffset,
@@ -174,7 +174,7 @@ namespace ImagePipeline.Memory
                 Preconditions.CheckState(!Closed);
                 int actualCount = AdjustByteCount(nativeMemoryOffset, count);
                 CheckBounds(nativeMemoryOffset, byteArray.Length, byteArrayOffset, actualCount);
-                NativeMethods.NativeCopyToByteArray(
+                NativeMethods.nativeCopyToByteArray(
                     _nativePtr + nativeMemoryOffset, byteArray, byteArrayOffset, actualCount);
 
                 return actualCount;
@@ -193,7 +193,7 @@ namespace ImagePipeline.Memory
                 Preconditions.CheckState(!Closed);
                 Preconditions.CheckArgument(offset >= 0);
                 Preconditions.CheckArgument(offset < Size);
-                return NativeMethods.NativeReadByte(_nativePtr + offset);
+                return NativeMethods.nativeReadByte(_nativePtr + offset);
             }
         }
 
@@ -276,7 +276,7 @@ namespace ImagePipeline.Memory
             Preconditions.CheckState(!Closed);
             Preconditions.CheckState(!other.Closed);
             CheckBounds(offset, other.Size, otherOffset, count);
-            NativeMethods.NativeMemcpy(
+            NativeMethods.nativeMemcpy(
                 other._nativePtr + otherOffset, _nativePtr + offset, count);
         }
 

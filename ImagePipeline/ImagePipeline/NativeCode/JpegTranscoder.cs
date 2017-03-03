@@ -72,7 +72,7 @@ namespace ImagePipeline.NativeCode
                 scaleNumerator != SCALE_DENOMINATOR || rotationAngle != 0,
                 "no transformation requested");
 
-            NativeMethods.NativeTranscodeJpeg(
+            NativeMethods.nativeTranscodeJpeg(
                 Preconditions.CheckNotNull(inputStream),
                 Preconditions.CheckNotNull(outputStream),
                 rotationAngle,

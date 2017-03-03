@@ -16,8 +16,29 @@
     <ClCompile Include="MemChunk\NativeMemoryChunk.c">
       <Filter>MemChunk</Filter>
     </ClCompile>
-    <ClCompile Include="ImagePipeline\JpegTranscoder.c">
+    <ClCompile Include="ImagePipeline\decoded_image.cpp">
       <Filter>ImagePipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="ImagePipeline\exceptions.cpp">
+      <Filter>ImagePipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="ImagePipeline\JpegTranscoder.cpp">
+      <Filter>ImagePipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="ImagePipeline\transformations.cpp">
+      <Filter>ImagePipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="ImagePipeline\jpeg\jpeg_codec.cpp">
+      <Filter>ImagePipeline\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="ImagePipeline\jpeg\jpeg_error_handler.cpp">
+      <Filter>ImagePipeline\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="ImagePipeline\jpeg\jpeg_memory_io.cpp">
+      <Filter>ImagePipeline\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="ImagePipeline\jpeg\jpeg_stream_wrappers.cpp">
+      <Filter>ImagePipeline\jpeg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -25,10 +46,10 @@
     <ClInclude Include="MemChunk\NativeMemoryChunk.h">
       <Filter>MemChunk</Filter>
     </ClInclude>
-    <ClInclude Include="Common.h" />
-    <ClInclude Include="Macros.h" />
-    <ClInclude Include="ImagePipeline\JpegTranscoder.h">
-      <Filter>ImagePipeline</Filter>
-    </ClInclude>
+    <ClInclude Include="common.h" />
+    <ClInclude Include="macros.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

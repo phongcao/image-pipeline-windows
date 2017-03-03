@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2015-present, Facebook, Inc.
  * All rights reserved.
  *
@@ -7,15 +7,25 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#include "common.h"
+#include "decoded_image.h"
 
-EXTERN_C_BEGIN
+namespace facebook 
+{
+	namespace imagepipeline 
+	{
+		int bytesPerPixel(PixelFormat pixel_format) 
+		{
+			switch (pixel_format) 
+			{
+				case PixelFormat::RGB:
+				return 3;
 
-WIN_EXPORT void nativeTranscodeJpeg(
-	LPSTREAM inputStream,
-	LPSTREAM outputStream,
-	int rotationAngle,
-	int scaleNominator,
-	int quality);
+				case PixelFormat::RGBA:
+				return 4;
 
-EXTERN_C_END
+				default:
+				return 0;
+			}
+		}
+	} 
+}

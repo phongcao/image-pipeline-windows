@@ -8,25 +8,25 @@ namespace ImagePipeline.NativeCode
         private const string DllName = "ImagePipelineNative";
 
         [DllImport(DllName, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NativeFree(long lpointer);
+        public static extern void nativeFree(long lpointer);
 
         [DllImport(DllName, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-        public static extern long NativeAllocate(int size);
+        public static extern long nativeAllocate(int size);
 
         [DllImport(DllName, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NativeCopyToByteArray(long lpointer, byte[] byteArray, int offset, int count);
+        public static extern void nativeCopyToByteArray(long lpointer, byte[] byteArray, int offset, int count);
 
         [DllImport(DllName, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NativeCopyFromByteArray(long lpointer, byte[] byteArray, int offset, int count);
+        public static extern void nativeCopyFromByteArray(long lpointer, byte[] byteArray, int offset, int count);
 
         [DllImport(DllName, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NativeMemcpy(long dst, long src, int count);
+        public static extern void nativeMemcpy(long dst, long src, int count);
 
         [DllImport(DllName, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-        public static extern byte NativeReadByte(long lpointer);
+        public static extern byte nativeReadByte(long lpointer);
 
         [DllImport(DllName, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void NativeTranscodeJpeg(
+        public static extern void nativeTranscodeJpeg(
             IStream inputStream,
             IStream outputStream,
             int rotationAngle,
