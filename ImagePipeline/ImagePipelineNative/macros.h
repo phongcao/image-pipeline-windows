@@ -26,3 +26,5 @@
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
 #define LONG_TO_PTR(j) ((void*) (intptr_t) (j))
 #define PTR_TO_LONG(p) ((int64_t) (intptr_t) (p))
+
+#define STREAM_BUFFER_SIZE 8 * 1024

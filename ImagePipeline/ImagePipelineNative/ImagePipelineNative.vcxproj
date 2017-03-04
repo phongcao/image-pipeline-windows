@@ -156,7 +156,7 @@
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -182,7 +182,7 @@
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -208,7 +208,7 @@
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

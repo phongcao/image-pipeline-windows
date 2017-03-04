@@ -15,6 +15,7 @@
 
 #include "jpeg_error_handler.h"
 #include "jpeg_memory_io.h"
+#include "common.h"
 
 namespace facebook 
 {
@@ -22,11 +23,6 @@ namespace facebook
 	{
 		namespace jpeg 
 		{
-			/**
-			 * Default size of read/write buffers
-			 */
-			static const unsigned int kBufferSize = 8 * 1024;
-
 			/**
 			 * Initialize source.
 			 *
@@ -133,7 +129,7 @@ namespace facebook
 				dest->write_memory = (JOCTET *) (*cinfo->mem->alloc_small)(
 					(j_common_ptr) cinfo,
 					JPOOL_IMAGE,
-					kBufferSize * sizeof(JOCTET));
+					STREAM_BUFFER_SIZE * sizeof(JOCTET));
 
 				if (dest->write_memory == nullptr) 
 				{
@@ -143,7 +139,7 @@ namespace facebook
 				}
 
 				dest->public_fields.next_output_byte = dest->write_memory;
-				dest->public_fields.free_in_buffer = kBufferSize;
+				dest->public_fields.free_in_buffer = STREAM_BUFFER_SIZE;
 			}
 
 			/**
@@ -162,10 +158,10 @@ namespace facebook
 				dest->buffer.insert(
 					dest->buffer.end(),
 					dest->write_memory,
-					dest->write_memory + kBufferSize);
+					dest->write_memory + STREAM_BUFFER_SIZE);
 
 				dest->public_fields.next_output_byte = dest->write_memory;
-				dest->public_fields.free_in_buffer = kBufferSize;
+				dest->public_fields.free_in_buffer = STREAM_BUFFER_SIZE;
 				return true;
 			}
 
@@ -182,7 +178,7 @@ namespace facebook
 			static void memDestinationTerm(j_compress_ptr cinfo) 
 			{
 				JpegMemoryDestination* dest = reinterpret_cast<JpegMemoryDestination*>(cinfo->dest);
-				const long bytes_written = kBufferSize - (long)dest->public_fields.free_in_buffer;
+				const long bytes_written = STREAM_BUFFER_SIZE - (long)dest->public_fields.free_in_buffer;
 				dest->buffer.insert(
 					dest->buffer.end(),
 					dest->write_memory,

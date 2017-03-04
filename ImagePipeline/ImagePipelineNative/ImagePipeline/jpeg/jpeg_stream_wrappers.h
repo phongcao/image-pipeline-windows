@@ -16,8 +16,6 @@
 
 #include "common.h"
 
-#define STREAM_BUFFER_SIZE 8 * 1024
-
 namespace facebook
 {
 	namespace imagepipeline
