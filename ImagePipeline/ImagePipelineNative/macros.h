@@ -27,4 +27,4 @@
 #define LONG_TO_PTR(j) ((void*) (intptr_t) (j))
 #define PTR_TO_LONG(p) ((int64_t) (intptr_t) (p))
 
-#define STREAM_BUFFER_SIZE 8 * 1024
+#define STREAM_BUFFER_SIZE 4 * 1024

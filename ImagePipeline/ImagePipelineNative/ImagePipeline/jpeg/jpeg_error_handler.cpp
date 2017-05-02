@@ -45,7 +45,7 @@ namespace facebook
 			 *  - free jpeg-turbo data structures
 			 *  - jump back to place determined by setjmpBuffer
 			 */
-			static void jpegCleanup(JpegErrorHandler* error_handler) 
+			void jpegCleanup(JpegErrorHandler* error_handler) 
 			{
 				if (error_handler->dinfoPtr) 
 				{
@@ -76,12 +76,6 @@ namespace facebook
 			{
 				JpegErrorHandler* error_handler = (JpegErrorHandler*)cinfo->err;
 				throw exception(msg);
-				jpegCleanup(error_handler);
-			}
-
-			void jpegJumpOnException(j_common_ptr cinfo) 
-			{
-				JpegErrorHandler* error_handler = (JpegErrorHandler*)cinfo->err;
 				jpegCleanup(error_handler);
 			}
 		} 

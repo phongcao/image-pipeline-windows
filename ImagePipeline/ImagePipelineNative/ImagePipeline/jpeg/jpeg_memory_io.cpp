@@ -46,7 +46,7 @@ namespace facebook
 			 * <p> This function is a callback passed to libjpeg and should not be used
 			 * directly.
 			 *
-			 * <p> libjpeg will call this when it consumes all bytes  provided in
+			 * <p> libjpeg will call this when it consumes all bytes provided in
 			 * memSourceInit and requires more data to proceed with image decoding.
 			 * This will happen only if the buffer provided at the beginning of decode
 			 * operation does not contain full jpeg image. In such case this method

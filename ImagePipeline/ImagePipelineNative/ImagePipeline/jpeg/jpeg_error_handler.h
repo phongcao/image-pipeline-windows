@@ -93,11 +93,11 @@ namespace facebook
 				const char* msg);
 
 			/**
-			 * Checks for pending java exception and if one occured
-			 * frees jpeg-turbo resources and jumps to the place pointed by
-			 * setjmp buffer of associated JpegErrorHandler structure
+			 * Doing the actual cleanup:
+			 *  - free jpeg-turbo data structures
+			 *  - jump back to place determined by setjmpBuffer
 			 */
-			void jpegJumpOnException(j_common_ptr cinfo);
+			void jpegCleanup(JpegErrorHandler* error_handler);
 		} 
 	} 
 }

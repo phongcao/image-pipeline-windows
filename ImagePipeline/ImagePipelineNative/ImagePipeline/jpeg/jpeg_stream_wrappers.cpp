@@ -26,19 +26,25 @@ namespace facebook
 			 */
 			static void isInitSource(j_decompress_ptr dinfo)
 			{
-				JpegInputStreamWrapper* src = (JpegInputStreamWrapper*)dinfo->src;
-				src->start = true;
-				jpegJumpOnException((j_common_ptr)dinfo);
-				src->buffer = (JOCTET*)(*dinfo->mem->alloc_small)(
-					(j_common_ptr)dinfo,
-					JPOOL_PERMANENT,
-					STREAM_BUFFER_SIZE * sizeof(JOCTET));
-
-				if (src->buffer == nullptr)
+				try
 				{
-					jpegSafeThrow(
+					JpegInputStreamWrapper* src = (JpegInputStreamWrapper*)dinfo->src;
+					src->start = true;
+					src->buffer = (JOCTET*)(*dinfo->mem->alloc_small)(
 						(j_common_ptr)dinfo,
-						"Failed to allocate memory for read buffer");
+						JPOOL_PERMANENT,
+						STREAM_BUFFER_SIZE * sizeof(JOCTET));
+
+					if (src->buffer == nullptr)
+					{
+						jpegSafeThrow(
+							(j_common_ptr)dinfo,
+							"Failed to allocate memory for read buffer");
+					}
+				}
+				catch (int)
+				{
+					jpegCleanup((JpegErrorHandler*)dinfo->err);
 				}
 			}
 
@@ -47,32 +53,37 @@ namespace facebook
 			 */
 			static boolean isFillInputBuffer(j_decompress_ptr dinfo)
 			{
-				JpegInputStreamWrapper* src = (JpegInputStreamWrapper*)dinfo->src;
-				ULONG nbytes = 0;
-				src->inputStream->Read(src->readBuffer, STREAM_BUFFER_SIZE, &nbytes);
-				jpegJumpOnException((j_common_ptr)dinfo);
-
-				if (nbytes <= 0)
+				try
 				{
-					if (src->start)
+					JpegInputStreamWrapper* src = (JpegInputStreamWrapper*)dinfo->src;
+					ULONG nbytes = 0;
+					src->inputStream->Read(src->readBuffer, STREAM_BUFFER_SIZE, &nbytes);
+
+					if (nbytes <= 0)
 					{
-						ERREXIT(dinfo, JERR_INPUT_EMPTY);
+						if (src->start)
+						{
+							ERREXIT(dinfo, JERR_INPUT_EMPTY);
+						}
+
+						src->buffer[0] = (JOCTET)0xFF;
+						src->buffer[1] = (JOCTET)JPEG_EOI;
+						nbytes = 2;
+					}
+					else
+					{
+						memcpy(src->buffer, src->readBuffer, STREAM_BUFFER_SIZE);
 					}
 
-					src->buffer[0] = (JOCTET)0xFF;
-					src->buffer[1] = (JOCTET)JPEG_EOI;
-					nbytes = 2;
-				} 
-				else 
-				{
-					memcpy(src->buffer, src->readBuffer, STREAM_BUFFER_SIZE);
-					jpegJumpOnException((j_common_ptr)dinfo);
+					src->public_fields.next_input_byte = src->buffer;
+					src->public_fields.bytes_in_buffer = nbytes;
+					src->start = false;
+					return true;
 				}
-
-				src->public_fields.next_input_byte = src->buffer;
-				src->public_fields.bytes_in_buffer = nbytes;
-				src->start = false;
-				return true;
+				catch (int)
+				{
+					jpegCleanup((JpegErrorHandler*)dinfo->err);
+				}
 			}
 
 			/*
@@ -81,28 +92,34 @@ namespace facebook
 			 */
 			static void isSkipInputData(j_decompress_ptr dinfo, long num_bytes)
 			{
-				JpegInputStreamWrapper* src = (JpegInputStreamWrapper*)dinfo->src;
-				if (num_bytes > 0) 
+				try
 				{
-					if (src->public_fields.bytes_in_buffer > (unsigned long)num_bytes) 
+					JpegInputStreamWrapper* src = (JpegInputStreamWrapper*)dinfo->src;
+					if (num_bytes > 0)
 					{
-						src->public_fields.next_input_byte += (size_t)num_bytes;
-						src->public_fields.bytes_in_buffer -= (size_t)num_bytes;
-					} 
-					else 
-					{
-						long to_skip = num_bytes - (long)src->public_fields.bytes_in_buffer;
-						LARGE_INTEGER li_to_skip;
-						li_to_skip.QuadPart = to_skip;
-						ULARGE_INTEGER new_postion;
+						if (src->public_fields.bytes_in_buffer > (unsigned long)num_bytes)
+						{
+							src->public_fields.next_input_byte += (size_t)num_bytes;
+							src->public_fields.bytes_in_buffer -= (size_t)num_bytes;
+						}
+						else
+						{
+							long to_skip = num_bytes - (long)src->public_fields.bytes_in_buffer;
+							LARGE_INTEGER li_to_skip;
+							li_to_skip.QuadPart = to_skip;
+							ULARGE_INTEGER new_postion;
 
-						// We could at least try to skip appropriate amout of bytes...
-						// TODO: 3752653
-						src->inputStream->Seek(li_to_skip, STREAM_SEEK_CUR, &new_postion);
-						jpegJumpOnException((j_common_ptr)dinfo);
-						src->public_fields.next_input_byte = nullptr;
-						src->public_fields.bytes_in_buffer = 0;
+							// We could at least try to skip appropriate amout of bytes...
+							// TODO: 3752653
+							src->inputStream->Seek(li_to_skip, STREAM_SEEK_CUR, &new_postion);
+							src->public_fields.next_input_byte = nullptr;
+							src->public_fields.bytes_in_buffer = 0;
+						}
 					}
+				}
+				catch (int)
+				{
+					jpegCleanup((JpegErrorHandler*)dinfo->err);
 				}
 			}
 
@@ -132,24 +149,30 @@ namespace facebook
 			 */
 			static void osInitDestination(j_compress_ptr cinfo) 
 			{
-				JpegOutputStreamWrapper* dest = (JpegOutputStreamWrapper*)cinfo->dest;
-				jpegJumpOnException((j_common_ptr)cinfo);
-
-				// Allocate the output buffer --- it will be released when done with image
-				dest->buffer = (JOCTET *)(*cinfo->mem->alloc_small)(
-					(j_common_ptr)cinfo,
-					JPOOL_IMAGE,
-					STREAM_BUFFER_SIZE * sizeof(JOCTET));
-
-				if (dest->buffer == NULL) 
+				try
 				{
-					jpegSafeThrow(
-						(j_common_ptr)cinfo,
-						"Failed to allcoate memory for byte buffer.");
-				}
+					JpegOutputStreamWrapper* dest = (JpegOutputStreamWrapper*)cinfo->dest;
 
-				dest->public_fields.next_output_byte = dest->buffer;
-				dest->public_fields.free_in_buffer = STREAM_BUFFER_SIZE;
+					// Allocate the output buffer --- it will be released when done with image
+					dest->buffer = (JOCTET *)(*cinfo->mem->alloc_small)(
+						(j_common_ptr)cinfo,
+						JPOOL_IMAGE,
+						STREAM_BUFFER_SIZE * sizeof(JOCTET));
+
+					if (dest->buffer == NULL)
+					{
+						jpegSafeThrow(
+							(j_common_ptr)cinfo,
+							"Failed to allcoate memory for byte buffer.");
+					}
+
+					dest->public_fields.next_output_byte = dest->buffer;
+					dest->public_fields.free_in_buffer = STREAM_BUFFER_SIZE;
+				}
+				catch (int)
+				{
+					jpegCleanup((JpegErrorHandler*)cinfo->err);
+				}
 			}
 
 			/**
@@ -157,15 +180,20 @@ namespace facebook
 			 */
 			static boolean osEmptyOutputBuffer(j_compress_ptr cinfo) 
 			{
-				JpegOutputStreamWrapper* dest = (JpegOutputStreamWrapper*)cinfo->dest;
-				memcpy(dest->writeBuffer, dest->buffer, STREAM_BUFFER_SIZE);
-				jpegJumpOnException((j_common_ptr)cinfo);
-				ULONG nbytes = 0;
-				dest->outputStream->Write(dest->writeBuffer, STREAM_BUFFER_SIZE, &nbytes);
-				jpegJumpOnException((j_common_ptr)cinfo);
-				dest->public_fields.next_output_byte = dest->buffer;
-				dest->public_fields.free_in_buffer = STREAM_BUFFER_SIZE;
-				return true;
+				try
+				{
+					JpegOutputStreamWrapper* dest = (JpegOutputStreamWrapper*)cinfo->dest;
+					memcpy(dest->writeBuffer, dest->buffer, STREAM_BUFFER_SIZE);
+					ULONG nbytes = 0;
+					dest->outputStream->Write(dest->writeBuffer, STREAM_BUFFER_SIZE, &nbytes);
+					dest->public_fields.next_output_byte = dest->buffer;
+					dest->public_fields.free_in_buffer = STREAM_BUFFER_SIZE;
+					return true;
+				}
+				catch (int)
+				{
+					jpegCleanup((JpegErrorHandler*)cinfo->err);
+				}
 			}
 
 			/**
@@ -174,16 +202,21 @@ namespace facebook
 			 */
 			static void osTermDestination(j_compress_ptr cinfo) 
 			{
-				JpegOutputStreamWrapper* dest = (JpegOutputStreamWrapper*)cinfo->dest;
-				size_t datacount = STREAM_BUFFER_SIZE - dest->public_fields.free_in_buffer;
-
-				if (datacount>0) 
+				try
 				{
-					memcpy(dest->writeBuffer, dest->buffer, datacount);
-					jpegJumpOnException((j_common_ptr)cinfo);
-					ULONG nbytes = 0;
-					dest->outputStream->Write(dest->writeBuffer, (ULONG)datacount, &nbytes);
-					jpegJumpOnException((j_common_ptr)cinfo);
+					JpegOutputStreamWrapper* dest = (JpegOutputStreamWrapper*)cinfo->dest;
+					size_t datacount = STREAM_BUFFER_SIZE - dest->public_fields.free_in_buffer;
+
+					if (datacount > 0)
+					{
+						memcpy(dest->writeBuffer, dest->buffer, datacount);
+						ULONG nbytes = 0;
+						dest->outputStream->Write(dest->writeBuffer, (ULONG)datacount, &nbytes);
+					}
+				}
+				catch (int)
+				{
+					jpegCleanup((JpegErrorHandler*)cinfo->err);
 				}
 			}
 

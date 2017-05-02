@@ -343,7 +343,7 @@ namespace facebook
 				JSAMPARRAY buffer = (*dinfo.mem->alloc_sarray)(
 					(j_common_ptr)&dinfo, 
 					JPOOL_IMAGE, 
-					row_stride, 
+					(JDIMENSION)row_stride,
 					1);
 
 				while (dinfo.output_scanline < dinfo.output_height) 
