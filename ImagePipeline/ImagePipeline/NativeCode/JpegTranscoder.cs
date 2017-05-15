@@ -1,4 +1,5 @@
 ﻿using FBCore.Common.Internal;
+using System;
 using System.Runtime.InteropServices.ComTypes;
 
 namespace ImagePipeline.NativeCode
@@ -48,6 +49,8 @@ namespace ImagePipeline.NativeCode
 
         /// <summary>
         /// Downscales and rotates jpeg image.
+        /// 
+        /// Notes: ARM (Windows Phone) isn't supported!
         /// </summary>
         /// <param name="inputStream">The input stream.</param>
         /// <param name="outputStream">The output stream.</param>
@@ -72,12 +75,20 @@ namespace ImagePipeline.NativeCode
                 scaleNumerator != SCALE_DENOMINATOR || rotationAngle != 0,
                 "no transformation requested");
 
+#if !ARM
             NativeMethods.nativeTranscodeJpeg(
                 Preconditions.CheckNotNull(inputStream),
                 Preconditions.CheckNotNull(outputStream),
                 rotationAngle,
                 scaleNumerator,
                 quality);
+#else // ARM
+            STATSTG cb = default(STATSTG);
+            inputStream.Stat(out cb, 0);
+            IntPtr pcbRead = default(IntPtr);
+            IntPtr pcbWritten = default(IntPtr);
+            inputStream.CopyTo(outputStream, cb.cbSize, pcbRead, pcbWritten);
+#endif // ARM
         }
     }
 }

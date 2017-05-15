@@ -7,6 +7,8 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
+#ifndef ARM
+
 #include "JpegTranscoder.h"
 #include "transformations.h"
 #include "exceptions.h"
@@ -37,3 +39,5 @@ void nativeTranscodeJpeg(
 		scale_factor,
 		quality);
 }
+
+#endif // ARM

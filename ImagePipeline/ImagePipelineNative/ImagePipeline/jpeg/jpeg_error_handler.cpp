@@ -7,6 +7,8 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
+#ifndef ARM
+
 #include <stdio.h>
 #include <setjmp.h>
 #include <stdexcept>
@@ -81,3 +83,5 @@ namespace facebook
 		} 
 	} 
 }
+
+#endif // ARM
