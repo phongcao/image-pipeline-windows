@@ -1,4 +1,4 @@
-﻿/**
+/*
  * Copyright (c) 2015-present, Facebook, Inc.
  * All rights reserved.
  *
@@ -7,18 +7,25 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#include "common.h"
+#include "decoded_image.h"
 
-BOOL APIENTRY DllMain(HMODULE /* hModule */, DWORD ul_reason_for_call, LPVOID /* lpReserved */)
+namespace facebook 
 {
-    switch (ul_reason_for_call)
-    {
-		case DLL_PROCESS_ATTACH:
-		case DLL_THREAD_ATTACH:
-		case DLL_THREAD_DETACH:
-		case DLL_PROCESS_DETACH:
-			break;
-    }
+	namespace imagepipeline 
+	{
+		int bytesPerPixel(PixelFormat pixel_format) 
+		{
+			switch (pixel_format) 
+			{
+				case PixelFormat::RGB:
+				return 3;
 
-    return TRUE;
+				case PixelFormat::RGBA:
+				return 4;
+
+				default:
+				return 0;
+			}
+		}
+	} 
 }

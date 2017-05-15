@@ -28,10 +28,13 @@ namespace ImageUtils
             {
                 case ExifInterface.ORIENTATION_NORMAL:
                     return 0;
+
                 case ExifInterface.ORIENTATION_ROTATE_180:
                     return 180;
+
                 case ExifInterface.ORIENTATION_ROTATE_90:
                     return 90;
+
                 case ExifInterface.ORIENTATION_ROTATE_270:
                     return 270;
             }

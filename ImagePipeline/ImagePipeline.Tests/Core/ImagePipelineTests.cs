@@ -1,9 +1,11 @@
 ﻿using FBCore.Common.References;
 using FBCore.Concurrency;
 using FBCore.DataSource;
+using ImagePipeline.Common;
 using ImagePipeline.Core;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
+using ImagePipeline.Platform;
 using ImagePipeline.Request;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
@@ -27,6 +29,13 @@ namespace ImagePipeline.Tests.Core
         private readonly Uri IMAGE4_URL = new Uri("https://unsplash.it/800/600?image=4");
         private readonly Uri IMAGE5_URL = new Uri("https://unsplash.it/800/600?image=5");
         private readonly Uri FAILURE_URL = new Uri("https://httpbin.org/image_not_found.png");
+        private readonly Uri LOCAL_PNG_URL = new Uri("ms-appx:///Assets/pngs/1.png");
+        private readonly Uri LOCAL_JPEG_URL = new Uri("ms-appx:///Assets/jpegs/1.jpeg");
+
+        /// <copyright>
+        /// beach.jpg file is from https://github.com/markevans/dragonfly
+        /// </copyright>
+        private readonly Uri LOCAL_JPEG_EXIF_URL = new Uri("ms-appx:///Assets/jpegs/beach.jpg");
 
         private static ImagePipelineCore _imagePipeline;
         private ImageRequestBuilder _requestBuilder;
@@ -396,33 +405,6 @@ namespace ImagePipeline.Tests.Core
         }
 
         /// <summary>
-        /// Tests out cancelling a fetch request for a decoded image.
-        /// </summary>
-        [TestMethod]
-        public async Task TestCancellingFetchDecodedImage3()
-        {
-            var failed = false;
-            var dataSource = _imagePipeline.FetchDecodedImage(ImageRequest.FromUri(IMAGE3_URL), null);
-            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<CloseableImage>>(
-                response =>
-                {
-                    failed = true;
-                    return Task.CompletedTask;
-                },
-                response =>
-                {
-                    failed = true;
-                });
-
-            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
-            await Task.Delay(10).ConfigureAwait(false);
-            dataSource.Close();
-            Assert.IsFalse(failed);
-            Assert.IsFalse(await _imagePipeline.IsInDiskCacheAsync(IMAGE3_URL).ConfigureAwait(false));
-            Assert.IsFalse(_imagePipeline.IsInBitmapMemoryCache(ImageRequest.FromUri(IMAGE3_URL)));
-        }
-
-        /// <summary>
         /// Tests out cancelling a prefetch request to the disk cache.
         /// </summary>
         [TestMethod]
@@ -468,32 +450,6 @@ namespace ImagePipeline.Tests.Core
 
             dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
             await Task.Delay(5).ConfigureAwait(false);
-            dataSource.Close();
-            Assert.IsFalse(failed);
-            Assert.IsFalse(await _imagePipeline.IsInDiskCacheAsync(IMAGE4_URL).ConfigureAwait(false));
-        }
-
-        /// <summary>
-        /// Tests out cancelling a prefetch request to the disk cache.
-        /// </summary>
-        [TestMethod]
-        public async Task TestCancellingPrefetchToDiskCache3()
-        {
-            var failed = false;
-            var dataSource = _imagePipeline.PrefetchToDiskCache(ImageRequest.FromUri(IMAGE4_URL), null);
-            var dataSubscriber = new BaseDataSubscriberImpl<object>(
-                response =>
-                {
-                    failed = true;
-                    return Task.CompletedTask;
-                },
-                response =>
-                {
-                    failed = true;
-                });
-
-            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
-            await Task.Delay(10).ConfigureAwait(false);
             dataSource.Close();
             Assert.IsFalse(failed);
             Assert.IsFalse(await _imagePipeline.IsInDiskCacheAsync(IMAGE4_URL).ConfigureAwait(false));
@@ -553,30 +509,77 @@ namespace ImagePipeline.Tests.Core
         }
 
         /// <summary>
-        /// Tests out cancelling a prefetch request to the bitmap cache.
+        /// Tests out fetching a png file from local assets
         /// </summary>
         [TestMethod]
-        public async Task TestCancellingPrefetchToBitmapCache3()
+        public async Task TestFetchLocalPng()
         {
-            var failed = false;
-            var dataSource = _imagePipeline.PrefetchToBitmapCache(ImageRequest.FromUri(IMAGE5_URL), null);
-            var dataSubscriber = new BaseDataSubscriberImpl<object>(
-                response =>
-                {
-                    failed = true;
-                    return Task.CompletedTask;
-                },
-                response =>
-                {
-                    failed = true;
-                });
+            var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
+                ImageRequest.FromUri(LOCAL_PNG_URL)).ConfigureAwait(false);
 
-            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
-            await Task.Delay(10).ConfigureAwait(false);
-            dataSource.Close();
-            Assert.IsFalse(failed);
-            Assert.IsFalse(await _imagePipeline.IsInDiskCacheAsync(IMAGE5_URL).ConfigureAwait(false));
-            Assert.IsFalse(_imagePipeline.IsInBitmapMemoryCache(ImageRequest.FromUri(IMAGE5_URL)));
+            await DispatcherHelpers.RunOnDispatcherAsync(() =>
+            {
+                Assert.IsTrue(bitmap.PixelWidth != 0);
+                Assert.IsTrue(bitmap.PixelHeight != 0);
+            });
+        }
+
+        /// <summary>
+        /// Tests out fetching a jpeg file from local assets
+        /// </summary>
+        [TestMethod]
+        public async Task TestFetchLocalJpeg()
+        {
+            var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
+                ImageRequest.FromUri(LOCAL_JPEG_URL)).ConfigureAwait(false);
+
+            await DispatcherHelpers.RunOnDispatcherAsync(() =>
+            {
+                Assert.IsTrue(bitmap.PixelWidth != 0);
+                Assert.IsTrue(bitmap.PixelHeight != 0);
+            });
+        }
+
+        /// <summary>
+        /// Tests out fetching a jpeg file with Exif info from local assets
+        /// </summary>
+        [TestMethod]
+        public async Task TestFetchLocalJpegExif()
+        {
+            var imageRequest = ImageRequestBuilder
+                .NewBuilderWithSource(LOCAL_JPEG_EXIF_URL)
+                .SetAutoRotateEnabled(true)
+                .Build();
+
+            var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(imageRequest)
+                .ConfigureAwait(false);
+
+            await DispatcherHelpers.RunOnDispatcherAsync(() =>
+            {
+                Assert.IsTrue(bitmap.PixelWidth != 0);
+                Assert.IsTrue(bitmap.PixelHeight != 0);
+            });
+        }
+
+        /// <summary>
+        /// Tests out fetching a jpeg file and resize.
+        /// </summary>
+        [TestMethod]
+        public async Task TestFetchLocalJpegResize()
+        {
+            var imageRequest = ImageRequestBuilder
+                .NewBuilderWithSource(LOCAL_JPEG_URL)
+                .SetResizeOptions(new ResizeOptions(120, 91))
+                .Build();
+
+            var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(imageRequest)
+                .ConfigureAwait(false);
+
+            await DispatcherHelpers.RunOnDispatcherAsync(() =>
+            {
+                Assert.IsTrue(bitmap.PixelWidth == 120);
+                Assert.IsTrue(bitmap.PixelHeight == 91);
+            });
         }
     }
 }

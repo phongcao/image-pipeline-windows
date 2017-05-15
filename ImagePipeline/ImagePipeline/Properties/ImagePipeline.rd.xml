@@ -28,6 +28,7 @@
   <Library Name="ImagePipeline">
 
   	<!-- add directives for your library here -->
+    <Type Name="ImagePipeline.NativeCode.ManagedIStream" MarshalObject="Required All" />
 
   </Library>
 </Directives>

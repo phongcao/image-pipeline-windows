@@ -70,7 +70,7 @@
     <PlatformTarget>ARM</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;ARM</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>ARM</PlatformTarget>
@@ -82,7 +82,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <PlatformTarget>ARM</PlatformTarget>
     <OutputPath>bin\ARM\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;ARM</DefineConstants>
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
@@ -167,7 +167,10 @@
     <Compile Include="Listener\ForwardingRequestListener.cs" />
     <Compile Include="Listener\IRequestListener.cs" />
     <Compile Include="Listener\RequestListenerImpl.cs" />
-    <Compile Include="NativeInterop\NativeMethods.cs" />
+    <Compile Include="NativeCode\JpegTranscoder.cs" />
+    <Compile Include="NativeCode\ManagedIStream.cs" />
+    <Compile Include="NativeCode\NativeMethods.cs" />
+    <Compile Include="NativeCode\StreamExtensions.cs" />
     <Compile Include="Platform\DispatcherHelpers.cs" />
     <Compile Include="Platform\IPlatformDecoder.cs" />
     <Compile Include="Platform\WinRTDecoder.cs" />

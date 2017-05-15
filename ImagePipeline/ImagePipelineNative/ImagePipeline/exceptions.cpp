@@ -1,4 +1,4 @@
-﻿/**
+/*
  * Copyright (c) 2015-present, Facebook, Inc.
  * All rights reserved.
  *
@@ -7,18 +7,18 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#include "common.h"
+#include <stdexcept>
+#include "exceptions.h"
 
-BOOL APIENTRY DllMain(HMODULE /* hModule */, DWORD ul_reason_for_call, LPVOID /* lpReserved */)
+using namespace std;
+
+namespace facebook 
 {
-    switch (ul_reason_for_call)
-    {
-		case DLL_PROCESS_ATTACH:
-		case DLL_THREAD_ATTACH:
-		case DLL_THREAD_DETACH:
-		case DLL_PROCESS_DETACH:
-			break;
-    }
-
-    return TRUE;
+	namespace imagepipeline 
+	{
+		void safeThrowException(const char* msg)
+		{
+			throw exception(msg);
+		}
+	} 
 }

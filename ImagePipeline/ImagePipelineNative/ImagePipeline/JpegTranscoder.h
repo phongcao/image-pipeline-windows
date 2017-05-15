@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright (c) 2015-present, Facebook, Inc.
  * All rights reserved.
  *
@@ -7,16 +7,15 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#pragma once
+#include "common.h"
 
-#include "targetver.h"
+EXTERN_C_BEGIN
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
+WIN_EXPORT void nativeTranscodeJpeg(
+	LPSTREAM inputStream,
+	LPSTREAM outputStream,
+	int rotationAngle,
+	int scaleNominator,
+	int quality);
 
-#include <windows.h>
-#include <stdint.h>
-#include <stdlib.h>
-
-#include "Macros.h"
+EXTERN_C_END
