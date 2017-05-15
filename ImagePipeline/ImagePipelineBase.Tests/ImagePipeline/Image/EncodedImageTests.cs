@@ -183,12 +183,15 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
         {
             var file = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/ImagePipeline/Images/image.jpg"));
+
             using (var stream = await file.OpenReadAsync())
             {
                 IPooledByteBuffer buf = new TrivialPooledByteBuffer(
                     ByteStreams.ToByteArray(stream.AsStream()));
+
                 EncodedImage encodedImage = new EncodedImage(
                     CloseableReference<IPooledByteBuffer>.of(buf, _releaser));
+
                 await encodedImage.ParseMetaDataAsync();
                 Assert.AreEqual(ImageFormat.JPEG, encodedImage.Format);
                 Assert.AreEqual(550, encodedImage.Width);
@@ -204,12 +207,15 @@ namespace ImagePipelineBase.Tests.ImagePipeline.Image
         {
             var file = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/ImagePipeline/Images/image.png"));
+
             using (var stream = await file.OpenReadAsync())
             {
                 IPooledByteBuffer buf = new TrivialPooledByteBuffer(
                     ByteStreams.ToByteArray(stream.AsStream()));
+
                 EncodedImage encodedImage = new EncodedImage(
                     CloseableReference<IPooledByteBuffer>.of(buf, _releaser));
+
                 await encodedImage.ParseMetaDataAsync();
                 Assert.AreEqual(ImageFormat.PNG, encodedImage.Format);
                 Assert.AreEqual(800, encodedImage.Width);

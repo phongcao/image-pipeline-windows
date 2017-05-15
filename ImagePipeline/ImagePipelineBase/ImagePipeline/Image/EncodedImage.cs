@@ -299,8 +299,9 @@ namespace ImagePipeline.Image
             // some WebPs even though those are not its actual dimensions.
             if (!ImageFormatHelper.IsWebpFormat(Format))
             {
-                Tuple<int, int> dimensions = 
-                    await BitmapUtil.DecodeDimensionsAsync(GetInputStream()).ConfigureAwait(false);
+                Tuple<int, int> dimensions = await BitmapUtil
+                    .DecodeDimensionsAsync(GetInputStream())
+                    .ConfigureAwait(false);
 
                 if (dimensions != default(Tuple<int, int>))
                 {

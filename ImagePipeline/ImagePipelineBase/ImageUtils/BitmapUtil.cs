@@ -4,6 +4,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace ImageUtils
 {
@@ -67,7 +69,9 @@ namespace ImageUtils
                 using (var reference = buffer.CreateReference())
                 {
                     byte* dataInBytes;
-                    ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacity);
+                    ((IMemoryBufferByteAccess)reference).GetBuffer(
+                        out dataInBytes,
+                        out capacity);
                 }
             }
 
@@ -84,7 +88,8 @@ namespace ImageUtils
         {
             // Wrapping with ByteArrayInputStream is cheap and we don't have
             // duplicate implementation
-            return await DecodeDimensionsAsync(new MemoryStream(bytes)).ConfigureAwait(false);
+            return await DecodeDimensionsAsync(
+                new MemoryStream(bytes)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -95,7 +100,8 @@ namespace ImageUtils
         /// The inputStream containing the image data.
         /// </param>
         /// <returns>Dimensions of the image.</returns>
-        public static async Task<Tuple<int, int>> DecodeDimensionsAsync(Stream inputStream)
+        public static async Task<Tuple<int, int>> DecodeDimensionsAsync(
+            Stream inputStream)
         {
             Preconditions.CheckNotNull(inputStream);
 
@@ -107,12 +113,79 @@ namespace ImageUtils
                     .ConfigureAwait(false);
 
                 return new Tuple<int, int>(
-                    (int)decoder.OrientedPixelWidth, (int)decoder.OrientedPixelHeight);
+                    (int)decoder.PixelWidth, (int)decoder.PixelHeight);
             }
             catch (Exception)
             {
                 return default(Tuple<int, int>);
             }   
+        }
+
+        /// <summary>
+        /// Asynchronously returns a byte array containing the thumbnail image.
+        /// </summary>
+        /// <param name="stream">The image stream.</param>
+        /// <returns>A byte array containing the thumbnail image.</returns>
+        public static async Task<byte[]> GetThumbnailAsync(IRandomAccessStream stream)
+        {
+            try
+            {
+                BitmapDecoder decoder = await BitmapDecoder
+                    .CreateAsync(stream)
+                    .AsTask()
+                    .ConfigureAwait(false);
+
+                using (var imageStream = await decoder.GetThumbnailAsync().AsTask().ConfigureAwait(false))
+                using (var readStream = imageStream.AsStream())
+                {
+                    byte[] thumbnail = new byte[readStream.Length];
+                    await readStream.ReadAsync(thumbnail, 0, thumbnail.Length)
+                        .ConfigureAwait(false);
+
+                    return thumbnail;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously returns a byte array containing the thumbnail image.
+        /// </summary>
+        /// <param name="uri">The image uri.</param>
+        /// <returns>A byte array containing the thumbnail image.</returns>
+        public static async Task<byte[]> GetThumbnailAsync(Uri uri)
+        {
+            try
+            {
+                var file = await StorageFile.GetFileFromApplicationUriAsync(uri)
+                    .AsTask()
+                    .ConfigureAwait(false);
+                              
+                using (var fileStream = await file.OpenReadAsync().AsTask().ConfigureAwait(false))
+                {
+                    BitmapDecoder decoder = await BitmapDecoder
+                        .CreateAsync(fileStream)
+                        .AsTask()
+                        .ConfigureAwait(false);
+
+                    using (var imageStream = await decoder.GetThumbnailAsync().AsTask().ConfigureAwait(false))
+                    using (var readStream = imageStream.AsStream())
+                    {
+                        byte[] thumbnail = new byte[readStream.Length];
+                        await readStream.ReadAsync(thumbnail, 0, thumbnail.Length)
+                            .ConfigureAwait(false);
+
+                        return thumbnail;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>

@@ -83,6 +83,7 @@ namespace facebook
 				catch (int)
 				{
 					jpegCleanup((JpegErrorHandler*)dinfo->err);
+					return false;
 				}
 			}
 
@@ -193,6 +194,7 @@ namespace facebook
 				catch (int)
 				{
 					jpegCleanup((JpegErrorHandler*)cinfo->err);
+					return false;
 				}
 			}
 

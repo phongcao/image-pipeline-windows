@@ -1,6 +1,7 @@
 ﻿using FBCore.Common.References;
 using FBCore.Concurrency;
 using FBCore.DataSource;
+using ImagePipeline.Common;
 using ImagePipeline.Core;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
@@ -557,6 +558,27 @@ namespace ImagePipeline.Tests.Core
             {
                 Assert.IsTrue(bitmap.PixelWidth != 0);
                 Assert.IsTrue(bitmap.PixelHeight != 0);
+            });
+        }
+
+        /// <summary>
+        /// Tests out fetching a jpeg file and resize.
+        /// </summary>
+        [TestMethod]
+        public async Task TestFetchLocalJpegResize()
+        {
+            var imageRequest = ImageRequestBuilder
+                .NewBuilderWithSource(LOCAL_JPEG_URL)
+                .SetResizeOptions(new ResizeOptions(120, 91))
+                .Build();
+
+            var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(imageRequest)
+                .ConfigureAwait(false);
+
+            await DispatcherHelpers.RunOnDispatcherAsync(() =>
+            {
+                Assert.IsTrue(bitmap.PixelWidth == 120);
+                Assert.IsTrue(bitmap.PixelHeight == 91);
             });
         }
     }
