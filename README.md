@@ -12,7 +12,7 @@
 
 ## Architecture
 
-![architecture](https://scontent.fbed1-2.fna.fbcdn.net/v/t39.2365-6/11057083_393469260836543_318035251_n.png?oh=7aa5c622b7f9c9f18a599dd70480a813&oe=59443FE7)
+![architecture](http://frescolib.org/static/imagepipeline.png)
 
 ## Simple usage
 
