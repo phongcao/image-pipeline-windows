@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>fresco.imagepipeline</id>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <title>Image Pipeline</title>
     <authors>Phong Cao</authors>
     <owners>Phong Cao</owners>
@@ -16,32 +16,44 @@
     <tags>Fresco ImagePipeline</tags>
   </metadata>
   <files>
-	<file src="..\ImagePipeline\bin\Release\ImagePipeline_stub.dll" target="lib\uap10.0"/>
-	<file src="..\ImagePipeline\bin\Release\ImagePipelineBase_stub.dll" target="lib\uap10.0"/>
-	<file src="..\ImagePipeline\bin\Release\FBCore_stub.dll" target="lib\uap10.0"/>
-	<file src="..\ImagePipelineNative\bin\x64\Release\ImagePipelineNative.pri" target="runtimes\win10-x64\native"/>
-	<file src="..\ImagePipelineNative\bin\x64\Release\ImagePipelineNative.dll" target="runtimes\win10-x64\native"/>
-	<file src="..\FBCore\bin\x64\Release\FBCore.dll" target="runtimes\win10-x64\lib\uap10.0"/>
-	<file src="..\FBCore\bin\x64\Release\FBCore.pri" target="runtimes\win10-x64\lib\uap10.0"/>
-	<file src="..\ImagePipelineBase\bin\x64\Release\ImagePipelineBase.dll" target="runtimes\win10-x64\lib\uap10.0"/>
-	<file src="..\ImagePipelineBase\bin\x64\Release\ImagePipelineBase.pri" target="runtimes\win10-x64\lib\uap10.0"/>
-	<file src="..\ImagePipeline\bin\x64\Release\ImagePipeline.dll" target="runtimes\win10-x64\lib\uap10.0"/>
-	<file src="..\ImagePipeline\bin\x64\Release\ImagePipeline.pri" target="runtimes\win10-x64\lib\uap10.0"/>
-	<file src="..\ImagePipelineNative\bin\x86\Release\ImagePipelineNative.pri" target="runtimes\win10-x86\native"/>
-	<file src="..\ImagePipelineNative\bin\x86\Release\ImagePipelineNative.dll" target="runtimes\win10-x86\native"/>
-	<file src="..\FBCore\bin\x86\Release\FBCore.dll" target="runtimes\win10-x86\lib\uap10.0"/>
-	<file src="..\FBCore\bin\x86\Release\FBCore.pri" target="runtimes\win10-x86\lib\uap10.0"/>
-	<file src="..\ImagePipelineBase\bin\x86\Release\ImagePipelineBase.dll" target="runtimes\win10-x86\lib\uap10.0"/>
-	<file src="..\ImagePipelineBase\bin\x86\Release\ImagePipelineBase.pri" target="runtimes\win10-x86\lib\uap10.0"/>
-	<file src="..\ImagePipeline\bin\x86\Release\ImagePipeline.dll" target="runtimes\win10-x86\lib\uap10.0"/>
-	<file src="..\ImagePipeline\bin\x86\Release\ImagePipeline.pri" target="runtimes\win10-x86\lib\uap10.0"/>
-	<file src="..\ImagePipelineNative\bin\ARM\Release\ImagePipelineNative.pri" target="runtimes\win10-arm\native"/>
-	<file src="..\ImagePipelineNative\bin\ARM\Release\ImagePipelineNative.dll" target="runtimes\win10-arm\native"/>
-	<file src="..\FBCore\bin\ARM\Release\FBCore.dll" target="runtimes\win10-arm\lib\uap10.0"/>
-	<file src="..\FBCore\bin\ARM\Release\FBCore.pri" target="runtimes\win10-arm\lib\uap10.0"/>
-	<file src="..\ImagePipelineBase\bin\ARM\Release\ImagePipelineBase.dll" target="runtimes\win10-arm\lib\uap10.0"/>
-	<file src="..\ImagePipelineBase\bin\ARM\Release\ImagePipelineBase.pri" target="runtimes\win10-arm\lib\uap10.0"/>
-	<file src="..\ImagePipeline\bin\ARM\Release\ImagePipeline.dll" target="runtimes\win10-arm\lib\uap10.0"/>
-	<file src="..\ImagePipeline\bin\ARM\Release\ImagePipeline.pri" target="runtimes\win10-arm\lib\uap10.0"/>
+    <file src="..\ImagePipeline\bin\Release\ImagePipeline.dll" target="ref\uap10.0"/>
+    <file src="..\ImagePipeline\bin\Release\ImagePipelineBase.dll" target="ref\uap10.0"/>
+    <file src="..\ImagePipeline\bin\Release\FBCore.dll" target="ref\uap10.0"/>
+
+    <file src="..\ImagePipelineNative\bin\x64\Release\ImagePipelineNative.pri" target="runtimes\win10-x64\native"/>
+    <file src="..\ImagePipelineNative\bin\x64\Release\ImagePipelineNative.dll" target="runtimes\win10-x64\native"/>    
+    <file src="..\FBCore\bin\x64\Release\FBCore.dll" target="runtimes\win10-x64\lib\uap10.0"/>
+    <file src="..\FBCore\bin\x64\Release\FBCore.pri" target="runtimes\win10-x64\lib\uap10.0"/>
+    <file src="..\FBCore\bin\x64\Release\FBCore.XML" target="runtimes\win10-x64\lib\uap10.0"/>
+    <file src="..\ImagePipelineBase\bin\x64\Release\ImagePipelineBase.dll" target="runtimes\win10-x64\lib\uap10.0"/>
+    <file src="..\ImagePipelineBase\bin\x64\Release\ImagePipelineBase.pri" target="runtimes\win10-x64\lib\uap10.0"/>
+    <file src="..\ImagePipelineBase\bin\x64\Release\ImagePipelineBase.XML" target="runtimes\win10-x64\lib\uap10.0"/>
+    <file src="..\ImagePipeline\bin\x64\Release\ImagePipeline.dll" target="runtimes\win10-x64\lib\uap10.0"/>
+    <file src="..\ImagePipeline\bin\x64\Release\ImagePipeline.pri" target="runtimes\win10-x64\lib\uap10.0"/>
+    <file src="..\ImagePipeline\bin\x64\Release\ImagePipeline.XML" target="runtimes\win10-x64\lib\uap10.0"/>
+
+    <file src="..\ImagePipelineNative\bin\x86\Release\ImagePipelineNative.pri" target="runtimes\win10-x86\native"/>
+    <file src="..\ImagePipelineNative\bin\x86\Release\ImagePipelineNative.dll" target="runtimes\win10-x86\native"/>
+    <file src="..\FBCore\bin\x86\Release\FBCore.dll" target="runtimes\win10-x86\lib\uap10.0"/>
+    <file src="..\FBCore\bin\x86\Release\FBCore.pri" target="runtimes\win10-x86\lib\uap10.0"/>
+    <file src="..\FBCore\bin\x86\Release\FBCore.XML" target="runtimes\win10-x86\lib\uap10.0"/>
+    <file src="..\ImagePipelineBase\bin\x86\Release\ImagePipelineBase.dll" target="runtimes\win10-x86\lib\uap10.0"/>
+    <file src="..\ImagePipelineBase\bin\x86\Release\ImagePipelineBase.pri" target="runtimes\win10-x86\lib\uap10.0"/>
+    <file src="..\ImagePipelineBase\bin\x86\Release\ImagePipelineBase.XML" target="runtimes\win10-x86\lib\uap10.0"/>
+    <file src="..\ImagePipeline\bin\x86\Release\ImagePipeline.dll" target="runtimes\win10-x86\lib\uap10.0"/>
+    <file src="..\ImagePipeline\bin\x86\Release\ImagePipeline.pri" target="runtimes\win10-x86\lib\uap10.0"/>
+    <file src="..\ImagePipeline\bin\x86\Release\ImagePipeline.XML" target="runtimes\win10-x86\lib\uap10.0"/>
+
+    <file src="..\ImagePipelineNative\bin\ARM\Release\ImagePipelineNative.pri" target="runtimes\win10-arm\native"/>
+    <file src="..\ImagePipelineNative\bin\ARM\Release\ImagePipelineNative.dll" target="runtimes\win10-arm\native"/>    
+    <file src="..\FBCore\bin\ARM\Release\FBCore.dll" target="runtimes\win10-arm\lib\uap10.0"/>
+    <file src="..\FBCore\bin\ARM\Release\FBCore.pri" target="runtimes\win10-arm\lib\uap10.0"/>
+    <file src="..\FBCore\bin\ARM\Release\FBCore.XML" target="runtimes\win10-arm\lib\uap10.0"/>
+    <file src="..\ImagePipelineBase\bin\ARM\Release\ImagePipelineBase.dll" target="runtimes\win10-arm\lib\uap10.0"/>
+    <file src="..\ImagePipelineBase\bin\ARM\Release\ImagePipelineBase.pri" target="runtimes\win10-arm\lib\uap10.0"/>
+    <file src="..\ImagePipelineBase\bin\ARM\Release\ImagePipelineBase.XML" target="runtimes\win10-arm\lib\uap10.0"/>
+    <file src="..\ImagePipeline\bin\ARM\Release\ImagePipeline.dll" target="runtimes\win10-arm\lib\uap10.0"/>
+    <file src="..\ImagePipeline\bin\ARM\Release\ImagePipeline.pri" target="runtimes\win10-arm\lib\uap10.0"/>
+    <file src="..\ImagePipeline\bin\ARM\Release\ImagePipeline.XML" target="runtimes\win10-arm\lib\uap10.0"/>
   </files>
 </package>
