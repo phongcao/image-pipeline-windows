@@ -47,10 +47,9 @@ namespace ImagePipeline.NativeCode
             return (degrees >= 0) && (degrees <= 270) && (degrees % 90 == 0);
         }
 
+#if HAS_LIBJPEGTURBO
         /// <summary>
         /// Downscales and rotates jpeg image.
-        /// 
-        /// Notes: Currently disabled since libjpeg-turbo fails WACK.
         /// </summary>
         /// <param name="inputStream">The input stream.</param>
         /// <param name="outputStream">The output stream.</param>
@@ -58,7 +57,7 @@ namespace ImagePipeline.NativeCode
         /// <param name="scaleNumerator">
         /// 1 - 16, image will be scaled using scaleNumerator/8 factor.
         /// </param>
-        /// <param name="quality">1 - 100.</param>
+        /// <param name="quality">1 - 100.</param> 
         public static void TranscodeJpeg(
             IStream inputStream,
             IStream outputStream,
@@ -82,5 +81,6 @@ namespace ImagePipeline.NativeCode
                 scaleNumerator,
                 quality);
         }
+#endif // HAS_LIBJPEGTURBO
     }
 }

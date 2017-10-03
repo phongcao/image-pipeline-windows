@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>fresco.imagepipeline</id>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
     <title>Image Pipeline</title>
     <authors>Phong Cao</authors>
     <owners>Phong Cao</owners>

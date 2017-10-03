@@ -25,6 +25,7 @@ namespace ImagePipeline.NativeCode
         [DllImport(DllName, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
         public static extern byte nativeReadByte(long lpointer);
 
+#if HAS_LIBJPEGTURBO
         [DllImport(DllName, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
         public static extern void nativeTranscodeJpeg(
             IStream inputStream,
@@ -32,5 +33,6 @@ namespace ImagePipeline.NativeCode
             int rotationAngle,
             int scaleNominator,
             int quality);
+#endif // HAS_LIBJPEGTURBO
     }
 }
