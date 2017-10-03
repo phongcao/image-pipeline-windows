@@ -49,7 +49,4 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="macros.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
 </Project>

@@ -561,25 +561,25 @@ namespace ImagePipeline.Tests.Core
             });
         }
 
-        /// <summary>
-        /// Tests out fetching a jpeg file and resize.
-        /// </summary>
-        [TestMethod]
-        public async Task TestFetchLocalJpegResize()
-        {
-            var imageRequest = ImageRequestBuilder
-                .NewBuilderWithSource(LOCAL_JPEG_URL)
-                .SetResizeOptions(new ResizeOptions(120, 91))
-                .Build();
+        ///// <summary>
+        ///// Tests out fetching a jpeg file and resize.
+        ///// </summary>
+        //[TestMethod]
+        //public async Task TestFetchLocalJpegResize()
+        //{
+        //    var imageRequest = ImageRequestBuilder
+        //        .NewBuilderWithSource(LOCAL_JPEG_URL)
+        //        .SetResizeOptions(new ResizeOptions(120, 91))
+        //        .Build();
 
-            var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(imageRequest)
-                .ConfigureAwait(false);
+        //    var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(imageRequest)
+        //        .ConfigureAwait(false);
 
-            await DispatcherHelpers.RunOnDispatcherAsync(() =>
-            {
-                Assert.IsTrue(bitmap.PixelWidth == 120);
-                Assert.IsTrue(bitmap.PixelHeight == 91);
-            });
-        }
+        //    await DispatcherHelpers.RunOnDispatcherAsync(() =>
+        //    {
+        //        Assert.IsTrue(bitmap.PixelWidth == 120);
+        //        Assert.IsTrue(bitmap.PixelHeight == 91);
+        //    });
+        //}
     }
 }

@@ -176,12 +176,16 @@ namespace ImagePipeline.Producers
                     int numerator = GetScaleNumerator(imageRequest, encodedImage);
                     extraMap = GetExtraMap(encodedImage, imageRequest, numerator);
                     inputStream = encodedImage.GetInputStream();
+#if HAS_LIBJPEGTURBO
                     JpegTranscoder.TranscodeJpeg(
                         inputStream.AsIStream(),
                         outputStream.AsIStream(),
                         GetRotationAngle(imageRequest, encodedImage),
                         numerator,
                         DEFAULT_JPEG_QUALITY);
+#else // HAS_LIBJPEGTURBO
+                    inputStream.CopyTo(outputStream);
+#endif // HAS_LIBJPEGTURBO
 
                     CloseableReference<IPooledByteBuffer> reference =
                            CloseableReference<IPooledByteBuffer>.of(outputStream.ToByteBuffer());

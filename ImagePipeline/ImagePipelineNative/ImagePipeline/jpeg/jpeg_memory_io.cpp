@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#ifndef ARM
+#ifdef HAS_LIBJPEGTURBO
 
 #include <vector>
 #include <algorithm>
@@ -197,4 +197,4 @@ namespace facebook
 	} 
 }
 
-#endif // ARM
+#endif // HAS_LIBJPEGTURBO

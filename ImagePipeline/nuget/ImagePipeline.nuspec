@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>fresco.imagepipeline</id>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <title>Image Pipeline</title>
     <authors>Phong Cao</authors>
     <owners>Phong Cao</owners>
@@ -11,7 +11,7 @@
     <iconUrl>http://frescolib.org/static/logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Image Pipeline loads images from the network, local storage, or local resources. To save data and CPU, it has three levels of cache; two in memory and another in internal storage.</description>
-    <releaseNotes>Supporting Visual Studio 2017.</releaseNotes>
+    <releaseNotes>Fixing Windows App Certification Kit issues.</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Fresco ImagePipeline</tags>
   </metadata>

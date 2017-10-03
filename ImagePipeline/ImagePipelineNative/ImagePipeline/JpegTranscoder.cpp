@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#ifndef ARM
+#ifdef HAS_LIBJPEGTURBO
 
 #include "JpegTranscoder.h"
 #include "transformations.h"
@@ -40,4 +40,4 @@ void nativeTranscodeJpeg(
 		quality);
 }
 
-#endif // ARM
+#endif // HAS_LIBJPEGTURBO
