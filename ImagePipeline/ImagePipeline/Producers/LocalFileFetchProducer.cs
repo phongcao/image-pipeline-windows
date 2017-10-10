@@ -1,4 +1,5 @@
-﻿using FBCore.Concurrency;
+﻿using FBCore.Common.Util;
+using FBCore.Concurrency;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
 using ImagePipeline.Request;
@@ -32,15 +33,23 @@ namespace ImagePipeline.Producers
         /// </summary>
         protected override Task<EncodedImage> GetEncodedImage(ImageRequest imageRequest)
         {
-            Task<StorageFile> uriToFilePathTask = StorageFile.GetFileFromApplicationUriAsync(
-                imageRequest.SourceUri).AsTask();
+            if (UriUtil.IsFileUri(imageRequest.SourceUri))
+            {
+                FileInfo file = new FileInfo(imageRequest.SourceUri.LocalPath);
+                return Task.FromResult(GetEncodedImage(file.OpenRead(), (int)(file.Length)));
+            }
+            else
+            {
+                Task<StorageFile> uriToFilePathTask = StorageFile.GetFileFromApplicationUriAsync(
+                    imageRequest.SourceUri).AsTask();
 
-            return uriToFilePathTask.ContinueWith(
-                (filepathTask) => 
-                {
-                    FileInfo file = new FileInfo(filepathTask.Result.Path);
-                    return GetEncodedImage(file.OpenRead(), (int)(file.Length));
-                });
+                return uriToFilePathTask.ContinueWith(
+                    (filepathTask) =>
+                    {
+                        FileInfo file = new FileInfo(filepathTask.Result.Path);
+                        return GetEncodedImage(file.OpenRead(), (int)(file.Length));
+                    });
+            }
         }
 
         /// <summary>

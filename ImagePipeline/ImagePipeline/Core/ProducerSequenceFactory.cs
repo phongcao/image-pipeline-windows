@@ -594,6 +594,10 @@ namespace ImagePipeline.Core
             {
                 return GetDataFetchSequence();
             }
+            else if (UriUtil.IsFileUri(uri))
+            {
+                return GetLocalImageFileFetchSequence();
+            }
             else
             {
                 string uriString = uri.ToString();
