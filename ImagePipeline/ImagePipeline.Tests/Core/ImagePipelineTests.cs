@@ -1,7 +1,6 @@
 ﻿using FBCore.Common.References;
 using FBCore.Concurrency;
 using FBCore.DataSource;
-using ImagePipeline.Common;
 using ImagePipeline.Core;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
@@ -24,11 +23,11 @@ namespace ImagePipeline.Tests.Core
     [TestClass]
     public class ImagePipelineTests
     {
-        private readonly Uri IMAGE_URL = new Uri("https://unsplash.it/800/600?image=1");
-        private readonly Uri IMAGE2_URL = new Uri("https://unsplash.it/800/600?image=2");
-        private readonly Uri IMAGE3_URL = new Uri("https://unsplash.it/800/600?image=3");
-        private readonly Uri IMAGE4_URL = new Uri("https://unsplash.it/800/600?image=4");
-        private readonly Uri IMAGE5_URL = new Uri("https://unsplash.it/800/600?image=5");
+        private readonly Uri IMAGE_URL = new Uri("https://picsum.photos/800/600?image=1");
+        private readonly Uri IMAGE2_URL = new Uri("https://picsum.photos/800/600?image=2");
+        private readonly Uri IMAGE3_URL = new Uri("https://picsum.photos/800/600?image=3");
+        private readonly Uri IMAGE4_URL = new Uri("https://picsum.photos/800/600?image=4");
+        private readonly Uri IMAGE5_URL = new Uri("https://picsum.photos/800/600?image=5");
         private readonly Uri FAILURE_URL = new Uri("https://httpbin.org/image_not_found.png");
         private readonly Uri LOCAL_PNG_URL = new Uri("ms-appx:///Assets/pngs/1.png");
         private readonly Uri LOCAL_JPEG_URL = new Uri("ms-appx:///Assets/jpegs/1.jpeg");
