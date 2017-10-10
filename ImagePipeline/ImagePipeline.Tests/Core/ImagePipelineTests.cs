@@ -13,6 +13,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
+using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace ImagePipeline.Tests.Core
@@ -31,6 +32,9 @@ namespace ImagePipeline.Tests.Core
         private readonly Uri FAILURE_URL = new Uri("https://httpbin.org/image_not_found.png");
         private readonly Uri LOCAL_PNG_URL = new Uri("ms-appx:///Assets/pngs/1.png");
         private readonly Uri LOCAL_JPEG_URL = new Uri("ms-appx:///Assets/jpegs/1.jpeg");
+        private readonly Uri LOCAL_APP_DATA_URL = new Uri("ms-appdata:///local/1.png");
+        private readonly Uri ROAMING_APP_DATA_URL = new Uri("ms-appdata:///roaming/1.png");
+        private readonly Uri TEMP_APP_DATA_URL = new Uri("ms-appdata:///temp/1.png");
 
         /// <copyright>
         /// beach.jpg file is from https://github.com/markevans/dragonfly
@@ -532,6 +536,75 @@ namespace ImagePipeline.Tests.Core
         {
             var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
                 ImageRequest.FromUri(LOCAL_JPEG_URL)).ConfigureAwait(false);
+
+            await DispatcherHelpers.RunOnDispatcherAsync(() =>
+            {
+                Assert.IsTrue(bitmap.PixelWidth != 0);
+                Assert.IsTrue(bitmap.PixelHeight != 0);
+            });
+        }
+
+        /// <summary>
+        /// Tests out fetching a file from local app data folder
+        /// </summary>
+        [TestMethod]
+        public async Task TestLocalAppData()
+        {
+            // Prepare resource for testing.
+            ApplicationData appData = ApplicationData.Current;
+            StorageFile sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
+                new Uri("ms-appx:///Assets/pngs/1.png")).AsTask().ConfigureAwait(false);
+
+            await sourceFile.CopyAsync(appData.LocalFolder).AsTask().ConfigureAwait(false);
+
+            var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
+                ImageRequest.FromUri(LOCAL_APP_DATA_URL)).ConfigureAwait(false);
+
+            await DispatcherHelpers.RunOnDispatcherAsync(() =>
+            {
+                Assert.IsTrue(bitmap.PixelWidth != 0);
+                Assert.IsTrue(bitmap.PixelHeight != 0);
+            });
+        }
+
+        /// <summary>
+        /// Tests out fetching a file from roaming app data folder
+        /// </summary>
+        [TestMethod]
+        public async Task TestRoamingAppData()
+        {
+            // Prepare resource for testing.
+            ApplicationData appData = ApplicationData.Current;
+            StorageFile sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
+                new Uri("ms-appx:///Assets/pngs/1.png")).AsTask().ConfigureAwait(false);
+
+            await sourceFile.CopyAsync(appData.RoamingFolder).AsTask().ConfigureAwait(false);
+
+            var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
+                ImageRequest.FromUri(ROAMING_APP_DATA_URL)).ConfigureAwait(false);
+
+            await DispatcherHelpers.RunOnDispatcherAsync(() =>
+            {
+                Assert.IsTrue(bitmap.PixelWidth != 0);
+                Assert.IsTrue(bitmap.PixelHeight != 0);
+            });
+        }
+
+        /// <summary>
+        /// Tests out fetching a file from temp app data folder
+        /// </summary>
+        [TestMethod]
+        public async Task TestTempAppData()
+        {
+            // Prepare resource for testing.
+            ApplicationData appData = ApplicationData.Current;
+            StorageFile sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
+                new Uri("ms-appx:///Assets/pngs/1.png")).AsTask().ConfigureAwait(false);
+
+            await sourceFile.CopyAsync(appData.TemporaryFolder).AsTask().ConfigureAwait(false);
+
+            var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
+                ImageRequest.FromUri(TEMP_APP_DATA_URL)).ConfigureAwait(false);
 
             await DispatcherHelpers.RunOnDispatcherAsync(() =>
             {
