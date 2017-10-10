@@ -550,8 +550,8 @@ namespace ImagePipeline.Tests.Core
         public async Task TestLocalAppData()
         {
             // Prepare resource for testing.
-            ApplicationData appData = ApplicationData.Current;
-            StorageFile sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
+            var appData = ApplicationData.Current;
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/pngs/1.png")).AsTask().ConfigureAwait(false);
 
             await sourceFile.CopyAsync(appData.LocalFolder).AsTask().ConfigureAwait(false);
@@ -573,8 +573,8 @@ namespace ImagePipeline.Tests.Core
         public async Task TestRoamingAppData()
         {
             // Prepare resource for testing.
-            ApplicationData appData = ApplicationData.Current;
-            StorageFile sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
+            var appData = ApplicationData.Current;
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/pngs/1.png")).AsTask().ConfigureAwait(false);
 
             await sourceFile.CopyAsync(appData.RoamingFolder).AsTask().ConfigureAwait(false);
@@ -596,14 +596,38 @@ namespace ImagePipeline.Tests.Core
         public async Task TestTempAppData()
         {
             // Prepare resource for testing.
-            ApplicationData appData = ApplicationData.Current;
-            StorageFile sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
+            var appData = ApplicationData.Current;
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/pngs/1.png")).AsTask().ConfigureAwait(false);
 
             await sourceFile.CopyAsync(appData.TemporaryFolder).AsTask().ConfigureAwait(false);
 
             var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
                 ImageRequest.FromUri(TEMP_APP_DATA_URL)).ConfigureAwait(false);
+
+            await DispatcherHelpers.RunOnDispatcherAsync(() =>
+            {
+                Assert.IsTrue(bitmap.PixelWidth != 0);
+                Assert.IsTrue(bitmap.PixelHeight != 0);
+            });
+        }
+
+        /// <summary>
+        /// Tests out fetching a file using file URI
+        /// </summary>
+        [TestMethod]
+        public async Task TestFileUri()
+        {
+            // Prepare resource for testing.
+            var appData = ApplicationData.Current;
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
+                new Uri("ms-appx:///Assets/pngs/2.png")).AsTask().ConfigureAwait(false);
+
+            await sourceFile.CopyAsync(appData.LocalFolder).AsTask().ConfigureAwait(false);
+
+            var fileUri = new Uri($"file:///{ appData.LocalFolder.Path }/2.png");
+            var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
+                ImageRequest.FromUri(fileUri)).ConfigureAwait(false);
 
             await DispatcherHelpers.RunOnDispatcherAsync(() =>
             {

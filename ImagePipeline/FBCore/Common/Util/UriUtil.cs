@@ -43,6 +43,11 @@ namespace FBCore.Common.Util
         public const string DATA_SCHEME = "data";
 
         /// <summary>
+        /// File scheme for URIs.
+        /// </summary>
+        public const string FILE_SCHEME = "file";
+
+        /// <summary>
         /// Check if uri represents network resource.
         ///
         /// <param name="uri">uri to check.</param>
@@ -93,7 +98,18 @@ namespace FBCore.Common.Util
         /// <param name="uri">uri to check.</param>
         public static bool IsDataUri(Uri uri)
         {
-            return DATA_SCHEME.Equals(GetSchemeOrNull(uri));
+            string scheme = GetSchemeOrNull(uri);
+            return DATA_SCHEME.Equals(scheme);
+        }
+
+        /// <summary>
+        /// Check if the uri is a file uri.
+        /// </summary>
+        /// <param name="uri">uri to check.</param>
+        public static bool IsFileUri(Uri uri)
+        {
+            string scheme = GetSchemeOrNull(uri);
+            return FILE_SCHEME.Equals(scheme);
         }
 
         /// <summary>
