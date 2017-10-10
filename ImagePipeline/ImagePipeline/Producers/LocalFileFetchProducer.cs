@@ -2,8 +2,11 @@
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
 using ImagePipeline.Request;
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Storage;
 
 namespace ImagePipeline.Producers
 {
@@ -30,8 +33,11 @@ namespace ImagePipeline.Producers
         /// </summary>
         protected override Task<EncodedImage> GetEncodedImage(ImageRequest imageRequest)
         {
-            FileInfo file = (FileInfo)imageRequest.SourceFile;
-            return Task.FromResult(GetEncodedImage(file.OpenRead(), (int)(file.Length)));
+            Task<StorageFile> uriToFilePathTask = StorageFile.GetFileFromApplicationUriAsync(imageRequest.SourceUri).AsTask();
+            return uriToFilePathTask.ContinueWith<EncodedImage>((filepathTask) => {
+                FileInfo file = new FileInfo(filepathTask.Result.Path);
+                return GetEncodedImage(file.OpenRead(), (int)(file.Length));
+            });
         }
 
         /// <summary>
