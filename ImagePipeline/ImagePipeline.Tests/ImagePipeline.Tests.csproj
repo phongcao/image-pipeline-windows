@@ -150,6 +150,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\gifs\dog.gif" />
     <Content Include="Assets\jpegs\1.jpeg" />
     <Content Include="Assets\jpegs\2.jpeg" />
     <Content Include="Assets\jpegs\3.jpeg" />

@@ -805,6 +805,27 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
+        /// Returns whether the image is stored in the encoded memory cache.
+        /// </summary>
+        /// <param name="uri">
+        /// The uri for the image to be looked up.
+        /// </param>
+        /// <returns>
+        /// true if the image was found in the encoded memory cache,
+        /// false otherwise.
+        /// </returns>
+        public bool IsInEncodedMemoryCache(Uri uri)
+        {
+            if (uri == null)
+            {
+                return false;
+            }
+
+            Predicate<ICacheKey> encodedCachePredicate = PredicateForUri(uri);
+            return _encodedMemoryCache.Contains(encodedCachePredicate);
+        }
+
+        /// <summary>
         /// Returns whether the image is stored in the bitmap memory cache.
         /// </summary>
         /// <param name="uri">
