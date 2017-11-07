@@ -33,9 +33,12 @@ namespace ImagePipeline.Core
         internal IProducer<CloseableReference<IPooledByteBuffer>> _encodedImageProducerSequence;
         internal IProducer<object> _networkFetchToEncodedMemoryPrefetchSequence;
         internal IProducer<EncodedImage> _commonNetworkFetchToEncodedMemorySequence;
+        internal IProducer<CloseableReference<IPooledByteBuffer>> _encodedLocalImageFileFetchSequence;
+        internal IProducer<CloseableReference<IPooledByteBuffer>> _encodedLocalResourceFetchSequence;
+        internal IProducer<CloseableReference<IPooledByteBuffer>> _encodedLocalAssetFetchSequence;
+        internal IProducer<CloseableReference<IPooledByteBuffer>> _encodedDataFetchSequence;
         internal IProducer<CloseableReference<CloseableImage>> _localImageFileFetchSequence;
         internal IProducer<CloseableReference<CloseableImage>> _localVideoFileFetchSequence;
-        internal IProducer<CloseableReference<CloseableImage>> _localContentUriFetchSequence;
         internal IProducer<CloseableReference<CloseableImage>> _localResourceFetchSequence;
         internal IProducer<CloseableReference<CloseableImage>> _localAssetFetchSequence;
         internal IProducer<CloseableReference<CloseableImage>> _dataFetchSequence;
@@ -91,17 +94,10 @@ namespace ImagePipeline.Core
         public IProducer<CloseableReference<IPooledByteBuffer>> GetEncodedImageProducerSequence(
             ImageRequest imageRequest)
         {
-            ValidateEncodedImageRequest(imageRequest);
-            lock (_gate)
-            {
-                if (_encodedImageProducerSequence == null)
-                {
-                    _encodedImageProducerSequence = new RemoveImageTransformMetaDataProducer(
-                        GetBackgroundNetworkFetchToEncodedMemorySequence());
-                }
-            }
+            IProducer<CloseableReference<IPooledByteBuffer>> pipelineSequence =
+                GetBasicEncodedImageSequence(imageRequest);
 
-            return _encodedImageProducerSequence;
+            return pipelineSequence;
         }
 
         /// <summary>
@@ -303,6 +299,138 @@ namespace ImagePipeline.Core
                 }
 
                 return _backgroundNetworkFetchToEncodedMemorySequence;
+            }
+        }
+
+        /// <summary>
+        /// encoded cache multiplex -> encoded cache -> local resource fetch.
+        /// </summary>
+        private IProducer<CloseableReference<IPooledByteBuffer>> GetEncodedLocalResourceFetchSequence()
+        {
+            lock (_gate)
+            {
+                if (_encodedLocalResourceFetchSequence == null)
+                {
+                    LocalResourceFetchProducer localResourceFetchProducer =
+                        _producerFactory.NewLocalResourceFetchProducer();
+
+                    _encodedLocalResourceFetchSequence = new RemoveImageTransformMetaDataProducer(
+                        NewEncodedCacheMultiplexToTranscodeSequence(localResourceFetchProducer));
+                }
+
+                return _encodedLocalResourceFetchSequence;
+            }
+        }
+
+        /// <summary>
+        /// encoded cache multiplex -> encoded cache -> data fetch.
+        /// </summary>
+        private IProducer<CloseableReference<IPooledByteBuffer>> GetEncodedDataFetchSequence()
+        {
+            lock (_gate)
+            {
+                if (_encodedDataFetchSequence == null)
+                {
+                    DataFetchProducer dataFetchProducer =
+                        _producerFactory.NewDataFetchProducer();
+
+                    _encodedDataFetchSequence = new RemoveImageTransformMetaDataProducer(
+                        NewEncodedCacheMultiplexToTranscodeSequence(dataFetchProducer));
+                }
+
+                return _encodedDataFetchSequence;
+            }
+        }
+
+        /// <summary>
+        /// encoded cache multiplex -> encoded cache -> local asset fetch.
+        /// </summary>
+        private IProducer<CloseableReference<IPooledByteBuffer>> GetEncodedLocalAssetFetchSequence()
+        {
+            lock (_gate)
+            {
+                if (_encodedLocalAssetFetchSequence == null)
+                {
+                    LocalAssetFetchProducer localAssetFetchProducer =
+                        _producerFactory.NewLocalAssetFetchProducer();
+
+                    _encodedLocalAssetFetchSequence = new RemoveImageTransformMetaDataProducer(
+                        NewEncodedCacheMultiplexToTranscodeSequence(localAssetFetchProducer));
+                }
+
+                return _encodedLocalAssetFetchSequence;
+            }
+        }
+
+        /// <summary>
+        /// encoded cache multiplex -> encoded cache -> local file fetch.
+        /// </summary>
+        private IProducer<CloseableReference<IPooledByteBuffer>> GetEncodedLocalImageFileFetchSequence()
+        {
+            lock (_gate)
+            {
+                if (_encodedLocalImageFileFetchSequence == null)
+                {
+                    LocalFileFetchProducer localFileFetchProducer =
+                        _producerFactory.NewLocalFileFetchProducer();
+
+                    _encodedLocalImageFileFetchSequence = new RemoveImageTransformMetaDataProducer(
+                        NewEncodedCacheMultiplexToTranscodeSequence(localFileFetchProducer));
+                }
+
+                return _encodedLocalImageFileFetchSequence;
+            }
+        }
+
+        private IProducer<CloseableReference<IPooledByteBuffer>> GetBasicEncodedImageSequence(
+            ImageRequest imageRequest)
+        {
+            Preconditions.CheckNotNull(imageRequest);
+
+            Uri uri = imageRequest.SourceUri;
+            Preconditions.CheckNotNull(uri, "Uri is null.");
+            if (UriUtil.IsNetworkUri(uri))
+            {
+                lock (_gate)
+                {
+                    if (_encodedImageProducerSequence == null)
+                    {
+                        _encodedImageProducerSequence = new RemoveImageTransformMetaDataProducer(
+                            GetBackgroundNetworkFetchToEncodedMemorySequence());
+                    }
+                }
+
+                return _encodedImageProducerSequence;
+            }
+            else if (UriUtil.IsAppDataUri(uri))
+            {
+                return GetEncodedLocalImageFileFetchSequence();
+            }
+            else if (UriUtil.IsAppPackageUri(uri))
+            {
+                return GetEncodedLocalAssetFetchSequence();
+            }
+            else if (UriUtil.IsAppResourceUri(uri))
+            {
+                return GetEncodedLocalResourceFetchSequence();
+            }
+            else if (UriUtil.IsDataUri(uri))
+            {
+                return GetEncodedDataFetchSequence();
+            }
+            else if (UriUtil.IsFileUri(uri))
+            {
+                return GetEncodedLocalImageFileFetchSequence();
+            }
+            else
+            {
+                string uriString = uri.ToString();
+                if (uriString.Length > 30)
+                {
+                    uriString = uriString.Substring(0, 30) + "...";
+                }
+
+                throw new Exception("Unsupported uri scheme! Uri is: " + uriString);
             }
         }
 
@@ -509,6 +637,7 @@ namespace ImagePipeline.Core
                     _localAssetFetchSequence =
                         NewBitmapCacheGetToLocalTransformSequence(localAssetFetchProducer);
                 }
+
                 return _localAssetFetchSequence;
             }
         }

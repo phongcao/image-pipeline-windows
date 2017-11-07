@@ -35,10 +35,10 @@ namespace Examples
         {
             var imageId = _rnd.Next(1, 100);
             await _imagePipeline.ClearCachesAsync();
-            UpdateImage(Image1, new Uri($"https://unsplash.it/800/600?image={ imageId }"));
-            UpdateImage(Image2, new Uri($"https://unsplash.it/800/600?image={ imageId + 1}"));
-            UpdateImage(Image3, new Uri($"https://unsplash.it/800/600?image={ imageId + 2 }"));
-            UpdateImage(Image4, new Uri($"https://unsplash.it/800/600?image={ imageId + 3 }"));
+            UpdateImage(Image1, new Uri($"https://picsum.photos/800/600?image={ imageId }"));
+            UpdateImage(Image2, new Uri($"https://picsum.photos/800/600?image={ imageId + 1}"));
+            UpdateImage(Image3, new Uri($"https://picsum.photos/800/600?image={ imageId + 2 }"));
+            UpdateImage(Image4, new Uri($"https://picsum.photos/800/600?image={ imageId + 3 }"));
         }
 
         public void UpdateImage(Image image, Uri uri)

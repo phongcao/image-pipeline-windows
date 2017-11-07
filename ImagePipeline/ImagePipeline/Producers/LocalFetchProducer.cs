@@ -37,7 +37,6 @@ namespace ImagePipeline.Producers
             IConsumer<EncodedImage> consumer,
             IProducerContext producerContext)
         {
-
             IProducerListener listener = producerContext.Listener;
             string requestId = producerContext.Id;
             ImageRequest imageRequest = producerContext.ImageRequest;

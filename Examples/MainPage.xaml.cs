@@ -15,7 +15,7 @@ namespace Examples
         public const int MAX_DIMENSION = 600;
         public const int MIN_DIMENSION = 400;
         public const int VIEW_DIMENSION = 200;
-        public const string IMAGE_URL = "https://unsplash.it/{0}/{1}?image={2}";
+        public const string IMAGE_URL = "https://picsum.photos/{0}/{1}?image={2}";
 
         private static Random _rnd = new Random();
 
