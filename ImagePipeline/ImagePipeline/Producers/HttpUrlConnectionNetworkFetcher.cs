@@ -191,8 +191,7 @@ namespace ImagePipeline.Producers
 
         private bool IsHttpSuccess(HttpStatusCode responseCode)
         {
-            return (responseCode >= HttpStatusCode.Ok &&
-                responseCode < HttpStatusCode.MultipleChoices);
+            return (responseCode == HttpStatusCode.Ok);
         }
 
         private bool IsHttpRedirect(HttpStatusCode responseCode)
