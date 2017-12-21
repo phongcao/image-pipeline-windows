@@ -9,10 +9,12 @@ using ImagePipeline.Request;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace ImagePipeline.Tests.Core
@@ -30,11 +32,18 @@ namespace ImagePipeline.Tests.Core
         private readonly Uri IMAGE5_URL = new Uri("https://picsum.photos/800/600?image=5");
         private readonly Uri FAILURE_URL = new Uri("https://httpbin.org/image_not_found.png");
         private readonly Uri LOCAL_PNG_URL = new Uri("ms-appx:///Assets/pngs/1.png");
+        private readonly Uri LOCAL_PNG2_URL = new Uri("ms-appx:///Assets/pngs/2.png");
+        private readonly Uri LOCAL_PNG3_URL = new Uri("ms-appx:///Assets/pngs/3.png");
+        private readonly Uri LOCAL_PNG4_URL = new Uri("ms-appx:///Assets/pngs/4.png");
         private readonly Uri LOCAL_JPEG_URL = new Uri("ms-appx:///Assets/jpegs/1.jpeg");
         private readonly Uri LOCAL_GIF_URL = new Uri("ms-appx:///Assets/gifs/dog.gif");
         private readonly Uri LOCAL_APP_DATA_URL = new Uri("ms-appdata:///local/1.png");
+        private readonly Uri LOCAL_APP_DATA2_URL = new Uri("ms-appdata:///local/2.png");
         private readonly Uri ROAMING_APP_DATA_URL = new Uri("ms-appdata:///roaming/1.png");
+        private readonly Uri ROAMING_APP_DATA2_URL = new Uri("ms-appdata:///roaming/2.png");
         private readonly Uri TEMP_APP_DATA_URL = new Uri("ms-appdata:///temp/1.png");
+        private readonly Uri TEMP_APP_DATA2_URL = new Uri("ms-appdata:///temp/2.png");
+        private readonly string INVALID_TOKEN = "{11111111-1111-1111-1111-111111111111}";
 
         /// <copyright>
         /// beach.jpg file is from https://github.com/markevans/dragonfly
@@ -499,12 +508,13 @@ namespace ImagePipeline.Tests.Core
         {
             // Prepare resource for testing.
             var appData = ApplicationData.Current;
-            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
-                new Uri("ms-appx:///Assets/pngs/2.png")).AsTask().ConfigureAwait(false);
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(LOCAL_PNG3_URL)
+                .AsTask()
+                .ConfigureAwait(false);
 
             await sourceFile.CopyAsync(appData.LocalFolder).AsTask().ConfigureAwait(false);
 
-            var fileUri = new Uri($"file:///{ appData.LocalFolder.Path }/2.png");
+            var fileUri = new Uri($"file:///{ appData.LocalFolder.Path }/3.png");
             var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
                 ImageRequest.FromUri(fileUri)).ConfigureAwait(false);
 
@@ -523,8 +533,9 @@ namespace ImagePipeline.Tests.Core
         {
             // Prepare resource for testing.
             var appData = ApplicationData.Current;
-            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
-                new Uri("ms-appx:///Assets/pngs/1.png")).AsTask().ConfigureAwait(false);
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(LOCAL_PNG_URL)
+                .AsTask()
+                .ConfigureAwait(false);
 
             await sourceFile.CopyAsync(appData.LocalFolder).AsTask().ConfigureAwait(false);
 
@@ -546,8 +557,9 @@ namespace ImagePipeline.Tests.Core
         {
             // Prepare resource for testing.
             var appData = ApplicationData.Current;
-            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
-                new Uri("ms-appx:///Assets/pngs/1.png")).AsTask().ConfigureAwait(false);
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(LOCAL_PNG_URL)
+                .AsTask()
+                .ConfigureAwait(false);
 
             await sourceFile.CopyAsync(appData.RoamingFolder).AsTask().ConfigureAwait(false);
 
@@ -569,8 +581,9 @@ namespace ImagePipeline.Tests.Core
         {
             // Prepare resource for testing.
             var appData = ApplicationData.Current;
-            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
-                new Uri("ms-appx:///Assets/pngs/1.png")).AsTask().ConfigureAwait(false);
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(LOCAL_PNG_URL)
+                .AsTask()
+                .ConfigureAwait(false);
 
             await sourceFile.CopyAsync(appData.TemporaryFolder).AsTask().ConfigureAwait(false);
 
@@ -800,8 +813,9 @@ namespace ImagePipeline.Tests.Core
         {
             // Prepare resource for testing.
             var appData = ApplicationData.Current;
-            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
-                new Uri("ms-appx:///Assets/pngs/4.png")).AsTask().ConfigureAwait(false);
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(LOCAL_PNG4_URL)
+                .AsTask()
+                .ConfigureAwait(false);
 
             await sourceFile.CopyAsync(appData.LocalFolder).AsTask().ConfigureAwait(false);
 
@@ -854,18 +868,19 @@ namespace ImagePipeline.Tests.Core
         /// Tests out fetching an encoded image from local app data folder
         /// </summary>
         [TestMethod]
-        public async Task TestFetchEncodedLocalAppData()
+        public async Task TestFetchEncodedImageLocalAppData()
         {
             // Prepare resource for testing.
             var appData = ApplicationData.Current;
-            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
-                new Uri("ms-appx:///Assets/pngs/3.png")).AsTask().ConfigureAwait(false);
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(LOCAL_PNG2_URL)
+                .AsTask()
+                .ConfigureAwait(false);
 
             await sourceFile.CopyAsync(appData.LocalFolder).AsTask().ConfigureAwait(false);
 
             var completion = new ManualResetEvent(false);
             var dataSource = _imagePipeline.FetchEncodedImage(
-                ImageRequest.FromUri(LOCAL_APP_DATA_URL), null);
+                ImageRequest.FromUri(LOCAL_APP_DATA2_URL), null);
 
             var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IPooledByteBuffer>>(
                 response =>
@@ -914,18 +929,19 @@ namespace ImagePipeline.Tests.Core
         /// Tests out fetching an encoded image from roaming app data folder
         /// </summary>
         [TestMethod]
-        public async Task TestFetchEncodedRoamingAppData()
+        public async Task TestFetchEncodedImageRoamingAppData()
         {
             // Prepare resource for testing.
             var appData = ApplicationData.Current;
-            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
-                new Uri("ms-appx:///Assets/pngs/3.png")).AsTask().ConfigureAwait(false);
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(LOCAL_PNG2_URL)
+                .AsTask()
+                .ConfigureAwait(false);
 
             await sourceFile.CopyAsync(appData.RoamingFolder).AsTask().ConfigureAwait(false);
 
             var completion = new ManualResetEvent(false);
             var dataSource = _imagePipeline.FetchEncodedImage(
-                ImageRequest.FromUri(ROAMING_APP_DATA_URL), null);
+                ImageRequest.FromUri(ROAMING_APP_DATA2_URL), null);
 
             var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IPooledByteBuffer>>(
                 response =>
@@ -974,12 +990,13 @@ namespace ImagePipeline.Tests.Core
         /// Tests out fetching an encoded image from temp app data folder
         /// </summary>
         [TestMethod]
-        public async Task TestFetchEncodedTempAppData()
+        public async Task TestFetchEncodedImageTempAppData()
         {
             // Prepare resource for testing.
             var appData = ApplicationData.Current;
-            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(
-                new Uri("ms-appx:///Assets/pngs/3.png")).AsTask().ConfigureAwait(false);
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(LOCAL_PNG2_URL)
+                .AsTask()
+                .ConfigureAwait(false);
 
             await sourceFile.CopyAsync(appData.TemporaryFolder).AsTask().ConfigureAwait(false);
 
@@ -1071,5 +1088,144 @@ namespace ImagePipeline.Tests.Core
         //        Assert.IsTrue(bitmap.PixelHeight == 91);
         //    });
         //}
+
+        /// <summary>
+        /// Tests out fetching an encoded image from future access list
+        /// </summary>
+        [TestMethod]
+        public async Task TestFetchEncodedImageFutureAccessList()
+        {
+            // Prepare resource for testing.
+            var fa = StorageApplicationPermissions.FutureAccessList;
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(LOCAL_PNG_URL)
+                .AsTask()
+                .ConfigureAwait(false);
+
+            string token = fa.Add(sourceFile, "test");
+
+            var completion = new ManualResetEvent(false);
+            var uri = new Uri($"urn:future-access-list:{ token }");
+            var dataSource = _imagePipeline.FetchEncodedImage(
+                ImageRequest.FromUri(uri), null);
+
+            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IPooledByteBuffer>>(
+                response =>
+                {
+                    CloseableReference<IPooledByteBuffer> reference = response.GetResult();
+                    if (reference != null)
+                    {
+                        IPooledByteBuffer inputStream = reference.Get();
+
+                        try
+                        {
+                            Assert.IsTrue(inputStream.Size != 0);
+                            Assert.IsTrue(_imagePipeline.IsInEncodedMemoryCache(uri));
+                        }
+                        catch (Exception)
+                        {
+                            Assert.Fail();
+                        }
+                        finally
+                        {
+                            CloseableReference<IPooledByteBuffer>.CloseSafely(reference);
+                            completion.Set();
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                    else
+                    {
+                        Assert.Fail();
+                        completion.Set();
+                        return Task.CompletedTask;
+                    }
+                },
+                response =>
+                {
+                    Assert.Fail();
+                    completion.Set();
+                });
+
+            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            completion.WaitOne();
+        }
+
+        /// <summary>
+        /// Tests out fetching an invalid encoded image from future access list
+        /// </summary>
+        [TestMethod]
+        public void TestFetchEncodedImageFutureAccessListFail()
+        {
+            var completion = new ManualResetEvent(false);
+            var uri = new Uri($"urn:future-access-list:{ INVALID_TOKEN }");
+            var dataSource = _imagePipeline.FetchEncodedImage(
+                ImageRequest.FromUri(uri), null);
+
+            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<IPooledByteBuffer>>(
+                response =>
+                {
+                    Assert.Fail();
+                    completion.Set();
+                    return Task.CompletedTask;
+                },
+                response =>
+                {
+                    completion.Set();
+                });
+
+            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            completion.WaitOne();
+        }
+
+        /// <summary>
+        /// Tests out fetching a decoded image from future access list
+        /// </summary>
+        [TestMethod]
+        public async Task TestFetchFutureAccessList()
+        {
+            // Prepare resource for testing.
+            var fa = StorageApplicationPermissions.FutureAccessList;
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(LOCAL_PNG_URL)
+                .AsTask()
+                .ConfigureAwait(false);
+
+            string token = fa.Add(sourceFile, "test");
+
+            var uri = new Uri($"urn:future-access-list:{ token }");
+            var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
+                ImageRequest.FromUri(uri)).ConfigureAwait(false);
+
+            await DispatcherHelpers.RunOnDispatcherAsync(() =>
+            {
+                Assert.IsTrue(bitmap.PixelWidth != 0);
+                Assert.IsTrue(bitmap.PixelHeight != 0);
+            });
+        }
+
+        /// <summary>
+        /// Tests out fetching a decoded image from future access list.
+        /// The uri is encoded.
+        /// </summary>
+        [TestMethod]
+        public async Task TestFetchFutureAccessListEncodedURI()
+        {
+            // Prepare resource for testing.
+            var fa = StorageApplicationPermissions.FutureAccessList;
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(LOCAL_PNG_URL)
+                .AsTask()
+                .ConfigureAwait(false);
+
+            string token = WebUtility.UrlEncode(fa.Add(sourceFile, "test"));
+
+            var uri = new Uri($"urn:future-access-list:{ token }");
+            var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
+                ImageRequest.FromUri(uri)).ConfigureAwait(false);
+
+            await DispatcherHelpers.RunOnDispatcherAsync(() =>
+            {
+                Assert.IsTrue(bitmap.PixelWidth != 0);
+                Assert.IsTrue(bitmap.PixelHeight != 0);
+            });
+        }
     }
 }

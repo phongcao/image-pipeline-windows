@@ -48,6 +48,11 @@ namespace FBCore.Common.Util
         public const string FILE_SCHEME = "file";
 
         /// <summary>
+        /// FutureAccessList scheme for URIs.
+        /// </summary>
+        public const string FUTURE_ACCESS_LIST_SCHEME = "urn:future-access-list:";
+
+        /// <summary>
         /// Check if uri represents network resource.
         ///
         /// <param name="uri">uri to check.</param>
@@ -110,6 +115,16 @@ namespace FBCore.Common.Util
         {
             string scheme = GetSchemeOrNull(uri);
             return FILE_SCHEME.Equals(scheme);
+        }
+
+        /// <summary>
+        /// Check if the uri is a FutureAccessList uri.
+        /// </summary>
+        /// <param name="uri">uri to check.</param>
+        public static bool IsFutureAccessListUri(Uri uri)
+        {
+            return (uri == null) ? false : uri.OriginalString.StartsWith(
+                FUTURE_ACCESS_LIST_SCHEME);
         }
 
         /// <summary>
