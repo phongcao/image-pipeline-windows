@@ -37,11 +37,13 @@ namespace ImagePipeline.Core
         internal IProducer<CloseableReference<IPooledByteBuffer>> _encodedLocalResourceFetchSequence;
         internal IProducer<CloseableReference<IPooledByteBuffer>> _encodedLocalAssetFetchSequence;
         internal IProducer<CloseableReference<IPooledByteBuffer>> _encodedDataFetchSequence;
+        internal IProducer<CloseableReference<IPooledByteBuffer>> _encodedFutureAccessListFetchSequence;
         internal IProducer<CloseableReference<CloseableImage>> _localImageFileFetchSequence;
         internal IProducer<CloseableReference<CloseableImage>> _localVideoFileFetchSequence;
         internal IProducer<CloseableReference<CloseableImage>> _localResourceFetchSequence;
         internal IProducer<CloseableReference<CloseableImage>> _localAssetFetchSequence;
         internal IProducer<CloseableReference<CloseableImage>> _dataFetchSequence;
+        internal IProducer<CloseableReference<CloseableImage>> _futureAccessListFetchSequence;
         internal IDictionary<
             IProducer<CloseableReference<CloseableImage>>,
             IProducer<CloseableReference<CloseableImage>>> _postprocessorSequences;
@@ -382,6 +384,26 @@ namespace ImagePipeline.Core
             }
         }
 
+        /// <summary>
+        /// encoded cache multiplex -> encoded cache -> FutureAccessList fetch.
+        /// </summary>
+        private IProducer<CloseableReference<IPooledByteBuffer>> GetEncodedFutureAccessListFetchSequence()
+        {
+            lock (_gate)
+            {
+                if (_encodedFutureAccessListFetchSequence == null)
+                {
+                    FutureAccessListFetchProducer futureAccessListFetchProducer =
+                        _producerFactory.NewFutureAccessListFetchProducer();
+
+                    _encodedFutureAccessListFetchSequence = new RemoveImageTransformMetaDataProducer(
+                        NewEncodedCacheMultiplexToTranscodeSequence(futureAccessListFetchProducer));
+                }
+
+                return _encodedFutureAccessListFetchSequence;
+            }
+        }
+
         private IProducer<CloseableReference<IPooledByteBuffer>> GetBasicEncodedImageSequence(
             ImageRequest imageRequest)
         {
@@ -421,6 +443,10 @@ namespace ImagePipeline.Core
             else if (UriUtil.IsFileUri(uri))
             {
                 return GetEncodedLocalImageFileFetchSequence();
+            }
+            else if (UriUtil.IsFutureAccessListUri(uri))
+            {
+                return GetEncodedFutureAccessListFetchSequence();
             }
             else
             {
@@ -689,6 +715,32 @@ namespace ImagePipeline.Core
             }
         }
 
+        /// <summary>
+        /// bitmap cache get ->
+        /// background thread hand-off -> multiplex -> bitmap cache ->
+        /// decode -> branch on separate images
+        ///   -> exif resize and rotate -> exif thumbnail creation
+        ///   -> local image resize and rotate -> add meta data producer
+        ///   -> multiplex -> encoded cache -> (webp transcode)
+        ///   -> FutureAccessList fetch.
+        /// </summary>
+        private IProducer<CloseableReference<CloseableImage>> GetFutureAccessListFetchSequence()
+        {
+            lock (_gate)
+            {
+                if (_futureAccessListFetchSequence == null)
+                {
+                    FutureAccessListFetchProducer futureAccessListFetchProducer =
+                        _producerFactory.NewFutureAccessListFetchProducer();
+
+                    _futureAccessListFetchSequence =
+                        NewBitmapCacheGetToLocalTransformSequence(futureAccessListFetchProducer);
+                }
+
+                return _futureAccessListFetchSequence;
+            }
+        }
+
         private IProducer<CloseableReference<CloseableImage>> GetBasicDecodedImageSequence(
             ImageRequest imageRequest)
         {
@@ -726,6 +778,10 @@ namespace ImagePipeline.Core
             else if (UriUtil.IsFileUri(uri))
             {
                 return GetLocalImageFileFetchSequence();
+            }
+            else if (UriUtil.IsFutureAccessListUri(uri))
+            {
+                return GetFutureAccessListFetchSequence();
             }
             else
             {

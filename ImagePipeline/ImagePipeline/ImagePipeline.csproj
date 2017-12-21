@@ -203,6 +203,7 @@
     <Compile Include="Producers\LocalExifThumbnailProducer.cs" />
     <Compile Include="Producers\LocalFetchProducer.cs" />
     <Compile Include="Producers\LocalFileFetchProducer.cs" />
+    <Compile Include="Producers\FutureAccessListFetchProducer.cs" />
     <Compile Include="Producers\LocalResourceFetchProducer.cs" />
     <Compile Include="Producers\LocalVideoThumbnailProducer.cs" />
     <Compile Include="Producers\MultiplexProducer.cs" />

@@ -44,9 +44,9 @@ namespace ImagePipeline.Producers
                     imageRequest.SourceUri).AsTask();
 
                 return uriToFilePathTask.ContinueWith(
-                    (filepathTask) =>
+                    (filePathTask) =>
                     {
-                        FileInfo file = new FileInfo(filepathTask.Result.Path);
+                        FileInfo file = new FileInfo(filePathTask.Result.Path);
                         return GetEncodedImage(file.OpenRead(), (int)(file.Length));
                     });
             }

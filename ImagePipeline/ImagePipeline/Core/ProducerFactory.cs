@@ -317,6 +317,16 @@ namespace ImagePipeline.Core
         }
 
         /// <summary>
+        /// Instantiates the <see cref="FutureAccessListFetchProducer"/>.
+        /// </summary>
+        public FutureAccessListFetchProducer NewFutureAccessListFetchProducer()
+        {
+            return new FutureAccessListFetchProducer(
+                _executorSupplier.ForLocalStorageRead,
+                _pooledByteBufferFactory);
+        }
+
+        /// <summary>
         /// Instantiates the <see cref="NetworkFetchProducer"/>.
         /// </summary>
         public NetworkFetchProducer NewNetworkFetchProducer(INetworkFetcher<FetchState> networkFetcher)
