@@ -4,6 +4,7 @@ using ImagePipeline.Memory;
 using ImagePipeline.Request;
 using System;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using Windows.Storage.AccessCache;
 
@@ -32,9 +33,10 @@ namespace ImagePipeline.Producers
         /// </summary>
         protected override Task<EncodedImage> GetEncodedImage(ImageRequest imageRequest)
         {
-            string originalString = imageRequest.SourceUri.OriginalString;
+            string originalString = WebUtility.UrlDecode(imageRequest.SourceUri.OriginalString);
             string token = originalString.Substring(originalString.LastIndexOf(":") + 1);
-            return StorageApplicationPermissions.FutureAccessList.GetFileAsync(token).AsTask()
+            return StorageApplicationPermissions.FutureAccessList.GetFileAsync(token)
+                .AsTask()
                 .ContinueWith(
                 (filePathTask) =>
                 {

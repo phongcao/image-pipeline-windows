@@ -9,6 +9,7 @@ using ImagePipeline.Request;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using System;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
@@ -1189,6 +1190,32 @@ namespace ImagePipeline.Tests.Core
                 .ConfigureAwait(false);
 
             string token = fa.Add(sourceFile, "test");
+
+            var uri = new Uri($"urn:future-access-list:{ token }");
+            var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
+                ImageRequest.FromUri(uri)).ConfigureAwait(false);
+
+            await DispatcherHelpers.RunOnDispatcherAsync(() =>
+            {
+                Assert.IsTrue(bitmap.PixelWidth != 0);
+                Assert.IsTrue(bitmap.PixelHeight != 0);
+            });
+        }
+
+        /// <summary>
+        /// Tests out fetching a decoded image from future access list.
+        /// The uri is encoded.
+        /// </summary>
+        [TestMethod]
+        public async Task TestFetchFutureAccessListEncodedURI()
+        {
+            // Prepare resource for testing.
+            var fa = StorageApplicationPermissions.FutureAccessList;
+            var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(LOCAL_PNG_URL)
+                .AsTask()
+                .ConfigureAwait(false);
+
+            string token = WebUtility.UrlEncode(fa.Add(sourceFile, "test"));
 
             var uri = new Uri($"urn:future-access-list:{ token }");
             var bitmap = await _imagePipeline.FetchDecodedBitmapImageAsync(
