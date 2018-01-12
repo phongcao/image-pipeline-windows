@@ -65,6 +65,29 @@ namespace ImagePipeline.Platform
         /// <summary>
         /// Calls on dispatcher.
         /// </summary>
+        public static Task CallOnDispatcherAsync(Func<Task> asyncFunc)
+        {
+            var taskCompletionSource = new TaskCompletionSource<object>();
+
+            RunOnDispatcher(async () =>
+            {
+                try
+                {
+                    await asyncFunc().ConfigureAwait(false);
+                    taskCompletionSource.SetResult(string.Empty);
+                }
+                catch (Exception ex)
+                {
+                    taskCompletionSource.SetException(ex);
+                }
+            });
+
+            return taskCompletionSource.Task;
+        }
+
+        /// <summary>
+        /// Calls on dispatcher.
+        /// </summary>
         public static Task<T> CallOnDispatcherAsync<T>(Func<T> func)
         {
             var taskCompletionSource = new TaskCompletionSource<T>();

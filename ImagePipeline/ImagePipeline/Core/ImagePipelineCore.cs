@@ -444,7 +444,7 @@ namespace ImagePipeline.Core
                         try
                         {
                             inputStream.Read(0, bytesArray, 0, inputStream.Size);
-                            await DispatcherHelpers.RunOnDispatcherAsync(async () =>
+                            await DispatcherHelpers.CallOnDispatcherAsync(async () =>
                             {
                                 using (var outStream = new InMemoryRandomAccessStream())
                                 using (var writeStream = outStream.AsStreamForWrite())
