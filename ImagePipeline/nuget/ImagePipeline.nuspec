@@ -11,7 +11,7 @@
     <iconUrl>http://frescolib.org/static/logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Image Pipeline loads images from the network, local storage, or local resources. To save data and CPU, it has three levels of cache; two in memory and another in internal storage.</description>
-    <releaseNotes>Bug fixes.</releaseNotes>
+    <releaseNotes>Updates DispatcherHelpers to work properly in multiple windows scenario.</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Fresco ImagePipeline</tags>
   </metadata>
