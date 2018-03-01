@@ -19,6 +19,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace ImagePipeline.Core
@@ -223,12 +224,16 @@ namespace ImagePipeline.Core
         /// <param name="token">
         /// The cancellation token.
         /// </param>
+        /// <param name="dispatcher">
+        /// The current view's dispatcher, used to create WriteableBitmap.
+        /// </param>
         /// <returns>
         /// A Task{WriteableBitmap} representing the image.
         /// </returns>
         public Task<WriteableBitmap> FetchImageFromBitmapCacheAsync(
             ImageRequest imageRequest,
-            CancellationToken token = default(CancellationToken))
+            CancellationToken token = default(CancellationToken),
+            CoreDispatcher dispatcher = null)
         {
             var taskCompletionSource = new TaskCompletionSource<WriteableBitmap>();
             var dataSource = FetchDecodedImage(
@@ -253,8 +258,8 @@ namespace ImagePipeline.Core
                             {
                                 taskCompletionSource.SetException(e);
                             }
-                        })
-                        .ConfigureAwait(false);
+                        },
+                        dispatcher).ConfigureAwait(false);
                     }
                     else
                     {
@@ -403,13 +408,17 @@ namespace ImagePipeline.Core
         /// </summary>
         /// <param name="uri">The image uri.</param>
         /// <param name="token">The cancellation token.</param>
+        /// <param name="dispatcher">
+        /// The current view's dispatcher, used to create BitmapImage.
+        /// </param>
         /// <returns>The encoded BitmapImage.</returns>
         /// <exception cref="IOException">
         /// If the image uri can't be found.
         /// </exception>
         public Task<BitmapImage> FetchEncodedBitmapImageAsync(
             Uri uri, 
-            CancellationToken token = default(CancellationToken))
+            CancellationToken token = default(CancellationToken),
+            CoreDispatcher dispatcher = null)
         {
             var taskCompletionSource = new TaskCompletionSource<BitmapImage>();
             var dataSource = FetchEncodedImage(ImageRequest.FromUri(uri), null);
@@ -455,8 +464,8 @@ namespace ImagePipeline.Core
                                     await bitmapImage.SetSourceAsync(outStream).AsTask().ConfigureAwait(false);
                                     taskCompletionSource.SetResult(bitmapImage);
                                 }
-                            })
-                            .ConfigureAwait(false);
+                            },
+                            dispatcher).ConfigureAwait(false);
                         }
                         catch (Exception e)
                         {
@@ -493,13 +502,17 @@ namespace ImagePipeline.Core
         /// </summary>
         /// <param name="imageRequest">The image request.</param>
         /// <param name="token">The cancellation token.</param>
+        /// <param name="dispatcher">
+        /// The current view's dispatcher, used to create WriteableBitmap.
+        /// </param>
         /// <returns>The decoded WriteableBitmap.</returns>
         /// <exception cref="IOException">
         /// If the image request isn't valid.
         /// </exception>
         public Task<WriteableBitmap> FetchDecodedBitmapImageAsync(
             ImageRequest imageRequest,
-            CancellationToken token = default(CancellationToken))
+            CancellationToken token = default(CancellationToken),
+            CoreDispatcher dispatcher = null)
         {
             var taskCompletionSource = new TaskCompletionSource<WriteableBitmap>();
             var dataSource = FetchDecodedImage(imageRequest, null);
@@ -520,8 +533,8 @@ namespace ImagePipeline.Core
                             {
                                 taskCompletionSource.SetException(e);
                             }
-                        })
-                        .ConfigureAwait(false);
+                        },
+                        dispatcher).ConfigureAwait(false);
                     }
                     else
                     {
