@@ -28,21 +28,28 @@ namespace ImagePipeline.Platform
         /// </summary>
         public static bool IsOnDispatcher()
         {
-            return CoreWindow.GetForCurrentThread()?.Dispatcher != null;
+            return CoreApplication.MainView.Dispatcher.HasThreadAccess;
         }
 
         /// <summary>
         /// Runs on dispatcher.
         /// </summary>
-        public static async void RunOnDispatcher(DispatchedHandler action)
+        public static async void RunOnDispatcher(DispatchedHandler action, CoreDispatcher dispatcher = null)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, action).AsTask().ConfigureAwait(false);
+            if (dispatcher != null)
+            {
+                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, action).AsTask().ConfigureAwait(false);
+            }
+            else
+            {
+                await CoreApplication.MainView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, action).AsTask().ConfigureAwait(false);
+            }
         }
 
         /// <summary>
         /// Runs on dispatcher.
         /// </summary>
-        public static Task RunOnDispatcherAsync(Action action)
+        public static Task RunOnDispatcherAsync(Action action, CoreDispatcher dispatcher = null)
         {
             var taskCompletionSource = new TaskCompletionSource<object>();
 
@@ -57,7 +64,8 @@ namespace ImagePipeline.Platform
                 {
                     taskCompletionSource.SetException(ex);
                 }
-            });
+            },
+            dispatcher);
 
             return taskCompletionSource.Task;
         }
@@ -65,7 +73,7 @@ namespace ImagePipeline.Platform
         /// <summary>
         /// Calls on dispatcher.
         /// </summary>
-        public static Task CallOnDispatcherAsync(Func<Task> asyncFunc)
+        public static Task CallOnDispatcherAsync(Func<Task> asyncFunc, CoreDispatcher dispatcher = null)
         {
             var taskCompletionSource = new TaskCompletionSource<object>();
 
@@ -80,7 +88,8 @@ namespace ImagePipeline.Platform
                 {
                     taskCompletionSource.SetException(ex);
                 }
-            });
+            },
+            dispatcher);
 
             return taskCompletionSource.Task;
         }
@@ -88,7 +97,7 @@ namespace ImagePipeline.Platform
         /// <summary>
         /// Calls on dispatcher.
         /// </summary>
-        public static Task<T> CallOnDispatcherAsync<T>(Func<T> func)
+        public static Task<T> CallOnDispatcherAsync<T>(Func<T> func, CoreDispatcher dispatcher = null)
         {
             var taskCompletionSource = new TaskCompletionSource<T>();
 
@@ -99,7 +108,8 @@ namespace ImagePipeline.Platform
                 // TaskCompletionSource<T>.SetResult can call continuations
                 // on the awaiter of the task completion source.
                 Task.Run(() => taskCompletionSource.SetResult(result));
-            });
+            },
+            dispatcher);
 
             return taskCompletionSource.Task;
         }
