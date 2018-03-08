@@ -754,7 +754,21 @@ namespace ImagePipeline.Core
             }
             else
             {
-                return Task.FromResult(default(FileInfo));
+                return _mainBufferedDiskCache.Contains(cacheKey).ContinueWith(
+                    task =>
+                    {
+                        bool fileExists = task.Result;
+                        if (fileExists)
+                        {
+                            IBinaryResource resource = ImagePipelineFactory.Instance.GetMainDiskStorageCache().GetResource(cacheKey);
+                            return ((FileBinaryResource)resource).File;
+                        }
+                        else
+                        {
+                            return default(FileInfo);
+                        }
+                    },
+                    TaskContinuationOptions.ExecuteSynchronously);
             }
         }
 

@@ -329,6 +329,7 @@ namespace ImagePipeline.Cache
                 {
                     _stagingArea.ClearAll();
                     _fileCache.ClearAll();
+                    _writeToDiskCacheTasks.Clear();
                 });
             }
             catch (Exception)
