@@ -17,7 +17,7 @@ namespace ImagePipeline.Tests.Producers
         private const string SUCCESS_URL = "https://httpbin.org/image/png";
         private const string FAILURE_URL = "https://httpbin.org/image_not_found.png";
         private const string SUCCESS_REDIRECT_URL = "http://httpbin.org/redirect-to?url=https%3A%2F%2Fwww.microsoft.com%2F";
-        private const string FAILURE_REDIRECT_URL = "http://httpbin.org/redirect-to?url=http%3A%2F%2Fhttpbin.org%2F";
+        private const string SUCCESS_REDIRECT_URL2 = "http://facebook.github.io/react/logo-og.png";
 
         private static HttpUrlConnectionNetworkFetcher _fetcher;
 
@@ -189,34 +189,36 @@ namespace ImagePipeline.Tests.Producers
         }
 
         /// <summary>
-        /// Tests out the callback with failed redirection
+        /// Tests out the callback with successful redirection
         /// </summary>
         [TestMethod, Timeout(3000)]
-        public void TestFetchSendsErrorToCallbackAfterRedirectToSameLocation()
+        public void TestFetchSendsSuccessToCallbackAfterRedirect2()
         {
             ManualResetEvent completion = new ManualResetEvent(false);
             bool failed = false;
             _producerContext = new SettableProducerContext(
-                ImageRequest.FromUri(FAILURE_REDIRECT_URL),
-                FAILURE_REDIRECT_URL,
+                ImageRequest.FromUri(SUCCESS_REDIRECT_URL2),
+                SUCCESS_REDIRECT_URL2,
                 _producerListener,
                 new object(),
                 RequestLevel.FULL_FETCH,
                 false,
                 true,
                 Priority.MEDIUM);
+
             _fetchState = new FetchState(_consumer, _producerContext);
             _fetcher.Fetch(
                 _fetchState,
                 new NetworkFetcherCallbackImpl(
                     (response, responseLength) =>
                     {
-                        failed = true;
+                        Assert.IsTrue(response != null);
+                        Assert.IsTrue(responseLength == -1);
                         completion.Set();
                     },
                     (throwable) =>
                     {
-                        Assert.IsTrue(throwable.GetType() == typeof(IOException));
+                        failed = true;
                         completion.Set();
                     },
                     () =>

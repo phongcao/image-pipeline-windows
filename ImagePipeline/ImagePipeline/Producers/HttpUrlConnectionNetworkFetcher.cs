@@ -158,7 +158,7 @@ namespace ImagePipeline.Producers
                         Uri nextUri = response.Headers.Location;
                         string originalScheme = uri.Scheme;
 
-                        if (maxRedirects > 0 && nextUri != null && !nextUri.Scheme.Equals(originalScheme))
+                        if (maxRedirects > 0 && nextUri != null)
                         {
                             return await DownloadFrom(nextUri, maxRedirects - 1, token)
                                 .ConfigureAwait(false);
