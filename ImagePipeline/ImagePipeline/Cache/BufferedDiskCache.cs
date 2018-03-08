@@ -7,6 +7,7 @@ using FBCore.Concurrency;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -27,6 +28,8 @@ namespace ImagePipeline.Cache
         private readonly StagingArea _stagingArea;
         private readonly IImageCacheStatsTracker _imageCacheStatsTracker;
 
+        private ConcurrentDictionary<ICacheKey, Task> _writeToDiskCacheTasks;
+
         /// <summary>
         /// Instantiates the <see cref="BufferedDiskCache"/>.
         /// </summary>
@@ -45,6 +48,7 @@ namespace ImagePipeline.Cache
             _writeExecutor = writeExecutor;
             _imageCacheStatsTracker = imageCacheStatsTracker;
             _stagingArea = StagingArea.Instance;
+            _writeToDiskCacheTasks = new ConcurrentDictionary<ICacheKey, Task>();
         }
 
         /// <summary>
@@ -247,7 +251,7 @@ namespace ImagePipeline.Cache
             EncodedImage finalEncodedImage = EncodedImage.CloneOrNull(encodedImage);
             try
             {
-                return _writeExecutor.Execute(() =>
+                Task writeTask = _writeExecutor.Execute(() =>
                 {
                     try
                     {
@@ -259,6 +263,9 @@ namespace ImagePipeline.Cache
                         EncodedImage.CloseSafely(finalEncodedImage);
                     }
                 });
+
+                _writeToDiskCacheTasks.TryAdd(key, writeTask);
+                return writeTask;
             }
             catch (Exception)
             {
@@ -272,12 +279,27 @@ namespace ImagePipeline.Cache
         }
 
         /// <summary>
+        /// Gets the write-to-disk-cache task for the provided cache key.
+        /// </summary>
+        /// <param name="cacheKey">The cache key.</param>
+        public Task GetWriteToDiskCacheTask(ICacheKey cacheKey)
+        {
+            Task writeTask = default(Task);
+            _writeToDiskCacheTasks.TryGetValue(cacheKey, out writeTask);
+            return writeTask;
+        }
+
+        /// <summary>
         /// Removes the item from the disk cache and the staging area.
         /// </summary>
         public Task Remove(ICacheKey key)
         {
             Preconditions.CheckNotNull(key);
             _stagingArea.Remove(key);
+
+            Task writeTask = default(Task);
+            _writeToDiskCacheTasks.TryRemove(key, out writeTask);
+
             try
             {
                 return _writeExecutor.Execute(() =>
