@@ -1227,5 +1227,32 @@ namespace ImagePipeline.Tests.Core
                 Assert.IsTrue(bitmap.PixelHeight != 0);
             });
         }
+
+        /// <summary>
+        /// Tests out getting the file cache path when the file has been
+        /// written to disk successfully.
+        /// </summary>
+        [TestMethod, Timeout(5000)]
+        public async Task TestGetFileCachePathSuccess()
+        {
+            await _imagePipeline.PrefetchToDiskCacheAsync(IMAGE_URL).ConfigureAwait(false);
+            Assert.IsTrue(await _imagePipeline.IsInDiskCacheAsync(IMAGE_URL).ConfigureAwait(false));
+
+            FileInfo info = await _imagePipeline.GetFileCachePath(IMAGE_URL).ConfigureAwait(false);
+            Assert.IsNotNull(info);
+        }
+
+        /// <summary>
+        /// Tests out getting the file cache path when the file doesn't exist.
+        /// </summary>
+        [TestMethod, Timeout(5000)]
+        public async Task TestGetFileCachePathFail()
+        {
+            await _imagePipeline.PrefetchToDiskCacheAsync(IMAGE_URL).ConfigureAwait(false);
+            Assert.IsTrue(await _imagePipeline.IsInDiskCacheAsync(IMAGE_URL).ConfigureAwait(false));
+
+            FileInfo info = await _imagePipeline.GetFileCachePath(FAILURE_URL).ConfigureAwait(false);
+            Assert.IsNull(info);
+        }
     }
 }

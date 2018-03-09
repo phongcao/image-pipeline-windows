@@ -7,6 +7,7 @@ using FBCore.Concurrency;
 using ImagePipeline.Image;
 using ImagePipeline.Memory;
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -27,6 +28,8 @@ namespace ImagePipeline.Cache
         private readonly StagingArea _stagingArea;
         private readonly IImageCacheStatsTracker _imageCacheStatsTracker;
 
+        private ConcurrentDictionary<ICacheKey, Task> _writeToDiskCacheTasks;
+
         /// <summary>
         /// Instantiates the <see cref="BufferedDiskCache"/>.
         /// </summary>
@@ -45,6 +48,7 @@ namespace ImagePipeline.Cache
             _writeExecutor = writeExecutor;
             _imageCacheStatsTracker = imageCacheStatsTracker;
             _stagingArea = StagingArea.Instance;
+            _writeToDiskCacheTasks = new ConcurrentDictionary<ICacheKey, Task>();
         }
 
         /// <summary>
@@ -247,7 +251,7 @@ namespace ImagePipeline.Cache
             EncodedImage finalEncodedImage = EncodedImage.CloneOrNull(encodedImage);
             try
             {
-                return _writeExecutor.Execute(() =>
+                Task writeTask = _writeExecutor.Execute(() =>
                 {
                     try
                     {
@@ -257,8 +261,15 @@ namespace ImagePipeline.Cache
                     {
                         _stagingArea.Remove(key, finalEncodedImage);
                         EncodedImage.CloseSafely(finalEncodedImage);
+
+                        // Removes write task after it's completed.
+                        Task writeTaskCompleted = default(Task);
+                        _writeToDiskCacheTasks.TryRemove(key, out writeTaskCompleted);
                     }
                 });
+
+                _writeToDiskCacheTasks.TryAdd(key, writeTask);
+                return writeTask;
             }
             catch (Exception)
             {
@@ -267,8 +278,23 @@ namespace ImagePipeline.Cache
                 Debug.WriteLine($"Failed to schedule disk-cache write for { key.ToString() }");
                 _stagingArea.Remove(key, encodedImage);
                 EncodedImage.CloseSafely(finalEncodedImage);
+
+                // Removes write task due to error.
+                Task writeTaskCompleted = default(Task);
+                _writeToDiskCacheTasks.TryRemove(key, out writeTaskCompleted);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Gets the write-to-disk-cache task for the provided cache key.
+        /// </summary>
+        /// <param name="cacheKey">The cache key.</param>
+        public Task GetWriteToDiskCacheTask(ICacheKey cacheKey)
+        {
+            Task writeTask = default(Task);
+            _writeToDiskCacheTasks.TryGetValue(cacheKey, out writeTask);
+            return writeTask;
         }
 
         /// <summary>
@@ -278,6 +304,10 @@ namespace ImagePipeline.Cache
         {
             Preconditions.CheckNotNull(key);
             _stagingArea.Remove(key);
+
+            Task writeTask = default(Task);
+            _writeToDiskCacheTasks.TryRemove(key, out writeTask);
+
             try
             {
                 return _writeExecutor.Execute(() =>
@@ -307,6 +337,7 @@ namespace ImagePipeline.Cache
                 {
                     _stagingArea.ClearAll();
                     _fileCache.ClearAll();
+                    _writeToDiskCacheTasks.Clear();
                 });
             }
             catch (Exception)

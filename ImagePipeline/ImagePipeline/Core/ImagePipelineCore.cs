@@ -1,4 +1,5 @@
-﻿using Cache.Common;
+﻿using BinaryResource;
+using Cache.Common;
 using FBCore.Common.Internal;
 using FBCore.Common.References;
 using FBCore.Common.Util;
@@ -729,6 +730,46 @@ namespace ImagePipeline.Core
             });
 
             return taskCompletionSource.Task;
+        }
+
+        /// <summary>
+        /// Gets the file cache path.
+        /// </summary>
+        /// <param name="uri">The image uri.</param>
+        public Task<FileInfo> GetFileCachePath(Uri uri)
+        {
+            ICacheKey cacheKey = _cacheKeyFactory.GetEncodedCacheKey(
+                ImageRequest.FromUri(uri), null);
+
+            Task writeTask = _mainBufferedDiskCache.GetWriteToDiskCacheTask(cacheKey);
+            if (writeTask != default(Task))
+            {
+                return writeTask.ContinueWith(
+                    task =>
+                    {
+                        IBinaryResource resource = ImagePipelineFactory.Instance.GetMainDiskStorageCache().GetResource(cacheKey);
+                        return ((FileBinaryResource)resource).File;
+                    },
+                    TaskContinuationOptions.ExecuteSynchronously);
+            }
+            else
+            {
+                return _mainBufferedDiskCache.Contains(cacheKey).ContinueWith(
+                    task =>
+                    {
+                        bool fileExists = task.Result;
+                        if (fileExists)
+                        {
+                            IBinaryResource resource = ImagePipelineFactory.Instance.GetMainDiskStorageCache().GetResource(cacheKey);
+                            return ((FileBinaryResource)resource).File;
+                        }
+                        else
+                        {
+                            return default(FileInfo);
+                        }
+                    },
+                    TaskContinuationOptions.ExecuteSynchronously);
+            }
         }
 
         /// <summary>
