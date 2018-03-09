@@ -261,6 +261,10 @@ namespace ImagePipeline.Cache
                     {
                         _stagingArea.Remove(key, finalEncodedImage);
                         EncodedImage.CloseSafely(finalEncodedImage);
+
+                        // Removes write task after it's completed.
+                        Task writeTaskCompleted = default(Task);
+                        _writeToDiskCacheTasks.TryRemove(key, out writeTaskCompleted);
                     }
                 });
 
@@ -274,6 +278,10 @@ namespace ImagePipeline.Cache
                 Debug.WriteLine($"Failed to schedule disk-cache write for { key.ToString() }");
                 _stagingArea.Remove(key, encodedImage);
                 EncodedImage.CloseSafely(finalEncodedImage);
+
+                // Removes write task due to error.
+                Task writeTaskCompleted = default(Task);
+                _writeToDiskCacheTasks.TryRemove(key, out writeTaskCompleted);
                 throw;
             }
         }
