@@ -1254,5 +1254,59 @@ namespace ImagePipeline.Tests.Core
             FileInfo info = await _imagePipeline.GetFileCachePath(FAILURE_URL).ConfigureAwait(false);
             Assert.IsNull(info);
         }
+
+        /// <summary>
+        /// Tests out fetching a decoded gif.
+        /// </summary>
+        [TestMethod]
+        public void TestFetchDecodedGif()
+        {
+            var completion = new ManualResetEvent(false);
+            var failed = false;
+            var request = ImageRequestBuilder.NewBuilderWithSource(LOCAL_GIF_URL).Build();
+            var dataSource = _imagePipeline.FetchDecodedImage(request, null);
+            var dataSubscriber = new BaseDataSubscriberImpl<CloseableReference<CloseableImage>>(
+                response =>
+                {
+                    var reference = response.GetResult();
+                    if (reference != null)
+                    {
+                        try
+                        {
+                            var image = reference.Get();
+                            Assert.IsTrue(image.Width == 110);
+                            Assert.IsTrue(image.Height == 110);
+                        }
+                        catch (Exception)
+                        {
+                            failed = true;
+                        }
+                        finally
+                        {
+                            CloseableReference<CloseableImage>.CloseSafely(reference);
+                            completion.Set();
+                        }
+                    }
+                    else
+                    {
+                        failed = true;
+                        completion.Set();
+                    }
+
+                    return Task.CompletedTask;
+                },
+                response =>
+                {
+                    failed = true;
+                    completion.Set();
+                });
+
+            dataSource.Subscribe(dataSubscriber, CallerThreadExecutor.Instance);
+            completion.WaitOne();
+            if (failed)
+            {
+                Assert.Fail();
+            }
+        }
     }
 }

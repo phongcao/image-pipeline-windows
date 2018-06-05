@@ -1,9 +1,11 @@
-﻿using ImageFormatUtils;
+﻿using FBCore.Common.Internal;
+using ImageFormatUtils;
 using ImagePipeline.AnimatedFactory;
 using ImagePipeline.Common;
 using ImagePipeline.Image;
 using ImagePipeline.Platform;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 
@@ -102,7 +104,24 @@ namespace ImagePipeline.Decoder
             EncodedImage encodedImage,
             ImageDecodeOptions options)
         {
-            throw new NotImplementedException();
+            Stream inputStream = encodedImage.GetInputStream();
+            if (inputStream == null)
+            {
+                return Task.FromResult(default(CloseableImage));
+            }
+
+            try
+            {
+                // Phong Cao: always forceStaticImage
+                return DecodeStaticImageAsync(encodedImage)
+                    .ContinueWith(
+                    task => ((CloseableImage)task.Result),
+                    TaskContinuationOptions.ExecuteSynchronously);
+            }
+            finally
+            {
+                Closeables.CloseQuietly(inputStream);
+            }
         }
 
         /// <summary>
