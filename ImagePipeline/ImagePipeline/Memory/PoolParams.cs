@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ImagePipeline.Memory
 {
     /// <summary>
-    /// Config parameters for pools (<see cref="BasePool{T}"/>.
+    /// Config parameters for pools (<see cref="BasePool{T}"/>).
     /// Supplied via a provider.
     /// <para />
     /// <see cref="MaxSizeSoftCap"/>
@@ -142,7 +142,7 @@ namespace ImagePipeline.Memory
         /// Max bucket size for the pool.
         /// </param>
         /// <param name="maxNumThreads">
-        /// The maximum number of threads in th epool, or -1
+        /// The maximum number of threads in the pool, or -1
         /// if the pool doesn't care.
         /// </param>
 
