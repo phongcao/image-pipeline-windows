@@ -3,6 +3,7 @@
 
 ## Installation
 [![NuGet](https://img.shields.io/nuget/v/fresco.imagepipeline.svg)](https://www.nuget.org/packages/fresco.imagepipeline/)
+[![Downloads](https://img.shields.io/nuget/dt/fresco.imagepipeline.svg)](https://www.nuget.org/packages/fresco.imagepipeline/)
 
 ## Features
 * Has a memory management system that uses the native heap to minimize the impact of garbage collection.
