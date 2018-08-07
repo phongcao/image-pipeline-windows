@@ -55,13 +55,21 @@ namespace ImagePipeline.Memory
         private static int GetMaxSizeSoftCap()
         {
             ulong maxMemory = Math.Min(MemoryManager.AppMemoryUsageLimit, int.MaxValue);
-            if (maxMemory < 16 * ByteConstants.MB)
+            if (maxMemory < 8 * ByteConstants.MB)
+            {
+                return 0;
+            }
+            else if (maxMemory < 16 * ByteConstants.MB)
             {
                 return 3 * ByteConstants.MB;
             }
             else if (maxMemory < 32 * ByteConstants.MB)
             {
                 return 6 * ByteConstants.MB;
+            }
+            else if (maxMemory < 128 * ByteConstants.MB)
+            {
+                return 12 * ByteConstants.MB;
             }
             else
             {
