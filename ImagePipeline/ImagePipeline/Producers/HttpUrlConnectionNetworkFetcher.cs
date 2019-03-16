@@ -138,55 +138,59 @@ namespace ImagePipeline.Producers
             .Result;
         }
 
-        private async Task<HttpResponseMessage> DownloadFrom(
+        private Task<HttpResponseMessage> DownloadFrom(
             Uri uri, int maxRedirects, CancellationToken token)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
             var asyncInfo = _client.SendRequestAsync(request);
-            using (token.Register(asyncInfo.Cancel))
+
+            return asyncInfo.AsTask().ContinueWith(
+            responseTask =>
             {
                 try
                 {
-                    HttpResponseMessage response = await asyncInfo.AsTask().ConfigureAwait(false);
-                    HttpStatusCode responseCode = response.StatusCode;
-                    if (IsHttpSuccess(responseCode))
+                    using (token.Register(asyncInfo.Cancel))
                     {
-                        return response;
-                    }
-                    else if (IsHttpRedirect(responseCode))
-                    {
-                        Uri nextUri = response.Headers.Location;
-                        string originalScheme = uri.Scheme;
-
-                        if (maxRedirects > 0 && nextUri != null)
+                        HttpResponseMessage response = responseTask.Result;
+                        HttpStatusCode responseCode = response.StatusCode;
+                        if (IsHttpSuccess(responseCode))
                         {
-                            return await DownloadFrom(nextUri, maxRedirects - 1, token)
-                                .ConfigureAwait(false);
+                            return Task.FromResult(response);
+                        }
+                        else if (IsHttpRedirect(responseCode))
+                        {
+                            Uri nextUri = response.Headers.Location;
+                            string originalScheme = uri.Scheme;
+
+                            if (maxRedirects > 0 && nextUri != null)
+                            {
+                                return DownloadFrom(nextUri, maxRedirects - 1, token);
+                            }
+                            else
+                            {
+                                string message = (maxRedirects == 0) ?
+                                    string.Format("URL {0} follows too many redirects", uri.ToString()) :
+                                    string.Format("URL {0} returned {1} without a valid redirect", uri.ToString(), responseCode);
+
+                                return Task.FromException<HttpResponseMessage>(new IOException(message));
+                            }
                         }
                         else
                         {
-                            string message = (maxRedirects == 0) ? 
-                                string.Format("URL {0} follows too many redirects", uri.ToString()) :
-                                string.Format("URL {0} returned {1} without a valid redirect", uri.ToString(), responseCode);
-
-                            throw new IOException(message);
+                            return Task.FromException<HttpResponseMessage>(new IOException(
+                                string.Format(
+                                    "Image URL {0} returned HTTP code {1}",
+                                    uri.ToString(),
+                                    responseCode)));
                         }
                     }
-                    else
-                    {
-                        throw new IOException(
-                            string.Format(
-                                "Image URL {0} returned HTTP code {1}", 
-                                uri.ToString(), 
-                                responseCode));
-                    }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    token.ThrowIfCancellationRequested();
-                    throw;
+                    return Task.FromException<HttpResponseMessage>(e);
                 }
-            }
+            })
+            .Unwrap();
         }
 
         private bool IsHttpSuccess(HttpStatusCode responseCode)
