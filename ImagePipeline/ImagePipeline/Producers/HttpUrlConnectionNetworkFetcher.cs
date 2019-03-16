@@ -169,22 +169,22 @@ namespace ImagePipeline.Producers
                                 string.Format("URL {0} follows too many redirects", uri.ToString()) :
                                 string.Format("URL {0} returned {1} without a valid redirect", uri.ToString(), responseCode);
 
-                            throw new IOException(message);
+                            return await Task.FromException<HttpResponseMessage>(
+                                new IOException(message));
                         }
                     }
                     else
                     {
-                        throw new IOException(
+                        return await Task.FromException<HttpResponseMessage>(new IOException(
                             string.Format(
                                 "Image URL {0} returned HTTP code {1}", 
                                 uri.ToString(), 
-                                responseCode));
+                                responseCode)));
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    token.ThrowIfCancellationRequested();
-                    throw;
+                    return await Task.FromException<HttpResponseMessage>(e);
                 }
             }
         }
